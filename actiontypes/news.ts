@@ -1,0 +1,5 @@
+export const FETCH_NEWS_REQUESTED = 'news/FETCH_NEWS_REQUESTED';
+export const FETCH_NEWS_SUCCESS = 'news/FETCH_NEWS_SUCCESS';
+export const FETCH_NEWS_FAILURE = 'news/FETCH_NEWS_FAILURE';
+
+export const DISMISS_NEWS_ITEM = 'news/DISMISS_NEWS_ITEM';

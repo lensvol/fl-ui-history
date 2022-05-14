@@ -1,0 +1,9 @@
+// Fetch items
+export const FETCH_REQUESTED = 'subscription/FETCH_REQUESTED';
+export const FETCH_SUCCESS = 'subscription/FETCH_SUCCESS';
+export const FETCH_FAILURE = 'subscription/FETCH_FAILURE';
+
+// Cancel subscription (braintree)
+export const CANCEL_BRAINTREE_SUBSCRIPTION_REQUESTED = 'subscription/CANCEL_BRAINTREE_SUBSCRIPTION_REQUESTED';
+export const CANCEL_BRAINTREE_SUBSCRIPTION_SUCCESS = 'subscription/CANCEL_BRAINTREE_SUBSCRIPTION_SUCCESS';
+export const CANCEL_BRAINTREE_SUBSCRIPTION_FAILURE = 'subscription/CANCEL_BRAINTREE_SUBSCRIPTION_FAILURE';
