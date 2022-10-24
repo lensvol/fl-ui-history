@@ -1,9 +1,9 @@
-import shouldShowTooltipDecisionFunctions from 'features/mapping/shouldShowTooltipDecisionFunctions';
-import { IArea, ISetting } from 'types/map';
+import shouldShowTooltipDecisionFunctions from "features/mapping/shouldShowTooltipDecisionFunctions";
+import { IArea, ISetting } from "types/map";
 
 export default function shouldShowTooltip(
   area: IArea,
-  setting: ISetting | undefined,
+  setting: ISetting | undefined
   // { mapRootArea: { areaKey } }: Pick<IMappableSetting, 'mapRootArea'>,
 ): boolean {
   // If we have no areaKey, return false

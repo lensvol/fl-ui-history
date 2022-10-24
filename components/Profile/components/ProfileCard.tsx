@@ -1,35 +1,31 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import Image from 'components/Image';
-import { IAppState } from 'types/app';
+import React from "react";
+import { connect } from "react-redux";
+import Image from "components/Image";
+import { IAppState } from "types/app";
 
 type OwnProps = {
-  profileUp?: boolean,
+  profileUp?: boolean;
 };
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;
 
 export function ProfileCard(props: Props) {
-  const {
-    profileCharacter,
-    profileUp,
-  } = props;
+  const { profileCharacter, profileUp } = props;
 
   if (profileCharacter == null) {
     return null;
   }
 
-  const {
-    avatarImage,
-    currentDomicile,
-  } = profileCharacter;
+  const { avatarImage, currentDomicile } = profileCharacter;
 
   if (!currentDomicile) {
     return null;
   }
 
   const icon = profileUp ? avatarImage : currentDomicile.image;
-  const iconType = profileUp ? 'cameo' : 'lodgings';
-  const tooltipData = profileUp ? undefined : { ...currentDomicile, image: undefined };
+  const iconType = profileUp ? "cameo" : "lodgings";
+  const tooltipData = profileUp
+    ? undefined
+    : { ...currentDomicile, image: undefined };
 
   return (
     <Image
@@ -45,8 +41,10 @@ export function ProfileCard(props: Props) {
   );
 }
 
-ProfileCard.displayName = 'ProfileCard';
+ProfileCard.displayName = "ProfileCard";
 
-const mapStateToProps = ({ profile: { profileCharacter } }: IAppState) => ({ profileCharacter });
+const mapStateToProps = ({ profile: { profileCharacter } }: IAppState) => ({
+  profileCharacter,
+});
 
 export default connect(mapStateToProps)(ProfileCard);

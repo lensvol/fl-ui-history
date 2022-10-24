@@ -1,4 +1,4 @@
-import { IPlansState } from 'types/plans';
+import { IPlansState } from "types/plans";
 
 export const INITIAL_STATE: IPlansState = {
   activePlans: [],

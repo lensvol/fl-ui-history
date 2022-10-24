@@ -1,11 +1,11 @@
 import {
   SET_TIMER_NEXT_AVAILABLE,
   SET_TIMER_REMAINING,
-} from 'actiontypes/timer';
+} from "actiontypes/timer";
 
-import quantizeToSeconds from './quantizeToSeconds';
+import quantizeToSeconds from "./quantizeToSeconds";
 
-import { INITIAL_STATE } from './constants';
+import { INITIAL_STATE } from "./constants";
 
 /**
  * Initial state

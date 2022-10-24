@@ -1,21 +1,23 @@
-import { ICard } from 'types/cards';
-import BaseService, { Either } from './BaseMonadicService';
+import { ICard } from "types/cards";
+import BaseService, { Either } from "./BaseMonadicService";
 
 export interface ICardsService {
-  fetchOpportunityCards: () => Promise<Either<FetchCardsResponse>>,
-  discardOpportunityCard: (eventId: number) => Promise<Either<DiscardCardResponse>>,
-  drawOpportunityCards: () => Promise<Either<DrawCardsResponse>>,
+  fetchOpportunityCards: () => Promise<Either<FetchCardsResponse>>;
+  discardOpportunityCard: (
+    eventId: number
+  ) => Promise<Either<DiscardCardResponse>>;
+  drawOpportunityCards: () => Promise<Either<DrawCardsResponse>>;
 }
 
 export type FetchCardsResponse = {
-  currency: number,
-  currentTime: string,
-  displayCards: ICard[],
-  eligibleForCardsCount: number,
-  isInAStorylet: boolean,
-  maxHandSize: number,
-  maxDeckSize: number,
-  nextActionAt: string,
+  currency: number;
+  currentTime: string;
+  displayCards: ICard[];
+  eligibleForCardsCount: number;
+  isInAStorylet: boolean;
+  maxHandSize: number;
+  maxDeckSize: number;
+  nextActionAt: string;
 };
 
 export type DiscardCardResponse = FetchCardsResponse & {};
@@ -29,21 +31,22 @@ class CardsService extends BaseService implements ICardsService {
    */
   fetchOpportunityCards: () => Promise<Either<FetchCardsResponse>> = () => {
     const config = {
-      url: '/opportunity',
+      url: "/opportunity",
     };
     return this.doRequest<FetchCardsResponse>(config);
   };
 
-  discardOpportunityCard: (eventId: number) => Promise<Either<DiscardCardResponse>> = (eventId: number) => {
+  discardOpportunityCard: (
+    eventId: number
+  ) => Promise<Either<DiscardCardResponse>> = (eventId: number) => {
     const config = {
-      method: 'post',
-      url: '/opportunity/discard',
-      data: { eventId }
+      method: "post",
+      url: "/opportunity/discard",
+      data: { eventId },
     };
 
     return this.doRequest<DiscardCardResponse>(config);
   };
-
 
   /**
    * Draw opportunity cards
@@ -51,11 +54,11 @@ class CardsService extends BaseService implements ICardsService {
    */
   drawOpportunityCards: () => Promise<Either<DrawCardsResponse>> = () => {
     const config = {
-      method: 'post',
-      url: '/opportunity/draw',
+      method: "post",
+      url: "/opportunity/draw",
     };
     return this.doRequest<DrawCardsResponse>(config);
-  }
+  };
 }
 
 export { CardsService as default };

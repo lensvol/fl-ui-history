@@ -1,36 +1,34 @@
-import SuggestContactButton from 'components/Act/components/SuggestContactButton';
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import SuggestContactButton from "components/Act/components/SuggestContactButton";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import {
-  addNewContact,
-} from 'actions/storylet';
+import { addNewContact } from "actions/storylet";
 
 class AddContactContainer extends Component {
   static propTypes = {
     branchId: PropTypes.number.isRequired,
     onAddContact: PropTypes.func.isRequired,
-  }
+  };
 
   state = {
-    message: '',
+    message: "",
     isSubmitting: false,
-    value: '',
-  }
+    value: "",
+  };
 
   handleChange = (e) => {
     const { message } = this.state;
     this.setState({ value: e.target.value });
     // Clear the message, if it's there
     if (message) {
-      this.setState({ message: '' });
+      this.setState({ message: "" });
     }
-  }
+  };
 
   handleSuggestComplete = ({ name }) => {
     this.setState({ value: name });
-  }
+  };
 
   handleSubmit = async (e) => {
     const { branchId, dispatch, onAddContact } = this.props;
@@ -58,7 +56,7 @@ class AddContactContainer extends Component {
 
     // Update our local state
     this.setState({ message, isSubmitting: false });
-  }
+  };
 
   render = () => {
     const { branchId } = this.props;
@@ -76,7 +74,7 @@ class AddContactContainer extends Component {
         <label
           className="act__contact-choice-label"
           htmlFor="js-add-a-contact"
-          style={{ width: '100% ' }}
+          style={{ width: "100% " }}
         >
           Add a contact
           <input
@@ -87,14 +85,17 @@ class AddContactContainer extends Component {
             value={value}
           />
         </label>
-        <p className="act__add-contact-message" dangerouslySetInnerHTML={{ __html: message }} />
+        <p
+          className="act__add-contact-message"
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
         <p className="buttons act__add-and-suggest-buttons">
           <button
             className="button button--primary"
-            disabled={value === '' || isSubmitting}
+            disabled={value === "" || isSubmitting}
             type="submit"
           >
-            {isSubmitting ? 'Adding...' : 'Add'}
+            {isSubmitting ? "Adding..." : "Add"}
           </button>
           <SuggestContactButton
             branchId={branchId}
@@ -103,7 +104,7 @@ class AddContactContainer extends Component {
         </p>
       </form>
     );
-  }
+  };
 }
 
 const mapStateToProps = ({

@@ -1,25 +1,31 @@
-import { FetchMapSuccess } from 'actions/map/fetch';
-import asStateAwareArea from 'features/mapping/asStateAwareArea';
-import {
-  AreaWithNestedJsonInfo,
-  IMappableSetting,
-  IMapState,
-} from 'types/map';
+import { FetchMapSuccess } from "actions/map/fetch";
+import asStateAwareArea from "features/mapping/asStateAwareArea";
+import { AreaWithNestedJsonInfo, IMappableSetting, IMapState } from "types/map";
 
-export default function fetchMapSuccess(state: IMapState, { payload }: FetchMapSuccess) {
+export default function fetchMapSuccess(
+  state: IMapState,
+  { payload }: FetchMapSuccess
+) {
   const { currentArea, areas } = payload;
 
   const flattenedAreas = flattenAreas(areas);
 
   const flattenedStateAwareAreas = flattenedAreas
-    .map(area => ({ ...area, ...area.jsonInfo }))
-    .map(a => asStateAwareArea(a, flattenedAreas, state.setting as IMappableSetting, currentArea));
+    .map((area) => ({ ...area, ...area.jsonInfo }))
+    .map((a) =>
+      asStateAwareArea(
+        a,
+        flattenedAreas,
+        state.setting as IMappableSetting,
+        currentArea
+      )
+    );
 
   const currentAreaWithJsonInfo = asStateAwareArea(
     { ...currentArea, ...(currentArea.jsonInfo ?? {}) },
     flattenedStateAwareAreas,
     state.setting as IMappableSetting,
-    currentArea,
+    currentArea
   );
 
   return {
@@ -31,7 +37,9 @@ export default function fetchMapSuccess(state: IMapState, { payload }: FetchMapS
   };
 }
 
-function flattenAreas(areas: AreaWithNestedJsonInfo[]): AreaWithNestedJsonInfo[] {
+function flattenAreas(
+  areas: AreaWithNestedJsonInfo[]
+): AreaWithNestedJsonInfo[] {
   return areas.flatMap((a) => {
     if (a.childAreas && a.childAreas.length) {
       return [a, ...flattenAreas(a.childAreas)];

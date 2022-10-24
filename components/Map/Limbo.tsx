@@ -1,82 +1,67 @@
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
-import classnames from 'classnames';
+import React, { useCallback, useMemo } from "react";
+import classnames from "classnames";
 import Interactive from "react-interactive";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import TippyWrapper from 'components/TippyWrapper';
-import { openModalTooltip } from 'actions/modalTooltip';
-import {
-  areaToTooltipData,
-  isUnterzeeSetting,
-} from 'features/mapping';
-import asStateAwareArea from 'features/mapping/asStateAwareArea';
-import { MAP_BASE_URL } from 'features/mapping/constants';
+import TippyWrapper from "components/TippyWrapper";
+import { openModalTooltip } from "actions/modalTooltip";
+import { areaToTooltipData, isUnterzeeSetting } from "features/mapping";
+import asStateAwareArea from "features/mapping/asStateAwareArea";
+import { MAP_BASE_URL } from "features/mapping/constants";
 
-import { IAppState } from 'types/app';
-import { IMappableSetting } from 'types/map';
+import { IAppState } from "types/app";
+import { IMappableSetting } from "types/map";
 
 type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: Function,
+  dispatch: Function;
 };
 
-const noop = () => {
-};
+const noop = () => {};
 
 export function Limbo(props: Props) {
-  const {
-    areas,
-    currentArea,
-    dispatch,
-    setting,
-  } = props;
+  const { areas, currentArea, dispatch, setting } = props;
 
-  const tooltipData = useMemo(() => ({
-    ...areaToTooltipData(
-      asStateAwareArea(
-        currentArea!,
-        areas || [],
-        setting! as IMappableSetting,
+  const tooltipData = useMemo(
+    () => ({
+      ...areaToTooltipData(
+        asStateAwareArea(
+          currentArea!,
+          areas || [],
+          setting! as IMappableSetting,
+          currentArea
+        ),
         currentArea,
+        !!setting?.canTravel,
+        noop,
+        true
       ),
-      currentArea,
-      !!setting?.canTravel,
-      noop,
-      true,
-    ),
-    name: `Your location: ${currentArea?.name}`,
-  }), [
-    areas,
-    currentArea,
-    setting,
-  ]);
+      name: `Your location: ${currentArea?.name}`,
+    }),
+    [areas, currentArea, setting]
+  );
 
-  const handleStateChange = useCallback(({ nextState, event }) => {
-    event.preventDefault();
-    const { iState } = nextState;
+  const handleStateChange = useCallback(
+    ({ nextState, event }) => {
+      event.preventDefault();
+      const { iState } = nextState;
 
-    if (/touchActive/.test(iState)) {
-      dispatch(openModalTooltip(tooltipData));
-    }
-  }, [dispatch, tooltipData]);
+      if (/touchActive/.test(iState)) {
+        dispatch(openModalTooltip(tooltipData));
+      }
+    },
+    [dispatch, tooltipData]
+  );
 
   return (
     <div
       className={classnames(
-        'map-limbo',
-        (isUnterzeeSetting(setting)) && 'map-limbo--unterzee',
+        "map-limbo",
+        isUnterzeeSetting(setting) && "map-limbo--unterzee"
       )}
     >
       <PlayerMarker {...props} />
-      <Interactive
-        as="div"
-        onStateChange={handleStateChange}
-      >
-        <TippyWrapper
-          tooltipData={tooltipData}
-        >
+      <Interactive as="div" onStateChange={handleStateChange}>
+        <TippyWrapper tooltipData={tooltipData}>
           <img
             alt="In limbo"
             className="map-limbo__signpost"
@@ -85,7 +70,7 @@ export function Limbo(props: Props) {
         </TippyWrapper>
       </Interactive>
     </div>
-  )
+  );
 }
 
 function PlayerMarker({ avatarImage }: Props) {

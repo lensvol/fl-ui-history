@@ -1,45 +1,40 @@
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
-import classnames from 'classnames';
-import {
-  connect,
-  DispatchProp,
-} from 'react-redux';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import React, { useCallback, useMemo } from "react";
+import classnames from "classnames";
+import { connect, DispatchProp } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import { setTab } from 'actions/subtabs';
-import { IAppState } from 'types/app';
+import { setTab } from "actions/subtabs";
+import { IAppState } from "types/app";
 
-function InnerTabs({
-  dispatch,
-  history,
-  subtab,
-}: Props) {
+function InnerTabs({ dispatch, history, subtab }: Props) {
   const goToMyself = useCallback(() => {
-    setTab({ tab: 'myself', subtab: 'myself' })(dispatch);
-    history.push('/myself');
+    setTab({ tab: "myself", subtab: "myself" })(dispatch);
+    history.push("/myself");
   }, [dispatch, history]);
 
   const goToPossessions = useCallback(() => {
-    setTab({ tab: 'myself', subtab: 'possessions' })(dispatch);
-    history.push('/possessions');
+    setTab({ tab: "myself", subtab: "possessions" })(dispatch);
+    history.push("/possessions");
   }, [dispatch, history]);
 
-  const myselfClass = useMemo(() => classnames({
-    'inner-tab': true,
-    'inner-tab--with-border': true,
-    'inner-tab--active': subtab === 'myself',
-  }), [subtab]);
+  const myselfClass = useMemo(
+    () =>
+      classnames({
+        "inner-tab": true,
+        "inner-tab--with-border": true,
+        "inner-tab--active": subtab === "myself",
+      }),
+    [subtab]
+  );
 
-  const possessionsClass = useMemo(() => classnames({
-    'inner-tab': true,
-    'inner-tab--active': subtab === 'possessions',
-  }), [subtab]);
+  const possessionsClass = useMemo(
+    () =>
+      classnames({
+        "inner-tab": true,
+        "inner-tab--active": subtab === "possessions",
+      }),
+    [subtab]
+  );
 
   return (
     <div className="inner-tabs">
@@ -50,9 +45,7 @@ function InnerTabs({
         type="button"
       >
         <i className="fl-ico fl-ico-2x fl-ico-myself inner-tab__icon" />
-        <div className="inner-tab__label">
-          Myself
-        </div>
+        <div className="inner-tab__label">Myself</div>
       </button>
 
       <button
@@ -62,17 +55,19 @@ function InnerTabs({
         type="button"
       >
         <i className="fl-ico fl-ico-2x fl-ico-inventory inner-tab__icon" />
-        <div className="inner-tab__label">
-          Possessions
-        </div>
+        <div className="inner-tab__label">Possessions</div>
       </button>
     </div>
   );
 }
 
-const mapStateToProps = ({ subtabs: { myself: subtab } }: IAppState) => ({ subtab });
+const mapStateToProps = ({ subtabs: { myself: subtab } }: IAppState) => ({
+  subtab,
+});
 
-type Props = DispatchProp & RouteComponentProps & ReturnType<typeof mapStateToProps>;
+type Props = DispatchProp &
+  RouteComponentProps &
+  ReturnType<typeof mapStateToProps>;
 
 export default withRouter(connect(mapStateToProps)(InnerTabs));
 

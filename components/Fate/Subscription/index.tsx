@@ -1,18 +1,11 @@
-import PurchaseSubscriptionModal from 'components/PurchaseSubscriptionModal';
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import ReactCSSTransitionReplace from 'react-css-transition-replace';
+import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
+import React, { useCallback, useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import ReactCSSTransitionReplace from "react-css-transition-replace";
 
-import * as SubscriptionActionCreators from 'actions/subscription';
+import * as SubscriptionActionCreators from "actions/subscription";
 
-import SubscriptionComponent from './Subscription';
+import SubscriptionComponent from "./Subscription";
 
 function SubscriptionContainer({ onClick }: Props) {
   const dispatch = useDispatch();
@@ -54,7 +47,7 @@ function SubscriptionContainer({ onClick }: Props) {
 }
 
 interface Props {
-  onClick?: () => void,
+  onClick?: () => void;
 }
 
 export default connect()(SubscriptionContainer);

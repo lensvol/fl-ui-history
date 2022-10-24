@@ -1,21 +1,24 @@
-import React from 'react';
-import { FormikHelpers as FormikActions } from 'formik';
+import React from "react";
+import { FormikHelpers as FormikActions } from "formik";
 
-import Modal from 'components/Modal';
+import Modal from "components/Modal";
 
-import CompleteMessage from './CompleteMessage';
-import ForgottenPasswordResetForm from './ForgottenPasswordResetForm';
+import CompleteMessage from "./CompleteMessage";
+import ForgottenPasswordResetForm from "./ForgottenPasswordResetForm";
 
 type Props = {
-  isComplete: boolean,
-  isOpen: boolean,
-  isSuccess: boolean,
-  message: string | undefined,
-  onAfterClose: () => void,
-  onClickWhenFailed: () => void,
-  onClickWhenSuccessful: () => void,
-  onRequestClose: () => void,
-  onSubmit: (values: { password: string }, actions: FormikActions<{ password: string }>) => Promise<void>,
+  isComplete: boolean;
+  isOpen: boolean;
+  isSuccess: boolean;
+  message: string | undefined;
+  onAfterClose: () => void;
+  onClickWhenFailed: () => void;
+  onClickWhenSuccessful: () => void;
+  onRequestClose: () => void;
+  onSubmit: (
+    values: { password: string },
+    actions: FormikActions<{ password: string }>
+  ) => Promise<void>;
 };
 
 export default function ForgottenPasswordResetModalComponent(props: Props) {

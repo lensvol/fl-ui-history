@@ -1,6 +1,9 @@
-import Config from 'configuration';
-import { CLIENT_BECAME_OUTDATED, VERSION_MISMATCH_MODAL_DISMISSED } from 'actiontypes/versionSync';
-import { IVersionSyncState } from 'types/versionSync';
+import Config from "configuration";
+import {
+  CLIENT_BECAME_OUTDATED,
+  VERSION_MISMATCH_MODAL_DISMISSED,
+} from "actiontypes/versionSync";
+import { IVersionSyncState } from "types/versionSync";
 
 export const INITIAL_STATE: IVersionSyncState = {
   isClientOutdated: false,

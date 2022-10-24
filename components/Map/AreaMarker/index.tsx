@@ -5,29 +5,25 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
-import {
-  IArea,
-  ILabelledArea,
-  IStateAwareArea,
-} from 'types/map';
+} from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
+import { IArea, ILabelledArea, IStateAwareArea } from "types/map";
 import {
   CircleMarker,
   Tooltip,
   Tooltip as LeafletTooltip,
-} from 'react-leaflet';
+} from "react-leaflet";
 
 import {
   areaToTooltipData,
   isInteractable,
   shouldZoomOnTapAtZoomLevel,
   xy,
-} from 'features/mapping';
-import classnames from 'classnames';
-import InteractiveMarker from 'components/Map/InteractiveMarker';
-import { MapModalTooltipContextValue } from 'components/Map/MapModalTooltipContext';
+} from "features/mapping";
+import classnames from "classnames";
+import InteractiveMarker from "components/Map/InteractiveMarker";
+import { MapModalTooltipContextValue } from "components/Map/MapModalTooltipContext";
 
 function AreaMarker({
   area,
@@ -66,7 +62,7 @@ function AreaMarker({
         area,
         currentArea,
         !!setting?.canTravel,
-        onAreaClick,
+        onAreaClick
       );
       openModalTooltip({ ...tooltipData });
     }
@@ -101,29 +97,30 @@ function AreaMarker({
 
       // Add event listeners to the leaflet's DOM element
       if (el) {
-        el.addEventListener('click', onClick, { passive: true });
-        el.addEventListener('touchend', onTouchEnd, { passive: true });
-        el.addEventListener('touchstart', onTouchStart, { passive: true });
+        el.addEventListener("click", onClick, { passive: true });
+        el.addEventListener("touchend", onTouchEnd, { passive: true });
+        el.addEventListener("touchstart", onTouchStart, { passive: true });
 
-        return (() => {
-          el.removeEventListener('click', onClick);
-          el.removeEventListener('touchend', onTouchEnd);
-          el.removeEventListener('touchstart', onTouchStart);
-        });
+        return () => {
+          el.removeEventListener("click", onClick);
+          el.removeEventListener("touchend", onTouchEnd);
+          el.removeEventListener("touchstart", onTouchStart);
+        };
       }
 
       // If we can't get the DOM Element for the marker, return a no-op callback
-      return () => { /* no-op */ };
+      return () => {
+        /* no-op */
+      };
     }
 
     // If we can't find the ref at all, return a no-op callback
-    return () => { /* no-op */ };
+    return () => {
+      /* no-op */
+    };
   }, [onClick, onTouchEnd, onTouchStart]);
 
-  const {
-    labelX,
-    labelY,
-  } = area;
+  const { labelX, labelY } = area;
 
   const isAreaInteractable = isInteractable(area) && (interactive ?? true);
 
@@ -137,14 +134,13 @@ function AreaMarker({
         fillColor="transparent"
         opacity={0}
       >
-
         <LeafletTooltip
           className={classnames(
-            'leaflet-tooltip--fbg',
-            (isAreaInteractable && area.unlocked)
-              ? 'leaflet-tooltip--fbg-interactable'
-              : 'leaflet-tooltip--fbg-landmark',
-            className,
+            "leaflet-tooltip--fbg",
+            isAreaInteractable && area.unlocked
+              ? "leaflet-tooltip--fbg-interactable"
+              : "leaflet-tooltip--fbg-landmark",
+            className
           )}
           direction="center"
           offset={[0, 0]}
@@ -166,15 +162,16 @@ function AreaMarker({
   );
 }
 
-interface OwnProps extends Pick<MapModalTooltipContextValue, 'openModalTooltip'> {
-  area: IStateAwareArea & ILabelledArea,
-  className?: string,
-  currentArea: IArea,
-  interactive?: boolean,
-  onAreaClick: (e: any, area: IArea) => Promise<void>,
-  onAreaSelect: (area?: IArea) => void,
-  onTapAtLowZoomLevel: (area: IArea) => void,
-  zoomLevel: number,
+interface OwnProps
+  extends Pick<MapModalTooltipContextValue, "openModalTooltip"> {
+  area: IStateAwareArea & ILabelledArea;
+  className?: string;
+  currentArea: IArea;
+  interactive?: boolean;
+  onAreaClick: (e: any, area: IArea) => Promise<void>;
+  onAreaSelect: (area?: IArea) => void;
+  onTapAtLowZoomLevel: (area: IArea) => void;
+  zoomLevel: number;
 }
 
 const mapStateToProps = ({ map: { setting } }: IAppState) => ({

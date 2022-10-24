@@ -1,8 +1,8 @@
-import axios, { AxiosInstance } from 'axios';
-import Config from 'configuration';
-import { VersionMismatch } from 'services/BaseService';
-import { getTokenAndStorage } from 'features/startup';
-import semver from 'semver';
+import axios, { AxiosInstance } from "axios";
+import Config from "configuration";
+import { VersionMismatch } from "services/BaseService";
+import { getTokenAndStorage } from "features/startup";
+import semver from "semver";
 
 export class Success<T> {
   data: T;
@@ -33,22 +33,24 @@ export default class BaseService {
     });
 
     this.config = {
-      method: 'get',
+      method: "get",
       withCredentials: true,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        Accept: 'application/json, *.*',
-        'Content-Type': 'application/json',
+        "X-Requested-With": "XMLHttpRequest",
+        Accept: "application/json, *.*",
+        "Content-Type": "application/json",
       },
     };
   }
 
   refreshAccessToken: (token: string) => void = (token: string) => {
-    window[getTokenAndStorage(window).storage].setItem('access_token', token);
+    window[getTokenAndStorage(window).storage].setItem("access_token", token);
   };
 
   // eslint-disable-next-line arrow-parens
-  doRequest: <T = any>(config: any) => Promise<Either<T>> = async <T = any>(config: any) => {
+  doRequest: <T = any>(config: any) => Promise<Either<T>> = async <T = any>(
+    config: any
+  ) => {
     // Override base config data with what we were passed in
     const configData: any = {
       ...this.config,
@@ -56,7 +58,7 @@ export default class BaseService {
     };
 
     // Look for a JWT
-    const { token = '' } = getTokenAndStorage(window);
+    const { token = "" } = getTokenAndStorage(window);
 
     // If we have a token, then insert it into the request header
     if (token.length) {
@@ -65,7 +67,8 @@ export default class BaseService {
         ...(config.headers ?? {}),
         Authorization: `Bearer ${token}`,
         // Only send major.minor.patch
-        'X-Current-Version': semver.coerce(Config.version)?.version ?? undefined,
+        "X-Current-Version":
+          semver.coerce(Config.version)?.version ?? undefined,
       };
     }
 
@@ -73,7 +76,7 @@ export default class BaseService {
     const response = await this.axiosInstance.request(configData);
 
     // Check the latest client version available
-    const latestVersion = response.headers['x-latest-available-client-version'];
+    const latestVersion = response.headers["x-latest-available-client-version"];
 
     // We're only interested in major.minor.patch versions here; if those match,
     // we're happy (this is not intended to check compatibility between dev branches
@@ -83,10 +86,11 @@ export default class BaseService {
 
     // It's OK for the client to be a version ahead of the server, but
     // if it's behind, throw a VersionMismatch error
-    if (coercedCurrentVersion && coercedLatestVersion && !semver.gte(
-      coercedCurrentVersion,
-      coercedLatestVersion,
-    )) {
+    if (
+      coercedCurrentVersion &&
+      coercedLatestVersion &&
+      !semver.gte(coercedCurrentVersion, coercedLatestVersion)
+    ) {
       throw new VersionMismatch(latestVersion);
     }
 

@@ -1,6 +1,9 @@
-import { IStoryletState } from 'types/storylet';
+import { IStoryletState } from "types/storylet";
 
-export default function fetchAvailableSuccess(state: IStoryletState, payload: any): IStoryletState {
+export default function fetchAvailableSuccess(
+  state: IStoryletState,
+  payload: any
+): IStoryletState {
   return {
     ...state,
     canChangeOutfit: payload.canChangeOutfit,

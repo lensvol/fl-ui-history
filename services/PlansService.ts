@@ -1,5 +1,9 @@
-import BaseService from './BaseService';
-import { ICreatePlanRequestData, IEditPlanRequestData, IPlansService } from 'types/plans';
+import BaseService from "./BaseService";
+import {
+  ICreatePlanRequestData,
+  IEditPlanRequestData,
+  IPlansService,
+} from "types/plans";
 
 class PlansService extends BaseService implements IPlansService {
   /**
@@ -9,8 +13,8 @@ class PlansService extends BaseService implements IPlansService {
    */
   createPlan = (branchData: ICreatePlanRequestData) => {
     const config = {
-      method: 'post',
-      url: '/plan/create',
+      method: "post",
+      url: "/plan/create",
       data: {
         branchId: branchData.id,
         planKey: branchData.planKey,
@@ -19,18 +23,16 @@ class PlansService extends BaseService implements IPlansService {
     return this.doRequest(config);
   };
 
-
   /**
    * Fetch
    * @return {Promise}
    */
   fetchPlans = () => {
     const config = {
-      url: '/plan',
+      url: "/plan",
     };
     return this.doRequest(config);
   };
-
 
   /**
    * Delete plan
@@ -39,9 +41,9 @@ class PlansService extends BaseService implements IPlansService {
    */
   deletePlan = (branchId: number) => {
     const config = {
-      method: 'post',
-      url: 'plan/delete',
-      data: {branchId}
+      method: "post",
+      url: "plan/delete",
+      data: { branchId },
     };
     return this.doRequest(config);
   };
@@ -51,10 +53,10 @@ class PlansService extends BaseService implements IPlansService {
    * @param  {Object} planData
    * @return {Promise}
    */
-  editPlan = (planData : IEditPlanRequestData = {}) => {
+  editPlan = (planData: IEditPlanRequestData = {}) => {
     const config = {
-      method: 'post',
-      url: 'plan/update',
+      method: "post",
+      url: "plan/update",
       data: {
         branchId: planData.branch?.id,
         notes: planData.noteInput,
@@ -62,7 +64,7 @@ class PlansService extends BaseService implements IPlansService {
       },
     };
     return this.doRequest(config);
-  }
+  };
 }
 
 export { PlansService as default };

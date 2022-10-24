@@ -1,6 +1,6 @@
-import React from 'react';
-import { Feature } from 'flagged';
-import { FEATURE_IS_IT_ADVENT } from 'features/feature-flags';
+import React from "react";
+import { Feature } from "flagged";
+import { FEATURE_IS_IT_ADVENT } from "features/feature-flags";
 
 export default function AdventLinkItem() {
   return (
@@ -9,7 +9,7 @@ export default function AdventLinkItem() {
         <a
           className="sidemenu__nav-link"
           href="https://advent.fallenlondon.com/"
-          style={{ display: 'flex' }}
+          style={{ display: "flex" }}
         >
           <img
             alt="Mr Sacks"
@@ -17,7 +17,7 @@ export default function AdventLinkItem() {
             height="16"
             width="16"
             style={{
-              marginRight: '5px',
+              marginRight: "5px",
             }}
           />
           It's Advent!

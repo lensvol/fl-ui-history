@@ -1,25 +1,28 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   DELETE_CONTACT_FAILURE,
   DELETE_CONTACT_REQUESTED,
   DELETE_CONTACT_SUCCESS,
-} from 'actiontypes/contacts';
-import { ActionCreator } from 'redux';
-import { VersionMismatch } from 'services/BaseService';
+} from "actiontypes/contacts";
+import { ActionCreator } from "redux";
+import { VersionMismatch } from "services/BaseService";
 
-import ContactService from 'services/ContactService';
-import { BaseResponse } from 'types/app';
+import ContactService from "services/ContactService";
+import { BaseResponse } from "types/app";
 
 export type DeleteContactRequested = { type: typeof DELETE_CONTACT_REQUESTED };
 export type DeleteContactFailure = { type: typeof DELETE_CONTACT_FAILURE };
-export type DeleteContactSuccess= {
-  type: typeof DELETE_CONTACT_SUCCESS,
+export type DeleteContactSuccess = {
+  type: typeof DELETE_CONTACT_SUCCESS;
   payload: {
-    deletedUserId: number,
-  }
-}
+    deletedUserId: number;
+  };
+};
 
-export type DeleteContactActions = DeleteContactRequested | DeleteContactFailure | DeleteContactSuccess;
+export type DeleteContactActions =
+  | DeleteContactRequested
+  | DeleteContactFailure
+  | DeleteContactSuccess;
 
 const service = new ContactService();
 
@@ -43,9 +46,14 @@ export default function deleteContact(userID: number) {
   };
 }
 
-export const deleteContactRequested: ActionCreator<DeleteContactRequested> = () => ({ type: DELETE_CONTACT_REQUESTED, isDeleting: true });
+export const deleteContactRequested: ActionCreator<
+  DeleteContactRequested
+> = () => ({ type: DELETE_CONTACT_REQUESTED, isDeleting: true });
 
-export const deleteContactSuccess: ActionCreator<DeleteContactSuccess> = (data: BaseResponse, userID: number) => ({
+export const deleteContactSuccess: ActionCreator<DeleteContactSuccess> = (
+  data: BaseResponse,
+  userID: number
+) => ({
   type: DELETE_CONTACT_SUCCESS,
   payload: {
     deletedUserId: userID,
@@ -55,7 +63,9 @@ export const deleteContactSuccess: ActionCreator<DeleteContactSuccess> = (data: 
   },
 });
 
-export const deleteContactFailure: ActionCreator<DeleteContactFailure> = (error: any) => ({
+export const deleteContactFailure: ActionCreator<DeleteContactFailure> = (
+  error: any
+) => ({
   type: DELETE_CONTACT_FAILURE,
   payload: {
     isDeleting: false,

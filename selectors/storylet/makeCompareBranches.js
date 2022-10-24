@@ -18,5 +18,10 @@ export default function makeCompareBranches({ actions }) {
 }
 
 export function makeIsLocked({ actions }) {
-  return branch => !!(branch.actionCost > actions || branch.qualityLocked || branch.currencyLocked);
+  return (branch) =>
+    !!(
+      branch.actionCost > actions ||
+      branch.qualityLocked ||
+      branch.currencyLocked
+    );
 }

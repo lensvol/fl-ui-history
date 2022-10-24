@@ -1,26 +1,19 @@
-import saveCurrentOutfit from 'actions/outfit/saveCurrentOutfit';
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import { Feature } from 'flagged';
+import saveCurrentOutfit from "actions/outfit/saveCurrentOutfit";
+import React, { useCallback, useMemo, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { Feature } from "flagged";
 
 import {
   FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS,
   NEW_OUTFIT_BEHAVIOUR,
-} from 'features/feature-flags';
-import { Success } from 'services/BaseMonadicService';
-import { IOutfit } from 'types/outfit';
-import { IAppState } from 'types/app';
-import renameOutfit from 'actions/outfit/renameOutfit';
-import OutfitDropdown from './OutfitDropdown';
-import OutfitEditButtons from './OutfitEditButtons';
-import OutfitRenameForm from './OutfitRenameForm';
+} from "features/feature-flags";
+import { Success } from "services/BaseMonadicService";
+import { IOutfit } from "types/outfit";
+import { IAppState } from "types/app";
+import renameOutfit from "actions/outfit/renameOutfit";
+import OutfitDropdown from "./OutfitDropdown";
+import OutfitEditButtons from "./OutfitEditButtons";
+import OutfitRenameForm from "./OutfitRenameForm";
 
 export function ChangeableControls({
   dirty,
@@ -31,20 +24,23 @@ export function ChangeableControls({
   const dispatch = useDispatch();
 
   const [isEditing, setIsEditing] = useState(false);
-  const selectedOutfit: IOutfit | undefined = useMemo(() => outfits.find(o => o.selected), [outfits]);
+  const selectedOutfit: IOutfit | undefined = useMemo(
+    () => outfits.find((o) => o.selected),
+    [outfits]
+  );
 
   const onCancel = useCallback(() => setIsEditing(false), []);
 
-  const onSaveName = useCallback(async ({ name }: { name: string }) => {
-    if (selectedOutfit === undefined) {
-      return;
-    }
-    await dispatch(renameOutfit(selectedOutfit.id, name));
-    setIsEditing(false);
-  }, [
-    dispatch,
-    selectedOutfit,
-  ]);
+  const onSaveName = useCallback(
+    async ({ name }: { name: string }) => {
+      if (selectedOutfit === undefined) {
+        return;
+      }
+      await dispatch(renameOutfit(selectedOutfit.id, name));
+      setIsEditing(false);
+    },
+    [dispatch, selectedOutfit]
+  );
 
   const onSaveOutfit = useCallback(async () => {
     if (!dirty) {
@@ -55,11 +51,7 @@ export function ChangeableControls({
       return;
     }
     onSaveOutfitSuccess();
-  }, [
-    dirty,
-    dispatch,
-    onSaveOutfitSuccess,
-  ]);
+  }, [dirty, dispatch, onSaveOutfitSuccess]);
 
   const onStartEditing = useCallback(() => setIsEditing(true), []);
 
@@ -67,33 +59,30 @@ export function ChangeableControls({
     <Feature name={NEW_OUTFIT_BEHAVIOUR}>
       {(areOutfitsLockable: boolean) => (
         <>
-          {isEditing && selectedOutfit
-            ? (
-              <OutfitRenameForm
-                initialName={selectedOutfit.name}
-                onSubmit={onSaveName}
-                onCancel={onCancel}
-              />
-            ) : (
-              <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
-                {(doesStoryletStateLockOutfits: boolean) => (
-                  <OutfitDropdown
-                    areOutfitsLockable={areOutfitsLockable}
-                    doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
-                    onChange={onSelectOutfit}
-                  />
-                )}
-              </Feature>
-            )}
-          {isEditing
-            ? null
-            : (
-              <OutfitEditButtons
-                dirty={dirty}
-                onStartEditing={onStartEditing}
-                onSaveOutfit={onSaveOutfit}
-              />
-            )}
+          {isEditing && selectedOutfit ? (
+            <OutfitRenameForm
+              initialName={selectedOutfit.name}
+              onSubmit={onSaveName}
+              onCancel={onCancel}
+            />
+          ) : (
+            <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
+              {(doesStoryletStateLockOutfits: boolean) => (
+                <OutfitDropdown
+                  areOutfitsLockable={areOutfitsLockable}
+                  doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
+                  onChange={onSelectOutfit}
+                />
+              )}
+            </Feature>
+          )}
+          {isEditing ? null : (
+            <OutfitEditButtons
+              dirty={dirty}
+              onStartEditing={onStartEditing}
+              onSaveOutfit={onSaveOutfit}
+            />
+          )}
         </>
       )}
     </Feature>
@@ -106,8 +95,8 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 type OwnProps = {
-  onSelectOutfit: (...args: any) => void,
-  onSaveOutfitSuccess: () => void,
+  onSelectOutfit: (...args: any) => void;
+  onSaveOutfitSuccess: () => void;
 };
 
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;

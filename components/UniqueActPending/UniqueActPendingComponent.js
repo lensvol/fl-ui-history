@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment } from "react";
+import PropTypes from "prop-types";
 
-import Loading from 'components/Loading';
-import StoryletRoot from 'components/StoryletRoot';
+import Loading from "components/Loading";
+import StoryletRoot from "components/StoryletRoot";
 
 export default function UniqueActPendingComponent({
   branch,
@@ -17,7 +17,8 @@ export default function UniqueActPendingComponent({
           You have already issued an outstanding invitation for this action!
         </h2>
         <p>
-          It must be accepted or cancelled before you can send another invitation of this kind.
+          It must be accepted or cancelled before you can send another
+          invitation of this kind.
         </p>
       </div>
       <div className="buttons buttons--left buttons--storylet-exit-options">
@@ -42,9 +43,7 @@ UniqueActPendingComponent.propTypes = {
 export function GoBack() {
   return (
     <Fragment>
-      <i className="fa fa-arrow-left" />
-      {' '}
-      Back
+      <i className="fa fa-arrow-left" /> Back
     </Fragment>
   );
 }

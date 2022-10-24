@@ -1,47 +1,53 @@
-import { ActionCreator } from 'redux';
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as FateActionTypes from 'actiontypes/fate';
-import { ThunkDispatch } from 'redux-thunk';
-import {
-  Either,
-  Success,
-} from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
+import { ActionCreator } from "redux";
+import { handleVersionMismatch } from "actions/versionSync";
+import * as FateActionTypes from "actiontypes/fate";
+import { ThunkDispatch } from "redux-thunk";
+import { Either, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
 import FateService, {
   IFateService,
   PurchaseFateItemRequest,
   PurchaseFateItemResponse,
-} from 'services/FateService';
-import { fetchAvailable } from 'actions/storylet';
-import { fetch as fetchCards } from 'actions/cards';
+} from "services/FateService";
+import { fetchAvailable } from "actions/storylet";
+import { fetch as fetchCards } from "actions/cards";
 
 export type PurchaseItemRequested = {
-  type: typeof FateActionTypes.PURCHASE_ITEM_REQUESTED,
+  type: typeof FateActionTypes.PURCHASE_ITEM_REQUESTED;
 };
 
 export type PurchaseItemSuccess = {
-  type: typeof FateActionTypes.PURCHASE_ITEM_SUCCESS,
-  payload: PurchaseFateItemResponse,
+  type: typeof FateActionTypes.PURCHASE_ITEM_SUCCESS;
+  payload: PurchaseFateItemResponse;
 };
 
 export type PurchaseItemFailure = {
-  type: typeof FateActionTypes.PURCHASE_ITEM_FAILURE,
+  type: typeof FateActionTypes.PURCHASE_ITEM_FAILURE;
 };
 
-export type PurchaseItemActions = PurchaseItemFailure | PurchaseItemRequested | PurchaseItemSuccess;
+export type PurchaseItemActions =
+  | PurchaseItemFailure
+  | PurchaseItemRequested
+  | PurchaseItemSuccess;
 
-export const purchaseItemRequested: ActionCreator<PurchaseItemRequested> = () => ({
+export const purchaseItemRequested: ActionCreator<
+  PurchaseItemRequested
+> = () => ({
   type: FateActionTypes.PURCHASE_ITEM_REQUESTED,
   isPurchasing: true,
 });
 
-export const purchaseItemSuccess: ActionCreator<PurchaseItemSuccess> = (data: PurchaseFateItemResponse) => ({
+export const purchaseItemSuccess: ActionCreator<PurchaseItemSuccess> = (
+  data: PurchaseFateItemResponse
+) => ({
   type: FateActionTypes.PURCHASE_ITEM_SUCCESS,
   isPurchasing: false,
   payload: data,
 });
 
-export const purchaseItemFailure: ActionCreator<PurchaseItemFailure> = (error: any) => ({
+export const purchaseItemFailure: ActionCreator<PurchaseItemFailure> = (
+  error: any
+) => ({
   type: FateActionTypes.PURCHASE_ITEM_FAILURE,
   isPurchasing: false,
   error: true,
@@ -54,10 +60,13 @@ export const purchaseItemFailure: ActionCreator<PurchaseItemFailure> = (error: a
 
 export default purchaseItem(new FateService());
 
-export function purchaseItem(service: IFateService):
-  (fateData: PurchaseFateItemRequest)
-    => (dispatch: ThunkDispatch<any, any, any>)
-    => Promise<Either<PurchaseFateItemResponse> | VersionMismatch> {
+export function purchaseItem(
+  service: IFateService
+): (
+  fateData: PurchaseFateItemRequest
+) => (
+  dispatch: ThunkDispatch<any, any, any>
+) => Promise<Either<PurchaseFateItemResponse> | VersionMismatch> {
   return (fateData: PurchaseFateItemRequest) => async (dispatch) => {
     dispatch(purchaseItemRequested());
 

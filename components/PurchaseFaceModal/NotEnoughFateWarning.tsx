@@ -1,5 +1,5 @@
-import React from 'react';
-import PurchaseFateContext from 'components/GeneralContainer/PurchaseFateContext';
+import React from "react";
+import PurchaseFateContext from "components/GeneralContainer/PurchaseFateContext";
 
 export default function NotEnoughFateWarning({
   currentFate,
@@ -12,10 +12,14 @@ export default function NotEnoughFateWarning({
 
   if (currentFate >= fateCost) {
     return (
-      <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
-        <span>
-          {`Changing your face costs ${fateCost} Fate.`}
-        </span>
+      <div
+        style={{
+          alignItems: "center",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <span>{`Changing your face costs ${fateCost} Fate.`}</span>
       </div>
     );
   }
@@ -23,7 +27,13 @@ export default function NotEnoughFateWarning({
   return (
     <PurchaseFateContext.Consumer>
       {({ onOpenPurchaseFateModal }) => (
-        <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <span>
             {`Changing your face costs ${fateCost} Fate; you have ${currentFate}.`}
           </span>
@@ -41,7 +51,7 @@ export default function NotEnoughFateWarning({
 }
 
 type Props = {
-  currentFate: number,
-  fateCost: number,
-  isFree: boolean,
+  currentFate: number;
+  fateCost: number;
+  isFree: boolean;
 };

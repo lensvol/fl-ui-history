@@ -1,38 +1,42 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
+import { handleVersionMismatch } from "actions/versionSync";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
 import {
   SELECT_STORE_FAILURE,
   SELECT_STORE_REQUESTED,
   SELECT_STORE_SUCCESS,
-} from 'actiontypes/exchange';
+} from "actiontypes/exchange";
 
-import ExchangeService from 'services/ExchangeService';
-import { IAppState } from 'types/app';
-import { IFetchAvailableItemsResponse } from 'types/exchange';
+import ExchangeService from "services/ExchangeService";
+import { IAppState } from "types/app";
+import { IFetchAvailableItemsResponse } from "types/exchange";
 
 export type SelectStoreFailure = { type: typeof SELECT_STORE_FAILURE };
 export type SelectStoreRequested = { type: typeof SELECT_STORE_REQUESTED };
 export type SelectStoreSuccess = {
-  type: typeof SELECT_STORE_SUCCESS,
+  type: typeof SELECT_STORE_SUCCESS;
   payload: {
-    id: number | 'null',
-    items: IFetchAvailableItemsResponse,
-  },
+    id: number | "null";
+    items: IFetchAvailableItemsResponse;
+  };
 };
 
-export type SelectStoreAction = SelectStoreFailure | SelectStoreRequested | SelectStoreSuccess;
+export type SelectStoreAction =
+  | SelectStoreFailure
+  | SelectStoreRequested
+  | SelectStoreSuccess;
 
 const service = new ExchangeService();
-
 
 /** ----------------------------------------------------------------------------
  * SELECT STORE
  -----------------------------------------------------------------------------*/
-export default function selectStore(shopId: number | 'null') {
+export default function selectStore(shopId: number | "null") {
   return async (dispatch: Function, getState: () => IAppState) => {
     // Have we cached this store?
-    const { exchange: { shops } } = getState();
+    const {
+      exchange: { shops },
+    } = getState();
 
     // If we have data in the cache, use it
     if (shops[shopId].items.length > 0) {
@@ -61,7 +65,10 @@ export default function selectStore(shopId: number | 'null') {
 
 const selectStoreRequested = () => ({ type: SELECT_STORE_REQUESTED });
 
-const selectStoreSuccess = (items: IFetchAvailableItemsResponse, id: number | 'null') => ({
+const selectStoreSuccess = (
+  items: IFetchAvailableItemsResponse,
+  id: number | "null"
+) => ({
   payload: { id, items },
   type: SELECT_STORE_SUCCESS,
 });

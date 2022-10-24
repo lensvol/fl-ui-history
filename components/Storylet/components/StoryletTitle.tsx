@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 interface Props {
-  level?: number | undefined,
-  name: string,
+  level?: number | undefined;
+  name: string;
 }
 
 export default function StoryletTitle({ level = 3, name }: Props) {

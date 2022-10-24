@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react';
-import classnames from 'classnames';
+import React, { useMemo } from "react";
+import classnames from "classnames";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 import { IStorylet } from "types/storylet";
 
 export interface Props {
-  disabled: boolean,
-  isGoingBack: boolean,
-  onClick: (e: any) => void,
-  storylet: IStorylet,
+  disabled: boolean;
+  isGoingBack: boolean;
+  onClick: (e: any) => void;
+  storylet: IStorylet;
 }
 
 export default function GoBack({
@@ -17,16 +17,13 @@ export default function GoBack({
   onClick,
   storylet,
 }: Props) {
-
   const content = useMemo(() => {
     if (isGoingBack) {
       return <Loading spinner small />;
     }
     return (
       <span>
-        <i className="fa fa-arrow-left" />
-        {' '}
-        Perhaps not
+        <i className="fa fa-arrow-left" /> Perhaps not
       </span>
     );
   }, [isGoingBack]);
@@ -38,8 +35,8 @@ export default function GoBack({
   return (
     <button
       className={classnames(
-        'button button--primary',
-        (isGoingBack || disabled) && 'button--disabled',
+        "button button--primary",
+        (isGoingBack || disabled) && "button--disabled"
       )}
       disabled={disabled || isGoingBack}
       onClick={onClick}
@@ -50,4 +47,4 @@ export default function GoBack({
   );
 }
 
-GoBack.displayName = 'GoBack';
+GoBack.displayName = "GoBack";

@@ -1,35 +1,21 @@
-import { updateEmailAddress } from 'actions/settings';
-import Loading from 'components/Loading';
-import Modal from 'components/Modal';
-import {
-  Field,
-  Form,
-  Formik,
-  FormikHelpers,
-} from 'formik';
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import { updateEmailAddress } from "actions/settings";
+import Loading from "components/Loading";
+import Modal from "components/Modal";
+import { Field, Form, Formik, FormikHelpers } from "formik";
+import React, { useCallback, useMemo, useState } from "react";
 
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import { IAppState } from 'types/app';
-import wait from 'utils/wait';
+import { connect, useDispatch } from "react-redux";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import { IAppState } from "types/app";
+import wait from "utils/wait";
 
 enum UpdateEmailModalStep {
   Ready,
   Success, // eslint-disable-line no-shadow
 }
 
-function UpdateEmailModal(
-  props: Props,
-) {
+function UpdateEmailModal(props: Props) {
   const {
     isOpen,
     data: { emailAddress },
@@ -47,42 +33,39 @@ function UpdateEmailModal(
     setCurrentStep(UpdateEmailModalStep.Ready);
   }, []);
 
-  const handleSubmit = useCallback(async (
-    values,
-    { setSubmitting, setErrors }: FormikHelpers<{ emailAddress: string }>,
-  ) => {
-    const { emailAddress: newEmailAddress } = values;
-    setSubmitting(true);
-    await wait(500);
-    const result = await updateEmailAddress(newEmailAddress)(dispatch);
-    setSubmitting(false);
-    // Return silently if the user needs to refresh the page anyway
-    if (result instanceof VersionMismatch) {
-      return;
-    }
-    if (result instanceof Success) {
-      setCurrentStep(UpdateEmailModalStep.Success);
-      setMessage(`Your email address is now ${newEmailAddress}`);
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (
+      values,
+      { setSubmitting, setErrors }: FormikHelpers<{ emailAddress: string }>
+    ) => {
+      const { emailAddress: newEmailAddress } = values;
+      setSubmitting(true);
+      await wait(500);
+      const result = await updateEmailAddress(newEmailAddress)(dispatch);
+      setSubmitting(false);
+      // Return silently if the user needs to refresh the page anyway
+      if (result instanceof VersionMismatch) {
+        return;
+      }
+      if (result instanceof Success) {
+        setCurrentStep(UpdateEmailModalStep.Success);
+        setMessage(`Your email address is now ${newEmailAddress}`);
+        return;
+      }
 
-    setErrors({ emailAddress: result.message });
-    setMessage(result.message);
-  }, [
-    dispatch,
-  ]);
+      setErrors({ emailAddress: result.message });
+      setMessage(result.message);
+    },
+    [dispatch]
+  );
 
   const contents = useMemo(() => {
     switch (currentStep) {
       case UpdateEmailModalStep.Success:
         return (
           <div>
-            <h3 className="heading heading--2">
-              Email address updated!
-            </h3>
-            <p>
-              {message}
-            </p>
+            <h3 className="heading heading--2">Email address updated!</h3>
+            <p>{message}</p>
           </div>
         );
 
@@ -91,7 +74,7 @@ function UpdateEmailModal(
           <div>
             <h3 className="heading heading--2">Update email address</h3>
             <Formik
-              initialValues={{ emailAddress: emailAddress ?? '' }}
+              initialValues={{ emailAddress: emailAddress ?? "" }}
               onSubmit={handleSubmit}
               render={({ values, dirty, isSubmitting }) => (
                 <Form>
@@ -105,11 +88,10 @@ function UpdateEmailModal(
                       value={values.emailAddress}
                     />
                   </p>
-                  {message ? <p dangerouslySetInnerHTML={{ __html: message }} /> : null}
-                  <div
-                    className="dialog__actions"
-                    style={{ marginTop: 24 }}
-                  >
+                  {message ? (
+                    <p dangerouslySetInnerHTML={{ __html: message }} />
+                  ) : null}
+                  <div className="dialog__actions" style={{ marginTop: 24 }}>
                     <button
                       className="button button--primary"
                       disabled={isSubmitting}
@@ -124,11 +106,10 @@ function UpdateEmailModal(
                       type="submit"
                     >
                       {isSubmitting ? (
-                        <Loading
-                          spinner
-                          small
-                        />
-                      ) : <span>Update Email</span>}
+                        <Loading spinner small />
+                      ) : (
+                        <span>Update Email</span>
+                      )}
                     </button>
                   </div>
                 </Form>
@@ -137,13 +118,7 @@ function UpdateEmailModal(
           </div>
         );
     }
-  }, [
-    currentStep,
-    emailAddress,
-    handleSubmit,
-    message,
-    onRequestClose,
-  ]);
+  }, [currentStep, emailAddress, handleSubmit, message, onRequestClose]);
 
   return (
     <Modal
@@ -157,10 +132,9 @@ function UpdateEmailModal(
 }
 
 type OwnProps = {
-  isOpen: boolean,
-  onRequestClose: () => void,
+  isOpen: boolean;
+  onRequestClose: () => void;
 };
-
 
 const mapStateToProps = (state: IAppState) => ({
   data: state.settings.data,

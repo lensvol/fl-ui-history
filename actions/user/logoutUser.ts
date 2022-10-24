@@ -1,12 +1,12 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { LOGOUT_SUCCESS } from 'actiontypes/user';
-import { ActionCreator } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
-import UserService, { IUserService } from 'services/UserService';
+import { handleVersionMismatch } from "actions/versionSync";
+import { LOGOUT_SUCCESS } from "actiontypes/user";
+import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
+import UserService, { IUserService } from "services/UserService";
 
-import { closeSidebar } from 'actions/sidebar';
-import clearAuthenticationTokens from 'features/startup/clearAuthenticationTokens';
+import { closeSidebar } from "actions/sidebar";
+import clearAuthenticationTokens from "features/startup/clearAuthenticationTokens";
 
 export type LogoutSuccess = { type: typeof LOGOUT_SUCCESS };
 
@@ -37,7 +37,7 @@ export default function logoutUser() {
       dispatch(logoutSuccess());
       // Let the API know we're logging out
       await service.logout();
-      window.location.href = '/login';
+      window.location.href = "/login";
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));

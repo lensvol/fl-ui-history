@@ -1,50 +1,59 @@
 /* eslint-disable func-names */
-import { PutInAction } from 'actions/storylet/putIn';
-import { handleVersionMismatch } from 'actions/versionSync';
-import { ActionCreator } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import {
-  Either,
-  Failure,
-} from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
+import { PutInAction } from "actions/storylet/putIn";
+import { handleVersionMismatch } from "actions/versionSync";
+import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { Either, Failure } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
 import CardService, {
   FetchCardsResponse,
   ICardsService,
-} from 'services/CardsService';
-import {
-  setNextAvailable,
-  TimerAction,
-} from 'actions/timer';
-import { putIn } from 'actions/storylet';
-import computeNextActionsAt from 'utils/computeNextActionsAt';
+} from "services/CardsService";
+import { setNextAvailable, TimerAction } from "actions/timer";
+import { putIn } from "actions/storylet";
+import computeNextActionsAt from "utils/computeNextActionsAt";
 import {
   BACKGROUND_FETCH_CARDS_REQUESTED,
   CARDS_SHOULD_FETCH,
   FETCH_CARDS_FAILURE,
   FETCH_CARDS_REQUESTED,
   FETCH_CARDS_SUCCESS,
-} from 'actiontypes/cards';
-import { IAppState } from 'types/app';
+} from "actiontypes/cards";
+import { IAppState } from "types/app";
 
-export type FetchCardsRequested = { type: typeof BACKGROUND_FETCH_CARDS_REQUESTED | typeof FETCH_CARDS_REQUESTED };
-export type FetchCardsSuccess = { type: typeof FETCH_CARDS_SUCCESS, payload: FetchCardsResponse };
+export type FetchCardsRequested = {
+  type: typeof BACKGROUND_FETCH_CARDS_REQUESTED | typeof FETCH_CARDS_REQUESTED;
+};
+export type FetchCardsSuccess = {
+  type: typeof FETCH_CARDS_SUCCESS;
+  payload: FetchCardsResponse;
+};
 export type FetchCardsFailure = { type: typeof FETCH_CARDS_FAILURE };
 
 export type ShouldFetchCards = { type: typeof CARDS_SHOULD_FETCH };
 
-export type FetchCardsActions = FetchCardsRequested | FetchCardsSuccess | FetchCardsFailure | ShouldFetchCards;
+export type FetchCardsActions =
+  | FetchCardsRequested
+  | FetchCardsSuccess
+  | FetchCardsFailure
+  | ShouldFetchCards;
 
-const fetchRequested: ActionCreator<FetchCardsRequested> = (background: boolean) => ({
+const fetchRequested: ActionCreator<FetchCardsRequested> = (
+  background: boolean
+) => ({
   type: background ? BACKGROUND_FETCH_CARDS_REQUESTED : FETCH_CARDS_REQUESTED,
 });
 
-export const fetchSuccess: ActionCreator<FetchCardsSuccess> = (data: FetchCardsResponse) => ({
+export const fetchSuccess: ActionCreator<FetchCardsSuccess> = (
+  data: FetchCardsResponse
+) => ({
   type: FETCH_CARDS_SUCCESS,
   payload: data,
 });
 
-export const shouldFetch: ActionCreator<ShouldFetchCards> = () => ({ type: CARDS_SHOULD_FETCH });
+export const shouldFetch: ActionCreator<ShouldFetchCards> = () => ({
+  type: CARDS_SHOULD_FETCH,
+});
 
 const fetchFailure: ActionCreator<FetchCardsFailure> = () => ({
   type: FETCH_CARDS_FAILURE,
@@ -53,8 +62,8 @@ const fetchFailure: ActionCreator<FetchCardsFailure> = () => ({
 export default fetch(new CardService());
 
 type FetchOptions = {
-  background?: boolean,
-  preventMove?: boolean,
+  background?: boolean;
+  preventMove?: boolean;
 };
 
 /** ----------------------------------------------------------------------------
@@ -65,21 +74,31 @@ type FetchOptions = {
 
 type FetchActions = FetchCardsActions | PutInAction | TimerAction;
 
-export function fetch(service: ICardsService): (options?: FetchOptions) => (
+export function fetch(
+  service: ICardsService
+): (
+  options?: FetchOptions
+) => (
   dispatch: ThunkDispatch<Either<FetchCardsResponse>, IAppState, FetchActions>,
-  getState: () => IAppState,
+  getState: () => IAppState
 ) => Promise<Either<FetchCardsResponse> | VersionMismatch> {
   return function (options: FetchOptions = {}) {
     const { background = false, preventMove = false } = options;
 
     return async function (
-      dispatch: ThunkDispatch<Promise<Either<FetchCardsResponse>>, IAppState, FetchActions>,
-      getState: () => IAppState,
+      dispatch: ThunkDispatch<
+        Promise<Either<FetchCardsResponse>>,
+        IAppState,
+        FetchActions
+      >,
+      getState: () => IAppState
     ) {
-      const { cards: { isFetching, isFetchingInBackground } } = getState();
+      const {
+        cards: { isFetching, isFetchingInBackground },
+      } = getState();
 
       if (isFetching || isFetchingInBackground) {
-        return new Failure('Already fetching cards');
+        return new Failure("Already fetching cards");
       }
 
       dispatch(fetchRequested(background));
@@ -93,15 +112,14 @@ export function fetch(service: ICardsService): (options?: FetchOptions) => (
         }
 
         const { data } = result;
-        const {
-          currentTime,
-          isInAStorylet,
-          nextActionAt,
-        } = data;
+        const { currentTime, isInAStorylet, nextActionAt } = data;
         if (!preventMove && isInAStorylet && !background) {
           dispatch(putIn());
         }
-        const nextActionsAt = computeNextActionsAt({ currentTime, nextActionAt });
+        const nextActionsAt = computeNextActionsAt({
+          currentTime,
+          nextActionAt,
+        });
         dispatch(setNextAvailable(nextActionsAt));
         dispatch(fetchSuccess(data));
 

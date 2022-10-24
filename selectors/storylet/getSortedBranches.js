@@ -1,5 +1,5 @@
-import { createSelector } from 'reselect';
-import makeCompareBranches from './makeCompareBranches';
+import { createSelector } from "reselect";
+import makeCompareBranches from "./makeCompareBranches";
 
 const getActions = ({ actions: { actions } }) => actions;
 const getBranches = ({ branches: { branches } }) => branches;

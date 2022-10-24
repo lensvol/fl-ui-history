@@ -1,7 +1,7 @@
-import React from 'react';
-import Image from 'components/Image';
+import React from "react";
+import Image from "components/Image";
 
-import { Props } from './props';
+import { Props } from "./props";
 
 export default function ExceptionalStoryTrailerXsDown({ data }: Props) {
   return (
@@ -9,7 +9,7 @@ export default function ExceptionalStoryTrailerXsDown({ data }: Props) {
       <div className="premium-sub-purchase-card__body">
         <div
           className="premium-sub-purchase-card__left"
-          style={{ float: 'left' }}
+          style={{ float: "left" }}
         >
           <Image
             borderContainerClassName="premium-sub-purchase-card__border"

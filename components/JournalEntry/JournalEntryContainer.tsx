@@ -1,43 +1,33 @@
-import {
-  deleteEntry,
-  fetchSharedContent,
-} from 'actions/profile';
-import classnames from 'classnames';
+import { deleteEntry, fetchSharedContent } from "actions/profile";
+import classnames from "classnames";
 
-import Buttonlet from 'components/Buttonlet';
-import React, {
-  Component,
-  Fragment,
-} from 'react';
-import { connect } from 'react-redux';
-import {
-  Link,
-  RouteComponentProps,
-  withRouter,
-} from 'react-router-dom';
-import { ThunkDispatch } from 'redux-thunk';
-import { IAppState } from 'types/app';
+import Buttonlet from "components/Buttonlet";
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import { ThunkDispatch } from "redux-thunk";
+import { IAppState } from "types/app";
 
-import DeleteDialog from './DeleteDialog';
+import DeleteDialog from "./DeleteDialog";
 
 type State = {
-  modalIsOpen: boolean,
-}
+  modalIsOpen: boolean;
+};
 
 class JournalEntry extends Component<Props, State> {
   mounted = false;
 
-  state = { modalIsOpen: false }
+  state = { modalIsOpen: false };
 
-  static displayName = 'JournalEntry';
+  static displayName = "JournalEntry";
 
   componentDidMount = () => {
     this.mounted = true;
-  }
+  };
 
   componentWillUnmount = () => {
     this.mounted = false;
-  }
+  };
 
   deleteAndClose = async () => {
     const { canEdit, data, dispatch } = this.props;
@@ -50,7 +40,7 @@ class JournalEntry extends Component<Props, State> {
     if (this.mounted) {
       this.handleRequestClose();
     }
-  }
+  };
 
   handleFetchFromId = () => {
     const {
@@ -62,27 +52,22 @@ class JournalEntry extends Component<Props, State> {
     if (characterName) {
       dispatch(fetchSharedContent({ characterName, fromId: id }));
     }
-  }
+  };
 
   handleRequestClose = () => {
     this.setState({ modalIsOpen: false });
-  }
+  };
 
   showModal = () => {
     this.setState({ modalIsOpen: true });
-  }
+  };
 
   /**
    * Render
    * @return {Object}
    */
   render() {
-    const {
-      data,
-      canEdit,
-      isFetching,
-      profileCharacter,
-    } = this.props;
+    const { data, canEdit, isFetching, profileCharacter } = this.props;
     const { modalIsOpen } = this.state;
 
     if (!profileCharacter) {
@@ -90,16 +75,15 @@ class JournalEntry extends Component<Props, State> {
     }
 
     const { name } = profileCharacter;
-    const {
-      areaName,
-      fallenLondonDateTime,
-      id,
-    } = data;
+    const { areaName, fallenLondonDateTime, id } = data;
 
     return (
       <Fragment>
         <div
-          className={classnames('journal-entry', isFetching && 'journal-entry--is-fetching')}
+          className={classnames(
+            "journal-entry",
+            isFetching && "journal-entry--is-fetching"
+          )}
           style={{ marginBottom: 16 }}
         >
           <div className="media__body">
@@ -118,8 +102,7 @@ class JournalEntry extends Component<Props, State> {
             />
             <h2 className="media__heading heading heading--3 journal-entry__date-and-location">
               <span className="journal-entry__date">
-                {fallenLondonDateTime}
-                {' '}
+                {fallenLondonDateTime}{" "}
               </span>
               <span className="journal-entry__location">
                 {areaName && `(${areaName})`}
@@ -170,10 +153,11 @@ const mapStateToProps = ({ profile }: IAppState) => ({
   profileCharacter: profile.profileCharacter,
 });
 
-type Props = ReturnType<typeof mapStateToProps> & RouteComponentProps & {
-  data: any,
-  dispatch: ThunkDispatch<any, any, any>,
-  isFetching: boolean,
-};
+type Props = ReturnType<typeof mapStateToProps> &
+  RouteComponentProps & {
+    data: any;
+    dispatch: ThunkDispatch<any, any, any>;
+    isFetching: boolean;
+  };
 
 export default withRouter(connect(mapStateToProps)(JournalEntry));

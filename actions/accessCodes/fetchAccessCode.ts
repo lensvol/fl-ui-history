@@ -1,35 +1,48 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   FETCH_ACCESS_CODE_FAILURE,
   FETCH_ACCESS_CODE_REQUESTED,
   FETCH_ACCESS_CODE_SUCCESS,
-} from 'actiontypes/accessCodes';
-import { ActionCreator } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import AccessCodeService, { FetchAccessCodeResponse } from 'services/AccessCodeService';
-import { VersionMismatch } from 'services/BaseService';
+} from "actiontypes/accessCodes";
+import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import AccessCodeService, {
+  FetchAccessCodeResponse,
+} from "services/AccessCodeService";
+import { VersionMismatch } from "services/BaseService";
 
-export type FetchAccessCodeRequested = { type: typeof FETCH_ACCESS_CODE_REQUESTED };
+export type FetchAccessCodeRequested = {
+  type: typeof FETCH_ACCESS_CODE_REQUESTED;
+};
 export type FetchAccessCodeSuccess = {
-  type: typeof FETCH_ACCESS_CODE_SUCCESS,
-  payload: any,
+  type: typeof FETCH_ACCESS_CODE_SUCCESS;
+  payload: any;
 };
 export type FetchAccessCodeFailure = { type: typeof FETCH_ACCESS_CODE_FAILURE };
 
-export type FetchAccessCodeActions = FetchAccessCodeRequested | FetchAccessCodeFailure | FetchAccessCodeSuccess;
+export type FetchAccessCodeActions =
+  | FetchAccessCodeRequested
+  | FetchAccessCodeFailure
+  | FetchAccessCodeSuccess;
 
 /** ----------------------------------------------------------------------------
  * FETCH ACCESSCODE
  -----------------------------------------------------------------------------*/
 
-const fetchAccessCodeRequest: ActionCreator<FetchAccessCodeRequested> = () => ({ type: FETCH_ACCESS_CODE_REQUESTED });
+const fetchAccessCodeRequest: ActionCreator<FetchAccessCodeRequested> = () => ({
+  type: FETCH_ACCESS_CODE_REQUESTED,
+});
 const fetchAccessCodeSuccess: ActionCreator<FetchAccessCodeSuccess> = ({
   accessCode,
-}: { accessCode: FetchAccessCodeResponse }) => ({
+}: {
+  accessCode: FetchAccessCodeResponse;
+}) => ({
   type: FETCH_ACCESS_CODE_SUCCESS,
   payload: accessCode,
 });
-const fetchAccessCodeFailure: ActionCreator<FetchAccessCodeFailure> = (_e?: any) => ({
+const fetchAccessCodeFailure: ActionCreator<FetchAccessCodeFailure> = (
+  _e?: any
+) => ({
   type: FETCH_ACCESS_CODE_FAILURE,
 });
 

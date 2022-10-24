@@ -1,43 +1,49 @@
-import Config from 'configuration';
+import Config from "configuration";
 
-export const DEFAULT_ICON = 'placeholder2';
+export const DEFAULT_ICON = "placeholder2";
 
 export type ImageType =
-  'ad'
-  | 'cameo'
-  | 'map-area-decoration'
-  | 'card'
-  | 'currencies'
-  | 'header'
-  | 'icon'
-  | 'location'
-  | 'lodgings'
-  | 'small-icon';
+  | "ad"
+  | "cameo"
+  | "map-area-decoration"
+  | "card"
+  | "currencies"
+  | "header"
+  | "icon"
+  | "location"
+  | "lodgings"
+  | "small-icon";
 
-export default function getImagePath({ icon, type }: { icon: string | undefined, type: ImageType }): string {
+export default function getImagePath({
+  icon,
+  type,
+}: {
+  icon: string | undefined;
+  type: ImageType;
+}): string {
   // Intentionally use falsy comparison here — we want to catch empty strings too
   const imageIcon = icon || DEFAULT_ICON;
 
   switch (type) {
-    case 'ad':
+    case "ad":
       return `${Config.bucketUrl}ads/${imageIcon}.png`;
-    case 'cameo':
+    case "cameo":
       return `${Config.imageUrl}cameos/${imageIcon}.png`;
-    case 'card':
+    case "card":
       return `${Config.imageUrl}cards/${imageIcon}.png`;
-    case 'currencies':
+    case "currencies":
       return `${Config.imageUrl}currencies/${imageIcon}.png`;
-    case 'header':
+    case "header":
       return `${Config.imageUrl}headers/${imageIcon}.png`;
-    case 'location':
+    case "location":
       return `${Config.imageUrl}locations/${imageIcon}.jpg`;
-    case 'lodgings':
+    case "lodgings":
       return `${Config.imageUrl}lodgings/${imageIcon}.png`;
-    case 'map-area-decoration':
+    case "map-area-decoration":
       return `${Config.bucketUrl}map/${imageIcon}.png`;
-    case 'small-icon':
+    case "small-icon":
       return `${Config.imageUrl}icons/${imageIcon}small.png`;
-    case 'icon':
+    case "icon":
     default:
       return `${Config.imageUrl}icons/${imageIcon}.png`;
   }

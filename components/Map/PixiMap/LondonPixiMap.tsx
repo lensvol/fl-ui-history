@@ -1,4 +1,4 @@
-import shouldHaveHitbox from 'features/mapping/shouldHaveHitbox';
+import shouldHaveHitbox from "features/mapping/shouldHaveHitbox";
 import React, {
   SyntheticEvent,
   useCallback,
@@ -6,46 +6,40 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import classnames from 'classnames';
+} from "react";
+import classnames from "classnames";
 import {
   MAP_BASE_URL,
   MAP_ROOT_AREA_THE_FIFTH_CITY,
-} from 'features/mapping/constants';
-import DistrictLabelLayer from 'components/Map/DistrictLabelLayer';
-import { BaseProps } from 'components/Map/PixiMap/props';
-import ZoomControl from 'components/Map/PixiMap/ZoomControl';
-import ReactLeafletPixiOverlay from 'components/Map/ReactLeafletPixiOverlay';
+} from "features/mapping/constants";
+import DistrictLabelLayer from "components/Map/DistrictLabelLayer";
+import { BaseProps } from "components/Map/PixiMap/props";
+import ZoomControl from "components/Map/PixiMap/ZoomControl";
+import ReactLeafletPixiOverlay from "components/Map/ReactLeafletPixiOverlay";
 import {
   areaToTooltipData,
   getMapDimensionsForSetting,
   getMinimumZoomThatFits,
   isDistrict,
   xy,
-} from 'features/mapping';
-import { ModalTooltip } from 'components/ModalTooltip/ModalTooltipContainer';
-import L, {
-  LatLngBounds,
-} from 'leaflet';
-import getCRSForSetting from 'features/mapping/getCRSForSetting';
-import getMapZoomLimitsForSetting from 'features/mapping/getMapZoomLimitsForSetting';
-import getMinimumZoomLevelForDestinations from 'features/mapping/getMinimumZoomLevelForDestinations';
-import {
-  ImageOverlay,
-  Map as LeafletMap,
-  Pane,
-} from 'react-leaflet';
-import { connect } from 'react-redux';
-import getLabelledStateAwareAreas from 'selectors/map/getLabelledStateAwareAreas';
-import { IAppState } from 'types/app';
+} from "features/mapping";
+import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
+import L, { LatLngBounds } from "leaflet";
+import getCRSForSetting from "features/mapping/getCRSForSetting";
+import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting";
+import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
+import { ImageOverlay, Map as LeafletMap, Pane } from "react-leaflet";
+import { connect } from "react-redux";
+import getLabelledStateAwareAreas from "selectors/map/getLabelledStateAwareAreas";
+import { IAppState } from "types/app";
 import {
   IArea,
   IMappableSetting,
   IStateAwareArea,
   IStateAwareAreaWithHitbox,
-} from 'types/map';
-import PlayerMarkers from '../PlayerMarkers';
-import Hitbox from './Hitbox';
+} from "types/map";
+import PlayerMarkers from "../PlayerMarkers";
+import Hitbox from "./Hitbox";
 
 const SAFE_AREA_PADDING = 10;
 const HITBOX_CLICK_ZOOM_LEVEL = 4;
@@ -56,23 +50,22 @@ function Hitboxes({
   onAreaSelect,
   zoomLevel,
 }: {
-  areas: IStateAwareAreaWithHitbox[],
-  onAreaSelect: (arg0?: IArea) => void,
-  onClick: (area: IStateAwareArea) => void,
-  zoomLevel: number,
+  areas: IStateAwareAreaWithHitbox[];
+  onAreaSelect: (arg0?: IArea) => void;
+  onClick: (area: IStateAwareArea) => void;
+  zoomLevel: number;
 }) {
   return (
     <>
-      {areas
-        .map(area => (
-          <Hitbox
-            key={area.areaKey}
-            area={area}
-            onAreaSelect={onAreaSelect}
-            onClick={onClick}
-            zoomLevel={zoomLevel}
-          />
-        ))}
+      {areas.map((area) => (
+        <Hitbox
+          key={area.areaKey}
+          area={area}
+          onAreaSelect={onAreaSelect}
+          onClick={onClick}
+          zoomLevel={zoomLevel}
+        />
+      ))}
     </>
   );
 }
@@ -98,12 +91,16 @@ export function LondonPixiMap(props: Props) {
 
   const isPlayerInLondon = useMemo(
     () => areaKey === MAP_ROOT_AREA_THE_FIFTH_CITY,
-    [areaKey],
+    [areaKey]
   );
 
-  const minimumZoomLevelForDestinations = getMinimumZoomLevelForDestinations(setting as IMappableSetting);
+  const minimumZoomLevelForDestinations = getMinimumZoomLevelForDestinations(
+    setting as IMappableSetting
+  );
 
-  const { height: mapHeight, width: mapWidth } = getMapDimensionsForSetting(setting as IMappableSetting);
+  const { height: mapHeight, width: mapWidth } = getMapDimensionsForSetting(
+    setting as IMappableSetting
+  );
 
   const mapRef = useRef<any>(null);
   const overlayRef = useRef<any>(null);
@@ -114,7 +111,10 @@ export function LondonPixiMap(props: Props) {
 
   useEffect(() => {
     if (overlayRef.current !== null) {
-      overlayRef.current.redraw({ type: 'selectedArea', payload: { selectedArea } });
+      overlayRef.current.redraw({
+        type: "selectedArea",
+        payload: { selectedArea },
+      });
     }
   }, [selectedArea]);
 
@@ -128,142 +128,160 @@ export function LondonPixiMap(props: Props) {
       return;
     }
     const destination = xy(area.labelX, area.labelY);
-    mapRef.current.leafletElement.setView(destination, HITBOX_CLICK_ZOOM_LEVEL, { animate: true });
+    mapRef.current.leafletElement.setView(
+      destination,
+      HITBOX_CLICK_ZOOM_LEVEL,
+      { animate: true }
+    );
   }, []);
 
-  const handleAreaClick = useCallback(async (e: SyntheticEvent<Element, Event>, area: IArea) => {
-    if (isDistrict(area) && zoomLevel < minimumZoomLevelForDestinations) {
-      zoomToDistrict(area);
-      return;
-    }
-    await onAreaClick(e, area);
-  }, [
-    minimumZoomLevelForDestinations,
-    onAreaClick,
-    zoomLevel,
-    zoomToDistrict,
-  ]);
+  const handleAreaClick = useCallback(
+    async (e: SyntheticEvent<Element, Event>, area: IArea) => {
+      if (isDistrict(area) && zoomLevel < minimumZoomLevelForDestinations) {
+        zoomToDistrict(area);
+        return;
+      }
+      await onAreaClick(e, area);
+    },
+    [minimumZoomLevelForDestinations, onAreaClick, zoomLevel, zoomToDistrict]
+  );
 
-  const handleHitboxClick = useCallback((area: IStateAwareArea) => {
-    if (area.isDistrict && !area.isLit) {
-      return;
-    }
-    if (mapRef.current === null) {
-      return;
-    }
-    // We need to handle the hitbox click slightly differently, depending on zoom level.
-    // If we are zoomed way out, then we zoom in. Otherwise, we move to the area.
-    if (zoomLevel < minimumZoomLevelForDestinations) {
-      zoomToDistrict(area);
-      return;
-    }
+  const handleHitboxClick = useCallback(
+    (area: IStateAwareArea) => {
+      if (area.isDistrict && !area.isLit) {
+        return;
+      }
+      if (mapRef.current === null) {
+        return;
+      }
+      // We need to handle the hitbox click slightly differently, depending on zoom level.
+      // If we are zoomed way out, then we zoom in. Otherwise, we move to the area.
+      if (zoomLevel < minimumZoomLevelForDestinations) {
+        zoomToDistrict(area);
+        return;
+      }
 
-    onAreaClick(null, area);
-  }, [
-    minimumZoomLevelForDestinations,
-    onAreaClick,
-    zoomLevel,
-    zoomToDistrict,
-  ]);
+      onAreaClick(null, area);
+    },
+    [minimumZoomLevelForDestinations, onAreaClick, zoomLevel, zoomToDistrict]
+  );
 
-  const handleHitboxTap = useCallback((area) => {
-    if (area.isDistrict && !area.isLit) {
-      return;
-    }
+  const handleHitboxTap = useCallback(
+    (area) => {
+      if (area.isDistrict && !area.isLit) {
+        return;
+      }
 
-    if (area.isDistrict && zoomLevel < minimumZoomLevelForDestinations) {
-      zoomToDistrict(area);
-      return;
-    }
+      if (area.isDistrict && zoomLevel < minimumZoomLevelForDestinations) {
+        zoomToDistrict(area);
+        return;
+      }
 
-    onAreaSelect(area);
+      onAreaSelect(area);
 
-    const baseTooltipData = areaToTooltipData(
-      area,
+      const baseTooltipData = areaToTooltipData(
+        area,
+        currentArea,
+        !!setting?.canTravel,
+        (e) => onAreaClick(e, area)
+      );
+      setIsModalTooltipOpen(true);
+
+      if (zoomLevel >= minimumZoomLevelForDestinations) {
+        setTooltipData(baseTooltipData);
+      }
+    },
+    [
       currentArea,
-      !!setting?.canTravel,
-      e => onAreaClick(e, area),
-    );
-    setIsModalTooltipOpen(true);
-
-    if (zoomLevel >= minimumZoomLevelForDestinations) {
-      setTooltipData(baseTooltipData);
-    }
-  }, [
-    currentArea,
-    minimumZoomLevelForDestinations,
-    onAreaClick,
-    onAreaSelect,
-    setting,
-    zoomLevel,
-    zoomToDistrict,
-  ]);
+      minimumZoomLevelForDestinations,
+      onAreaClick,
+      onAreaSelect,
+      setting,
+      zoomLevel,
+      zoomToDistrict,
+    ]
+  );
 
   const handleRequestCloseModalTooltip = useCallback(() => {
     setIsModalTooltipOpen(false);
     onAreaSelect();
   }, [onAreaSelect]);
 
-  const handleZoomEnd = useCallback((e) => {
-    const newZoomLevel = e.target.getZoom();
-    setZoomLevel(newZoomLevel);
-    onZoomEnd(e);
+  const handleZoomEnd = useCallback(
+    (e) => {
+      const newZoomLevel = e.target.getZoom();
+      setZoomLevel(newZoomLevel);
+      onZoomEnd(e);
 
-    // Force-deselect if we've zoomed out beyond the threshold for showing destinations
-    if (selectedArea?.isDistrict && newZoomLevel < minimumZoomLevelForDestinations) {
-      onAreaSelect();
-    }
-  }, [
-    minimumZoomLevelForDestinations,
-    onAreaSelect,
-    onZoomEnd,
-    selectedArea,
-  ]);
+      // Force-deselect if we've zoomed out beyond the threshold for showing destinations
+      if (
+        selectedArea?.isDistrict &&
+        newZoomLevel < minimumZoomLevelForDestinations
+      ) {
+        onAreaSelect();
+      }
+    },
+    [minimumZoomLevelForDestinations, onAreaSelect, onZoomEnd, selectedArea]
+  );
 
   const maxZoom: number | undefined = useMemo(
     () => getMapZoomLimitsForSetting(setting as IMappableSetting)?.max,
-    [setting],
+    [setting]
   );
 
-  const minZoom: number | undefined = useMemo(
-    () => {
-      const minimumZoomThatFits = getMinimumZoomThatFits(window, setting as IMappableSetting);
-      if (minimumZoomThatFits === undefined) {
-        return undefined;
-      }
-      return Math.max(3, minimumZoomThatFits);
-    },
-    [setting],
-  );
+  const minZoom: number | undefined = useMemo(() => {
+    const minimumZoomThatFits = getMinimumZoomThatFits(
+      window,
+      setting as IMappableSetting
+    );
+    if (minimumZoomThatFits === undefined) {
+      return undefined;
+    }
+    return Math.max(3, minimumZoomThatFits);
+  }, [setting]);
 
-  const districtAreas = useMemo(() => areas.filter(a => a.isDistrict && a.shouldAppearOnMap), [areas]);
-  const nonDistrictAreas = useMemo(() => areas.filter(a => !isDistrict(a) && a.shouldAppearOnMap), [areas]);
+  const districtAreas = useMemo(
+    () => areas.filter((a) => a.isDistrict && a.shouldAppearOnMap),
+    [areas]
+  );
+  const nonDistrictAreas = useMemo(
+    () => areas.filter((a) => !isDistrict(a) && a.shouldAppearOnMap),
+    [areas]
+  );
 
   const areasWithHitboxes = useMemo(
-    () => areas
-      .filter(a => a.hasHitbox && shouldHaveHitbox(a, setting, zoomLevel))
-      .map(a => a as IStateAwareAreaWithHitbox),
-    [areas, setting, zoomLevel],
+    () =>
+      areas
+        .filter((a) => a.hasHitbox && shouldHaveHitbox(a, setting, zoomLevel))
+        .map((a) => a as IStateAwareAreaWithHitbox),
+    [areas, setting, zoomLevel]
   );
 
-  const crs = useMemo(() => getCRSForSetting(setting as IMappableSetting), [setting]);
+  const crs = useMemo(
+    () => getCRSForSetting(setting as IMappableSetting),
+    [setting]
+  );
 
   const imageOverlayBounds = useMemo(
-    () => L.latLngBounds(
-      xy(0, 0),
-      xy(mapWidth, -mapHeight),
-    ),
-    [mapHeight, mapWidth],
+    () => L.latLngBounds(xy(0, 0), xy(mapWidth, -mapHeight)),
+    [mapHeight, mapWidth]
   );
 
-  const center = useMemo(() => xy(initialCenter[0], initialCenter[1]), [initialCenter]);
+  const center = useMemo(
+    () => xy(initialCenter[0], initialCenter[1]),
+    [initialCenter]
+  );
 
-  const maxBounds: LatLngBounds = useMemo(() => new L.LatLngBounds(
-    [0 - SAFE_AREA_PADDING, 0 + SAFE_AREA_PADDING],
-    [-mapHeight + SAFE_AREA_PADDING, mapWidth - SAFE_AREA_PADDING],
-  ), [mapHeight, mapWidth]);
+  const maxBounds: LatLngBounds = useMemo(
+    () =>
+      new L.LatLngBounds(
+        [0 - SAFE_AREA_PADDING, 0 + SAFE_AREA_PADDING],
+        [-mapHeight + SAFE_AREA_PADDING, mapWidth - SAFE_AREA_PADDING]
+      ),
+    [mapHeight, mapWidth]
+  );
 
-  if (setting as IMappableSetting === undefined) {
+  if ((setting as IMappableSetting) === undefined) {
     return null;
   }
 
@@ -287,9 +305,8 @@ export function LondonPixiMap(props: Props) {
       onzoomend={handleZoomEnd}
       tms={false}
       zoomControl={false}
-      className={classnames(isPlayerInLondon && 'leaflet-container--london')}
+      className={classnames(isPlayerInLondon && "leaflet-container--london")}
     >
-
       <Pane
         style={{ zIndex: 99 }} // Hide this pane if we can show basically anything else
       >

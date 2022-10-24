@@ -1,4 +1,4 @@
-import { logoutUser } from 'actions/user';
+import { logoutUser } from "actions/user";
 
 /**
  * Authorization check.
@@ -7,12 +7,15 @@ import { logoutUser } from 'actions/user';
  * Ideally, this will impliment a token refresh method and only if that fails too
  * should it logout a user.
  */
-export const authInterceptor = ({ dispatch }) => next => (action) => {
-  if (action.status === 401) {
-    dispatch(logoutUser());
-  }
+export const authInterceptor =
+  ({ dispatch }) =>
+  (next) =>
+  (action) => {
+    if (action.status === 401) {
+      dispatch(logoutUser());
+    }
 
-  return next(action);
-};
+    return next(action);
+  };
 
 export default authInterceptor;

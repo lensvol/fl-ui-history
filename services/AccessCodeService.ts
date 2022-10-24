@@ -1,17 +1,17 @@
-import BaseService from './BaseService';
+import BaseService from "./BaseService";
 
 export type FetchAccessCodeResponse = {
-  completedMessage: string,
-  image: string,
-  initialMessage: string,
-  name: string,
+  completedMessage: string;
+  image: string;
+  initialMessage: string;
+  name: string;
 };
 
 export default class AccessCodeService extends BaseService {
   fetchAccessCode = (accessCodeName: string) => {
     const config = {
       url: `/accesscode/${accessCodeName}`,
-      method: 'post',
+      method: "post",
     };
     return this.doRequest(config);
   };
@@ -19,9 +19,9 @@ export default class AccessCodeService extends BaseService {
   processAccessCode = (accessCodeName: string) => {
     const config = {
       data: { accessCodeName },
-      url: '/processaccesscode',
-      method: 'post',
+      url: "/processaccesscode",
+      method: "post",
     };
     return this.doRequest(config);
-  }
+  };
 }

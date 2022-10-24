@@ -1,24 +1,26 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   SET_JOURNAL_PRIVACY_REQUESTED,
   SET_JOURNAL_PRIVACY_SUCCESS,
-} from 'actiontypes/myself';
-import { ActionCreator } from 'redux';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import MyselfService, { IMyselfService } from 'services/MyselfService';
+} from "actiontypes/myself";
+import { ActionCreator } from "redux";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import MyselfService, { IMyselfService } from "services/MyselfService";
 
 export type SetJournalPrivacyRequested = {
-  type: typeof SET_JOURNAL_PRIVACY_REQUESTED,
-  payload: { journalIsPrivate: boolean },
+  type: typeof SET_JOURNAL_PRIVACY_REQUESTED;
+  payload: { journalIsPrivate: boolean };
 };
 
 export type SetJournalPrivacySuccess = {
-  type: typeof SET_JOURNAL_PRIVACY_SUCCESS,
-  payload: { journalIsPrivate: boolean },
+  type: typeof SET_JOURNAL_PRIVACY_SUCCESS;
+  payload: { journalIsPrivate: boolean };
 };
 
-export type SetJournalPrivacyActions = SetJournalPrivacyRequested | SetJournalPrivacySuccess;
+export type SetJournalPrivacyActions =
+  | SetJournalPrivacyRequested
+  | SetJournalPrivacySuccess;
 
 export default setJournalPrivacy(new MyselfService());
 
@@ -42,12 +44,18 @@ export function setJournalPrivacy(service: IMyselfService) {
   };
 }
 
-const setJournalPrivacyRequested: ActionCreator<SetJournalPrivacyRequested> = (journalIsPrivate: boolean) => ({
+const setJournalPrivacyRequested: ActionCreator<SetJournalPrivacyRequested> = (
+  journalIsPrivate: boolean
+) => ({
   type: SET_JOURNAL_PRIVACY_REQUESTED,
   payload: { journalIsPrivate },
 });
 
-const setJournalPrivacySuccess: ActionCreator<SetJournalPrivacySuccess> = ({ journalIsPrivate }: { journalIsPrivate: boolean }) => ({
+const setJournalPrivacySuccess: ActionCreator<SetJournalPrivacySuccess> = ({
+  journalIsPrivate,
+}: {
+  journalIsPrivate: boolean;
+}) => ({
   type: SET_JOURNAL_PRIVACY_SUCCESS,
   payload: { journalIsPrivate },
 });

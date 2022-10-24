@@ -1,8 +1,11 @@
-import { FetchAvailableItemsSuccess } from 'actions/exchange/fetchAvailable';
-import mergeShopData from './mergeShopData';
-import { IExchangeState } from 'types/exchange';
+import { FetchAvailableItemsSuccess } from "actions/exchange/fetchAvailable";
+import mergeShopData from "./mergeShopData";
+import { IExchangeState } from "types/exchange";
 
-export default function fetchAvailableSuccess(state: IExchangeState, action: FetchAvailableItemsSuccess) {
+export default function fetchAvailableSuccess(
+  state: IExchangeState,
+  action: FetchAvailableItemsSuccess
+) {
   return {
     ...state,
     isFetchingAvailable: false,

@@ -1,39 +1,48 @@
-import { setNextAvailable } from 'actions/timer';
-import { handleVersionMismatch } from 'actions/versionSync';
-import { ActionCreator } from 'redux';
-import { VersionMismatch } from 'services/BaseService';
-import { FetchActionsResponse, IActionsService } from 'types/actions';
-import computeNextActionsAt from 'utils/computeNextActionsAt';
-import ActionsService from 'services/ActionsService';
+import { setNextAvailable } from "actions/timer";
+import { handleVersionMismatch } from "actions/versionSync";
+import { ActionCreator } from "redux";
+import { VersionMismatch } from "services/BaseService";
+import { FetchActionsResponse, IActionsService } from "types/actions";
+import computeNextActionsAt from "utils/computeNextActionsAt";
+import ActionsService from "services/ActionsService";
 
 import {
   FETCH_ACTIONS_ERROR,
   FETCH_ACTIONS_REQUESTED,
   FETCH_ACTIONS_SUCCESS,
-} from 'actiontypes/actions';
-import { logoutUser } from 'actions/user';
-import { Failure, Success } from 'services/BaseMonadicService';
+} from "actiontypes/actions";
+import { logoutUser } from "actions/user";
+import { Failure, Success } from "services/BaseMonadicService";
 
 export type FetchActionsRequested = { type: typeof FETCH_ACTIONS_REQUESTED };
 export type FetchActionsError = {
-  type: typeof FETCH_ACTIONS_ERROR,
-  error: any,
+  type: typeof FETCH_ACTIONS_ERROR;
+  error: any;
 };
 export type FetchActionsSuccess = {
-  type: typeof FETCH_ACTIONS_SUCCESS,
-  payload: FetchActionsResponse,
+  type: typeof FETCH_ACTIONS_SUCCESS;
+  payload: FetchActionsResponse;
 };
 
-export type FetchActionsActions = FetchActionsRequested | FetchActionsError | FetchActionsSuccess;
+export type FetchActionsActions =
+  | FetchActionsRequested
+  | FetchActionsError
+  | FetchActionsSuccess;
 
-export const fetchActionsError: ActionCreator<FetchActionsError> = (error: any) => ({
+export const fetchActionsError: ActionCreator<FetchActionsError> = (
+  error: any
+) => ({
   error,
-  type: FETCH_ACTIONS_ERROR
+  type: FETCH_ACTIONS_ERROR,
 });
 
-export const fetchActionsRequested: ActionCreator<FetchActionsRequested> = () => ({ type: FETCH_ACTIONS_REQUESTED });
+export const fetchActionsRequested: ActionCreator<
+  FetchActionsRequested
+> = () => ({ type: FETCH_ACTIONS_REQUESTED });
 
-export const fetchActionsSuccess: ActionCreator<FetchActionsSuccess> = (data: FetchActionsResponse) => ({
+export const fetchActionsSuccess: ActionCreator<FetchActionsSuccess> = (
+  data: FetchActionsResponse
+) => ({
   type: FETCH_ACTIONS_SUCCESS,
   payload: data,
 });
@@ -44,7 +53,8 @@ export function fetchActions(service: IActionsService) {
   return () => async (dispatch: Function) => {
     dispatch(fetchActionsRequested());
     try {
-      const result: Success<FetchActionsResponse> | Failure = await service.fetchActions();
+      const result: Success<FetchActionsResponse> | Failure =
+        await service.fetchActions();
 
       // We've got actions data from the server; let's use it
       if (result instanceof Success) {

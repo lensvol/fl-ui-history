@@ -1,27 +1,25 @@
-import React, {
-  useCallback,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import FacebookLogin from 'react-facebook-login';
+import React, { useCallback } from "react";
+import { connect, useDispatch } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import FacebookLogin from "react-facebook-login";
 
-import Config from 'configuration';
+import Config from "configuration";
 
-import { facebookLogin } from 'actions/user';
+import { facebookLogin } from "actions/user";
 
-import redirectAfterLogin from './redirectAfterLogin';
+import redirectAfterLogin from "./redirectAfterLogin";
 
 function FacebookLoginContainer({ history }: Props) {
   const dispatch = useDispatch();
   const { facebookAppId } = Config;
 
-  const handleCallback = useCallback(async (res: any) => {
-    const data: any = await dispatch(facebookLogin(res));
-    redirectAfterLogin(history, data);
-  }, [dispatch, history]);
+  const handleCallback = useCallback(
+    async (res: any) => {
+      const data: any = await dispatch(facebookLogin(res));
+      redirectAfterLogin(history, data);
+    },
+    [dispatch, history]
+  );
 
   return (
     <FacebookLogin

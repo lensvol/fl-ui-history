@@ -1,24 +1,31 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { FETCH_PLANS_FAILURE, FETCH_PLANS_REQUESTED, FETCH_PLANS_SUCCESS } from 'actiontypes/plans';
-import * as PlansActionTypes from 'actiontypes/plans';
-import { ActionCreator } from 'redux';
-import { VersionMismatch } from 'services/BaseService';
-import PlansService from 'services/PlansService';
-import { IPlan } from 'types/plans';
+import { handleVersionMismatch } from "actions/versionSync";
+import {
+  FETCH_PLANS_FAILURE,
+  FETCH_PLANS_REQUESTED,
+  FETCH_PLANS_SUCCESS,
+} from "actiontypes/plans";
+import * as PlansActionTypes from "actiontypes/plans";
+import { ActionCreator } from "redux";
+import { VersionMismatch } from "services/BaseService";
+import PlansService from "services/PlansService";
+import { IPlan } from "types/plans";
 
 const plansService = new PlansService();
 
 export type FetchPlansRequested = { type: typeof FETCH_PLANS_REQUESTED };
 export type FetchPlansFailure = { type: typeof FETCH_PLANS_FAILURE };
 export type FetchPlansSuccess = {
-  type: typeof FETCH_PLANS_SUCCESS,
+  type: typeof FETCH_PLANS_SUCCESS;
   payload: {
-    activePlans: IPlan[],
-    completePlans: IPlan[],
-  },
+    activePlans: IPlan[];
+    completePlans: IPlan[];
+  };
 };
 
-export type FetchPlansAction = FetchPlansRequested | FetchPlansFailure | FetchPlansSuccess;
+export type FetchPlansAction =
+  | FetchPlansRequested
+  | FetchPlansFailure
+  | FetchPlansSuccess;
 
 /** ----------------------------------------------------------------------------
  * FETCH PLANS
@@ -45,7 +52,10 @@ export const fetchPlansRequest: ActionCreator<FetchPlansRequested> = () => ({
   isFetching: true,
 });
 
-export const fetchPlansSuccess: ActionCreator<FetchPlansSuccess> = (data: { active: IPlan[], complete: IPlan[] }) => ({
+export const fetchPlansSuccess: ActionCreator<FetchPlansSuccess> = (data: {
+  active: IPlan[];
+  complete: IPlan[];
+}) => ({
   type: PlansActionTypes.FETCH_PLANS_SUCCESS,
   isFetching: false,
   payload: {
@@ -54,7 +64,9 @@ export const fetchPlansSuccess: ActionCreator<FetchPlansSuccess> = (data: { acti
   },
 });
 
-export const fetchPlansFailure: ActionCreator<FetchPlansFailure> = (error: any) => ({
+export const fetchPlansFailure: ActionCreator<FetchPlansFailure> = (
+  error: any
+) => ({
   type: PlansActionTypes.FETCH_PLANS_FAILURE,
   isFetching: false,
   error: true,

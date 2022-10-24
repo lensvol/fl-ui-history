@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import FeedMessagesComponent from './FeedMessagesComponent';
+import FeedMessagesComponent from "./FeedMessagesComponent";
 
 export default class FeedMessagesContainer extends Component<Props> {
-  static displayName = 'FeedMessagesContainer';
+  static displayName = "FeedMessagesContainer";
   /**
    * Render
    * @return {Object}
@@ -11,19 +11,14 @@ export default class FeedMessagesContainer extends Component<Props> {
   render() {
     const { type } = this.props;
 
-    const title = type === 'feedMessages' ? 'Recently' : 'Messages';
+    const title = type === "feedMessages" ? "Recently" : "Messages";
 
-    return (
-      <FeedMessagesComponent
-        title={title}
-        type={type}
-      />
-    );
+    return <FeedMessagesComponent title={title} type={type} />;
   }
 }
 
 type Props = {
-  type: 'feedMessages' | 'interactions',
+  type: "feedMessages" | "interactions";
 };
 
-FeedMessagesContainer.displayName = 'FeedMessagesContainer';
+FeedMessagesContainer.displayName = "FeedMessagesContainer";

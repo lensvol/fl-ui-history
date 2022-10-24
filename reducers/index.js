@@ -1,43 +1,43 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
-import timeTheHealer from 'features/timeTheHealer/timeTheHealerSlice';
-import accountLinkReminder from './accountLinkReminder';
-import actions from './actions';
-import app from './app';
-import branches from './branches';
-import categories from './categories';
-import user from './user';
-import storylet from './storylet';
-import cards from './cards';
-import contacts from './contacts';
-import equipment from './equipment';
-import messages from './messages';
-import myself from './myself';
-import exchange from './exchange';
-import fate from './fate';
-import mapAdmin from './mapAdmin';
-import plans from './plans';
-import profile from './profile';
-import registration from './registration';
-import map from './map';
-import modalTooltip from './modalTooltip';
-import mysteries from './mysteries';
-import outfit from './outfit';
-import phase from './phase';
-import timer from './timer';
-import scrollToComponent from './scrollToComponent';
-import spriteLoader from './spriteLoader';
-import subscription from './subscription';
-import payment from './payment';
-import screen from './screen';
-import settings from './settings';
-import sidebar from './sidebar';
-import socialAct from './socialAct';
-import subtabs from './subtabs';
-import news from './news';
-import infoBar from './infoBar';
-import accessCodes from './accessCodes';
-import versionSync from './versionSync';
+import timeTheHealer from "features/timeTheHealer/timeTheHealerSlice";
+import accountLinkReminder from "./accountLinkReminder";
+import actions from "./actions";
+import app from "./app";
+import branches from "./branches";
+import categories from "./categories";
+import user from "./user";
+import storylet from "./storylet";
+import cards from "./cards";
+import contacts from "./contacts";
+import equipment from "./equipment";
+import messages from "./messages";
+import myself from "./myself";
+import exchange from "./exchange";
+import fate from "./fate";
+import mapAdmin from "./mapAdmin";
+import plans from "./plans";
+import profile from "./profile";
+import registration from "./registration";
+import map from "./map";
+import modalTooltip from "./modalTooltip";
+import mysteries from "./mysteries";
+import outfit from "./outfit";
+import phase from "./phase";
+import timer from "./timer";
+import scrollToComponent from "./scrollToComponent";
+import spriteLoader from "./spriteLoader";
+import subscription from "./subscription";
+import payment from "./payment";
+import screen from "./screen";
+import settings from "./settings";
+import sidebar from "./sidebar";
+import socialAct from "./socialAct";
+import subtabs from "./subtabs";
+import news from "./news";
+import infoBar from "./infoBar";
+import accessCodes from "./accessCodes";
+import versionSync from "./versionSync";
 
 /**
  * Application reducer
@@ -88,7 +88,10 @@ const appReducer = combineReducers({
 });
 
 const rootReducer = (state, action) => {
-  if (action.type === 'user/LOGOUT_SUCCESS' || action.type === 'app/RESET_STORE') {
+  if (
+    action.type === "user/LOGOUT_SUCCESS" ||
+    action.type === "app/RESET_STORE"
+  ) {
     // n.b access codes are a type of login screen so we need to
     // retain the data rather than dispose as per comment above
     return appReducer({ accessCodes: { ...state.accessCodes } }, action);

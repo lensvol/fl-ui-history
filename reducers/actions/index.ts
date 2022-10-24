@@ -1,26 +1,24 @@
-import { ActionsActions } from 'actions/actions';
-import { MessagesAction } from 'actions/messages';
-import { StoryletActions } from 'actions/storylet';
+import { ActionsActions } from "actions/actions";
+import { MessagesAction } from "actions/messages";
+import { StoryletActions } from "actions/storylet";
 import {
   ACTIONS_UPDATED,
   FETCH_ACTIONS_ERROR,
   FETCH_ACTIONS_REQUESTED,
   FETCH_ACTIONS_SUCCESS,
-} from 'actiontypes/actions';
+} from "actiontypes/actions";
 
-import {
-  ACCEPT_SUCCESS,
-} from 'actiontypes/messages';
+import { ACCEPT_SUCCESS } from "actiontypes/messages";
 
 import {
   CHOOSE_BRANCH_SUCCESS,
   CHOOSE_STORYLET_SUCCESS,
   FETCH_AVAILABLE_SUCCESS,
   GOBACK_SUCCESS,
-} from 'actiontypes/storylet';
+} from "actiontypes/storylet";
 
-import fetchActionsSuccess from './fetchActionsSuccess';
-import { IActionsState } from 'types/actions';
+import fetchActionsSuccess from "./fetchActionsSuccess";
+import { IActionsState } from "types/actions";
 
 const INITIAL_STATE: IActionsState = {
   actionBankSize: 0,
@@ -29,7 +27,10 @@ const INITIAL_STATE: IActionsState = {
   isFetching: false,
 };
 
-export default function reducer(state = INITIAL_STATE, action: ActionsActions | StoryletActions | MessagesAction) {
+export default function reducer(
+  state = INITIAL_STATE,
+  action: ActionsActions | StoryletActions | MessagesAction
+) {
   switch (action.type) {
     case ACTIONS_UPDATED:
     case ACCEPT_SUCCESS:
@@ -40,7 +41,10 @@ export default function reducer(state = INITIAL_STATE, action: ActionsActions | 
         ...state,
         // If we have a payload value for `actions`, then update state;
         // otherwise, use existing state (in other worse, don't clobber)
-        actions: typeof action.payload.actions === 'undefined' ? state.actions : action.payload.actions,
+        actions:
+          typeof action.payload.actions === "undefined"
+            ? state.actions
+            : action.payload.actions,
       };
 
     case FETCH_ACTIONS_REQUESTED:

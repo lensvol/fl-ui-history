@@ -1,49 +1,38 @@
-import React, {
-  Component,
-  Fragment,
-  SyntheticEvent,
-} from 'react';
-import classnames from 'classnames';
-import { connect } from 'react-redux';
+import React, { Component, Fragment, SyntheticEvent } from "react";
+import classnames from "classnames";
+import { connect } from "react-redux";
 import Interactive, {
   ClickType,
   State as ReactInteractiveState,
-} from 'react-interactive';
+} from "react-interactive";
 
-import TippyWrapper from 'components/TippyWrapper';
-import { ThunkDispatch } from 'redux-thunk';
-import {
-  IArea,
-  IMappableSetting,
-  ISetting,
-} from 'types/map';
-import { openModalTooltip } from 'actions/modalTooltip';
-import {
-  areaToTooltipData,
-  isLodgings,
-} from 'features/mapping';
-import MapContext from 'components/Map/MapContext';
+import TippyWrapper from "components/TippyWrapper";
+import { ThunkDispatch } from "redux-thunk";
+import { IArea, IMappableSetting, ISetting } from "types/map";
+import { openModalTooltip } from "actions/modalTooltip";
+import { areaToTooltipData, isLodgings } from "features/mapping";
+import MapContext from "components/Map/MapContext";
 
-import { IAppState } from 'types/app';
+import { IAppState } from "types/app";
 import {
   MAP_BASE_URL,
   PLAYER_MARKER_HEIGHT,
   PLAYER_MARKER_WIDTH,
-} from 'features/mapping/constants';
-import Underline from 'components/Map/Lodgings/Underline';
-import asStateAwareArea from 'features/mapping/asStateAwareArea';
+} from "features/mapping/constants";
+import Underline from "components/Map/Lodgings/Underline";
+import asStateAwareArea from "features/mapping/asStateAwareArea";
 
 export interface Props {
-  area: IArea,
-  areas?: IArea[],
-  avatarImage: string,
-  areLodgingsLocked: boolean,
-  currentArea?: IArea,
-  dispatch: ThunkDispatch<any, any, any>,
-  onClick: (_: any, area: IArea) => void,
-  onSelect: (area?: IArea) => void,
-  selectedArea: IArea | undefined,
-  setting: ISetting | undefined,
+  area: IArea;
+  areas?: IArea[];
+  avatarImage: string;
+  areLodgingsLocked: boolean;
+  currentArea?: IArea;
+  dispatch: ThunkDispatch<any, any, any>;
+  onClick: (_: any, area: IArea) => void;
+  onSelect: (area?: IArea) => void;
+  selectedArea: IArea | undefined;
+  setting: ISetting | undefined;
 }
 
 export class LodgingsSubArea extends Component<Props> {
@@ -62,7 +51,7 @@ export class LodgingsSubArea extends Component<Props> {
     }
 
     // Iff this was a mouse click, run the onClick callback
-    if (clickType === 'mouseClick') {
+    if (clickType === "mouseClick") {
       onClick(e, area);
     }
   };
@@ -74,7 +63,10 @@ export class LodgingsSubArea extends Component<Props> {
   handleStateChange = ({
     nextState,
     event,
-  }: { nextState: ReactInteractiveState, event: SyntheticEvent<Element, Event> }) => {
+  }: {
+    nextState: ReactInteractiveState;
+    event: SyntheticEvent<Element, Event>;
+  }) => {
     const {
       area,
       areas,
@@ -104,11 +96,11 @@ export class LodgingsSubArea extends Component<Props> {
           area,
           areas || [],
           setting! as IMappableSetting,
-          currentArea,
+          currentArea
         ),
         currentArea,
         !!setting?.canTravel,
-        onClick,
+        onClick
       );
       dispatch(openModalTooltip({ ...tooltipData }));
     }
@@ -138,12 +130,12 @@ export class LodgingsSubArea extends Component<Props> {
         area,
         areas || [],
         setting! as IMappableSetting,
-        currentArea,
+        currentArea
       ),
       currentArea,
       !!setting?.canTravel,
       onClick,
-      false,
+      false
     );
 
     return (
@@ -151,22 +143,22 @@ export class LodgingsSubArea extends Component<Props> {
         <div
           className="lodgings-subarea"
           style={{
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-            position: 'relative',
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            position: "relative",
             width: `${42 + 10 + 10}px`, // width of widest icon plus padding on either side
           }}
         >
           <Interactive
             as="div"
             className={classnames(
-              'map__lodgings-button',
-              areLodgingsLocked && 'map__lodgings-button--locked',
-              areWeHere && 'map__lodgings-button--you-are-here',
+              "map__lodgings-button",
+              areLodgingsLocked && "map__lodgings-button--locked",
+              areWeHere && "map__lodgings-button--you-are-here"
             )}
             style={{
-              bottom: '20px',
+              bottom: "20px",
               right: 0,
             }}
             onClick={this.handleClick}
@@ -177,8 +169,8 @@ export class LodgingsSubArea extends Component<Props> {
                 alt={area.name}
                 src={`${MAP_BASE_URL}/lodgings/${area.areaKey}.png`}
                 className={classnames(
-                  'map__lodgings-button__image',
-                  areLodgingsLocked && 'map__lodgings-button__image--locked',
+                  "map__lodgings-button__image",
+                  areLodgingsLocked && "map__lodgings-button__image--locked"
                 )}
               />
             </TippyWrapper>
@@ -188,9 +180,9 @@ export class LodgingsSubArea extends Component<Props> {
               height={PLAYER_MARKER_HEIGHT}
               width={PLAYER_MARKER_WIDTH}
               className={classnames(
-                'map__lodgings-button__player-marker',
-                'map__player-marker',
-                areWeHere && 'map__player-marker--visible',
+                "map__lodgings-button__player-marker",
+                "map__player-marker",
+                areWeHere && "map__player-marker--visible"
               )}
             />
           </Interactive>
@@ -221,7 +213,9 @@ export class LodgingsSubArea extends Component<Props> {
 }
 
 const mapStateToProps = ({
-  myself: { character: { avatarImage } },
+  myself: {
+    character: { avatarImage },
+  },
   map: { areas, currentArea, setting },
 }: IAppState) => ({
   areas,

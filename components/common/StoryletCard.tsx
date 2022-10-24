@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Image from 'components/Image';
+import Image from "components/Image";
 
 export default function StoryletCard({
   border,
@@ -32,18 +32,18 @@ export default function StoryletCard({
   );
 }
 
-StoryletCard.displayName = 'StoryletCard';
+StoryletCard.displayName = "StoryletCard";
 
 interface Props {
-  border?: boolean,
-  borderColour?: string,
-  className?: string,
-  defaultCursor?: boolean,
-  image: string,
-  imageHeight?: number,
-  imageWidth?: number,
-  name: string,
-  onClick?: (event: any) => void,
+  border?: boolean;
+  borderColour?: string;
+  className?: string;
+  defaultCursor?: boolean;
+  image: string;
+  imageHeight?: number;
+  imageWidth?: number;
+  name: string;
+  onClick?: (event: any) => void;
   // onClick?: Function,
 }
 
@@ -61,7 +61,7 @@ StoryletCard.propTypes = {
 StoryletCard.defaultProps = {
   border: false,
   borderColour: undefined,
-  className: '',
+  className: "",
   defaultCursor: false,
   imageHeight: 0,
   imageWidth: 0,

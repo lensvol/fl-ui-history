@@ -1,26 +1,28 @@
-import { IFateCard } from 'types/fate';
-import BaseService, { Either } from './BaseMonadicService';
+import { IFateCard } from "types/fate";
+import BaseService, { Either } from "./BaseMonadicService";
 
 export interface IFateService {
-  changeAvatar: (avatarName: string) => Promise<Either<ChangeAvatarResponse>>
-  fetchFate: () => Promise<Either<FetchFateResponse>>,
-  purchaseItem: (data: PurchaseFateItemRequest) => Promise<Either<PurchaseFateItemResponse>>,
+  changeAvatar: (avatarName: string) => Promise<Either<ChangeAvatarResponse>>;
+  fetchFate: () => Promise<Either<FetchFateResponse>>;
+  purchaseItem: (
+    data: PurchaseFateItemRequest
+  ) => Promise<Either<PurchaseFateItemResponse>>;
 }
 
 export type ChangeAvatarResponse = FetchFateResponse;
 
 export type FetchFateResponse = {
-  currentFate: number,
-  currentNex: number,
-  fateCards: IFateCard[],
-  isExceptionalFriend: boolean,
-  premiumSubExpiryDateTime: string,
+  currentFate: number;
+  currentNex: number;
+  fateCards: IFateCard[];
+  isExceptionalFriend: boolean;
+  premiumSubExpiryDateTime: string;
 };
 
 export type PurchaseFateItemRequest = {
-  storeItemId: number,
-  avatarImage?: string | null,
-  newName?: string | null,
+  storeItemId: number;
+  avatarImage?: string | null;
+  newName?: string | null;
 };
 
 export type PurchaseFateItemResponse = FetchFateResponse;
@@ -32,11 +34,10 @@ class FateService extends BaseService implements IFateService {
    */
   fetchFate = () => {
     const config = {
-      url: '/fate',
+      url: "/fate",
     };
     return this.doRequest(config);
   };
-
 
   /**
    * Purchase Item
@@ -46,8 +47,8 @@ class FateService extends BaseService implements IFateService {
   purchaseItem = (data: PurchaseFateItemRequest) => {
     const { storeItemId, newName = null, avatarImage = null } = data;
     const config = {
-      method: 'post',
-      url: '/fate/purchase',
+      method: "post",
+      url: "/fate/purchase",
       data: {
         storeItemId,
         newName,
@@ -59,8 +60,8 @@ class FateService extends BaseService implements IFateService {
 
   changeAvatar = (avatarImage: string) => {
     const config = {
-      method: 'post',
-      url: '/fate/changeavatar',
+      method: "post",
+      url: "/fate/changeavatar",
       data: { avatarImage },
     };
     return this.doRequest<ChangeAvatarResponse>(config);

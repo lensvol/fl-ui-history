@@ -1,24 +1,28 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 
 import {
   CHOOSE_NEW_SCRAPBOOK_FAILURE,
   CHOOSE_NEW_SCRAPBOOK_REQUESTED,
   CHOOSE_NEW_SCRAPBOOK_SUCCESS,
-} from 'actiontypes/myself';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import MyselfService from 'services/MyselfService';
-import { IQuality } from 'types/qualities';
+} from "actiontypes/myself";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import MyselfService from "services/MyselfService";
+import { IQuality } from "types/qualities";
 
-export type ChooseNewScrapbookRequested = { type: typeof CHOOSE_NEW_SCRAPBOOK_REQUESTED };
-export type ChooseNewScrapbookSuccess = {
-  type: typeof CHOOSE_NEW_SCRAPBOOK_SUCCESS,
-  payload: IQuality,
+export type ChooseNewScrapbookRequested = {
+  type: typeof CHOOSE_NEW_SCRAPBOOK_REQUESTED;
 };
-export type ChooseNewScrapbookFailure = { type: typeof CHOOSE_NEW_SCRAPBOOK_FAILURE };
+export type ChooseNewScrapbookSuccess = {
+  type: typeof CHOOSE_NEW_SCRAPBOOK_SUCCESS;
+  payload: IQuality;
+};
+export type ChooseNewScrapbookFailure = {
+  type: typeof CHOOSE_NEW_SCRAPBOOK_FAILURE;
+};
 
-export type ChooseNewScrapbookActions
-  = ChooseNewScrapbookRequested
+export type ChooseNewScrapbookActions =
+  | ChooseNewScrapbookRequested
   | ChooseNewScrapbookSuccess
   | ChooseNewScrapbookFailure;
 

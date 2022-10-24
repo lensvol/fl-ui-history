@@ -1,55 +1,42 @@
-import React, {
-  Fragment,
-  useCallback,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
+import React, { Fragment, useCallback, useState } from "react";
+import { connect } from "react-redux";
 
-import {
-  chooseNewMantelpiece,
-  chooseNewScrapbook,
-} from 'actions/myself';
-import { fetchProfile } from 'actions/profile';
-import { ThunkDispatch } from 'redux-thunk';
-import getQualityPickerQualities from 'selectors/profile/getQualityPickerQualitiesByNature';
+import { chooseNewMantelpiece, chooseNewScrapbook } from "actions/myself";
+import { fetchProfile } from "actions/profile";
+import { ThunkDispatch } from "redux-thunk";
+import getQualityPickerQualities from "selectors/profile/getQualityPickerQualitiesByNature";
 
-import ProfileContext from 'components/Profile/ProfileContext';
-import QualityPicker from 'components/QualityPicker';
-import { IAppState } from 'types/app';
-import { IQuality } from 'types/qualities';
-import DisplayItemComponent from './DisplayItemComponent';
+import ProfileContext from "components/Profile/ProfileContext";
+import QualityPicker from "components/QualityPicker";
+import { IAppState } from "types/app";
+import { IQuality } from "types/qualities";
+import DisplayItemComponent from "./DisplayItemComponent";
 
-const labelToQualityPickerHeader = (label: 'Mantelpiece' | 'Scrapbook') => ({
-  Mantelpiece: 'Mantelpiece item',
-  Scrapbook: 'Scrapbook status',
-})[label];
+const labelToQualityPickerHeader = (label: "Mantelpiece" | "Scrapbook") =>
+  ({
+    Mantelpiece: "Mantelpiece item",
+    Scrapbook: "Scrapbook status",
+  }[label]);
 
 export function DisplayItem(props: Props) {
-  const {
-    data,
-    dispatch,
-    label,
-    profileCharacter,
-    qualityPickerQualities,
-  } = props;
+  const { data, dispatch, label, profileCharacter, qualityPickerQualities } =
+    props;
 
-  const {
-    nature,
-  } = data;
+  const { nature } = data;
 
   const [isQualityPickerOpen, setIsQualityPickerOpen] = useState(false);
 
-  const handleChoose = useCallback(async (quality: IQuality) => {
-    const action = nature === 'Thing' ? chooseNewMantelpiece : chooseNewScrapbook;
-    await dispatch(action(quality));
-    if (profileCharacter) {
-      dispatch(fetchProfile(profileCharacter.name));
-    }
-  }, [
-    dispatch,
-    nature,
-    profileCharacter,
-  ]);
+  const handleChoose = useCallback(
+    async (quality: IQuality) => {
+      const action =
+        nature === "Thing" ? chooseNewMantelpiece : chooseNewScrapbook;
+      await dispatch(action(quality));
+      if (profileCharacter) {
+        dispatch(fetchProfile(profileCharacter.name));
+      }
+    },
+    [dispatch, nature, profileCharacter]
+  );
 
   const handleClick = useCallback(() => {
     setIsQualityPickerOpen(true);
@@ -67,9 +54,13 @@ export function DisplayItem(props: Props) {
             data={data}
             editable={editable}
             label={label}
-            onClick={editable ? handleClick : () => {
-              // no-op
-            }}
+            onClick={
+              editable
+                ? handleClick
+                : () => {
+                    // no-op
+                  }
+            }
           />
           {editable && (
             <QualityPicker
@@ -87,11 +78,11 @@ export function DisplayItem(props: Props) {
   );
 }
 
-DisplayItem.displayName = 'DisplayItem';
+DisplayItem.displayName = "DisplayItem";
 
 interface OwnProps {
-  data: IQuality,
-  label: 'Mantelpiece' | 'Scrapbook',
+  data: IQuality;
+  label: "Mantelpiece" | "Scrapbook";
 }
 
 const mapStateToProps = (state: IAppState, props: OwnProps) => ({
@@ -100,7 +91,7 @@ const mapStateToProps = (state: IAppState, props: OwnProps) => ({
 });
 
 interface Props extends OwnProps, ReturnType<typeof mapStateToProps> {
-  dispatch: ThunkDispatch<any, any, any>,
+  dispatch: ThunkDispatch<any, any, any>;
 }
 
 export default connect(mapStateToProps)(DisplayItem);

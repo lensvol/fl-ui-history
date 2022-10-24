@@ -1,30 +1,21 @@
-import React, {
-  useEffect,
-} from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 
-import {
-  fetchMyself,
-} from 'actions/myself';
-import { setTab } from 'actions/subtabs';
+import { fetchMyself } from "actions/myself";
+import { setTab } from "actions/subtabs";
 
-import GeneralContainer from 'components/GeneralContainer';
-import Loading from 'components/Loading';
-import Myself from 'components/Myself';
-import { IAppState } from 'types/app';
+import GeneralContainer from "components/GeneralContainer";
+import Loading from "components/Loading";
+import Myself from "components/Myself";
+import { IAppState } from "types/app";
 
 type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: Function,
+  dispatch: Function;
 };
 
-function MyselfTab({
-  dispatch,
-  hasFetched,
-  isFetching,
-}: Props) {
-
+function MyselfTab({ dispatch, hasFetched, isFetching }: Props) {
   useEffect(() => {
-    dispatch(setTab({ tab: 'myself', subtab: 'myself' }));
+    dispatch(setTab({ tab: "myself", subtab: "myself" }));
     asyncUseEffect(!(hasFetched || isFetching));
 
     // If we have no data (unlikely, but possible if there was a network
@@ -35,12 +26,7 @@ function MyselfTab({
       }
       dispatch(fetchMyself());
     }
-  }, [
-    dispatch,
-    hasFetched,
-    isFetching,
-  ]);
-
+  }, [dispatch, hasFetched, isFetching]);
 
   return (
     <GeneralContainer>
@@ -49,9 +35,11 @@ function MyselfTab({
   );
 }
 
-MyselfTab.displayName = 'MyselfTab';
+MyselfTab.displayName = "MyselfTab";
 
-const mapStateToProps = ({ myself: { isFetching, hasFetched } }: IAppState) => ({
+const mapStateToProps = ({
+  myself: { isFetching, hasFetched },
+}: IAppState) => ({
   hasFetched,
   isFetching,
 });

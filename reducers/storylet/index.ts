@@ -1,19 +1,19 @@
-import { StoryletActions } from 'actions/storylet';
-import { AddNewContactSuccessAction } from 'actions/storylet/addNewContact';
-import { BeginSuccessAction } from 'actions/storylet/begin';
-import { BeginSocialEventSuccessAction } from 'actions/storylet/beginSocialEvent';
-import { FetchAvailableSuccessAction } from 'actions/storylet/fetchAvailable';
-import { GoBackFromSocialActAction } from 'actions/storylet/goBackFromSocialAct';
-import { RenameQualitySuccessAction } from 'actions/storylet/renameQuality';
-import * as StoryletActionTypes from 'actiontypes/storylet';
+import { StoryletActions } from "actions/storylet";
+import { AddNewContactSuccessAction } from "actions/storylet/addNewContact";
+import { BeginSuccessAction } from "actions/storylet/begin";
+import { BeginSocialEventSuccessAction } from "actions/storylet/beginSocialEvent";
+import { FetchAvailableSuccessAction } from "actions/storylet/fetchAvailable";
+import { GoBackFromSocialActAction } from "actions/storylet/goBackFromSocialAct";
+import { RenameQualitySuccessAction } from "actions/storylet/renameQuality";
+import * as StoryletActionTypes from "actiontypes/storylet";
 
-import { IStoryletState } from 'types/storylet';
+import { IStoryletState } from "types/storylet";
 
-import chooseBranchSuccess from './chooseBranchSuccess';
-import clearCache from './clearCache';
-import fetchAvailableSuccess from './fetchAvailableSuccess';
-import renameQualitySuccess from './renameQualitySuccess';
-import sortEligibleFriends from './sortEligibleFriends';
+import chooseBranchSuccess from "./chooseBranchSuccess";
+import clearCache from "./clearCache";
+import fetchAvailableSuccess from "./fetchAvailableSuccess";
+import renameQualitySuccess from "./renameQualitySuccess";
+import sortEligibleFriends from "./sortEligibleFriends";
 
 export const INITIAL_STATE: IStoryletState = {
   addedFriendId: 0,
@@ -23,7 +23,7 @@ export const INITIAL_STATE: IStoryletState = {
   isGoingBack: false,
   isSaving: false,
   isRenaming: false,
-  phase: 'Available',
+  phase: "Available",
   endStorylet: undefined,
   dated: false,
   message: null,
@@ -43,7 +43,10 @@ export const INITIAL_STATE: IStoryletState = {
  * @param {Object} state
  * @param {[Object]} action
  */
-export default function reducer(state = INITIAL_STATE, action: StoryletActions): IStoryletState {
+export default function reducer(
+  state = INITIAL_STATE,
+  action: StoryletActions
+): IStoryletState {
   // const { payload = {} } = action;
 
   switch (action.type) {
@@ -61,13 +64,7 @@ export default function reducer(state = INITIAL_STATE, action: StoryletActions):
 
     case StoryletActionTypes.CHOOSE_STORYLET_SUCCESS: {
       const {
-        payload: {
-          canChangeOutfit,
-          endStorylet,
-          messages,
-          phase,
-          storylet,
-        },
+        payload: { canChangeOutfit, endStorylet, messages, phase, storylet },
       } = action as BeginSuccessAction;
       return {
         ...state,
@@ -100,7 +97,10 @@ export default function reducer(state = INITIAL_STATE, action: StoryletActions):
       };
 
     case StoryletActionTypes.FETCH_AVAILABLE_SUCCESS:
-      return fetchAvailableSuccess(state, (action as FetchAvailableSuccessAction).payload);
+      return fetchAvailableSuccess(
+        state,
+        (action as FetchAvailableSuccessAction).payload
+      );
 
     case StoryletActionTypes.GOBACK_REQUESTED:
       return { ...state, isGoingBack: true };
@@ -155,7 +155,7 @@ export default function reducer(state = INITIAL_STATE, action: StoryletActions):
         isFetching: false,
         phase: payload.phase,
         // TODO: WTF?
-        storylet: payload.phase === 'End' ? null : state.storylet,
+        storylet: payload.phase === "End" ? null : state.storylet,
         endStorylet: payload.endStorylet,
         externalSocialAct: payload.externalSocialAct,
         messages: payload.messages,
@@ -183,7 +183,9 @@ export default function reducer(state = INITIAL_STATE, action: StoryletActions):
         ...state,
         isSaving: false,
         message: payload.message,
-        eligibleFriends: [...(payload.eligibleFriends ?? [])].sort(sortEligibleFriends),
+        eligibleFriends: [...(payload.eligibleFriends ?? [])].sort(
+          sortEligibleFriends
+        ),
         addedFriendId: payload.addedFriendId,
       };
     }
@@ -216,11 +218,7 @@ export default function reducer(state = INITIAL_STATE, action: StoryletActions):
 
     case StoryletActionTypes.BEGIN_SOCIAL_EVENT_SUCCESS: {
       const {
-        payload: {
-          messages,
-          phase,
-          storylet,
-        },
+        payload: { messages, phase, storylet },
       } = action as BeginSocialEventSuccessAction;
 
       return {
@@ -240,7 +238,7 @@ export default function reducer(state = INITIAL_STATE, action: StoryletActions):
       };
 
     case StoryletActionTypes.PUT_IN:
-      return { ...state, phase: 'In' };
+      return { ...state, phase: "In" };
 
     case StoryletActionTypes.CANNOT_USE_QUALITY:
       return state;

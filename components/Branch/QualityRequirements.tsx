@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react';
-import { ApiQualityRequirement } from 'types/storylet';
-import QualityRequirement from 'components/QualityRequirement';
+import React, { Fragment } from "react";
+import { ApiQualityRequirement } from "types/storylet";
+import QualityRequirement from "components/QualityRequirement";
 
 export interface Props {
-  requirements: ApiQualityRequirement[],
+  requirements: ApiQualityRequirement[];
 }
 
 export default function QualityRequirements({ requirements }: Props) {
@@ -12,17 +12,11 @@ export default function QualityRequirements({ requirements }: Props) {
   // hard to defend JavaScript.
   return (
     <Fragment>
-      {[...requirements]
-        .reverse()
-        .map(quality => (
-          <QualityRequirement
-            key={quality.qualityId}
-            data={quality}
-          />
-        ))
-      }
+      {[...requirements].reverse().map((quality) => (
+        <QualityRequirement key={quality.qualityId} data={quality} />
+      ))}
     </Fragment>
   );
 }
 
-QualityRequirements.displayName = 'QualityRequirements';
+QualityRequirements.displayName = "QualityRequirements";

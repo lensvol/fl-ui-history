@@ -1,12 +1,12 @@
-import React from 'react';
-import classnames from 'classnames';
+import React from "react";
+import classnames from "classnames";
 
 type Props = {
-  children: React.ReactNode,
-  className?: string,
-  fl?: boolean,
-  icon: string,
-  onClick: () => void,
+  children: React.ReactNode;
+  className?: string;
+  fl?: boolean;
+  icon: string;
+  onClick: () => void;
 };
 
 export default function NavItem({
@@ -23,15 +23,14 @@ export default function NavItem({
         onClick={onClick}
         type="button"
       >
-        <i className={classnames(makeClassName({ fl, icon }), className)} />
-        {' '}
+        <i className={classnames(makeClassName({ fl, icon }), className)} />{" "}
         {children}
       </button>
     </li>
   );
 }
 
-function makeClassName({ fl, icon }: Pick<Props, 'fl' | 'icon' >) {
+function makeClassName({ fl, icon }: Pick<Props, "fl" | "icon">) {
   if (fl) {
     return `fl-ico fl-ico-${icon} sidemenu__nav-icon sidemenu__nav-icon--fl-ico`;
   }

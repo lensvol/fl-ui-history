@@ -1,15 +1,8 @@
-import React, {
-  Fragment,
-  useMemo,
-} from 'react';
-import classnames from 'classnames';
-import { connect } from 'react-redux';
-import {
-  Link,
-  RouteComponentProps,
-  withRouter,
-} from 'react-router-dom';
-import { IAppState } from 'types/app';
+import React, { Fragment, useMemo } from "react";
+import classnames from "classnames";
+import { connect } from "react-redux";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import { IAppState } from "types/app";
 
 // import AccountOrGameLink from './AccountOrGameLink';
 
@@ -31,16 +24,16 @@ export function AuthenticatedHeader(props: Props) {
   } = props;
 
   const currentLocation = useMemo(() => {
-    if (pathname.startsWith('/account')) {
+    if (pathname.startsWith("/account")) {
       return CurrentLocation.Account;
     }
-    if (pathname.startsWith(('/help'))) {
+    if (pathname.startsWith("/help")) {
       return CurrentLocation.Help;
     }
-    if (pathname.startsWith('/privacy')) {
+    if (pathname.startsWith("/privacy")) {
       return CurrentLocation.Privacy;
     }
-    if (pathname.startsWith('/terms')) {
+    if (pathname.startsWith("/terms")) {
       return CurrentLocation.Terms;
     }
 
@@ -54,19 +47,21 @@ export function AuthenticatedHeader(props: Props) {
         onClick={onToggleFullScreen}
         type="button"
       >
-        <i className={classnames('fa', screen.full ? 'fa-compress' : 'fa-expand')} />
+        <i
+          className={classnames(
+            "fa",
+            screen.full ? "fa-compress" : "fa-expand"
+          )}
+        />
         <span className="u-visually-hidden">Toggle fullscreen mode</span>
       </button>
       <span className="top-stripe__user-name">
         {user.user ? `${user.user.name}:` : null}
-      </span>
-      {' '}
+      </span>{" "}
       <ul className="top-stripe__user-nav">
         {currentLocation !== CurrentLocation.SomewhereElse && (
           <li className="list-item--separated">
-            <Link to="/">
-              Back to game
-            </Link>
+            <Link to="/">Back to game</Link>
           </li>
         )}
 
@@ -96,13 +91,14 @@ export function AuthenticatedHeader(props: Props) {
   );
 }
 
-AuthenticatedHeader.displayName = 'AuthenticatedHeader';
+AuthenticatedHeader.displayName = "AuthenticatedHeader";
 
 const mapStateToProps = ({ screen, user }: IAppState) => ({ screen, user });
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps> & {
-  onLogout: () => void,
-  onToggleFullScreen: () => void,
-};
+type Props = RouteComponentProps &
+  ReturnType<typeof mapStateToProps> & {
+    onLogout: () => void;
+    onToggleFullScreen: () => void;
+  };
 
 export default withRouter(connect(mapStateToProps)(AuthenticatedHeader));

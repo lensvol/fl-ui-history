@@ -1,11 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 export default function AddContactForm(props) {
   const { userInput, onChange, onSubmit } = props;
   return (
     <form className="account__add-contact-form">
-      <label htmlFor="user-friends-name" className="u-visually-hidden">Username:</label>
+      <label htmlFor="user-friends-name" className="u-visually-hidden">
+        Username:
+      </label>
       <input
         name="userName"
         className="form__control"
@@ -26,7 +28,7 @@ export default function AddContactForm(props) {
   );
 }
 
-AddContactForm.displayName = 'AddContactForm';
+AddContactForm.displayName = "AddContactForm";
 
 AddContactForm.propTypes = {
   userInput: PropTypes.string.isRequired,

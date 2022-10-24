@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 export default function CombinedMessage({ flavour, result, success }) {
-  const failureText = 'A regret!';
-  const successText = 'Congratulations, friend!';
+  const failureText = "A regret!";
+  const successText = "Congratulations, friend!";
   return (
-    <div style={{ marginBottom: '1rem' }}>
+    <div style={{ marginBottom: "1rem" }}>
       <h1 className="heading heading--1">
         {success ? successText : failureText}
       </h1>
@@ -13,4 +13,4 @@ export default function CombinedMessage({ flavour, result, success }) {
   );
 }
 
-CombinedMessage.displayName = 'CombinedMessage';
+CombinedMessage.displayName = "CombinedMessage";

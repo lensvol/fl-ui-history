@@ -1,40 +1,32 @@
-import React, { useCallback } from 'react';
+import React, { useCallback } from "react";
 
-import { connect } from 'react-redux';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import { saveMessageVia } from 'actions/settings';
-import * as SettingsConstants from 'constants/settings';
+import { saveMessageVia } from "actions/settings";
+import * as SettingsConstants from "constants/settings";
 
-import { MessageVia } from 'services/SettingsService';
-import { IAppState } from 'types/app';
-import {
-  Form,
-  Formik,
-  Field,
-} from 'formik';
-import Loading from 'components/Loading';
-import { ThunkDispatch } from 'redux-thunk';
+import { MessageVia } from "services/SettingsService";
+import { IAppState } from "types/app";
+import { Form, Formik, Field } from "formik";
+import Loading from "components/Loading";
+import { ThunkDispatch } from "redux-thunk";
 
-const RADIO_GROUP_ID = 'message-via-group';
+const RADIO_GROUP_ID = "message-via-group";
 
 function MessageMethod({ data, dispatch, isChangingVia }: Props) {
-  const {
-    facebookAuth,
-    twitterAuth,
-  } = data;
+  const { facebookAuth, twitterAuth } = data;
 
+  const onSubmit = useCallback(
+    ({ selectedMethod }: { selectedMethod: MessageVia | undefined }) => {
+      if (!selectedMethod) {
+        return;
+      }
 
-  const onSubmit = useCallback(({ selectedMethod }: { selectedMethod: MessageVia | undefined }) => {
-    if (!selectedMethod) {
-      return;
-    }
-
-    dispatch(saveMessageVia(selectedMethod));
-  }, [dispatch]);
+      dispatch(saveMessageVia(selectedMethod));
+    },
+    [dispatch]
+  );
 
   return (
     <Formik
@@ -44,19 +36,15 @@ function MessageMethod({ data, dispatch, isChangingVia }: Props) {
       onSubmit={onSubmit}
       render={({ dirty }) => (
         <div>
-          <h2
-            className="heading heading--2"
-            id={RADIO_GROUP_ID}
-          >
+          <h2 className="heading heading--2" id={RADIO_GROUP_ID}>
             How should we message you?
           </h2>
           <Form>
-            <div
-              role="group"
-              aria-labelledby={RADIO_GROUP_ID}
-            >
+            <div role="group" aria-labelledby={RADIO_GROUP_ID}>
               <RadioButton value={SettingsConstants.EMAIL} />
-              {facebookAuth && <RadioButton value={SettingsConstants.FACEBOOK} />}
+              {facebookAuth && (
+                <RadioButton value={SettingsConstants.FACEBOOK} />
+              )}
               {twitterAuth && <RadioButton value={SettingsConstants.TWITTER} />}
               <RadioButton value={SettingsConstants.NONE} />
             </div>
@@ -65,7 +53,7 @@ function MessageMethod({ data, dispatch, isChangingVia }: Props) {
               disabled={!dirty || isChangingVia}
               type="submit"
             >
-              { isChangingVia ? <Loading spinner small /> : <span>Update</span>}
+              {isChangingVia ? <Loading spinner small /> : <span>Update</span>}
             </button>
           </Form>
         </div>
@@ -79,7 +67,7 @@ function RadioButton({ value }: { value: MessageVia }) {
     <label
       className="radio"
       htmlFor={`selectedMethod-${value}`}
-      style={{ marginLeft: '20px' }}
+      style={{ marginLeft: "20px" }}
     >
       <Field
         name="selectedMethod"
@@ -97,8 +85,9 @@ const mapStateToProps = (state: IAppState) => ({
   data: state.settings.data,
 });
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps> & {
-  dispatch: ThunkDispatch<any, any, any>,
-};
+type Props = RouteComponentProps &
+  ReturnType<typeof mapStateToProps> & {
+    dispatch: ThunkDispatch<any, any, any>;
+  };
 
 export default withRouter(connect(mapStateToProps)(MessageMethod));

@@ -1,19 +1,18 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useMemo, useState } from "react";
 
-import Modal from 'components/Modal';
-import RequestPasswordResetForm from './RequestPasswordResetForm';
-import RequestPasswordResetSuccess from './RequestPasswordResetSuccess';
+import Modal from "components/Modal";
+import RequestPasswordResetForm from "./RequestPasswordResetForm";
+import RequestPasswordResetSuccess from "./RequestPasswordResetSuccess";
 
 enum Step {
   Ready,
   Success,
 }
 
-export default function RequestPasswordResetModal({ isOpen, onRequestClose }: Props) {
+export default function RequestPasswordResetModal({
+  isOpen,
+  onRequestClose,
+}: Props) {
   const [currentStep, setCurrentStep] = useState(Step.Ready);
 
   const handleSubmitSuccess = useCallback(() => {
@@ -27,12 +26,9 @@ export default function RequestPasswordResetModal({ isOpen, onRequestClose }: Pr
       case Step.Success:
         return <RequestPasswordResetSuccess />;
       default:
-        return (<RequestPasswordResetForm onSuccess={handleSubmitSuccess} />);
+        return <RequestPasswordResetForm onSuccess={handleSubmitSuccess} />;
     }
-  }, [
-    currentStep,
-    handleSubmitSuccess,
-  ]);
+  }, [currentStep, handleSubmitSuccess]);
 
   return (
     <Modal
@@ -46,8 +42,8 @@ export default function RequestPasswordResetModal({ isOpen, onRequestClose }: Pr
 }
 
 type OwnProps = {
-  isOpen: boolean,
-  onRequestClose: () => void,
+  isOpen: boolean;
+  onRequestClose: () => void;
 };
 
 type Props = OwnProps;

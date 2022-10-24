@@ -1,18 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import FacebookLoginContainer from './FacebookLoginContainer';
-import GoogleLoginContainer from './GoogleLoginContainer';
-import TwitterLoginContainer from './TwitterLoginContainer';
-import EmailPasswordLoginForm from './EmailPasswordLoginForm';
+import FacebookLoginContainer from "./FacebookLoginContainer";
+import GoogleLoginContainer from "./GoogleLoginContainer";
+import TwitterLoginContainer from "./TwitterLoginContainer";
+import EmailPasswordLoginForm from "./EmailPasswordLoginForm";
 
 export default function Login() {
   return (
     <>
-      <div
-        role="tabpanel"
-        className="tab-pane active"
-        id="log-in"
-      >
+      <div role="tabpanel" className="tab-pane active" id="log-in">
         <h2 className="heading heading--2 heading--hr">Log in</h2>
 
         <EmailPasswordLoginForm />
@@ -30,8 +26,6 @@ export default function Login() {
         <p className="u-text-center">or</p>
         <GoogleLoginContainer label="Log in with Google" />
       </div>
-
-
     </>
   );
 }

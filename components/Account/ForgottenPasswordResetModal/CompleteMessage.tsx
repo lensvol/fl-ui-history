@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 
 interface Props {
-  isSuccess: boolean,
-  message: string | undefined,
-  onClickWhenFailed: () => void,
-  onClickWhenSuccessful: () => void,
+  isSuccess: boolean;
+  message: string | undefined;
+  onClickWhenFailed: () => void;
+  onClickWhenSuccessful: () => void;
 }
 
 export default function CompleteMessage({
@@ -13,15 +13,18 @@ export default function CompleteMessage({
   onClickWhenFailed,
   onClickWhenSuccessful,
 }: Props) {
-  const header = useMemo(() => (
-    <h2 className="heading heading--2">
-      {isSuccess ? (
-        <span> Success! </span>
-      ) : (
-        <span> Something went wrong </span>
-      )}
-    </h2>
-  ), [isSuccess]);
+  const header = useMemo(
+    () => (
+      <h2 className="heading heading--2">
+        {isSuccess ? (
+          <span> Success! </span>
+        ) : (
+          <span> Something went wrong </span>
+        )}
+      </h2>
+    ),
+    [isSuccess]
+  );
 
   const messageParagraph = useMemo(() => {
     if (message) {
@@ -59,11 +62,7 @@ export default function CompleteMessage({
         </button>
       </div>
     );
-  }, [
-    isSuccess,
-    onClickWhenFailed,
-    onClickWhenSuccessful,
-  ]);
+  }, [isSuccess, onClickWhenFailed, onClickWhenSuccessful]);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import begin from 'actions/storylet/begin';
+import begin from "actions/storylet/begin";
 
 /** ----------------------------------------------------------------------------
  * TRY AGAIN

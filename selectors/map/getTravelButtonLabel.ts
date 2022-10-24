@@ -16,16 +16,16 @@ export default function getLabelForSetting(setting: IMappableSetting) {
 }
  */
 
-import { MAP_ROOT_AREA_THE_FIFTH_CITY } from 'features/mapping/constants';
-import { createSelector } from 'reselect';
-import { IAppState } from 'types/app';
+import { MAP_ROOT_AREA_THE_FIFTH_CITY } from "features/mapping/constants";
+import { createSelector } from "reselect";
+import { IAppState } from "types/app";
 
 const getCurrentArea = (state: IAppState) => state.map.currentArea;
 const getSetting = (state: IAppState) => state.map.setting;
 
 const outputFn = (
   currentArea: ReturnType<typeof getCurrentArea>,
-  setting: ReturnType<typeof getSetting>,
+  setting: ReturnType<typeof getSetting>
 ) => {
   if (currentArea?.travelButtonLabel) {
     return currentArea.travelButtonLabel;
@@ -35,14 +35,14 @@ const outputFn = (
   }
 
   if (!setting?.canTravel) {
-    return 'View map';
+    return "View map";
   }
 
   if (setting?.mapRootArea?.areaKey === MAP_ROOT_AREA_THE_FIFTH_CITY) {
-    return 'Travel';
+    return "Travel";
   }
 
-  return 'View Map';
+  return "View Map";
 };
 
 export default createSelector(getCurrentArea, getSetting, outputFn);

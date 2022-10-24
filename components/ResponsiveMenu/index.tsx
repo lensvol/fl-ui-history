@@ -1,27 +1,15 @@
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
-import ReactCSSTransitionReplace from 'react-css-transition-replace';
-import classnames from 'classnames';
-import MediaSmDown from 'components/Responsive/MediaSmDown';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import React, { useCallback, useMemo } from "react";
+import ReactCSSTransitionReplace from "react-css-transition-replace";
+import classnames from "classnames";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+import { connect, useDispatch } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import {
-  fetch as fetchMap,
-  toggleMapView,
-} from 'actions/map';
-import { openSidebar } from 'actions/sidebar';
+import { fetch as fetchMap, toggleMapView } from "actions/map";
+import { openSidebar } from "actions/sidebar";
 
-import { IAppState } from 'types/app';
-import getImagePath from 'utils/getImagePath';
+import { IAppState } from "types/app";
+import getImagePath from "utils/getImagePath";
 
 function ResponsiveMenuContainer(props: Props) {
   const {
@@ -34,17 +22,24 @@ function ResponsiveMenuContainer(props: Props) {
 
   const dispatch = useDispatch();
 
-  const backgroundImage = useMemo(() => `${getImagePath({ icon: currentArea?.image, type: 'header' })}`, [currentArea]);
+  const backgroundImage = useMemo(
+    () => `${getImagePath({ icon: currentArea?.image, type: "header" })}`,
+    [currentArea]
+  );
 
-  const isMapEnabled = useMemo(() => (
-    (setting?.canOpenMap ?? false) && phase === 'Available' && pathname === '/'
-  ), [pathname, phase, setting]);
+  const isMapEnabled = useMemo(
+    () =>
+      (setting?.canOpenMap ?? false) &&
+      phase === "Available" &&
+      pathname === "/",
+    [pathname, phase, setting]
+  );
 
   const mapTitle = useMemo(() => {
-    if (setting?.canOpenMap && phase === 'Available') {
-      return 'Map';
+    if (setting?.canOpenMap && phase === "Available") {
+      return "Map";
     }
-    return 'Map - you cannot move right now';
+    return "Map - you cannot move right now";
   }, [phase, setting]);
 
   const onOpenSidebar = useCallback(() => dispatch(openSidebar()), [dispatch]);
@@ -95,9 +90,9 @@ function ResponsiveMenuContainer(props: Props) {
               >
                 <i
                   className={classnames(
-                    'fa fa-compass fa-3x',
-                    'icon--has-transition',
-                    !isMapEnabled && 'icon--disabled',
+                    "fa fa-compass fa-3x",
+                    "icon--has-transition",
+                    !isMapEnabled && "icon--disabled"
                   )}
                 />
                 <span className="u-visually-hidden">Map</span>
@@ -112,11 +107,7 @@ function ResponsiveMenuContainer(props: Props) {
 
 const mapStateToProps = ({
   storylet: { phase },
-  map: {
-    currentArea,
-    setting,
-    shouldUpdate: shouldMapUpdate,
-  },
+  map: { currentArea, setting, shouldUpdate: shouldMapUpdate },
 }: IAppState) => ({
   shouldMapUpdate,
   currentArea,

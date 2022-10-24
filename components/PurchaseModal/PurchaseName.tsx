@@ -1,30 +1,30 @@
-import { nameChanged } from 'actions/myself';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import classnames from 'classnames';
+import { nameChanged } from "actions/myself";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import classnames from "classnames";
 
-import { purchaseItem } from 'actions/fate';
+import { purchaseItem } from "actions/fate";
 
-import Image from 'components/Image';
-import Loading from 'components/Loading';
-import { Success } from 'services/BaseMonadicService';
+import Image from "components/Image";
+import Loading from "components/Loading";
+import { Success } from "services/BaseMonadicService";
 
-import { IFateCard } from 'types/fate';
+import { IFateCard } from "types/fate";
 
-import PurchaseResult from './PurchaseResult';
+import PurchaseResult from "./PurchaseResult";
 
 type Props = {
-  dispatch: Function, // eslint-disable-line
-  data: IFateCard,
-  onRequestClose: () => void,
-}
+  dispatch: Function; // eslint-disable-line
+  data: IFateCard;
+  onRequestClose: () => void;
+};
 
 type State = {
-  isSubmitting: boolean,
-  isSuccess?: boolean,
-  message?: string,
-  purchaseComplete: boolean,
-  value: string,
+  isSubmitting: boolean;
+  isSuccess?: boolean;
+  message?: string;
+  purchaseComplete: boolean;
+  value: string;
 };
 
 export class PurchaseName extends Component<Props, State> {
@@ -39,7 +39,7 @@ export class PurchaseName extends Component<Props, State> {
   state: State = {
     isSubmitting: false,
     purchaseComplete: false,
-    value: '',
+    value: "",
   };
 
   handleChange = (e: { target: { value: string } }) => {
@@ -47,7 +47,10 @@ export class PurchaseName extends Component<Props, State> {
   };
 
   handleSubmit = async () => {
-    const { dispatch, data: { id } } = this.props;
+    const {
+      dispatch,
+      data: { id },
+    } = this.props;
     const { isSubmitting, value } = this.state;
     if (isSubmitting || !value) {
       return;
@@ -61,7 +64,7 @@ export class PurchaseName extends Component<Props, State> {
     this.setState({ isSubmitting: true });
     const result = await dispatch(purchaseItem(data));
     const isSuccess = result instanceof Success;
-    const message = isSuccess ? (result.data.message) : result.message;
+    const message = isSuccess ? result.data.message : result.message;
     if (isSuccess) {
       dispatch(nameChanged(value));
     }
@@ -74,20 +77,12 @@ export class PurchaseName extends Component<Props, State> {
   };
 
   render = () => {
-    const {
-      onRequestClose,
-      data: activePurchase,
-    } = this.props;
+    const { onRequestClose, data: activePurchase } = this.props;
 
     const { image, name } = activePurchase;
 
-    const {
-      isSubmitting,
-      isSuccess,
-      message,
-      purchaseComplete,
-      value,
-    } = this.state;
+    const { isSubmitting, isSuccess, message, purchaseComplete, value } =
+      this.state;
 
     if (purchaseComplete) {
       return (
@@ -95,7 +90,7 @@ export class PurchaseName extends Component<Props, State> {
           image={image}
           name={name}
           isSuccess={isSuccess}
-          message={message ?? ''}
+          message={message ?? ""}
           onClick={onRequestClose}
         />
       );
@@ -103,10 +98,7 @@ export class PurchaseName extends Component<Props, State> {
 
     return (
       <div>
-        <h3
-          className="heading heading--2"
-          style={{ color: '#000' }}
-        >
+        <h3 className="heading heading--2" style={{ color: "#000" }}>
           Change your name
         </h3>
         <hr />
@@ -125,10 +117,8 @@ export class PurchaseName extends Component<Props, State> {
               </div>
             </div>
             <div className="media__body dialog__body">
-              <p dangerouslySetInnerHTML={{ __html: (message ?? '') }} />
-              <p>
-                You will now be known as:
-              </p>
+              <p dangerouslySetInnerHTML={{ __html: message ?? "" }} />
+              <p>You will now be known as:</p>
               <input
                 type="text"
                 className="form__control"
@@ -140,23 +130,21 @@ export class PurchaseName extends Component<Props, State> {
           </div>
           <div className="dialog__actions">
             <button
-              className={classnames('button button--primary', isSubmitting && 'button--disabled')}
+              className={classnames(
+                "button button--primary",
+                isSubmitting && "button--disabled"
+              )}
               onClick={this.handleSubmit}
               disabled={isSubmitting}
               type="button"
             >
-              {isSubmitting ? (
-                <Loading
-                  spinner
-                  small
-                />
-              ) : 'Change'}
+              {isSubmitting ? <Loading spinner small /> : "Change"}
             </button>
           </div>
         </div>
       </div>
     );
-  }
+  };
 }
 
 export default connect()(PurchaseName);

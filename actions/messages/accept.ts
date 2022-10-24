@@ -1,27 +1,35 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { ACCEPT_FAILURE, ACCEPT_REQUESTED, ACCEPT_SUCCESS } from 'actiontypes/messages';
-import { processMessages } from 'actions/app';
-import { ActionCreator } from 'redux';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import MessagesService, { AcceptInvitationResponse } from 'services/MessagesService';
+import { handleVersionMismatch } from "actions/versionSync";
+import {
+  ACCEPT_FAILURE,
+  ACCEPT_REQUESTED,
+  ACCEPT_SUCCESS,
+} from "actiontypes/messages";
+import { processMessages } from "actions/app";
+import { ActionCreator } from "redux";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import MessagesService, {
+  AcceptInvitationResponse,
+} from "services/MessagesService";
 
 const service = new MessagesService();
 
 export type AcceptFailure = { type: typeof ACCEPT_FAILURE };
 export type AcceptRequested = { type: typeof ACCEPT_REQUESTED };
 export type AcceptSuccess = {
-  type: typeof ACCEPT_SUCCESS,
-  payload: AcceptInvitationResponse & { id: number },
+  type: typeof ACCEPT_SUCCESS;
+  payload: AcceptInvitationResponse & { id: number };
 };
 
 export type AcceptAction = AcceptFailure | AcceptRequested | AcceptSuccess;
 
-const acceptRequested: ActionCreator<AcceptRequested> = () => ({ type: ACCEPT_REQUESTED });
+const acceptRequested: ActionCreator<AcceptRequested> = () => ({
+  type: ACCEPT_REQUESTED,
+});
 
 const acceptSuccess: ActionCreator<AcceptSuccess> = (
   invitationId: number,
-  data: AcceptInvitationResponse,
+  data: AcceptInvitationResponse
 ) => ({
   type: ACCEPT_SUCCESS,
   payload: { ...data, id: invitationId },

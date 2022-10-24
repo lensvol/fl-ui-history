@@ -1,17 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactCSSTransitionReplace from 'react-css-transition-replace';
+import React from "react";
+import PropTypes from "prop-types";
+import ReactCSSTransitionReplace from "react-css-transition-replace";
 
-import Buttonlet from 'components/Buttonlet';
+import Buttonlet from "components/Buttonlet";
 
 export default function SnippetComponent(props) {
-  const {
-    description,
-    isFetching,
-    title,
-    onShare,
-    onShowNextSnippet,
-  } = props;
+  const { description, isFetching, title, onShare, onShowNextSnippet } = props;
   return (
     <div className="snippet">
       <ReactCSSTransitionReplace
@@ -22,11 +16,7 @@ export default function SnippetComponent(props) {
       >
         <div key={title}>
           <div className="snippet__edit-button-container">
-            <Buttonlet
-              disabled={isFetching}
-              type="edit"
-              onClick={onShare}
-            />
+            <Buttonlet disabled={isFetching} type="edit" onClick={onShare} />
           </div>
           <div key={title}>
             <p className="heading heading--3 snippet__heading">{title}</p>

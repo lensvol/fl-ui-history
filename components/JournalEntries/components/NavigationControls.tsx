@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 
-import JournalDatePicker from './JournalDatePicker';
-import NavigationButton from './NavigationButton';
+import JournalDatePicker from "./JournalDatePicker";
+import NavigationButton from "./NavigationButton";
 
 interface Props {
-  fetchDirection: 'next' | 'prev' | undefined;
-  isFetching: boolean,
-  next: string | null | undefined,
-  onJumpToDate: (date: Date) => Promise<void>,
-  onNext: () => void,
-  onPrev: () => void,
-  prev: string | null | undefined,
+  fetchDirection: "next" | "prev" | undefined;
+  isFetching: boolean;
+  next: string | null | undefined;
+  onJumpToDate: (date: Date) => Promise<void>;
+  onNext: () => void;
+  onPrev: () => void;
+  prev: string | null | undefined;
 }
 
 export default function NavigationControls({
@@ -32,9 +32,7 @@ export default function NavigationControls({
           onClick={onNext}
         />
       )}
-      <JournalDatePicker
-        onChange={onJumpToDate}
-      />
+      <JournalDatePicker onChange={onJumpToDate} />
       {prev && (
         <NavigationButton
           direction="prev"
@@ -47,7 +45,7 @@ export default function NavigationControls({
   );
 }
 
-NavigationControls.displayName = 'NavigationControls';
+NavigationControls.displayName = "NavigationControls";
 
 /*
 NavigationControls.propTypes = {

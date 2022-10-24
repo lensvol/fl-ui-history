@@ -1,19 +1,11 @@
-import React, {
-  useCallback,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
+import React, { useCallback } from "react";
+import { connect, useDispatch } from "react-redux";
 
-import { logoutUser } from 'actions/user';
+import { logoutUser } from "actions/user";
 
-import Modal from 'components/Modal';
+import Modal from "components/Modal";
 
-export function ConfirmCancelCreateModal({
-  isOpen,
-  onRequestClose,
-}: Props) {
+export function ConfirmCancelCreateModal({ isOpen, onRequestClose }: Props) {
   const dispatch = useDispatch();
 
   const handleQuit = useCallback(() => {
@@ -23,17 +15,12 @@ export function ConfirmCancelCreateModal({
   }, [dispatch, onRequestClose]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
       <div>
         <h1 className="heading heading--2 heading--inverse">
           Quit character creation?
         </h1>
-        <p>
-          Are you sure you want to quit and go back to login?
-        </p>
+        <p>Are you sure you want to quit and go back to login?</p>
         <div className="buttons">
           <button
             className="button button--primary"
@@ -55,6 +42,6 @@ export function ConfirmCancelCreateModal({
   );
 }
 
-type Props = { isOpen: boolean, onRequestClose: () => void };
+type Props = { isOpen: boolean; onRequestClose: () => void };
 
 export default connect()(ConfirmCancelCreateModal);

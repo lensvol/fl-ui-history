@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { ThunkDispatch } from 'redux-thunk';
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { ThunkDispatch } from "redux-thunk";
 
-import { IAppState } from 'types/app';
-import BraintreeView from './BraintreeView';
-import PurchaseFateSuccess from './PurchaseFateSuccess';
+import { IAppState } from "types/app";
+import BraintreeView from "./BraintreeView";
+import PurchaseFateSuccess from "./PurchaseFateSuccess";
 
 function PurchaseFate(props: Props) {
   const { isSuccess, message } = props;
@@ -19,22 +19,28 @@ function PurchaseFate(props: Props) {
     <div className="purchase-panel">
       <div className="payment-toggle">
         <div className="security-notice pull-right">
-          <i className="icon icon-lock" />
-          {' '}
-          Secure Payment
+          <i className="icon icon-lock" /> Secure Payment
         </div>
       </div>
-      <BraintreeView key="braintree" onCancel={() => { /* no-op */ }} />
+      <BraintreeView
+        key="braintree"
+        onCancel={() => {
+          /* no-op */
+        }}
+      />
     </div>
   );
 }
 
 interface Props {
-  dispatch: ThunkDispatch<any, any, any>,
-  isSuccess: boolean,
-  message?: string,
+  dispatch: ThunkDispatch<any, any, any>;
+  isSuccess: boolean;
+  message?: string;
 }
 
-const mapStateToProps = ({ payment: { isSuccess, message } }: IAppState) => ({ isSuccess, message });
+const mapStateToProps = ({ payment: { isSuccess, message } }: IAppState) => ({
+  isSuccess,
+  message,
+});
 
 export default withRouter(connect(mapStateToProps)(PurchaseFate));

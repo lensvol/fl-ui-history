@@ -1,37 +1,27 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Loading from 'components/Loading';
-import Modal from 'components/Modal';
+import Loading from "components/Loading";
+import Modal from "components/Modal";
 
 interface Props {
-  isFetching: boolean,
-  isOpen: boolean,
-  onConfirm: () => void,
-  onRequestClose: () => void,
+  isFetching: boolean;
+  isOpen: boolean;
+  onConfirm: () => void;
+  onRequestClose: () => void;
 }
 
 export default function DeleteDialog(props: Props) {
-  const {
-    isFetching,
-    isOpen,
-    onConfirm,
-    onRequestClose,
-  } = props;
+  const { isFetching, isOpen, onConfirm, onRequestClose } = props;
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
       <div>
         <h2 className="heading heading--2 heading--inverse">
           Delete this entry?
         </h2>
         <hr />
         <div className="modal__body">
-          <p>
-            Are you sure you want to delete this entry?
-          </p>
+          <p>Are you sure you want to delete this entry?</p>
         </div>
         <div className="buttons">
           <button
@@ -40,7 +30,7 @@ export default function DeleteDialog(props: Props) {
             onClick={onConfirm}
             type="button"
           >
-            {isFetching ? <Loading spinner small /> : 'Delete'}
+            {isFetching ? <Loading spinner small /> : "Delete"}
           </button>
           <button
             className="button button--primary"

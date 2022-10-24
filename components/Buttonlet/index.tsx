@@ -1,34 +1,31 @@
-import React, {
-  CSSProperties,
-  useMemo,
-} from 'react';
-import classnames from 'classnames';
-import { ITooltipData } from 'components/ModalTooltip/types';
-import TippyWrapper from 'components/TippyWrapper';
+import React, { CSSProperties, useMemo } from "react";
+import classnames from "classnames";
+import { ITooltipData } from "components/ModalTooltip/types";
+import TippyWrapper from "components/TippyWrapper";
 import {
   useButtonletClassName,
   useCircleClassName,
   useIconClassName,
-} from './hooks';
+} from "./hooks";
 
 type Props = {
   classNames?: {
-    buttonletClassName?: string,
-    containerClassName?: string,
-    circleClassName?: string,
-    iconClassName?: string,
-  },
-  disabled?: boolean,
-  focused?: boolean,
-  local?: boolean,
-  onClick?: (...args: any) => any,
-  override?: boolean,
-  spin?: boolean,
-  style?: CSSProperties,
-  title?: string,
-  tooltipData?: ITooltipData,
-  tooltipTimeout?: number,
-  type: string,
+    buttonletClassName?: string;
+    containerClassName?: string;
+    circleClassName?: string;
+    iconClassName?: string;
+  };
+  disabled?: boolean;
+  focused?: boolean;
+  local?: boolean;
+  onClick?: (...args: any) => any;
+  override?: boolean;
+  spin?: boolean;
+  style?: CSSProperties;
+  title?: string;
+  tooltipData?: ITooltipData;
+  tooltipTimeout?: number;
+  type: string;
 };
 
 export default function Buttonlet({
@@ -50,61 +47,61 @@ export default function Buttonlet({
     focused,
     local,
     onClick,
-    type,
+    type
   );
 
   const containerClassName = classNames?.containerClassName;
 
-  const circleClassName = useCircleClassName(classNames?.circleClassName, override);
+  const circleClassName = useCircleClassName(
+    classNames?.circleClassName,
+    override
+  );
 
   const iconClassName = useIconClassName(
     classNames?.iconClassName,
     override,
     spin,
-    type,
+    type
   );
 
-  const component = useMemo(() => (
-    <button
-      aria-label={title}
-      onClick={onClick}
-      className={classnames('buttonlet-container', containerClassName)}
-      type="button"
-      disabled={disabled}
-    >
-      <span
-        className={classnames(buttonletClassName, ` buttonlet-${type}`)}
-        style={style}
-        title={title}
+  const component = useMemo(
+    () => (
+      <button
+        aria-label={title}
+        onClick={onClick}
+        className={classnames("buttonlet-container", containerClassName)}
+        type="button"
+        disabled={disabled}
       >
-        <span className={circleClassName} />
-        <span className={iconClassName} />
-        <span className="u-visually-hidden">{type}</span>
-      </span>
-    </button>
-  ), [
-    buttonletClassName,
-    circleClassName,
-    containerClassName,
-    disabled,
-    iconClassName,
-    onClick,
-    style,
-    title,
-    type,
-  ]);
+        <span
+          className={classnames(buttonletClassName, ` buttonlet-${type}`)}
+          style={style}
+          title={title}
+        >
+          <span className={circleClassName} />
+          <span className={iconClassName} />
+          <span className="u-visually-hidden">{type}</span>
+        </span>
+      </button>
+    ),
+    [
+      buttonletClassName,
+      circleClassName,
+      containerClassName,
+      disabled,
+      iconClassName,
+      onClick,
+      style,
+      title,
+      type,
+    ]
+  );
 
   if (tooltipData) {
-    return (
-      <TippyWrapper
-        tooltipData={tooltipData}
-      >
-        {component}
-      </TippyWrapper>
-    );
+    return <TippyWrapper tooltipData={tooltipData}>{component}</TippyWrapper>;
   }
 
   return component;
 }
 
-Buttonlet.displayName = 'Buttonlet';
+Buttonlet.displayName = "Buttonlet";

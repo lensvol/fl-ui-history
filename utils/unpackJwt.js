@@ -1,14 +1,11 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-import { getTokenAndStorage } from 'features/startup';
+import { getTokenAndStorage } from "features/startup";
 
 export default function unpackJwt(window) {
   const { token } = getTokenAndStorage(window);
   try {
-    const {
-      CharacterId: characterId,
-      UserId: userId,
-    } = jwt.decode(token);
+    const { CharacterId: characterId, UserId: userId } = jwt.decode(token);
     const retValue = {};
 
     // Check that character and user IDs are number-like

@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import ReactCSSTransitionReplace from 'react-css-transition-replace';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import ReactCSSTransitionReplace from "react-css-transition-replace";
 
-import { updateDescription } from 'actions/profile';
+import { updateDescription } from "actions/profile";
 
-
-import EditToggle from './EditToggle';
-import TheySayForm from './TheySayForm';
-import TheySayStatic from './TheySayStatic';
+import EditToggle from "./EditToggle";
+import TheySayForm from "./TheySayForm";
+import TheySayStatic from "./TheySayStatic";
 
 type State = {
-  isEditing: boolean,
+  isEditing: boolean;
 };
 
 class TheySay extends Component<Props, State> {
-  static displayName = 'TheySay';
+  static displayName = "TheySay";
 
   state = {
     isEditing: false,
@@ -33,10 +32,18 @@ class TheySay extends Component<Props, State> {
   };
 
   renderTransitionContent = () => {
-    const { profileCharacter: { description } } = this.props;
+    const {
+      profileCharacter: { description },
+    } = this.props;
     const { isEditing } = this.state;
     if (isEditing) {
-      return <TheySayForm key="form" initialValue={description} onSubmit={this.handleSubmit} />;
+      return (
+        <TheySayForm
+          key="form"
+          initialValue={description}
+          onSubmit={this.handleSubmit}
+        />
+      );
     }
     return <TheySayStatic key="static" description={description} />;
   };
@@ -49,9 +56,14 @@ class TheySay extends Component<Props, State> {
       <div className="snippet profile__snippet">
         <div className="they-say__header-row">
           <h3 className="heading heading--2 they-say__heading">They say...</h3>
-          {editable && <EditToggle isEditing={isEditing} onClick={this.handleToggleIsEditing} />}
+          {editable && (
+            <EditToggle
+              isEditing={isEditing}
+              onClick={this.handleToggleIsEditing}
+            />
+          )}
         </div>
-        <div style={{ marginTop: '1rem' }}>
+        <div style={{ marginTop: "1rem" }}>
           <ReactCSSTransitionReplace
             // @ts-ignore
             childComponent="div"
@@ -68,9 +80,9 @@ class TheySay extends Component<Props, State> {
 }
 
 type Props = {
-  dispatch: Function,
-  editable?: boolean,
-  profileCharacter: { description: string },
+  dispatch: Function;
+  editable?: boolean;
+  profileCharacter: { description: string };
 };
 
 /*

@@ -1,14 +1,14 @@
-import { OutfitActions } from 'actions/outfit';
-import * as MyselfActionTypes from 'actiontypes/myself';
-import { OutfitSlotName } from 'types/outfit';
+import { OutfitActions } from "actions/outfit";
+import * as MyselfActionTypes from "actiontypes/myself";
+import { OutfitSlotName } from "types/outfit";
 
-import fetchOutfitSuccess from './fetchOutfitSuccess';
+import fetchOutfitSuccess from "./fetchOutfitSuccess";
 
-export type IOutfitState = {[key in OutfitSlotName]?: number | undefined} & {
-  dirty: boolean,
-  isChanging: boolean,
-  maxOutfits: number,
-}
+export type IOutfitState = { [key in OutfitSlotName]?: number | undefined } & {
+  dirty: boolean;
+  isChanging: boolean;
+  maxOutfits: number;
+};
 
 export const INITIAL_STATE: IOutfitState = {
   dirty: false,

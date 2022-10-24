@@ -1,14 +1,10 @@
-import React, {
-  useMemo,
-} from 'react';
-import {
-  IArea,
-} from 'types/map';
-import { isLandmark } from 'features/mapping';
+import React, { useMemo } from "react";
+import { IArea } from "types/map";
+import { isLandmark } from "features/mapping";
 
 type Props = {
-  area: IArea,
-  onClick: (area: IArea) => Promise<void>,
+  area: IArea;
+  onClick: (area: IArea) => Promise<void>;
 };
 
 export default function PossibleMapMenuItem({ area, onClick }: Props) {
@@ -40,10 +36,7 @@ export default function PossibleMapMenuItem({ area, onClick }: Props) {
 
   return (
     <li key={area.areaKey}>
-      <button
-        onClick={() => onClick(area)}
-        type="button"
-      >
+      <button onClick={() => onClick(area)} type="button">
         {area.name}
       </button>
     </li>

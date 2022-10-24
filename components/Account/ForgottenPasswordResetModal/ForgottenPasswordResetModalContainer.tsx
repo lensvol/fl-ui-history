@@ -1,29 +1,25 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import ReactModal from 'react-modal';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import ReactModal from "react-modal";
 
-import { resetPassword } from 'actions/settings';
+import { resetPassword } from "actions/settings";
 
-import { APP_ROOT_SELECTOR } from 'constants/selectors';
-import {
-  Success,
-  Failure,
-} from 'services/BaseMonadicService';
+import { APP_ROOT_SELECTOR } from "constants/selectors";
+import { Success, Failure } from "services/BaseMonadicService";
 
-import ForgottenPasswordResetModalComponent from './ForgottenPasswordResetModalComponent';
+import ForgottenPasswordResetModalComponent from "./ForgottenPasswordResetModalComponent";
 
 type Props = {
-  dispatch: Function,
-  isOpen: boolean,
-  onRequestClose: () => void,
-  token: string,
+  dispatch: Function;
+  isOpen: boolean;
+  onRequestClose: () => void;
+  token: string;
 };
 
-
 type State = {
-  complete: boolean,
-  isSuccess: boolean,
-  message: string | undefined,
+  complete: boolean;
+  isSuccess: boolean;
+  message: string | undefined;
 };
 
 const INITIAL_STATE: State = {
@@ -46,11 +42,11 @@ class ForgottenPasswordResetModalContainer extends Component<Props, State> {
   };
 
   handleClickWhenFailed = () => {
-    window.location.pathname = '/';
+    window.location.pathname = "/";
   };
 
   handleClickWhenSuccessful = () => {
-    window.location.pathname = '/';
+    window.location.pathname = "/";
   };
 
   handleRequestClose = () => {
@@ -66,12 +62,15 @@ class ForgottenPasswordResetModalContainer extends Component<Props, State> {
   handleSubmit = async ({ password }: { password: string }) => {
     const { dispatch, token } = this.props;
     // const { isSuccess, message } = await dispatch(resetPassword({ password, token }));
-    const trevor: Success<{ isSuccess: string, message?: string }> | Failure = await dispatch(
-      resetPassword({ password, token }),
-    );
+    const trevor: Success<{ isSuccess: string; message?: string }> | Failure =
+      await dispatch(resetPassword({ password, token }));
 
     if (trevor instanceof Success) {
-      return this.setState({ isSuccess: true, complete: true, message: 'Password reset!' });
+      return this.setState({
+        isSuccess: true,
+        complete: true,
+        message: "Password reset!",
+      });
     }
 
     const { message } = trevor;
@@ -94,7 +93,7 @@ class ForgottenPasswordResetModalContainer extends Component<Props, State> {
         onSubmit={this.handleSubmit}
       />
     );
-  }
+  };
 }
 
 export default connect()(ForgottenPasswordResetModalContainer);

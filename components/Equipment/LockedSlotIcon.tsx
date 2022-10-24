@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export default function LockedSlotIcon() {
   return (
@@ -8,7 +8,7 @@ export default function LockedSlotIcon() {
       height={25}
       width={25}
       style={{
-        position: 'absolute',
+        position: "absolute",
         top: -4,
         right: -4,
       }}

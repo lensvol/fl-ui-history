@@ -1,18 +1,16 @@
-import React, {
-  useMemo,
-} from 'react';
-import Image from 'components/Image';
-import getImagePath from 'utils/getImagePath';
-import { OPTIMIZE_MYSELF_QUALITIES } from 'features/feature-flags';
-import { useFeature } from 'flagged';
+import React, { useMemo } from "react";
+import Image from "components/Image";
+import getImagePath from "utils/getImagePath";
+import { OPTIMIZE_MYSELF_QUALITIES } from "features/feature-flags";
+import { useFeature } from "flagged";
 
-import { normalize } from 'utils/stringFunctions';
-import { IQuality } from 'types/qualities';
+import { normalize } from "utils/stringFunctions";
+import { IQuality } from "types/qualities";
 
-import QualityItemNameAndDescription from './QualityItemNameAndDescription';
+import QualityItemNameAndDescription from "./QualityItemNameAndDescription";
 
 type Props = IQuality & {
-  filterString?: string,
+  filterString?: string;
 };
 
 export default function QualityItem(props: Props) {
@@ -31,15 +29,14 @@ export default function QualityItem(props: Props) {
   // Should we just render an <img />, or an <Image /> ?
   const usesQualityItemOptimization = useFeature(OPTIMIZE_MYSELF_QUALITIES);
 
-  const tooltipData = useMemo(() => ({
-    ...props,
-    level: effectiveLevel,
-    secondaryDescription: availableAt,
-  }), [
-    availableAt,
-    effectiveLevel,
-    props,
-  ]);
+  const tooltipData = useMemo(
+    () => ({
+      ...props,
+      level: effectiveLevel,
+      secondaryDescription: availableAt,
+    }),
+    [availableAt, effectiveLevel, props]
+  );
 
   if (filterString && normalize(name).indexOf(normalize(filterString)) < 0) {
     return null;
@@ -55,7 +52,7 @@ export default function QualityItem(props: Props) {
           <img
             alt={name}
             className="media__object"
-            src={getImagePath({ icon: image, type: 'small-icon' })}
+            src={getImagePath({ icon: image, type: "small-icon" })}
           />
         </div>
         <QualityItemNameAndDescription
@@ -91,4 +88,4 @@ export default function QualityItem(props: Props) {
     </li>
   );
 }
-QualityItem.displayName = 'QualityItem';
+QualityItem.displayName = "QualityItem";

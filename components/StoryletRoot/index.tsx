@@ -1,30 +1,21 @@
-import React, {
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback, useRef, useState } from "react";
+import { connect } from "react-redux";
 
-import Config from 'configuration';
+import Config from "configuration";
 
-import {
-  shareContent,
-  shareContentComplete,
-} from 'actions/profile';
-import { Success } from 'services/BaseMonadicService';
-import getBorderColour from 'utils/getBorderColour';
-import { stripHtml } from 'utils/stringFunctions';
+import { shareContent, shareContentComplete } from "actions/profile";
+import { Success } from "services/BaseMonadicService";
+import getBorderColour from "utils/getBorderColour";
+import { stripHtml } from "utils/stringFunctions";
 
-import Buttonlet from 'components/Buttonlet';
-import Image from 'components/Image';
-import ShareDialog from 'components/ShareDialog';
+import Buttonlet from "components/Buttonlet";
+import Image from "components/Image";
+import ShareDialog from "components/ShareDialog";
 
-import {
-  StoryletRootData,
-} from 'types/storylet';
-import { IAppState } from 'types/app';
-import { StoryletDescription } from 'components/common';
-import FrequencyButtonlet from './FrequencyButtonlet';
+import { StoryletRootData } from "types/storylet";
+import { IAppState } from "types/app";
+import { StoryletDescription } from "components/common";
+import FrequencyButtonlet from "./FrequencyButtonlet";
 
 export function StoryletRoot(props: Props) {
   const {
@@ -45,32 +36,35 @@ export function StoryletRoot(props: Props) {
 
   const [isSharing, setIsSharing] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
-  const [shareMessageResponse, setShareMessageResponse] = useState<string | undefined>();
+  const [shareMessageResponse, setShareMessageResponse] = useState<
+    string | undefined
+  >();
 
   const element = useRef<HTMLDivElement>(null);
 
-  const addToJournal = useCallback(async (message: any) => {
-    setIsSharing(true);
+  const addToJournal = useCallback(
+    async (message: any) => {
+      setIsSharing(true);
 
-    const result = await dispatch(shareContent({
-      contentClass: 'EventConclusion',
-      contentKey: shareDataId,
-      image: shareDataImage,
-      message: stripHtml(message),
-    }));
+      const result = await dispatch(
+        shareContent({
+          contentClass: "EventConclusion",
+          contentKey: shareDataId,
+          image: shareDataImage,
+          message: stripHtml(message),
+        })
+      );
 
-    if (result instanceof Success) {
-      setShareMessageResponse(result.data.message);
-    }
+      if (result instanceof Success) {
+        setShareMessageResponse(result.data.message);
+      }
 
-    setIsSharing(false);
+      setIsSharing(false);
 
-    return result;
-  }, [
-    dispatch,
-    shareDataId,
-    shareDataImage,
-  ]);
+      return result;
+    },
+    [dispatch, shareDataId, shareDataImage]
+  );
 
   const closeJournalDialog = useCallback(() => {
     setShareDialogOpen(false);
@@ -84,7 +78,7 @@ export function StoryletRoot(props: Props) {
   return (
     <div
       className="media media--root"
-      style={{ marginBottom: '18px' }}
+      style={{ marginBottom: "18px" }}
       ref={element}
     >
       <div className="media__left">
@@ -109,7 +103,7 @@ export function StoryletRoot(props: Props) {
             />
           )}
         </div>
-        {data.frequency === 'Sometimes' && data.distribution !== undefined && (
+        {data.frequency === "Sometimes" && data.distribution !== undefined && (
           <div className="storylet-root__frequency">
             <FrequencyButtonlet frequency={data.distribution} />
           </div>
@@ -122,7 +116,7 @@ export function StoryletRoot(props: Props) {
           containerClassName="storylet-root__description-container"
           text={data.description}
         />
-        {(privilegeLevel === 'Admin') && (
+        {privilegeLevel === "Admin" && (
           <a
             className="button button--primary"
             href={`${Config.cmsUrl}Storying/EditRoot?rootEventId=${rootEventId}`}
@@ -147,13 +141,13 @@ export function StoryletRoot(props: Props) {
   );
 }
 
-StoryletRoot.displayName = 'StoryletRoot';
+StoryletRoot.displayName = "StoryletRoot";
 
 export interface OwnProps {
-  data: StoryletRootData,
-  dispatch: Function, // eslint-disable-line
-  rootEventId?: number | string | undefined,
-  shareData?: any,
+  data: StoryletRootData;
+  dispatch: Function; // eslint-disable-line
+  rootEventId?: number | string | undefined;
+  shareData?: any;
 }
 
 const mapStateToProps = (state: IAppState) => ({

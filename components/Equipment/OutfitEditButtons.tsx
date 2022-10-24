@@ -1,17 +1,13 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
-import { useFeature } from 'flagged';
+import React, { useCallback, useMemo, useState } from "react";
+import { useFeature } from "flagged";
 
-import Buttonlet from 'components/Buttonlet';
-import { NEW_OUTFIT_BEHAVIOUR } from 'features/feature-flags';
+import Buttonlet from "components/Buttonlet";
+import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
 
 type Props = {
-  dirty: boolean,
-  onStartEditing: () => void,
-  onSaveOutfit: () => Promise<void>,
+  dirty: boolean;
+  onStartEditing: () => void;
+  onSaveOutfit: () => Promise<void>;
 };
 
 export default function OutfitEditButtons({
@@ -27,15 +23,13 @@ export default function OutfitEditButtons({
     setIsSaving(true);
     await onSaveOutfit();
     setIsSaving(false);
-  }, [
-    onSaveOutfit,
-  ]);
+  }, [onSaveOutfit]);
 
   const saveButtonDescription = useMemo(() => {
     if (!dirty) {
-      return 'You haven\'t made any changes to this outfit.';
+      return "You haven't made any changes to this outfit.";
     }
-    return 'Save your changes to this outfit.';
+    return "Save your changes to this outfit.";
   }, [dirty]);
 
   if (!hasNewOutfitBehaviour) {
@@ -48,11 +42,11 @@ export default function OutfitEditButtons({
         type="edit"
         onClick={onStartEditing}
         tooltipData={{
-          description: 'Edit this outfit\'s name',
+          description: "Edit this outfit's name",
         }}
       />
       <Buttonlet
-        type={isSaving ? 'refresh' : 'save-outfit'}
+        type={isSaving ? "refresh" : "save-outfit"}
         onClick={onClickToSaveOutfit}
         tooltipData={{
           description: saveButtonDescription,

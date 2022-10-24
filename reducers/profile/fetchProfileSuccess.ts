@@ -1,7 +1,10 @@
-import { FetchProfileSuccess } from 'actions/profile/fetchProfile';
-import { IProfileState } from 'types/profile';
+import { FetchProfileSuccess } from "actions/profile/fetchProfile";
+import { IProfileState } from "types/profile";
 
-export default function fetchProfileSuccess(state: IProfileState, action: FetchProfileSuccess): IProfileState {
+export default function fetchProfileSuccess(
+  state: IProfileState,
+  action: FetchProfileSuccess
+): IProfileState {
   const {
     characterName,
     currentArea,

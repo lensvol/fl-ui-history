@@ -1,44 +1,37 @@
-import { showAccountLinkReminder } from 'actions/accountLinkReminder';
+import { showAccountLinkReminder } from "actions/accountLinkReminder";
 
-import { fetchActions } from 'actions/actions';
-import extractImages from 'actions/app/extractImages';
+import { fetchActions } from "actions/actions";
+import extractImages from "actions/app/extractImages";
 // import extractImages from './extractImages';
 // import preloadImages from './preloadImages';
-import preloadImages from 'actions/app/preloadImages';
-import { fetch as fetchCards } from 'actions/cards';
-import fetchCategories from 'actions/categories/fetchCategories';
-import { fetchExchange } from 'actions/exchange';
-import { fetch as fetchFate } from 'actions/fate';
-import { getSupportingData } from 'actions/infoBar';
+import preloadImages from "actions/app/preloadImages";
+import { fetch as fetchCards } from "actions/cards";
+import fetchCategories from "actions/categories/fetchCategories";
+import { fetchExchange } from "actions/exchange";
+import { fetch as fetchFate } from "actions/fate";
+import { getSupportingData } from "actions/infoBar";
 import {
   fetch as fetchMap,
   setCurrentArea,
   setCurrentSetting,
-} from 'actions/map';
-import { fetch as fetchMessages } from 'actions/messages';
-import { fetchMyself } from 'actions/myself';
-import { fetch as fetchNews } from 'actions/news';
-import { fetchOutfit } from 'actions/outfit';
-import { fetchPlans } from 'actions/plans';
-import { fetch as fetchSettings } from 'actions/settings';
-import fetchAuthMethods from 'actions/settings/fetchAuthMethods';
-import { fetchAvailable as fetchAvailableStorylets } from 'actions/storylet';
-import {
-  fetchUser,
-  loginSuccess,
-} from 'actions/user';
-import { STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG } from 'constants/accountLinkReminder';
-import {
-  Either,
-  Failure,
-  Success,
-} from 'services/BaseMonadicService';
-import { FetchUserResponse } from 'services/UserService';
-import { IAppState } from 'types/app';
-import { IFetchMyselfResponseData } from 'types/myself';
+} from "actions/map";
+import { fetch as fetchMessages } from "actions/messages";
+import { fetchMyself } from "actions/myself";
+import { fetch as fetchNews } from "actions/news";
+import { fetchOutfit } from "actions/outfit";
+import { fetchPlans } from "actions/plans";
+import { fetch as fetchSettings } from "actions/settings";
+import fetchAuthMethods from "actions/settings/fetchAuthMethods";
+import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
+import { fetchUser, loginSuccess } from "actions/user";
+import { STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG } from "constants/accountLinkReminder";
+import { Either, Failure, Success } from "services/BaseMonadicService";
+import { FetchUserResponse } from "services/UserService";
+import { IAppState } from "types/app";
+import { IFetchMyselfResponseData } from "types/myself";
 
-import destructureJwt from 'utils/destructureJwt';
-import getImagePath from 'utils/getImagePath';
+import destructureJwt from "utils/destructureJwt";
+import getImagePath from "utils/getImagePath";
 
 const FLAG_PREFETCH_NON_MAP_IMAGES = false;
 
@@ -49,13 +42,15 @@ const FLAG_PREFETCH_NON_MAP_IMAGES = false;
  */
 
 export interface IBootstrapOptions {
-  fetchSpritesNow?: boolean,
-  hasMapRootAreaChanged?: boolean,
-  onSpriteLoadProgress?: (_?: any) => any,
+  fetchSpritesNow?: boolean;
+  hasMapRootAreaChanged?: boolean;
+  onSpriteLoadProgress?: (_?: any) => any;
 }
 
 function doesUserPreferAuthNagSuppression(storage: Storage) {
-  return JSON.parse(storage.getItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG) ?? 'false');
+  return JSON.parse(
+    storage.getItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG) ?? "false"
+  );
 }
 
 export default function performInitialRequests(options = {}) {
@@ -72,15 +67,18 @@ export default function performInitialRequests(options = {}) {
     try {
       await dispatch(fetchCategories());
     } catch (error) {
-      console.warn('Failed to fetch categories; continuing bootstrap');
+      console.warn("Failed to fetch categories; continuing bootstrap");
     }
 
     // Fetch myself qualities and optionally prefetch quality images
-    const fetchMyselfResult: Success<IFetchMyselfResponseData> | Failure = await dispatch(fetchMyself());
+    const fetchMyselfResult: Success<IFetchMyselfResponseData> | Failure =
+      await dispatch(fetchMyself());
     // No need to await images
     if (fetchMyselfResult instanceof Success && FLAG_PREFETCH_NON_MAP_IMAGES) {
       const images = extractImages();
-      preloadImages(images.map(image => getImagePath({ icon: image, type: 'small-icon' })));
+      preloadImages(
+        images.map((image) => getImagePath({ icon: image, type: "small-icon" }))
+      );
     }
 
     // Fetch outfit
@@ -102,10 +100,9 @@ export default function performInitialRequests(options = {}) {
     dispatch(fetchPlans());
 
     // Fetch settings
-    dispatch(fetchSettings())
-      .then(async () => {
-        await dispatch(fetchAuthMethods());
-      });
+    dispatch(fetchSettings()).then(async () => {
+      await dispatch(fetchAuthMethods());
+    });
 
     // Get the user data, which we need for a few things
     {
@@ -117,7 +114,9 @@ export default function performInitialRequests(options = {}) {
         // If we have an area key-value pair, set the current area now
         // (this will change in a future API update)
         if (data.area) {
-          dispatch(setCurrentArea({ ...data.area, ...(data.area.jsonInfo ?? {}) }));
+          dispatch(
+            setCurrentArea({ ...data.area, ...(data.area.jsonInfo ?? {}) })
+          );
         }
 
         // If we have a Setting k-v pair, set it now
@@ -129,7 +128,10 @@ export default function performInitialRequests(options = {}) {
 
         // Show the user an auth nag if the response says we should and if the user hasn't suppressed them
         // on this device
-        if (data.shouldDisplayAuthNag && !doesUserPreferAuthNagSuppression(localStorage)) {
+        if (
+          data.shouldDisplayAuthNag &&
+          !doesUserPreferAuthNagSuppression(localStorage)
+        ) {
           dispatch(showAccountLinkReminder());
         }
       }
@@ -146,11 +148,20 @@ export default function performInitialRequests(options = {}) {
     // Fetch bazaar data and optionally fetch images
     const exchangeData: any = await fetchExchange();
     if (exchangeData?.exchange?.shops && FLAG_PREFETCH_NON_MAP_IMAGES) {
-      const { exchange: { shops } } = exchangeData;
-      preloadImages(shops.map((s: any) => s.image).map((image: any) => `${getImagePath({
-        icon: image,
-        type: 'small-icon',
-      })}`));
+      const {
+        exchange: { shops },
+      } = exchangeData;
+      preloadImages(
+        shops
+          .map((s: any) => s.image)
+          .map(
+            (image: any) =>
+              `${getImagePath({
+                icon: image,
+                type: "small-icon",
+              })}`
+          )
+      );
     }
 
     // Fetch action bank stuff

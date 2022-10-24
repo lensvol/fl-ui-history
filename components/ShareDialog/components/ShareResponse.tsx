@@ -1,18 +1,18 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import { stripHtml } from 'utils/stringFunctions';
-import Image from 'components/Image';
-import { IAppState } from 'types/app';
+import { stripHtml } from "utils/stringFunctions";
+import Image from "components/Image";
+import { IAppState } from "types/app";
 
 interface Props {
-  borderColour?: string,
-  characterName: string,
+  borderColour?: string;
+  characterName: string;
   data: {
-    image: string,
-    name: string,
-  },
-  shareMessageResponse?: string,
+    image: string;
+    name: string;
+  };
+  shareMessageResponse?: string;
 }
 
 export function ShareResponse({
@@ -23,10 +23,8 @@ export function ShareResponse({
 }: Props) {
   return (
     <div>
-      <h1 className="heading heading--1">
-        Recorded for posterity!
-      </h1>
-      <div className="media" style={{ display: 'flex' }}>
+      <h1 className="heading heading--1">Recorded for posterity!</h1>
+      <div className="media" style={{ display: "flex" }}>
         <div className="media__left">
           <Image
             className="media__object"
@@ -41,7 +39,9 @@ export function ShareResponse({
 
         <div className="media__body">
           <p className="descriptive">
-            {shareMessageResponse ? `"${stripHtml(shareMessageResponse)}"` : null}
+            {shareMessageResponse
+              ? `"${stripHtml(shareMessageResponse)}"`
+              : null}
           </p>
           <p>View or delete it here</p>
           <a
@@ -58,6 +58,10 @@ export function ShareResponse({
   );
 }
 
-const mapStateToProps = ({ myself: { character: { name: characterName } } }: IAppState) => ({ characterName });
+const mapStateToProps = ({
+  myself: {
+    character: { name: characterName },
+  },
+}: IAppState) => ({ characterName });
 
 export default connect(mapStateToProps)(ShareResponse);

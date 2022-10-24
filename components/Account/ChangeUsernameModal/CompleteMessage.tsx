@@ -1,18 +1,21 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
+import React from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
 
 export function CompleteMessage({ name }: Props) {
   return (
     <div>
-      Success! Your username is now '
-      {name}
-'.
+      Success! Your username is now '{name}
+      '.
     </div>
   );
 }
 
-const mapStateToProps = ({ settings: { data: { name } } }: IAppState) => ({ name });
+const mapStateToProps = ({
+  settings: {
+    data: { name },
+  },
+}: IAppState) => ({ name });
 
 type Props = ReturnType<typeof mapStateToProps>;
 

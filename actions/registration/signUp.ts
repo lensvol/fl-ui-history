@@ -1,18 +1,18 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   SIGNUP_FAILURE,
   SIGNUP_REQUESTED,
   SIGNUP_SUCCESS,
-} from 'actiontypes/registration';
+} from "actiontypes/registration";
 
-import { bootstrap } from 'actions/app';
-import { ThunkDispatch } from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
+import { bootstrap } from "actions/app";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
 
-import RegisterService, { IRegisterService } from 'services/RegisterService';
+import RegisterService, { IRegisterService } from "services/RegisterService";
 
-export type SignUpRequested = { type: typeof SIGNUP_REQUESTED};
-export type SignUpSuccess = { type: typeof SIGNUP_SUCCESS, payload: any };
+export type SignUpRequested = { type: typeof SIGNUP_REQUESTED };
+export type SignUpSuccess = { type: typeof SIGNUP_SUCCESS; payload: any };
 export type SignUpFailure = { type: typeof SIGNUP_FAILURE };
 
 export type SignUpActions = SignUpRequested | SignUpFailure | SignUpSuccess;

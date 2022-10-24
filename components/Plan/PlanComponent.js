@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import classnames from "classnames";
 
-import Buttonlet from 'components/Buttonlet';
-import Image from 'components/Image';
+import Buttonlet from "components/Buttonlet";
+import Image from "components/Image";
 
-import EditButtonlet from './EditButtonlet';
-import RefreshButtonlet from './RefreshButtonlet';
-import FormOrNotes from './FormOrNotes';
+import EditButtonlet from "./EditButtonlet";
+import RefreshButtonlet from "./RefreshButtonlet";
+import FormOrNotes from "./FormOrNotes";
 
 export default function Plan(props) {
   const {
@@ -20,11 +20,7 @@ export default function Plan(props) {
     qualityRequirements,
   } = props;
   return (
-    <div
-      className={classnames(
-        'branch plans_separator',
-      )}
-    >
+    <div className={classnames("branch plans_separator")}>
       <div className="media__left">
         <div className="card card--sm">
           <Image
@@ -39,7 +35,11 @@ export default function Plan(props) {
       <div className="media__body enforced_break">
         <div className="plan__buttons">
           <EditButtonlet editing={editing} onClick={onToggleEditMode} />
-          <Buttonlet type="delete" title="Delete this plan" onClick={onDelete} />
+          <Buttonlet
+            type="delete"
+            title="Delete this plan"
+            onClick={onDelete}
+          />
           {canRefresh && <RefreshButtonlet onClick={onRefresh} />}
         </div>
 
@@ -51,9 +51,7 @@ export default function Plan(props) {
         <div>
           <FormOrNotes {...props} />
         </div>
-        <div className="buttons">
-          {!editing && qualityRequirements}
-        </div>
+        <div className="buttons">{!editing && qualityRequirements}</div>
       </div>
     </div>
   );
@@ -69,4 +67,3 @@ Plan.propTypes = {
   onToggleEditMode: PropTypes.func.isRequired,
   qualityRequirements: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
-

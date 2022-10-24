@@ -1,10 +1,10 @@
-import { ProfileActions } from 'actions/profile';
-import * as ProfileActionTypes from 'actiontypes/profile';
+import { ProfileActions } from "actions/profile";
+import * as ProfileActionTypes from "actiontypes/profile";
 
-import deleteEntrySuccess from 'reducers/profile/deleteEntrySuccess';
-import fetchProfileSuccess from 'reducers/profile/fetchProfileSuccess';
-import fetchSharedContentSuccess from 'reducers/profile/fetchSharedContentSuccess';
-import { IProfileState } from 'types/profile';
+import deleteEntrySuccess from "reducers/profile/deleteEntrySuccess";
+import fetchProfileSuccess from "reducers/profile/fetchProfileSuccess";
+import fetchSharedContentSuccess from "reducers/profile/fetchSharedContentSuccess";
+import { IProfileState } from "types/profile";
 
 const INITIAL_STATE: IProfileState = {
   characterName: undefined,

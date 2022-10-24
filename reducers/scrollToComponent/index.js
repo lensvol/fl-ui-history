@@ -1,7 +1,4 @@
-import {
-  START_SCROLLING,
-  STOP_SCROLLING,
-} from 'actiontypes/scrollToComponent';
+import { START_SCROLLING, STOP_SCROLLING } from "actiontypes/scrollToComponent";
 
 const INITIAL_STATE = {
   scrolling: false,

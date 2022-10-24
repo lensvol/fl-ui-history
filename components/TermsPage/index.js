@@ -1,7 +1,7 @@
-import React from 'react';
-import Header from 'components/Header';
-import Terms from 'components/Terms';
-import Footer from 'components/Footer';
+import React from "react";
+import Header from "components/Header";
+import Terms from "components/Terms";
+import Footer from "components/Footer";
 
 export default function TermsContainer() {
   return (
@@ -13,4 +13,4 @@ export default function TermsContainer() {
   );
 }
 
-TermsContainer.displayName = 'TermsContainer';
+TermsContainer.displayName = "TermsContainer";

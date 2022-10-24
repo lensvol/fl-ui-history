@@ -1,7 +1,7 @@
-import DisplayItem from 'components/Profile/components/DisplayItem';
-import React from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
+import DisplayItem from "components/Profile/components/DisplayItem";
+import React from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
 
 type Props = ReturnType<typeof mapStateToProps>;
 
@@ -14,7 +14,7 @@ export function MantelAndScrapContainer({ mantel, scrapbook }: Props) {
   );
 }
 
-MantelAndScrapContainer.displayName = 'MantelAndScrapContainer';
+MantelAndScrapContainer.displayName = "MantelAndScrapContainer";
 
 const mapStateToProps = ({ profile: { profileCharacter } }: IAppState) => ({
   mantel: profileCharacter?.mantelpieceItem,

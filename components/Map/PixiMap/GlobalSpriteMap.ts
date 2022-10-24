@@ -1,5 +1,5 @@
-import * as PIXI from 'pixi.js';
-import { IArea, SpriteType } from 'types/map';
+import * as PIXI from "pixi.js";
+import { IArea, SpriteType } from "types/map";
 
 const coastlineMap: { [key: string]: PIXI.Sprite } = {};
 const spriteMap: { [key: string]: PIXI.Sprite } = {};
@@ -11,14 +11,14 @@ const seaMap: { [key: string]: PIXI.Sprite } = {};
 const coastlineSeaMap: { [key: string]: PIXI.Sprite } = {};
 
 const mapsByType: { [key in SpriteType]: { [key: string]: PIXI.Sprite } } = {
-  'available': spriteMap,
-  'selection': selectionSpriteMap,
-  'main-destination': mainDestinationMap,
-  'main-destination-selection': mainDestinationSelectionMap,
-  'coastline': coastlineMap,
-  'fog': fogMap,
-  'sea': seaMap,
-  'coastlinesea': coastlineSeaMap,
+  available: spriteMap,
+  selection: selectionSpriteMap,
+  "main-destination": mainDestinationMap,
+  "main-destination-selection": mainDestinationSelectionMap,
+  coastline: coastlineMap,
+  fog: fogMap,
+  sea: seaMap,
+  coastlinesea: coastlineSeaMap,
 };
 
 const GlobalSpriteMap = {
@@ -37,8 +37,7 @@ const GlobalSpriteMap = {
     if (mapToUse[key]) {
       return mapToUse[key];
     }
-  }
+  },
 };
 
 export default GlobalSpriteMap;
-

@@ -1,8 +1,8 @@
-import * as PlansActionCreators from 'actions/plans';
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as StoryletActionTypes from 'actiontypes/storylet';
-import { VersionMismatch } from 'services/BaseService';
-import PlansService from 'services/PlansService';
+import * as PlansActionCreators from "actions/plans";
+import { handleVersionMismatch } from "actions/versionSync";
+import * as StoryletActionTypes from "actiontypes/storylet";
+import { VersionMismatch } from "services/BaseService";
+import PlansService from "services/PlansService";
 
 const service = new PlansService();
 
@@ -12,15 +12,18 @@ const service = new PlansService();
 export default function deletePlan(branchId: number) {
   return (dispatch: Function) => {
     dispatch(deletePlanRequest());
-    service.deletePlan(branchId).then(() => {
-      dispatch(deletePlanSuccess(branchId));
-      dispatch(PlansActionCreators.fetchPlans());
-    }).catch((error) => {
-      if (error instanceof VersionMismatch) {
-        dispatch(handleVersionMismatch(error));
-      }
-      dispatch(deletePlanFailure(error));
-    });
+    service
+      .deletePlan(branchId)
+      .then(() => {
+        dispatch(deletePlanSuccess(branchId));
+        dispatch(PlansActionCreators.fetchPlans());
+      })
+      .catch((error) => {
+        if (error instanceof VersionMismatch) {
+          dispatch(handleVersionMismatch(error));
+        }
+        dispatch(deletePlanFailure(error));
+      });
   };
 }
 

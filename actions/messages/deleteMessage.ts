@@ -1,19 +1,23 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { DELETE_FAILURE, DELETE_REQUESTED, DELETE_SUCCESS } from 'actiontypes/messages';
-import { ActionCreator } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import MessagesService, { IMessagesService } from 'services/MessagesService';
+import { handleVersionMismatch } from "actions/versionSync";
+import {
+  DELETE_FAILURE,
+  DELETE_REQUESTED,
+  DELETE_SUCCESS,
+} from "actiontypes/messages";
+import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import MessagesService, { IMessagesService } from "services/MessagesService";
 
 export type DeleteRequested = { type: typeof DELETE_REQUESTED };
 export type DeleteFailure = {
-  type: typeof DELETE_FAILURE,
-  status?: number,
+  type: typeof DELETE_FAILURE;
+  status?: number;
 };
 export type DeleteSuccess = {
-  type: typeof DELETE_SUCCESS,
-  payload: number,
+  type: typeof DELETE_SUCCESS;
+  payload: number;
 };
 
 export type DeleteAction = DeleteFailure | DeleteRequested | DeleteSuccess;

@@ -1,27 +1,23 @@
-import { OUTFIT_TYPE_EXCEPTIONAL } from 'constants/outfits';
-import React, {
-  ChangeEvent,
-  useCallback,
-  useMemo,
-} from 'react';
-import { connect } from 'react-redux';
-import { NEW_OUTFIT_BEHAVIOUR } from 'features/feature-flags';
-import { useFeature } from 'flagged';
-import Select from 'react-select';
-import getOrderedOutfits from 'selectors/outfit/getOrderedOutfits';
-import getCanUserChangeOutfit from 'selectors/possessions/getCanUserChangeOutfit';
-import { IAppState } from 'types/app';
+import { OUTFIT_TYPE_EXCEPTIONAL } from "constants/outfits";
+import React, { ChangeEvent, useCallback, useMemo } from "react";
+import { connect } from "react-redux";
+import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
+import { useFeature } from "flagged";
+import Select from "react-select";
+import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
+import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
+import { IAppState } from "types/app";
 
-import { useSelectedOutfit } from './hooks';
-import { compareOutfits } from './util';
-import * as DropdownStyles from './dropdown-styles';
-import EquipmentContext from './EquipmentContext';
+import { useSelectedOutfit } from "./hooks";
+import { compareOutfits } from "./util";
+import * as DropdownStyles from "./dropdown-styles";
+import EquipmentContext from "./EquipmentContext";
 
 type DropdownOption = {
-  label: string,
-  type: string,
-  value: number | string,
-  isDisabled: boolean,
+  label: string;
+  type: string;
+  value: number | string;
+  isDisabled: boolean;
 };
 
 export function OutfitDropdown({
@@ -33,31 +29,31 @@ export function OutfitDropdown({
 }: Props) {
   const selectedOutfit = useSelectedOutfit(outfits);
 
-  const handleBlurOrChangeFromNativeSelect = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
-    // If nothing has changed, don't fire the onChange handler
-    if (selectedOutfit?.id.toString() === e.target.value) {
-      return;
-    }
-    onChange(e.target.value);
-  }, [
-    onChange,
-    selectedOutfit,
-  ]);
+  const handleBlurOrChangeFromNativeSelect = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      // If nothing has changed, don't fire the onChange handler
+      if (selectedOutfit?.id.toString() === e.target.value) {
+        return;
+      }
+      onChange(e.target.value);
+    },
+    [onChange, selectedOutfit]
+  );
 
-  const handleChange = useCallback((arg: any) => {
-    const { value } = arg as { label: string, value: number | string };
-    onChange(value);
-  }, [
-    onChange,
-  ]);
+  const handleChange = useCallback(
+    (arg: any) => {
+      const { value } = arg as { label: string; value: number | string };
+      onChange(value);
+    },
+    [onChange]
+  );
 
   const hasNewOutfitBehaviour = useFeature(NEW_OUTFIT_BEHAVIOUR);
 
   const choices = useMemo(() => {
-    const sortedOutfits = [...outfits]
-      .sort(compareOutfits);
+    const sortedOutfits = [...outfits].sort(compareOutfits);
 
-    const purchasedOutfits = outfits.filter(a => a.type === 'Purchased');
+    const purchasedOutfits = outfits.filter((a) => a.type === "Purchased");
 
     // We can't buy any more outfits; just return what the player has
     if (purchasedOutfits.length >= maxOutfits) {
@@ -73,40 +69,34 @@ export function OutfitDropdown({
     return [
       ...sortedOutfits,
       {
-        id: 'buy-new-outfit',
-        name: 'Unlock another outfit...',
-        type: 'BuyOutfit',
+        id: "buy-new-outfit",
+        name: "Unlock another outfit...",
+        type: "BuyOutfit",
       },
     ];
-  }, [
-    hasNewOutfitBehaviour,
-    maxOutfits,
-    outfits,
-  ]);
+  }, [hasNewOutfitBehaviour, maxOutfits, outfits]);
 
   const options = useMemo(
-    () => [...choices]
-      .filter(c => c.id !== selectedOutfit.id)
-      .map(c => ({
-        label: c.name,
-        type: c.type,
-        value: c.id,
-        isDisabled: c.type === OUTFIT_TYPE_EXCEPTIONAL && !isExceptionalFriend,
-      }))
-      .sort((a, b) => {
-        if (a.isDisabled === b.isDisabled) {
-          return 0;
-        }
-        if (a.isDisabled) {
-          return 1;
-        }
-        return -1;
-      }),
-    [
-      choices,
-      isExceptionalFriend,
-      selectedOutfit.id,
-    ],
+    () =>
+      [...choices]
+        .filter((c) => c.id !== selectedOutfit.id)
+        .map((c) => ({
+          label: c.name,
+          type: c.type,
+          value: c.id,
+          isDisabled:
+            c.type === OUTFIT_TYPE_EXCEPTIONAL && !isExceptionalFriend,
+        }))
+        .sort((a, b) => {
+          if (a.isDisabled === b.isDisabled) {
+            return 0;
+          }
+          if (a.isDisabled) {
+            return 1;
+          }
+          return -1;
+        }),
+    [choices, isExceptionalFriend, selectedOutfit.id]
   );
 
   return (
@@ -121,11 +111,8 @@ export function OutfitDropdown({
             id={outfitDropdownId}
             tabIndex={0}
           >
-            {choices.map(choice => (
-              <option
-                key={choice.id}
-                value={choice.id}
-              >
+            {choices.map((choice) => (
+              <option key={choice.id} value={choice.id}>
                 {`${choice.name} (${choice.type})`}
               </option>
             ))}
@@ -135,8 +122,8 @@ export function OutfitDropdown({
       <div
         aria-hidden="true"
         style={{
-          alignItems: 'baseline',
-          display: 'flex',
+          alignItems: "baseline",
+          display: "flex",
           flex: 1,
         }}
       >
@@ -162,8 +149,8 @@ export function OutfitDropdown({
         <span
           className="heading heading--3"
           style={{
-            position: 'relative',
-            top: '2px',
+            position: "relative",
+            top: "2px",
           }}
         >
           Outfit
@@ -174,9 +161,9 @@ export function OutfitDropdown({
 }
 
 type OwnProps = {
-  areOutfitsLockable: boolean,
-  doesStoryletStateLockOutfits: boolean,
-  onChange: (id: string | number) => void,
+  areOutfitsLockable: boolean;
+  doesStoryletStateLockOutfits: boolean;
+  onChange: (id: string | number) => void;
 };
 
 const mapStateToProps = (state: IAppState, props: OwnProps) => ({

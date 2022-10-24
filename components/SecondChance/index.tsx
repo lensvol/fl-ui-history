@@ -1,15 +1,13 @@
-import SecondChanceComponent from 'components/SecondChance/SecondChanceComponent';
-import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { IAppState } from 'types/app';
+import SecondChanceComponent from "components/SecondChance/SecondChanceComponent";
+import React, { useCallback } from "react";
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import { IAppState } from "types/app";
 
-import * as StoryletActionCreators from 'actions/storylet';
+import * as StoryletActionCreators from "actions/storylet";
 
-type Props =
-  ReturnType<typeof mapStateToProps>
-  & RouteComponentProps
-  & { dispatch: Function };
+type Props = ReturnType<typeof mapStateToProps> &
+  RouteComponentProps & { dispatch: Function };
 
 export function SecondChance({
   dispatch,
@@ -20,8 +18,8 @@ export function SecondChance({
   storylet,
 }: Props) {
   const goBack = useCallback(() => {
-    if (phase === 'InItemUse') {
-      history.push('/possessions');
+    if (phase === "InItemUse") {
+      history.push("/possessions");
     }
     dispatch(StoryletActionCreators.goBack());
   }, [dispatch, history, phase]);
@@ -34,7 +32,6 @@ export function SecondChance({
       storylet={storylet}
     />
   );
-
 }
 
 const mapStateToProps = (state: IAppState) => ({

@@ -3,16 +3,16 @@
 // const TWITTER_URL = 'https://twitter.com/failbettergames/status/1257940665910124545';
 
 export default function createMaintenanceModeDOM(document, backAt) {
-  const container = document.createElement('div');
-  container.classList.add('error-boundary__content');
+  const container = document.createElement("div");
+  container.classList.add("error-boundary__content");
 
-  const header = document.createElement('h1');
-  header.classList.add('heading', 'heading--1');
-  header.style.textAlign = 'center';
-  header.style.marginBottom = '1rem';
-  header.innerText = 'Fallen London is undergoing scheduled maintenance';
+  const header = document.createElement("h1");
+  header.classList.add("heading", "heading--1");
+  header.style.textAlign = "center";
+  header.style.marginBottom = "1rem";
+  header.innerText = "Fallen London is undergoing scheduled maintenance";
 
-  const firstParagraph = document.createElement('p');
+  const firstParagraph = document.createElement("p");
   firstParagraph.innerHTML = `
   We're making some changes. \
   `;
@@ -35,7 +35,7 @@ export default function createMaintenanceModeDOM(document, backAt) {
   `;
   }
 
-  const secondParagraph = document.createElement('p');
+  const secondParagraph = document.createElement("p");
   secondParagraph.innerText = `
   Thank you for your patience, delicious friends. \
   All shall be well.

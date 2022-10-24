@@ -1,6 +1,6 @@
-import { formatEnhancementList } from 'components/Tooltip/util';
-import { IQuality } from 'types/qualities';
-import { stripHtml } from './stringFunctions';
+import { formatEnhancementList } from "components/Tooltip/util";
+import { IQuality } from "types/qualities";
+import { stripHtml } from "./stringFunctions";
 
 export default function createEquipmentQualityAltText({
   description,
@@ -14,5 +14,5 @@ export default function createEquipmentQualityAltText({
     description ? stripHtml(description) : undefined,
     secondaryDescription ? stripHtml(secondaryDescription) : undefined,
   ];
-  return altParts.filter(s => s).join('; ');
+  return altParts.filter((s) => s).join("; ");
 }

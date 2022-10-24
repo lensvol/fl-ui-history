@@ -1,20 +1,16 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
 
 class QualityRequirementsContainer extends PureComponent<Props> {
   render = () => {
-    const {
-      inviteeQreqText,
-      inviterQreqText,
-    } = this.props;
+    const { inviteeQreqText, inviterQreqText } = this.props;
 
     return (
       <div className="media--root act__quality-requirements">
         {inviterQreqText && (
           <div className="act__quality-requirement">
-            You must have
-            {' '}
+            You must have{" "}
             <div
               className="act__quality-requirement-list-container"
               dangerouslySetInnerHTML={{ __html: inviterQreqText }}
@@ -23,8 +19,7 @@ class QualityRequirementsContainer extends PureComponent<Props> {
         )}
         {inviteeQreqText && (
           <div className="act__quality-requirement">
-            They must have
-            {' '}
+            They must have{" "}
             <div
               className="act__quality-requirement-list-container"
               dangerouslySetInnerHTML={{ __html: inviteeQreqText }}
@@ -33,7 +28,7 @@ class QualityRequirementsContainer extends PureComponent<Props> {
         )}
       </div>
     );
-  }
+  };
 }
 
 const mapStateToProps = ({ socialAct: { inviteeData } }: IAppState) => ({

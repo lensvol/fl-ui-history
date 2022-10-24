@@ -1,10 +1,10 @@
 export default function getDefaultPayPalOptions(authorization) {
   const paypal = {
-    flow: 'vault',
+    flow: "vault",
     buttonStyle: {
-      color: 'blue',
-      shape: 'rect',
-      size: 'medium',
+      color: "blue",
+      shape: "rect",
+      size: "medium",
     },
   };
 

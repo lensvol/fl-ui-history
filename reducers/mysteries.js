@@ -1,5 +1,4 @@
-import * as MysteriesActionTypes from '../actiontypes/mysteries';
-
+import * as MysteriesActionTypes from "../actiontypes/mysteries";
 
 /**
  * Iniitial state
@@ -12,7 +11,6 @@ const initialState = {
   mysteries: null,
   message: null,
 };
-
 
 /**
  * Mysteries Reducer
@@ -47,7 +45,7 @@ const Mysteries = (state = initialState, action) => {
       };
 
     case MysteriesActionTypes.ANSWER_MYSTERY_SUCCESS: {
-      const updatedMysteries = action.mysteries.map(mystery => ({
+      const updatedMysteries = action.mysteries.map((mystery) => ({
         ...mystery,
         isSuccess: mystery.id === payload.id,
       }));
@@ -65,7 +63,7 @@ const Mysteries = (state = initialState, action) => {
     }
 
     case MysteriesActionTypes.REFRESH_MYSTERIES: {
-      const mysteries = state.mysteries.map(mystery => ({
+      const mysteries = state.mysteries.map((mystery) => ({
         ...mystery,
         isSuccess: false,
       }));

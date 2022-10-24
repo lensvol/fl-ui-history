@@ -1,15 +1,15 @@
-import React from 'react';
-import classnames from 'classnames';
+import React from "react";
+import classnames from "classnames";
 
-import { ITooltipData } from 'components/ModalTooltip/types';
-import Image from 'components/Image';
-import MediaMdUp from 'components/Responsive/MediaMdUp';
-import { IQuality } from 'types/qualities';
+import { ITooltipData } from "components/ModalTooltip/types";
+import Image from "components/Image";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import { IQuality } from "types/qualities";
 
 type Props = IQuality & {
-  isChanging: boolean,
-  onClick: () => any,
-  tooltipData: ITooltipData,
+  isChanging: boolean;
+  onClick: () => any;
+  tooltipData: ITooltipData;
 };
 
 export default function DisplayQualityMdUp({
@@ -24,16 +24,17 @@ export default function DisplayQualityMdUp({
 }: Props) {
   return (
     <MediaMdUp>
-      <div className={classnames(
-        'display-quality__image-and-name',
-        isChanging && 'display-quality--is-changing',
-      )}
+      <div
+        className={classnames(
+          "display-quality__image-and-name",
+          isChanging && "display-quality--is-changing"
+        )}
       >
         <div
           className={classnames(
-            'icon',
-            nature === 'Status' && 'icon--circular',
-            'display-quality__image',
+            "icon",
+            nature === "Status" && "icon--circular",
+            "display-quality__image"
           )}
         >
           <Image
@@ -46,9 +47,7 @@ export default function DisplayQualityMdUp({
           <span className="icon__value">{effectiveLevel}</span>
         </div>
         <div>
-          <span className="js-item-name item__name">
-            {nameAndLevel}
-          </span>
+          <span className="js-item-name item__name">{nameAndLevel}</span>
         </div>
       </div>
     </MediaMdUp>

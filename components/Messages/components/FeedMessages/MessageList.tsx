@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import Loading from 'components/Loading';
-import Message from '../Message';
+import Loading from "components/Loading";
+import Message from "../Message";
 
 export default function MessageList({ messages }: Props) {
   if (!messages) {
@@ -10,7 +10,9 @@ export default function MessageList({ messages }: Props) {
   if (messages.length) {
     return (
       <div>
-        {messages.map(message => <Message key={message.relatedId} data={message} />)}
+        {messages.map((message) => (
+          <Message key={message.relatedId} data={message} />
+        ))}
       </div>
     );
   }
@@ -18,5 +20,5 @@ export default function MessageList({ messages }: Props) {
 }
 
 type Props = {
-  messages: any[],
+  messages: any[];
 };

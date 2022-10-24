@@ -1,4 +1,4 @@
 export default {
-    messagesPathName : "/messages",
-    messagesLinkTo: "messages"
-  }
+  messagesPathName: "/messages",
+  messagesLinkTo: "messages",
+};

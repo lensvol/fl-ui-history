@@ -1,24 +1,30 @@
-import { DUMMY_XY_COORDINATES } from 'components/Map/constants';
-import { IArea } from 'types/map';
-import { isDistrict } from 'features/mapping/index';
+import { DUMMY_XY_COORDINATES } from "components/Map/constants";
+import { IArea } from "types/map";
+import { isDistrict } from "features/mapping/index";
 
-export default function getDestinationSelectionSpriteCoordinates(area: IArea): { x: number, y: number } {
+export default function getDestinationSelectionSpriteCoordinates(area: IArea): {
+  x: number;
+  y: number;
+} {
   if (isDistrict(area)) {
-    throw new Error('Tried to retrieve Destination selection sprite coords for a District');
+    throw new Error(
+      "Tried to retrieve Destination selection sprite coords for a District"
+    );
   }
-  const {
-    areaKey,
-    selectionSpriteTopLeftX,
-    selectionSpriteTopLeftY,
-  } = area;
+  const { areaKey, selectionSpriteTopLeftX, selectionSpriteTopLeftY } = area;
 
-  if (selectionSpriteTopLeftX !== undefined && selectionSpriteTopLeftY !== undefined) {
+  if (
+    selectionSpriteTopLeftX !== undefined &&
+    selectionSpriteTopLeftY !== undefined
+  ) {
     return {
       x: selectionSpriteTopLeftX,
       y: selectionSpriteTopLeftY,
     };
   }
 
-  console.error(`getDestinationSpriteSelectionCoordinates({${areaKey}): this area has no selection sprite coords`);
+  console.error(
+    `getDestinationSpriteSelectionCoordinates({${areaKey}): this area has no selection sprite coords`
+  );
   return DUMMY_XY_COORDINATES;
 }

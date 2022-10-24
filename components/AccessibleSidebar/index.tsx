@@ -1,12 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import moment from 'moment';
+import React from "react";
+import { connect } from "react-redux";
+import moment from "moment";
 
-import getSidebarQualities from 'selectors/myself/getSidebarQualities';
-import getEchoes from 'selectors/myself/getEchoes';
-import { IAppState } from 'types/app';
-import AccessibleMapMenu from './AccessibleMapMenu';
-import AccessibleNavigationTabs from './AccessibleNavigationTabs';
+import getSidebarQualities from "selectors/myself/getSidebarQualities";
+import getEchoes from "selectors/myself/getEchoes";
+import { IAppState } from "types/app";
+import AccessibleMapMenu from "./AccessibleMapMenu";
+import AccessibleNavigationTabs from "./AccessibleNavigationTabs";
 
 export function AccessibleSidebar({
   actionBankSize,
@@ -23,7 +23,7 @@ export function AccessibleSidebar({
     echoes,
     name,
     nextActionAt,
-  ].some(x => !x);
+  ].some((x) => !x);
   if (fetching) {
     return (
       <div className="accessible-sidebar u-visually-hidden">
@@ -32,16 +32,14 @@ export function AccessibleSidebar({
     );
   }
 
-  const formattedNextActionAt = moment(new Date(nextActionAt)).format('hh:mm');
+  const formattedNextActionAt = moment(new Date(nextActionAt)).format("hh:mm");
   return (
     <div
       id="accessible-sidebar"
       className="accessible-sidebar u-visually-hidden"
     >
       <h1 className="welcome">
-        {`It's ${name}!`}
-        {' '}
-        {`Welcome to ${currentAreaName}, delicious friend!`}
+        {`It's ${name}!`} {`Welcome to ${currentAreaName}, delicious friend!`}
       </h1>
       <section className="accessible-map">
         <AccessibleMapMenu />
@@ -50,8 +48,7 @@ export function AccessibleSidebar({
         <AccessibleNavigationTabs />
       </section>
       <section className="player-actions">
-        {`Actions: ${actions} of ${actionBankSize}`}
-        {' '}
+        {`Actions: ${actions} of ${actionBankSize}`}{" "}
         <time dateTime={formattedNextActionAt}>
           {`Next actions at ${formattedNextActionAt}`}
         </time>
@@ -60,15 +57,9 @@ export function AccessibleSidebar({
         {`Echoes: ${echoes.toFixed(2)}`}
       </section>
       <ul className="sidebar-qualities">
-        {sidebarQualities.map(quality => (
-          <li
-            key={quality.id}
-            className={quality.category}
-          >
-            {quality.name}
-            :
-            {' '}
-            {quality.effectiveLevel}
+        {sidebarQualities.map((quality) => (
+          <li key={quality.id} className={quality.category}>
+            {quality.name}: {quality.effectiveLevel}
           </li>
         ))}
       </ul>
@@ -76,23 +67,25 @@ export function AccessibleSidebar({
   );
 }
 
-AccessibleSidebar.displayName = 'AccessibleSidebar';
+AccessibleSidebar.displayName = "AccessibleSidebar";
 
 interface Props {
-  actions: number,
-  actionBankSize: number,
-  currentAreaName?: string,
-  echoes: number,
-  name?: string,
-  nextActionAt: any,
-  sidebarQualities: any[],
+  actions: number;
+  actionBankSize: number;
+  currentAreaName?: string;
+  echoes: number;
+  name?: string;
+  nextActionAt: any;
+  sidebarQualities: any[];
 }
 
 const mapStateToProps = (state: IAppState) => {
   const {
     actions: { actions, actionBankSize },
     map: { currentArea },
-    myself: { character: { name } },
+    myself: {
+      character: { name },
+    },
     timer: { timeNextActionIsAvailable: nextActionAt },
   } = state;
   return {

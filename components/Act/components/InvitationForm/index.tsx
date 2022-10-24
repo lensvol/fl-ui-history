@@ -1,30 +1,20 @@
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
-import classnames from 'classnames';
-import Loading from 'components/Loading';
-import { connect } from 'react-redux';
-import {
-  Field,
-  Formik,
-  Form,
-} from 'formik';
+import React, { useCallback, useMemo } from "react";
+import classnames from "classnames";
+import Loading from "components/Loading";
+import { connect } from "react-redux";
+import { Field, Formik, Form } from "formik";
 
-import { fetch as fetchMessages } from 'actions/messages';
-import {
-  goBackFromSocialAct,
-  sendSocialInvite,
-} from 'actions/storylet';
-import { ThunkDispatch } from 'redux-thunk';
+import { fetch as fetchMessages } from "actions/messages";
+import { goBackFromSocialAct, sendSocialInvite } from "actions/storylet";
+import { ThunkDispatch } from "redux-thunk";
 
 import {
   ApiCharacterFriend,
   ApiInternalSocialActRequest,
-} from 'services/StoryletService';
-import { IAppState } from 'types/app';
+} from "services/StoryletService";
+import { IAppState } from "types/app";
 
-import getContactName from './getContactName';
+import getContactName from "./getContactName";
 
 function InvitationFormContainer({
   actMessagePreview,
@@ -34,54 +24,46 @@ function InvitationFormContainer({
   eligibleFriends,
   selectedContactId,
 }: Props) {
-  const contactName = useMemo(
-    () => {
-      if (designatedFriend) {
-        return designatedFriend.name;
-      }
-      return getContactName({ eligibleFriends, selectedContactId });
-    },
-    [
-      designatedFriend,
-      eligibleFriends,
-      selectedContactId,
-    ],
-  );
+  const contactName = useMemo(() => {
+    if (designatedFriend) {
+      return designatedFriend.name;
+    }
+    return getContactName({ eligibleFriends, selectedContactId });
+  }, [designatedFriend, eligibleFriends, selectedContactId]);
 
   const disabled = useMemo(() => !selectedContactId, [selectedContactId]);
 
   const onGoBack = useCallback(
     () => dispatch(goBackFromSocialAct()),
-    [dispatch],
+    [dispatch]
   );
 
-  const handleSubmit = useCallback(async (values) => {
-    if (branch?.id === undefined) {
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (values) => {
+      if (branch?.id === undefined) {
+        return;
+      }
 
-    if (selectedContactId === undefined) {
-      return;
-    }
+      if (selectedContactId === undefined) {
+        return;
+      }
 
-    const data: ApiInternalSocialActRequest = {
-      branchId: branch?.id,
-      targetCharacterId: selectedContactId,
-      userMessage: values.userMessage,
-    };
+      const data: ApiInternalSocialActRequest = {
+        branchId: branch?.id,
+        targetCharacterId: selectedContactId,
+        userMessage: values.userMessage,
+      };
 
-    await dispatch(sendSocialInvite(data));
-    dispatch(fetchMessages());
-  }, [
-    branch,
-    dispatch,
-    selectedContactId,
-  ]);
+      await dispatch(sendSocialInvite(data));
+      dispatch(fetchMessages());
+    },
+    [branch, dispatch, selectedContactId]
+  );
 
   return (
     <Formik
       initialValues={{
-        userMessage: '',
+        userMessage: "",
       }}
       onSubmit={handleSubmit}
     >
@@ -93,7 +75,7 @@ function InvitationFormContainer({
           {actMessagePreview && (
             <p
               className="act__preset-invitation-text"
-              dangerouslySetInnerHTML={{ __html: actMessagePreview ?? '' }}
+              dangerouslySetInnerHTML={{ __html: actMessagePreview ?? "" }}
             />
           )}
 
@@ -111,18 +93,13 @@ function InvitationFormContainer({
             <button
               type="submit"
               className={classnames(
-                'button button--primary',
-                'button--no-margin',
-                disabled && 'button--disabled',
+                "button button--primary",
+                "button--no-margin",
+                disabled && "button--disabled"
               )}
               disabled={disabled || isSubmitting}
             >
-              {isSubmitting ? (
-                <Loading
-                  spinner
-                  small
-                />
-              ) : <span>Choose</span>}
+              {isSubmitting ? <Loading spinner small /> : <span>Choose</span>}
             </button>
 
             <button
@@ -130,9 +107,7 @@ function InvitationFormContainer({
               className="button button--primary button--no-margin"
               onClick={onGoBack}
             >
-              <i className="fa fa-arrow-left" />
-              {' '}
-              Back
+              <i className="fa fa-arrow-left" /> Back
             </button>
           </p>
         </Form>
@@ -142,23 +117,21 @@ function InvitationFormContainer({
 }
 
 type OwnProps = {
-  designatedFriend: undefined | { name: string },
-  eligibleFriends: ApiCharacterFriend[],
-  selectedContactId: number | undefined,
+  designatedFriend: undefined | { name: string };
+  eligibleFriends: ApiCharacterFriend[];
+  selectedContactId: number | undefined;
 };
 
 const mapStateToProps = ({
-  socialAct: {
-    actMessagePreview,
-    branch,
-  },
+  socialAct: { actMessagePreview, branch },
 }: IAppState) => ({
   actMessagePreview,
   branch,
 });
 
-type Props = OwnProps & ReturnType<typeof mapStateToProps> & {
-  dispatch: ThunkDispatch<any, any, any>,
-};
+type Props = OwnProps &
+  ReturnType<typeof mapStateToProps> & {
+    dispatch: ThunkDispatch<any, any, any>;
+  };
 
 export default connect(mapStateToProps)(InvitationFormContainer);

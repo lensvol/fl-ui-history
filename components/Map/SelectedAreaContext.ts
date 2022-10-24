@@ -1,14 +1,15 @@
-import React from 'react';
-import { IArea } from 'types/map';
+import React from "react";
+import { IArea } from "types/map";
 
 export interface SelectedAreaContextValue {
-  selectedArea?: IArea,
+  selectedArea?: IArea;
 }
 
-export const SelectedAreaContext = React.createContext<SelectedAreaContextValue>({
-  selectedArea: undefined,
-});
+export const SelectedAreaContext =
+  React.createContext<SelectedAreaContextValue>({
+    selectedArea: undefined,
+  });
 
-SelectedAreaContext.displayName = 'SelectedAreaContext';
+SelectedAreaContext.displayName = "SelectedAreaContext";
 
 export default SelectedAreaContext;

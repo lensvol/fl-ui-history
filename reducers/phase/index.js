@@ -1,4 +1,4 @@
-import * as StoryletActionTypes from 'actiontypes/storylet';
+import * as StoryletActionTypes from "actiontypes/storylet";
 
 const INITIAL_STATE = {
   phase: undefined,

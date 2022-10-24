@@ -1,31 +1,15 @@
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import {
-  Formik,
-  Field,
-  Form,
-  FormikHelpers as FormikActions,
-} from 'formik';
+import React, { useCallback, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { Formik, Field, Form, FormikHelpers as FormikActions } from "formik";
 
-import Loading from 'components/Loading';
-import {
-  Either,
-  Success,
-} from 'services/BaseMonadicService';
-import { LinkEmailResponse } from 'services/SettingsService';
-import { IAppState } from 'types/app';
-import Modal from 'components/Modal';
-import {
-  linkEmailToAccount,
-} from 'actions/settings';
+import Loading from "components/Loading";
+import { Either, Success } from "services/BaseMonadicService";
+import { LinkEmailResponse } from "services/SettingsService";
+import { IAppState } from "types/app";
+import Modal from "components/Modal";
+import { linkEmailToAccount } from "actions/settings";
 
-type LinkEmailValues = { emailAddress: string, password: string };
+type LinkEmailValues = { emailAddress: string; password: string };
 
 enum LinkEmailModalStep {
   Ready,
@@ -33,43 +17,38 @@ enum LinkEmailModalStep {
   LinkSuccess,
 }
 
-function LinkEmailModal({
-  isLinkingEmail,
-  isOpen,
-  onRequestClose,
-}: Props) {
+function LinkEmailModal({ isLinkingEmail, isOpen, onRequestClose }: Props) {
   const dispatch = useDispatch();
 
   const [currentStep, setCurrentStep] = useState(LinkEmailModalStep.Ready);
   const [message, setMessage] = useState<string | undefined>(undefined);
 
-  const handleSubmit = useCallback(async (
-    values: LinkEmailValues,
-    actions: FormikActions<LinkEmailValues>,
-  ) => {
-    const { emailAddress, password } = values;
-    actions.setSubmitting(true);
+  const handleSubmit = useCallback(
+    async (
+      values: LinkEmailValues,
+      actions: FormikActions<LinkEmailValues>
+    ) => {
+      const { emailAddress, password } = values;
+      actions.setSubmitting(true);
 
-    const result: Either<LinkEmailResponse> = await linkEmailToAccount({
-      emailAddress,
-      password,
-    })(dispatch);
+      const result: Either<LinkEmailResponse> = await linkEmailToAccount({
+        emailAddress,
+        password,
+      })(dispatch);
 
-    actions.setSubmitting(false);
+      actions.setSubmitting(false);
 
-    if (result instanceof Success) {
-      setCurrentStep(LinkEmailModalStep.LinkSuccess);
-      setMessage(result.data.message);
-    }
-  }, [dispatch]);
+      if (result instanceof Success) {
+        setCurrentStep(LinkEmailModalStep.LinkSuccess);
+        setMessage(result.data.message);
+      }
+    },
+    [dispatch]
+  );
 
   switch (currentStep) {
     case LinkEmailModalStep.LinkSuccess:
-      return (
-        <div>
-          {message}
-        </div>
-      );
+      return <div>{message}</div>;
 
     default:
       return (
@@ -77,7 +56,7 @@ function LinkEmailModal({
           <div>
             <h3 className="heading heading--2">Link Email To Account</h3>
             <Formik
-              initialValues={{ emailAddress: '', password: '' }}
+              initialValues={{ emailAddress: "", password: "" }}
               onSubmit={handleSubmit}
               render={({ values, dirty }) => (
                 <Form>
@@ -113,7 +92,11 @@ function LinkEmailModal({
                       disabled={!dirty || isLinkingEmail}
                       type="submit"
                     >
-                      {isLinkingEmail ? <Loading spinner small /> : <span>Link Email</span>}
+                      {isLinkingEmail ? (
+                        <Loading spinner small />
+                      ) : (
+                        <span>Link Email</span>
+                      )}
                     </button>
                   </div>
                 </Form>
@@ -126,8 +109,8 @@ function LinkEmailModal({
 }
 
 type OwnProps = {
-  isOpen: boolean,
-  onRequestClose: () => void,
+  isOpen: boolean;
+  onRequestClose: () => void;
 };
 
 const mapStateToProps = ({ settings }: IAppState) => ({

@@ -1,49 +1,43 @@
-import Act from 'components/Act';
-import Loading from 'components/Loading';
-import SecondChance from 'components/SecondChance';
-import StoryletEnd from 'components/StoryletEnd/StoryletEndContainer';
-import StoryletIn from 'components/StoryletIn/StoryletInContainer';
-import StoryletsAvailable from 'components/StoryletsAvailable';
-import * as phases from 'constants/phases';
-import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import Act from "components/Act";
+import Loading from "components/Loading";
+import SecondChance from "components/SecondChance";
+import StoryletEnd from "components/StoryletEnd/StoryletEndContainer";
+import StoryletIn from "components/StoryletIn/StoryletInContainer";
+import StoryletsAvailable from "components/StoryletsAvailable";
+import * as phases from "constants/phases";
+import React, { Fragment } from "react";
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import { fetch as fetchMap } from 'actions/map';
-import { fetchAvailable as fetchAvailableStorylets } from 'actions/storylet';
+import { fetch as fetchMap } from "actions/map";
+import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 
-import DomManipulationContext from 'components/DomManipulationContext';
-import ExceptionalFriendModal from 'components/ExceptionalFriendModal';
-import GeneralContainer from 'components/GeneralContainer';
-import Map from 'components/Map';
-import { IAppState } from 'types/app';
-import UniqueActPending from 'components/UniqueActPending';
-import Rename from 'components/Rename';
-import ExternalAct from 'components/ExternalAct';
+import DomManipulationContext from "components/DomManipulationContext";
+import ExceptionalFriendModal from "components/ExceptionalFriendModal";
+import GeneralContainer from "components/GeneralContainer";
+import Map from "components/Map";
+import { IAppState } from "types/app";
+import UniqueActPending from "components/UniqueActPending";
+import Rename from "components/Rename";
+import ExternalAct from "components/ExternalAct";
 
 class StoryTabContentContainer extends React.Component<Props, State> {
-  static displayName = 'StoryTabContentContainer';
+  static displayName = "StoryTabContentContainer";
 
   state = {
     isExceptionalFriendModalOpen: false,
   };
 
   componentDidMount = () => {
-    const {
-      dispatch,
-      isFetching,
-      phase,
-      socialAct,
-      storylet,
-      storylets,
-    } = this.props;
+    const { dispatch, isFetching, phase, socialAct, storylet, storylets } =
+      this.props;
 
     if (isFetching) {
       return;
     }
 
     const storyletsAreFalsy = !((storylets && storylets.length) || storylet);
-    const weNeedToBackOutOfASocialAct = phase === 'Act' && !socialAct;
+    const weNeedToBackOutOfASocialAct = phase === "Act" && !socialAct;
 
     // If we have falsy values for both 'storylets' and 'storylet', or we have stale social act state,
     if (storyletsAreFalsy || weNeedToBackOutOfASocialAct) {
@@ -109,9 +103,7 @@ class StoryTabContentContainer extends React.Component<Props, State> {
             onOpenSubscriptionModal: this.handleOpenSubscriptionModal,
           }}
         >
-          <GeneralContainer>
-            {this.renderContent()}
-          </GeneralContainer>
+          <GeneralContainer>{this.renderContent()}</GeneralContainer>
         </DomManipulationContext.Provider>
         <ExceptionalFriendModal
           isOpen={isExceptionalFriendModalOpen}
@@ -126,13 +118,7 @@ class StoryTabContentContainer extends React.Component<Props, State> {
 const mapStateToProps = ({
   cards: { handSize },
   map: { setting, showOps },
-  storylet: {
-    isFetching,
-    phase,
-    socialAct,
-    storylet,
-    storylets,
-  },
+  storylet: { isFetching, phase, socialAct, storylet, storylets },
 }: IAppState) => ({
   handSize,
   setting,
@@ -144,12 +130,14 @@ const mapStateToProps = ({
   storylets,
 });
 
-export interface Props extends ReturnType<typeof mapStateToProps>, RouteComponentProps {
-  dispatch: Function, // eslint-disable-line
+export interface Props
+  extends ReturnType<typeof mapStateToProps>,
+    RouteComponentProps {
+  dispatch: Function; // eslint-disable-line
 }
 
 export interface State {
-  isExceptionalFriendModalOpen: boolean,
+  isExceptionalFriendModalOpen: boolean;
 }
 
 export default withRouter(connect(mapStateToProps)(StoryTabContentContainer));

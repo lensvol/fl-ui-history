@@ -1,24 +1,22 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import ReactModal from 'react-modal';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import ReactModal from "react-modal";
 
-import {
-  closeModalTooltip,
-} from 'actions/modalTooltip';
-import ModalTooltipComponent from './ModalTooltipComponent';
+import { closeModalTooltip } from "actions/modalTooltip";
+import ModalTooltipComponent from "./ModalTooltipComponent";
 import { IAppState } from "types/app";
-import { ITooltipData } from 'components/ModalTooltip/types';
+import { ITooltipData } from "components/ModalTooltip/types";
 
 export interface Props {
-  dispatch?: Function,
-  modalIsOpen: boolean,
-  onRequestClose?: (e?: any) => void,
-  tooltipData: ITooltipData,
-  disableTouchEvents?: boolean,
+  dispatch?: Function;
+  modalIsOpen: boolean;
+  onRequestClose?: (e?: any) => void;
+  tooltipData: ITooltipData;
+  disableTouchEvents?: boolean;
 }
 
 export class ModalTooltip extends Component<Props> {
-  static displayName = 'ModalTooltip';
+  static displayName = "ModalTooltip";
 
   handleRequestClose = () => {
     const { dispatch, onRequestClose } = this.props;
@@ -34,11 +32,7 @@ export class ModalTooltip extends Component<Props> {
   };
 
   render = () => {
-    const {
-      disableTouchEvents,
-      modalIsOpen,
-      tooltipData,
-    } = this.props;
+    const { disableTouchEvents, modalIsOpen, tooltipData } = this.props;
 
     return (
       <ReactModal
@@ -49,7 +43,7 @@ export class ModalTooltip extends Component<Props> {
         overlayClassName="modal--tooltip-like__overlay"
         style={{
           overlay: {
-            touchAction: disableTouchEvents ? 'none' : undefined,
+            touchAction: disableTouchEvents ? "none" : undefined,
           },
         }}
       >
@@ -60,10 +54,12 @@ export class ModalTooltip extends Component<Props> {
         />
       </ReactModal>
     );
-  }
+  };
 }
 
-const mapStateToProps = ({ modalTooltip: { modalIsOpen, tooltipData } }: IAppState) => ({
+const mapStateToProps = ({
+  modalTooltip: { modalIsOpen, tooltipData },
+}: IAppState) => ({
   modalIsOpen,
   tooltipData,
 });

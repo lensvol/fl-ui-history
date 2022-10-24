@@ -1,8 +1,5 @@
-import {
-  ENTER_FULL_SCREEN,
-  EXIT_FULL_SCREEN,
-} from 'actiontypes/screen';
-import { IScreenState } from 'types/screen';
+import { ENTER_FULL_SCREEN, EXIT_FULL_SCREEN } from "actiontypes/screen";
+import { IScreenState } from "types/screen";
 
 const INITIAL_STATE: IScreenState = {
   full: false,

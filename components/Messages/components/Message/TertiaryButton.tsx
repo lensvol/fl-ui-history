@@ -1,12 +1,12 @@
-import React, { PropsWithChildren } from 'react';
-import classnames from 'classnames';
+import React, { PropsWithChildren } from "react";
+import classnames from "classnames";
 
 export default function Tertiary({ children, disabled, ...rest }: Props) {
   return (
     <button
       className={classnames(
-        'button button--tertiary',
-        disabled && 'button--disabled',
+        "button button--tertiary",
+        disabled && "button--disabled"
       )}
       disabled={disabled}
       type="button"
@@ -18,6 +18,6 @@ export default function Tertiary({ children, disabled, ...rest }: Props) {
 }
 
 type Props = PropsWithChildren<{
-  disabled: boolean,
-  onClick: () => void,
+  disabled: boolean;
+  onClick: () => void;
 }>;

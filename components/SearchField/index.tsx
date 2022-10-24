@@ -1,8 +1,5 @@
-import React, {
-  ChangeEvent,
-  CSSProperties,
-} from 'react';
-import classnames from 'classnames';
+import React, { ChangeEvent, CSSProperties } from "react";
+import classnames from "classnames";
 
 export default function SearchField({
   className,
@@ -15,8 +12,8 @@ export default function SearchField({
   return (
     <input
       type="text"
-      className={classnames('form__control input--item-search', className)}
-      placeholder={placeholder ?? 'Search'}
+      className={classnames("form__control input--item-search", className)}
+      placeholder={placeholder ?? "Search"}
       value={value}
       onChange={onChange}
       id={id}
@@ -25,13 +22,13 @@ export default function SearchField({
   );
 }
 
-SearchField.displayName = 'SearchField';
+SearchField.displayName = "SearchField";
 
 type Props = {
-  className?: string,
-  id?: string,
-  onChange: (evt: ChangeEvent<HTMLInputElement>) => void,
-  placeholder?: string,
-  style?: CSSProperties,
-  value: string,
+  className?: string;
+  id?: string;
+  onChange: (evt: ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  style?: CSSProperties;
+  value: string;
 };

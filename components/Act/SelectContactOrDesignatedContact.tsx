@@ -1,19 +1,17 @@
-import QualityRequirements from 'components/Act/components/QualityRequirements';
-import React from 'react';
-import { ApiCharacterFriend } from 'services/StoryletService';
-import SelectContact from './components/SelectContact';
-import DesignatedContact from './DesignatedContact';
-import ActContext from './ActContext';
-import AddContact from './components/AddContact';
+import QualityRequirements from "components/Act/components/QualityRequirements";
+import React from "react";
+import { ApiCharacterFriend } from "services/StoryletService";
+import SelectContact from "./components/SelectContact";
+import DesignatedContact from "./DesignatedContact";
+import ActContext from "./ActContext";
+import AddContact from "./components/AddContact";
 
 export default function SelectContactOrDesignatedContact({
   designatedFriend,
   eligibleFriends,
 }: Props) {
   if (designatedFriend) {
-    return (
-      <DesignatedContact />
-    );
+    return <DesignatedContact />;
   }
 
   return (
@@ -43,6 +41,6 @@ export default function SelectContactOrDesignatedContact({
 }
 
 interface Props {
-  designatedFriend: undefined | { name: string },
-  eligibleFriends: ApiCharacterFriend[] | undefined,
+  designatedFriend: undefined | { name: string };
+  eligibleFriends: ApiCharacterFriend[] | undefined;
 }

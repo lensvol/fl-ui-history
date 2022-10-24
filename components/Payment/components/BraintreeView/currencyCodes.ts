@@ -1,4 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-import { CurrencyCode } from 'types/payment';
+import { CurrencyCode } from "types/payment";
 
-export const CURRENCY_CODE_GBP: CurrencyCode = 'GBP';
+export const CURRENCY_CODE_GBP: CurrencyCode = "GBP";

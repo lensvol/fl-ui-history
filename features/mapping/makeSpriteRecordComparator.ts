@@ -1,11 +1,13 @@
-import { IArea, SpriteRecord } from 'types/map';
-import { isDistrict } from 'features/mapping/index';
-import { SPRITE_TYPE_ORDERING } from 'features/mapping/constants';
+import { IArea, SpriteRecord } from "types/map";
+import { isDistrict } from "features/mapping/index";
+import { SPRITE_TYPE_ORDERING } from "features/mapping/constants";
 
-export default function makeSpriteRecordComparator(areas: IArea[]): (a: SpriteRecord, b: SpriteRecord) => number {
+export default function makeSpriteRecordComparator(
+  areas: IArea[]
+): (a: SpriteRecord, b: SpriteRecord) => number {
   return (a, b) => {
-    const areaA = areas.find(area => area.areaKey === a[0]);
-    const areaB = areas.find(area => area.areaKey === b[0]);
+    const areaA = areas.find((area) => area.areaKey === a[0]);
+    const areaB = areas.find((area) => area.areaKey === b[0]);
     if (areaA && !areaB) {
       return -1;
     }
@@ -34,4 +36,3 @@ export default function makeSpriteRecordComparator(areas: IArea[]): (a: SpriteRe
     return SPRITE_TYPE_ORDERING[a[1]] - SPRITE_TYPE_ORDERING[b[1]];
   };
 }
-

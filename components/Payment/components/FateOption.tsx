@@ -1,15 +1,15 @@
-import { FEATURE_SHOW_VAT_BREAKDOWN } from 'features/feature-flags';
-import React from 'react';
-import classnames from 'classnames';
-import { NexQuantity } from 'types/payment';
-import { Feature } from 'flagged';
+import { FEATURE_SHOW_VAT_BREAKDOWN } from "features/feature-flags";
+import React from "react";
+import classnames from "classnames";
+import { NexQuantity } from "types/payment";
+import { Feature } from "flagged";
 
 type Props = {
-  data: NexQuantity,
-  id: number | string,
-  isBreakdownVisible: boolean,
-  isSelected: boolean,
-  onSelect: (pkg: NexQuantity) => void,
+  data: NexQuantity;
+  id: number | string;
+  isBreakdownVisible: boolean;
+  isSelected: boolean;
+  onSelect: (pkg: NexQuantity) => void;
 };
 
 export default function FateOption({
@@ -22,9 +22,9 @@ export default function FateOption({
   return (
     <li
       className={classnames(
-        'fate-option',
-        isBreakdownVisible && 'fate-option--breakdown-visible',
-        isSelected && 'fate-option--selected',
+        "fate-option",
+        isBreakdownVisible && "fate-option--breakdown-visible",
+        isSelected && "fate-option--selected"
       )}
     >
       <input
@@ -36,15 +36,8 @@ export default function FateOption({
         id={id.toString()}
         checked={isSelected}
       />
-      <label
-        className="fate-option__label"
-        htmlFor={id.toString()}
-      >
-        {data.quantity}
-        {' '}
-        FATE
-        {' '}
-        {data.currency.sign}
+      <label className="fate-option__label" htmlFor={id.toString()}>
+        {data.quantity} FATE {data.currency.sign}
         <span className="my-price">
           {(data.currencyAmount + data.valueAddedTax).toFixed(2)}
           <Feature name={FEATURE_SHOW_VAT_BREAKDOWN}>
@@ -56,14 +49,8 @@ export default function FateOption({
                 <>
                   <br />
                   <small>
-                    Cost
-                    {' '}
-                    {data.currency.sign}
-                    {data.currencyAmount.toFixed(2)}
-                    {' '}
-                    VAT
-                    {' '}
-                    {data.currency.sign}
+                    Cost {data.currency.sign}
+                    {data.currencyAmount.toFixed(2)} VAT {data.currency.sign}
                     {data.valueAddedTax.toFixed(2)}
                   </small>
                 </>
@@ -76,7 +63,7 @@ export default function FateOption({
   );
 }
 
-FateOption.displayName = 'FateOption';
+FateOption.displayName = "FateOption";
 
 /*
 FateOption.propTypes = {

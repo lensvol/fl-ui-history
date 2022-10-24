@@ -1,41 +1,46 @@
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { useCallback, useMemo } from "react";
 
-import { QUALITY_ID_DUMMY_SHOW_ALL_ITEMS } from 'components/Equipment/constants';
-import { FILTER_ENHANCEMENTS, NEW_OUTFIT_BEHAVIOUR } from 'features/feature-flags';
-import { unequipQuality } from 'actions/outfit';
-import { useQuality as _useQuality } from 'actions/storylet';
-import classnames from 'classnames';
-import Image from 'components/Image';
-import Loading from 'components/Loading';
-
-import { ITooltipData } from 'components/ModalTooltip/types';
-import { PossessionsContextValue } from 'components/Possessions/PossessionsContext';
-
+import { QUALITY_ID_DUMMY_SHOW_ALL_ITEMS } from "components/Equipment/constants";
 import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import getCanUserChangeOutfit from 'selectors/possessions/getCanUserChangeOutfit';
-import { IAppState } from 'types/app';
-import { OutfitSlotName } from 'types/outfit';
-import { useIsChangeable } from 'components/Equipment/hooks';
-import { IQuality } from 'types/qualities';
-import { useFeature } from 'flagged';
-import { normalize } from 'utils/stringFunctions';
-import { createEquipmentQualityAltText } from 'utils';
-import { EquipmentContextValue } from './EquipmentContext';
+  FILTER_ENHANCEMENTS,
+  NEW_OUTFIT_BEHAVIOUR,
+} from "features/feature-flags";
+import { unequipQuality } from "actions/outfit";
+import { useQuality as _useQuality } from "actions/storylet";
+import classnames from "classnames";
+import Image from "components/Image";
+import Loading from "components/Loading";
 
-type OwnProps =
-  Pick<EquipmentContextValue, 'openUseOrEquipModal'> &
-  Pick<IQuality, 'description' | 'enhancements' | 'id' | 'image' | 'level' | 'name' | 'useEventId'> & {
-  category: OutfitSlotName,
-  doesStoryletStateLockOutfits: boolean,
-  areOutfitsLockable: boolean,
-};
+import { ITooltipData } from "components/ModalTooltip/types";
+import { PossessionsContextValue } from "components/Possessions/PossessionsContext";
+
+import { connect, useDispatch } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
+import { IAppState } from "types/app";
+import { OutfitSlotName } from "types/outfit";
+import { useIsChangeable } from "components/Equipment/hooks";
+import { IQuality } from "types/qualities";
+import { useFeature } from "flagged";
+import { normalize } from "utils/stringFunctions";
+import { createEquipmentQualityAltText } from "utils";
+import { EquipmentContextValue } from "./EquipmentContext";
+
+type OwnProps = Pick<EquipmentContextValue, "openUseOrEquipModal"> &
+  Pick<
+    IQuality,
+    | "description"
+    | "enhancements"
+    | "id"
+    | "image"
+    | "level"
+    | "name"
+    | "useEventId"
+  > & {
+    category: OutfitSlotName;
+    doesStoryletStateLockOutfits: boolean;
+    areOutfitsLockable: boolean;
+  };
 
 const mapStateToProps = (state: IAppState, props: OwnProps) => ({
   canChangeOutfit: getCanUserChangeOutfit(state, props),
@@ -46,11 +51,11 @@ const mapStateToProps = (state: IAppState, props: OwnProps) => ({
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 
-type Props = StateProps
-  & OwnProps
-  & RouteComponentProps
-  & Pick<PossessionsContextValue, 'currentlyInStorylet'>
-  & Pick<EquipmentContextValue, 'filterString'>;
+type Props = StateProps &
+  OwnProps &
+  RouteComponentProps &
+  Pick<PossessionsContextValue, "currentlyInStorylet"> &
+  Pick<EquipmentContextValue, "filterString">;
 
 function EquippedItem(props: Props) {
   const {
@@ -75,7 +80,9 @@ function EquippedItem(props: Props) {
   const dispatch = useDispatch();
 
   const canPlayerUseItems = setting?.itemsUsableHere && !currentlyInStorylet;
-  const hasNewOutfitBehaviour: boolean = useFeature(NEW_OUTFIT_BEHAVIOUR) as boolean;
+  const hasNewOutfitBehaviour: boolean = useFeature(
+    NEW_OUTFIT_BEHAVIOUR
+  ) as boolean;
   const hasUseEventId = !!useEventId;
 
   const isChangeable = useIsChangeable(category);
@@ -86,12 +93,7 @@ function EquippedItem(props: Props) {
       return;
     }
     dispatch(unequipQuality(id, { autosaveOutfit: !hasNewOutfitBehaviour }));
-  }, [
-    dispatch,
-    hasNewOutfitBehaviour,
-    id,
-    isChangeable,
-  ]);
+  }, [dispatch, hasNewOutfitBehaviour, id, isChangeable]);
 
   const hasFilterEnhancementsFeature = useFeature(FILTER_ENHANCEMENTS);
 
@@ -102,19 +104,24 @@ function EquippedItem(props: Props) {
     if (selectedEnhancementQualityId === QUALITY_ID_DUMMY_SHOW_ALL_ITEMS) {
       return true;
     }
-    return enhancements?.find(e => e.qualityId === selectedEnhancementQualityId);
+    return enhancements?.find(
+      (e) => e.qualityId === selectedEnhancementQualityId
+    );
   }, [
     enhancements,
     hasFilterEnhancementsFeature,
     selectedEnhancementQualityId,
   ]);
 
-  const handleUse = useCallback(() => dispatch(_useQuality(id, history)), [dispatch, history, id]);
+  const handleUse = useCallback(
+    () => dispatch(_useQuality(id, history)),
+    [dispatch, history, id]
+  );
 
-  const matchesFilterString = useMemo(() => normalize(name).indexOf(normalize(filterString)) >= 0, [
-    filterString,
-    name,
-  ]);
+  const matchesFilterString = useMemo(
+    () => normalize(name).indexOf(normalize(filterString)) >= 0,
+    [filterString, name]
+  );
 
   const handleClick = useCallback(() => {
     if (!isChangeable) {
@@ -150,12 +157,8 @@ function EquippedItem(props: Props) {
     if (!isChangeable || !canChangeOutfit) {
       return [];
     }
-    return [{ label: 'Unequip', action: handleUnequip }];
-  }, [
-    canChangeOutfit,
-    handleUnequip,
-    isChangeable,
-  ]);
+    return [{ label: "Unequip", action: handleUnequip }];
+  }, [canChangeOutfit, handleUnequip, isChangeable]);
 
   const tooltipData = useMemo(() => {
     const data: ITooltipData = {
@@ -170,7 +173,7 @@ function EquippedItem(props: Props) {
     if (hasUseEventId && canPlayerUseItems) {
       data.smallButtons = [
         ...(smallButtons ?? []),
-        { label: 'Use', action: handleUse },
+        { label: "Use", action: handleUse },
       ];
     }
 
@@ -189,24 +192,25 @@ function EquippedItem(props: Props) {
 
   const tooltipTimeout = hasUseEventId && 500;
 
-  const altText = useMemo(() => createEquipmentQualityAltText({
-    description,
-    enhancements,
-    name,
-  }), [
-    description,
-    enhancements,
-    name,
-  ]);
+  const altText = useMemo(
+    () =>
+      createEquipmentQualityAltText({
+        description,
+        enhancements,
+        name,
+      }),
+    [description, enhancements, name]
+  );
 
   return (
     <>
       <div
         data-quality-id={id}
         className={classnames(
-          'equipped-item',
+          "equipped-item",
           // grey it out if it's not enhanced or doesn't match filter string
-          (!hasSelectedEnhancement || !matchesFilterString) && 'equipped-item--lacks-selected-enhancement',
+          (!hasSelectedEnhancement || !matchesFilterString) &&
+            "equipped-item--lacks-selected-enhancement"
         )}
       >
         <Image
@@ -219,8 +223,9 @@ function EquippedItem(props: Props) {
           tooltipPos="bottom"
           tooltipTimeout={tooltipTimeout}
           className={classnames(
-            'equipped-item__image',
-            (!isChangeable || !canChangeOutfit) && 'equipped-item__image--unchangeable',
+            "equipped-item__image",
+            (!isChangeable || !canChangeOutfit) &&
+              "equipped-item__image--unchangeable"
           )}
           defaultCursor={!isChangeable || !canChangeOutfit}
         />
@@ -234,6 +239,6 @@ function EquippedItem(props: Props) {
   );
 }
 
-EquippedItem.displayName = 'EquippedItem';
+EquippedItem.displayName = "EquippedItem";
 
 export default connect(mapStateToProps)(withRouter(EquippedItem));

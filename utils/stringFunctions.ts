@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 export function stripHtml(theString: string): string {
-  const doc = new DOMParser().parseFromString(theString, 'text/html');
-  return doc.body.textContent || '';
+  const doc = new DOMParser().parseFromString(theString, "text/html");
+  return doc.body.textContent || "";
 }
 
 /**
@@ -21,7 +21,7 @@ export function stripHtml(theString: string): string {
  */
 export function stripDiacritics(s: string): string {
   if (String.prototype.normalize !== undefined && s.normalize !== undefined) {
-    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
   return s;
 }

@@ -1,21 +1,20 @@
-import { FlushPlans, ToggleEditMode } from 'actions/plans';
-import { DeletePlanAction, DeletePlanSuccess } from 'actions/plans/deletePlan';
-import { FetchPlansAction, FetchPlansSuccess } from 'actions/plans/fetchPlans';
-import { SaveEditActions, SaveEditSuccess } from 'actions/plans/saveEditPlan';
-import { CreatePlanAction } from 'actions/storylet/createPlan';
-import * as PlansActionTypes from 'actiontypes/plans';
+import { FlushPlans, ToggleEditMode } from "actions/plans";
+import { DeletePlanAction, DeletePlanSuccess } from "actions/plans/deletePlan";
+import { FetchPlansAction, FetchPlansSuccess } from "actions/plans/fetchPlans";
+import { SaveEditActions, SaveEditSuccess } from "actions/plans/saveEditPlan";
+import { CreatePlanAction } from "actions/storylet/createPlan";
+import * as PlansActionTypes from "actiontypes/plans";
 
+import deletePlanSuccess from "reducers/plans/deletePlanSuccess";
+import fetchPlansSuccess from "reducers/plans/fetchPlansSuccess";
+import saveEditSuccess from "reducers/plans/saveEditSuccess";
+import toggleEditMode from "reducers/plans/toggleEditMode";
+import { IPlansState } from "types/plans";
 
-import deletePlanSuccess from 'reducers/plans/deletePlanSuccess';
-import fetchPlansSuccess from 'reducers/plans/fetchPlansSuccess';
-import saveEditSuccess from 'reducers/plans/saveEditSuccess';
-import toggleEditMode from 'reducers/plans/toggleEditMode';
-import { IPlansState } from 'types/plans';
-
-import { INITIAL_STATE } from './constants';
+import { INITIAL_STATE } from "./constants";
 
 type PlansActions =
-  CreatePlanAction
+  | CreatePlanAction
   | DeletePlanAction
   | FetchPlansAction
   | FlushPlans

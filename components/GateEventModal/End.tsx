@@ -1,17 +1,15 @@
-import React from 'react';
-import { IEndStorylet } from 'types/storylet';
-import StoryletEndComponent from 'components/StoryletEnd/StoryletEndComponent';
-import {
-  IMessagesObject,
-} from 'types/app/messages';
+import React from "react";
+import { IEndStorylet } from "types/storylet";
+import StoryletEndComponent from "components/StoryletEnd/StoryletEndComponent";
+import { IMessagesObject } from "types/app/messages";
 
 export interface Props {
-  endStorylet: IEndStorylet,
-  isGoingOnwards: boolean,
-  isTryingAgain: boolean,
-  messages: IMessagesObject,
-  onGoOnwards: () => Promise<void>,
-  onTryAgain: () => Promise<void>,
+  endStorylet: IEndStorylet;
+  isGoingOnwards: boolean;
+  isTryingAgain: boolean;
+  messages: IMessagesObject;
+  onGoOnwards: () => Promise<void>;
+  onTryAgain: () => Promise<void>;
 }
 
 export default function End({
@@ -20,11 +18,7 @@ export default function End({
   onGoOnwards,
   onTryAgain,
   messages,
-  endStorylet: {
-    canGoAgain,
-    event,
-    rootEventId,
-  },
+  endStorylet: { canGoAgain, event, rootEventId },
 }: Props) {
   return (
     <StoryletEndComponent

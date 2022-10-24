@@ -1,4 +1,4 @@
-import { GridLayer } from 'leaflet';
+import { GridLayer } from "leaflet";
 
 // @ts-ignore
 const originalInitTile = GridLayer.prototype._initTile;
@@ -17,12 +17,12 @@ export default function applyFractionalTileSizeWorkaround() {
 
   hasWorkaroundBeenApplied = true;
 
-  GridLayer.include( {
+  GridLayer.include({
     _initTile: function (tile: any) {
       originalInitTile.call(this, tile);
       const tileSize = this.getTileSize();
-      tile.style.width = tileSize.x + 1 + 'px';
-      tile.style.height = tileSize.y + 1 + 'px';
-    }
+      tile.style.width = tileSize.x + 1 + "px";
+      tile.style.height = tileSize.y + 1 + "px";
+    },
   });
 }

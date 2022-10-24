@@ -1,30 +1,30 @@
-import getSortedAuthMethods from 'components/AccountLinkReminder/getSortedAuthMethods';
-import { STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG } from 'constants/accountLinkReminder';
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
-import AuthStatus from './AuthStatus';
+import getSortedAuthMethods from "components/AccountLinkReminder/getSortedAuthMethods";
+import { STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG } from "constants/accountLinkReminder";
+import React, { useCallback, useMemo, useState } from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
+import AuthStatus from "./AuthStatus";
 
 export function AccountLinkReminderReady({
   authMethods,
   onRequestClose,
 }: Props) {
-  const methods = useMemo(() => getSortedAuthMethods(authMethods ?? []), [authMethods]);
+  const methods = useMemo(
+    () => getSortedAuthMethods(authMethods ?? []),
+    [authMethods]
+  );
 
   const [isChecked, setIsChecked] = useState<boolean>(
     JSON.parse(
-      localStorage.getItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG) ?? 'false',
-    ),
+      localStorage.getItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG) ??
+        "false"
+    )
   );
 
   const onChange = useCallback((e) => {
     setIsChecked(e.target.checked);
     if (e.target.checked) {
-      localStorage.setItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG, 'true');
+      localStorage.setItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG, "true");
     } else {
       localStorage.removeItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG);
     }
@@ -32,31 +32,22 @@ export function AccountLinkReminderReady({
 
   return (
     <div>
-      <h2 className="heading heading--2">
-        Review your login methods
-      </h2>
+      <h2 className="heading heading--2">Review your login methods</h2>
       <p>
-        It looks like you've only linked your account to one login method.
-        {' '}
-        You can change this here, if you'd like.
+        It looks like you've only linked your account to one login method. You
+        can change this here, if you'd like.
       </p>
       <div>
         <ul>
-          {methods.map(method => (
+          {methods.map((method) => (
             <li key={method}>
-              <h3 className="heading heading--3">
-                {method}
-              </h3>
-              <AuthStatus
-                method={method}
-              />
+              <h3 className="heading heading--3">{method}</h3>
+              <AuthStatus method={method} />
             </li>
           ))}
         </ul>
       </div>
-      <div
-        className="buttons account-link-reminder__buttons"
-      >
+      <div className="buttons account-link-reminder__buttons">
         <button
           className="button button--primary"
           type="button"
@@ -64,16 +55,13 @@ export function AccountLinkReminderReady({
         >
           Close
         </button>
-        <label
-          htmlFor="dont-ask-again"
-        >
-          Don't remind me about this again
-          on this device
+        <label htmlFor="dont-ask-again">
+          Don't remind me about this again on this device
           <input
             type="checkbox"
             onChange={onChange}
             checked={isChecked}
-            style={{ marginLeft: '.5rem', marginTop: 0 }}
+            style={{ marginLeft: ".5rem", marginTop: 0 }}
           />
         </label>
       </div>
@@ -82,12 +70,10 @@ export function AccountLinkReminderReady({
 }
 
 type OwnProps = {
-  onRequestClose: () => void,
+  onRequestClose: () => void;
 };
 
-const mapStateToProps = ({
-  settings: { authMethods },
-}: IAppState) => ({
+const mapStateToProps = ({ settings: { authMethods } }: IAppState) => ({
   authMethods,
 });
 

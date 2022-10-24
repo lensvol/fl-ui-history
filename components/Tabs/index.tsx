@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import Tab from './Tab';
+import Tab from "./Tab";
 
 type Props = {
   // active: string,
-  items: any[],
+  items: any[];
 };
 
 export default function Tabs({
@@ -13,12 +13,12 @@ export default function Tabs({
 }: Props) {
   return (
     <ul role="tablist">
-      {items.map(item => (
+      {items.map((item) => (
         <Tab
           key={item.value}
           id={item.value}
           onSelect={item.onSelect}
-          name={item.value === '/' ? 'story' : item.value}
+          name={item.value === "/" ? "story" : item.value}
           to={item.value}
         >
           {item.label}
@@ -28,4 +28,4 @@ export default function Tabs({
   );
 }
 
-Tabs.displayName = 'Tabs';
+Tabs.displayName = "Tabs";

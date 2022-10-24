@@ -1,32 +1,23 @@
-import React from 'react';
-import { IChooseBranchRequestData } from 'services/StoryletService';
-import {
-  IBranch,
-  IStorylet,
-} from 'types/storylet';
-import GoBack from 'components/StoryletIn/GoBack';
-import StoryletRoot from 'components/StoryletRoot';
-import Branch from 'components/Branch';
-import ExceptionalFriendModalContext from 'components/ExceptionalFriendModal/ExceptionalFriendModalContext';
-import DomManipulationContext from 'components/DomManipulationContext';
+import React from "react";
+import { IChooseBranchRequestData } from "services/StoryletService";
+import { IBranch, IStorylet } from "types/storylet";
+import GoBack from "components/StoryletIn/GoBack";
+import StoryletRoot from "components/StoryletRoot";
+import Branch from "components/Branch";
+import ExceptionalFriendModalContext from "components/ExceptionalFriendModal/ExceptionalFriendModalContext";
+import DomManipulationContext from "components/DomManipulationContext";
 
 export interface Props {
-  onChooseBranch: (_: IBranch & IChooseBranchRequestData) => Promise<void>,
-  onGoBack: () => void,
-  storylet: IStorylet,
+  onChooseBranch: (_: IBranch & IChooseBranchRequestData) => Promise<void>;
+  onGoBack: () => void;
+  storylet: IStorylet;
 }
 
 export function In(props: Props) {
-  const {
-    onChooseBranch,
-    onGoBack,
-    storylet,
-  } = props;
+  const { onChooseBranch, onGoBack, storylet } = props;
   return (
     <ExceptionalFriendModalContext.Consumer>
-      {({
-        openModal,
-      }) => (
+      {({ openModal }) => (
         <div>
           <DomManipulationContext.Provider
             value={{
@@ -35,14 +26,10 @@ export function In(props: Props) {
               onOpenSubscriptionModal: openModal,
             }}
           >
-            <StoryletRoot
-              data={storylet}
-              shareData={storylet}
-            />
+            <StoryletRoot data={storylet} shareData={storylet} />
           </DomManipulationContext.Provider>
-          <div style={{ marginLeft: '-.5rem' }}>
-            {storylet.childBranches.map(branch => (
-
+          <div style={{ marginLeft: "-.5rem" }}>
+            {storylet.childBranches.map((branch) => (
               <Branch
                 branch={branch}
                 isGoingBack={false}
@@ -53,7 +40,7 @@ export function In(props: Props) {
               />
             ))}
           </div>
-          <div style={{ marginTop: '1rem' }}>
+          <div style={{ marginTop: "1rem" }}>
             <GoBack
               disabled={false}
               isGoingBack={false}

@@ -1,8 +1,7 @@
-import * as SubscriptionActionTypes from 'actiontypes/subscription';
+import * as SubscriptionActionTypes from "actiontypes/subscription";
 
-
-import cancelBraintreeSubscriptionSuccess from './cancelBraintreeSubscriptionSuccess';
-import { ISubscriptionState } from 'types/subscription';
+import cancelBraintreeSubscriptionSuccess from "./cancelBraintreeSubscriptionSuccess";
+import { ISubscriptionState } from "types/subscription";
 
 /**
  * Initial state
@@ -16,13 +15,15 @@ const INITIAL_STATE: ISubscriptionState = {
   message: null,
 };
 
-
 /**
  * Fate Reducer
  * @param {Object} state
  * @param {[Object]} action
  */
-export default function reducer(state = INITIAL_STATE, action: { type: string, payload: any }) {
+export default function reducer(
+  state = INITIAL_STATE,
+  action: { type: string; payload: any }
+) {
   const { payload = {} } = action;
 
   switch (action.type) {

@@ -1,25 +1,21 @@
-import React, { CSSProperties, useCallback } from 'react';
+import React, { CSSProperties, useCallback } from "react";
 
 interface Props {
-  data: { name: string }[],
-  gotoItem: (_: any, __: { offset: number }) => void,
-  style?: CSSProperties,
+  data: { name: string }[];
+  gotoItem: (_: any, __: { offset: number }) => void;
+  style?: CSSProperties;
 }
 
 export default function CategorySelector(props: Props) {
-  const {
-    data,
-    gotoItem,
-    style,
-  } = props;
+  const { data, gotoItem, style } = props;
 
-  const handleChange = useCallback((evt: any) => {
-    const item = data.find(item => item.name === evt.target.value);
-    gotoItem(item, { offset: -50 });
-  }, [
-    data,
-    gotoItem,
-  ]);
+  const handleChange = useCallback(
+    (evt: any) => {
+      const item = data.find((item) => item.name === evt.target.value);
+      gotoItem(item, { offset: -50 });
+    },
+    [data, gotoItem]
+  );
 
   return (
     <select
@@ -28,12 +24,10 @@ export default function CategorySelector(props: Props) {
       style={style}
     >
       {data.map((item, i) => (
-        <option key={i}>
-          {item.name}
-        </option>
+        <option key={i}>{item.name}</option>
       ))}
     </select>
   );
 }
 
-CategorySelector.displayName = 'CategorySelector';
+CategorySelector.displayName = "CategorySelector";

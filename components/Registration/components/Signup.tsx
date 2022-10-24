@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import FacebookLoginContainer from './FacebookLoginContainer';
-import GoogleLoginContainer from './GoogleLoginContainer';
-import SignUpWithEmail from './SignUpWithEmail';
-import TwitterLoginContainer from './TwitterLoginContainer';
+import FacebookLoginContainer from "./FacebookLoginContainer";
+import GoogleLoginContainer from "./GoogleLoginContainer";
+import SignUpWithEmail from "./SignUpWithEmail";
+import TwitterLoginContainer from "./TwitterLoginContainer";
 
 export default function Signup() {
   return (
@@ -19,7 +19,6 @@ export default function Signup() {
         <TwitterLoginContainer label="Sign up with Twitter" />
         <Or />
         <GoogleLoginContainer label="Sign up with Google" />
-
       </div>
     </div>
   );

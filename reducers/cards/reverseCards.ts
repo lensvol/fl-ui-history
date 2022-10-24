@@ -1,3 +1,7 @@
-export default function reverseCards({ displayCards }: { displayCards: any[] }) {
+export default function reverseCards({
+  displayCards,
+}: {
+  displayCards: any[];
+}) {
   return [...displayCards].reverse();
 }

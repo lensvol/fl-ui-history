@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import Image from 'components/Image';
-import { Props } from './props';
+import Image from "components/Image";
+import { Props } from "./props";
 
 export default function ExceptionalStoryTrailerSmUp({ data }: Props) {
   return (

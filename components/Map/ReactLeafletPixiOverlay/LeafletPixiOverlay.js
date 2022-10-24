@@ -1,14 +1,22 @@
-import L from 'leaflet';
-import getMinimumZoomLevelForDestinations from 'features/mapping/getMinimumZoomLevelForDestinations';
+import L from "leaflet";
+import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
 import * as PIXI from "pixi.js";
-import { createUtils } from './utils';
+import { createUtils } from "./utils";
 
-import { AVAILABLE_SPRITE_CACHE, MAIN_DESTINATION_SPRITE_CACHE, SELECTION_SPRITE_CACHE, } from './sprite-caches';
+import {
+  AVAILABLE_SPRITE_CACHE,
+  MAIN_DESTINATION_SPRITE_CACHE,
+  SELECTION_SPRITE_CACHE,
+} from "./sprite-caches";
 
-import { getPixiContainer, getPixiMainRenderer, getPixiAuxRenderer } from './PixiSingletons';
+import {
+  getPixiContainer,
+  getPixiMainRenderer,
+  getPixiAuxRenderer,
+} from "./PixiSingletons";
 
-import { isDistrict } from 'features/mapping';
-import { MAIN_DESTINATION_SELECTION_SPRITE_CACHE } from 'components/Map/ReactLeafletPixiOverlay/sprite-caches';
+import { isDistrict } from "features/mapping";
+import { MAIN_DESTINATION_SELECTION_SPRITE_CACHE } from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
 
 const ROUND = L.Point.prototype._round;
 
@@ -16,7 +24,11 @@ function _log(/* message */) {
   // console.info(message);
 }
 
-function setInteractionManager(interactionManager, destroyInteractionManager, autoPreventDefault) {
+function setInteractionManager(
+  interactionManager,
+  destroyInteractionManager,
+  autoPreventDefault
+) {
   if (destroyInteractionManager) {
     interactionManager.destroy();
   } else if (!autoPreventDefault) {
@@ -26,14 +38,19 @@ function setInteractionManager(interactionManager, destroyInteractionManager, au
 
 const LeafletPixiOverlay = L.Layer.extend({
   addAreas: async function () {
-    _log('LeafletPixiOverlay.addAreas()');
+    _log("LeafletPixiOverlay.addAreas()");
     // Do nothing; we did this on page load
   },
 
   setSelectedArea: async function (area, setting, zoomLevel) {
-    _log(`LeafletPixiOverlay.setSelectedArea(${area ? area.name || area.areaKey : area}, zoomLevel=${zoomLevel})`);
+    _log(
+      `LeafletPixiOverlay.setSelectedArea(${
+        area ? area.name || area.areaKey : area
+      }, zoomLevel=${zoomLevel})`
+    );
 
-    const isZoomLevelBelowDestinationThreshold = zoomLevel < getMinimumZoomLevelForDestinations(setting);
+    const isZoomLevelBelowDestinationThreshold =
+      zoomLevel < getMinimumZoomLevelForDestinations(setting);
 
     // Some logic here. When zoomed in beyond the threshold for showing destinations, we want to toggle
     // selection state on main destinations when districts are selected / deselected
@@ -41,9 +58,9 @@ const LeafletPixiOverlay = L.Layer.extend({
     Object.keys(SELECTION_SPRITE_CACHE).forEach((areaKey) => {
       const selectionSprite = SELECTION_SPRITE_CACHE[areaKey];
       const shouldBeVisible =
-        area // is anything selected?
-        && area.areaKey === areaKey // is this area selected?
-        && (!isDistrict(area) || isZoomLevelBelowDestinationThreshold); // if we're a district, should we show district selection?
+        area && // is anything selected?
+        area.areaKey === areaKey && // is this area selected?
+        (!isDistrict(area) || isZoomLevelBelowDestinationThreshold); // if we're a district, should we show district selection?
 
       // Turn off selections for everything that isn't this area
       selectionSprite.filters[1].enabled = !shouldBeVisible;
@@ -52,9 +69,9 @@ const LeafletPixiOverlay = L.Layer.extend({
     Object.keys(MAIN_DESTINATION_SELECTION_SPRITE_CACHE).forEach((areaKey) => {
       const sprite = MAIN_DESTINATION_SELECTION_SPRITE_CACHE[areaKey];
       const shouldBeVisible =
-        area // is anything selected?
-        && area.areaKey === areaKey // is this area selected?
-        && !(isDistrict(area) && isZoomLevelBelowDestinationThreshold); // if we're a district, should we show main dest selection?
+        area && // is anything selected?
+        area.areaKey === areaKey && // is this area selected?
+        !(isDistrict(area) && isZoomLevelBelowDestinationThreshold); // if we're a district, should we show main dest selection?
       sprite.filters[1].enabled = !shouldBeVisible;
     });
 
@@ -62,17 +79,22 @@ const LeafletPixiOverlay = L.Layer.extend({
   },
 
   _updateArea: function (area) {
-    _log(`LeafletPixiOverlay._updateArea(${area.name || area.areaKey}, isLit=${area.isLit})`);
+    _log(
+      `LeafletPixiOverlay._updateArea(${area.name || area.areaKey}, isLit=${
+        area.isLit
+      })`
+    );
     if (area.isDistrict) {
       // Darken unlit districts
       AVAILABLE_SPRITE_CACHE[area.areaKey].filters[0].enabled = !area.isLit;
       // Hide main destinations for districts we haven't unlocked
-      MAIN_DESTINATION_SPRITE_CACHE[area.areaKey].filters[1].enabled = !area.shouldShowMainDestination;
+      MAIN_DESTINATION_SPRITE_CACHE[area.areaKey].filters[1].enabled =
+        !area.shouldShowMainDestination;
     }
   },
 
   getEvents: function () {
-    _log('LeafletPixiOverlay.getEvents()');
+    _log("LeafletPixiOverlay.getEvents()");
     const events = {
       move: this._onMove,
       moveend: this._update,
@@ -85,20 +107,23 @@ const LeafletPixiOverlay = L.Layer.extend({
   },
 
   onAdd: function (leafletMap) {
-    _log('LeafletPixiOverlay.onAdd()');
+    _log("LeafletPixiOverlay.onAdd()");
     this._setMap(leafletMap);
     if (!this._container) {
-      const container = this._container = L.DomUtil.create('div', 'leaflet-pixi-overlay');
-      container.style.position = 'absolute';
+      const container = (this._container = L.DomUtil.create(
+        "div",
+        "leaflet-pixi-overlay"
+      ));
+      container.style.position = "absolute";
       this._renderer = getPixiMainRenderer();
       setInteractionManager(
         this._renderer.plugins.interaction,
         this.options.destroyInteractionManager,
-        this.options.autoPreventDefault,
+        this.options.autoPreventDefault
       );
       container.appendChild(this._renderer.view);
       if (this._zoomAnimated) {
-        L.DomUtil.addClass(container, 'leaflet-zoom-animated');
+        L.DomUtil.addClass(container, "leaflet-zoom-animated");
         this._setContainerStyle();
       }
       // Handle double buffering aux renderer
@@ -107,11 +132,11 @@ const LeafletPixiOverlay = L.Layer.extend({
         setInteractionManager(
           this._auxRenderer.plugins.interaction,
           this.options.destroyInteractionManager,
-          this.options.autoPreventDefault,
+          this.options.autoPreventDefault
         );
         container.appendChild(this._auxRenderer.view);
-        this._renderer.view.style.position = 'absolute';
-        this._auxRenderer.view.style.position = 'absolute';
+        this._renderer.view.style.position = "absolute";
+        this._auxRenderer.view.style.position = "absolute";
       }
     }
     this._addContainer();
@@ -127,7 +152,7 @@ const LeafletPixiOverlay = L.Layer.extend({
     this.utils = createUtils(_layer, map, this);
 
     // Hello world!
-    this._update({ type: 'add' });
+    this._update({ type: "add" });
   },
 
   onRemove: function () {
@@ -177,13 +202,14 @@ const LeafletPixiOverlay = L.Layer.extend({
     this._pixiContainer = getPixiContainer();
     // TODO: set _rendererOptions
     this._rendererOptions = {};
-    this._doubleBuffering = PIXI.utils.isWebGLSupported()
-      && !this.options.forceCanvas
-      && this.options.doubleBuffering;
+    this._doubleBuffering =
+      PIXI.utils.isWebGLSupported() &&
+      !this.options.forceCanvas &&
+      this.options.doubleBuffering;
   },
 
   _addContainer: function () {
-    _log('LeafletPixiOverlay._addContainer()');
+    _log("LeafletPixiOverlay._addContainer()");
     this.getPane().appendChild(this._container);
   },
 
@@ -216,28 +242,34 @@ const LeafletPixiOverlay = L.Layer.extend({
     let duration;
     this._disableLeafletRounding();
     const scale = this._map.getZoomScale(this._zoom, this._initialZoom);
-    const shift = this._map.latLngToLayerPoint(this._wgsOrigin)._subtract(this._wgsInitialShift.multiplyBy(scale))._subtract(offset);
+    const shift = this._map
+      .latLngToLayerPoint(this._wgsOrigin)
+      ._subtract(this._wgsInitialShift.multiplyBy(scale))
+      ._subtract(offset);
     this._pixiContainer.scale.set(scale);
     duration = (window.performance.now() - startAt) / 1000;
     _log(`LeafletPixiOverlay._redraw(): scaling took ${duration.toFixed(2)} s`);
     this._pixiContainer.position.set(shift.x, shift.y);
     duration = (window.performance.now() - startAt) / 1000;
-    _log(`LeafletPixiOverlay._redraw(): positioning took ${duration.toFixed(2)} s`);
+    _log(
+      `LeafletPixiOverlay._redraw(): positioning took ${duration.toFixed(2)} s`
+    );
     this._drawCallback(this.utils, e);
     duration = (window.performance.now() - startAt) / 1000;
-    _log(`LeafletPixiOverlay._redraw(): draw callback took ${duration.toFixed(2)} s`);
+    _log(
+      `LeafletPixiOverlay._redraw(): draw callback took ${duration.toFixed(
+        2
+      )} s`
+    );
     this._enableLeafletRounding();
     _log(`LeafletPixiOverlay._redraw() took ${duration.toFixed(2)} s`);
   },
 
-  _setContainerStyle: function () {
-  },
+  _setContainerStyle: function () {},
 
-  _setEvents: function () {
-  },
+  _setEvents: function () {},
 
-  _setMap: function () {
-  },
+  _setMap: function () {},
 
   _resize: function () {
     const startAt = window.performance.now();
@@ -256,7 +288,9 @@ const LeafletPixiOverlay = L.Layer.extend({
     if (this._renderer.gl) {
       const gl = this._renderer.gl;
       if (gl.drawingBufferWidth !== this._renderer.width) {
-        const resolution = this.options.resolution * gl.drawingBufferWidth / this._renderer.width;
+        const resolution =
+          (this.options.resolution * gl.drawingBufferWidth) /
+          this._renderer.width;
         this._renderer.resolution = resolution;
         if (this._renderer.rootRenderTarget) {
           this._renderer.rootRenderTareget.resolution = resolution;
@@ -276,9 +310,14 @@ const LeafletPixiOverlay = L.Layer.extend({
     // Update pixel bounds of renderer container
     const p = this.options.padding;
     const mapSize = this._map.getSize();
-    const min = this._map.containerPointToLayerPoint(mapSize.multiplyBy(-p)).round();
+    const min = this._map
+      .containerPointToLayerPoint(mapSize.multiplyBy(-p))
+      .round();
 
-    this._bounds = new L.Bounds(min, min.add(mapSize.multiplyBy(1 + p * 2)).round());
+    this._bounds = new L.Bounds(
+      min,
+      min.add(mapSize.multiplyBy(1 + p * 2)).round()
+    );
     this._center = this._map.getCenter();
     this._zoom = this._map.getZoom();
 
@@ -295,7 +334,11 @@ const LeafletPixiOverlay = L.Layer.extend({
     const size = b.getSize();
 
     // Resize the renderer, if necessary
-    if (!this._renderer.size || this._renderer.size.x !== size.x || this._renderer.size.y !== size.y) {
+    if (
+      !this._renderer.size ||
+      this._renderer.size.x !== size.x ||
+      this._renderer.size.y !== size.y
+    ) {
       this._resize();
     }
 
@@ -303,8 +346,8 @@ const LeafletPixiOverlay = L.Layer.extend({
       requestAnimationFrame(() => {
         this._redraw(b.min, e);
         this._renderer.gl.finish();
-        view.style.visibility = 'visible';
-        this._auxRenderer.view.style.visibility = 'hidden';
+        view.style.visibility = "visible";
+        this._auxRenderer.view.style.visibility = "hidden";
         L.DomUtil.setPosition(container, b.min);
       });
     } else {

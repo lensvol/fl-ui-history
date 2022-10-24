@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import { goOnwards, tryAgain } from 'actions/storylet';
-import Loading from 'components/Loading';
+import { goOnwards, tryAgain } from "actions/storylet";
+import Loading from "components/Loading";
 
-import StoryletEndComponent from './StoryletEndComponent';
-import { IAppState } from 'types/app';
+import StoryletEndComponent from "./StoryletEndComponent";
+import { IAppState } from "types/app";
 
 interface Props extends RouteComponentProps {
-  dispatch: Function,
-  endStorylet: any,
-  messages?: any,
+  dispatch: Function;
+  endStorylet: any;
+  messages?: any;
 }
 
 interface State {
-  isTryingAgain: boolean,
-  isGoingOnwards: boolean,
+  isTryingAgain: boolean;
+  isGoingOnwards: boolean;
 }
 
 export class StoryletEndContainer extends Component<Props, State> {
-  static displayName = 'StoryletEndContainer';
+  static displayName = "StoryletEndContainer";
 
   mounted = false;
 
@@ -45,7 +45,10 @@ export class StoryletEndContainer extends Component<Props, State> {
    */
   handleOnwardsClick = async () => {
     const { dispatch, history, endStorylet } = this.props;
-    const { event: { isInEventUseTree }, isLinkingEvent } = endStorylet;
+    const {
+      event: { isInEventUseTree },
+      isLinkingEvent,
+    } = endStorylet;
 
     // Disable buttons
     this.setState({ isGoingOnwards: true });
@@ -63,7 +66,7 @@ export class StoryletEndContainer extends Component<Props, State> {
     // dispatching changes to the storylet state
     const shouldReturnToPossessionsTab = isInEventUseTree && !isLinkingEvent;
     if (shouldReturnToPossessionsTab) {
-      history.push('/possessions');
+      history.push("/possessions");
     }
   };
 
@@ -109,12 +112,7 @@ export class StoryletEndContainer extends Component<Props, State> {
       return <Loading />;
     }
 
-    const {
-      accessCode,
-      canGoAgain,
-      event,
-      rootEventId,
-    } = endStorylet;
+    const { accessCode, canGoAgain, event, rootEventId } = endStorylet;
     const disabled = isTryingAgain || isGoingOnwards;
 
     return (
@@ -134,7 +132,9 @@ export class StoryletEndContainer extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({ storylet: { endStorylet, messages } }: IAppState) => ({
+const mapStateToProps = ({
+  storylet: { endStorylet, messages },
+}: IAppState) => ({
   messages,
   endStorylet: endStorylet!,
 });

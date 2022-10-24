@@ -1,15 +1,21 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as SettingsActionTypes from 'actiontypes/settings';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import SettingsService, { ISettingsService } from 'services/SettingsService';
+import { handleVersionMismatch } from "actions/versionSync";
+import * as SettingsActionTypes from "actiontypes/settings";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import SettingsService, { ISettingsService } from "services/SettingsService";
 
-export type RequestPasswordResetRequested = { type: typeof SettingsActionTypes.REQUEST_PASSWORD_RESET_REQUESTED };
-export type RequestPasswordResetFailure = { type: typeof SettingsActionTypes.REQUEST_PASSWORD_RESET_FAILURE };
-export type RequestPasswordResetSuccess = { type: typeof SettingsActionTypes.REQUEST_PASSWORD_RESET_SUCCESS };
+export type RequestPasswordResetRequested = {
+  type: typeof SettingsActionTypes.REQUEST_PASSWORD_RESET_REQUESTED;
+};
+export type RequestPasswordResetFailure = {
+  type: typeof SettingsActionTypes.REQUEST_PASSWORD_RESET_FAILURE;
+};
+export type RequestPasswordResetSuccess = {
+  type: typeof SettingsActionTypes.REQUEST_PASSWORD_RESET_SUCCESS;
+};
 
-export type RequestPasswordResetActions
-  = RequestPasswordResetRequested
+export type RequestPasswordResetActions =
+  | RequestPasswordResetRequested
   | RequestPasswordResetFailure
   | RequestPasswordResetSuccess;
 

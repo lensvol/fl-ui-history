@@ -1,20 +1,20 @@
-import { buildTooltipData } from 'components/SidebarQualities/utils';
-import React, { Component } from 'react';
+import { buildTooltipData } from "components/SidebarQualities/utils";
+import React, { Component } from "react";
 
-import { normalize } from 'utils/stringFunctions';
-import Modal from 'components/Modal';
-import Image from 'components/Image';
-import { IQuality } from 'types/qualities';
+import { normalize } from "utils/stringFunctions";
+import Modal from "components/Modal";
+import Image from "components/Image";
+import { IQuality } from "types/qualities";
 
 interface State {
-  filterString: string,
+  filterString: string;
 }
 
 export default class QualityPicker extends Component<Props, State> {
   mounted = false;
 
   state = {
-    filterString: '',
+    filterString: "",
   };
 
   componentDidMount = () => {
@@ -36,13 +36,8 @@ export default class QualityPicker extends Component<Props, State> {
   };
 
   render = () => {
-    const {
-      activateButtonLabel,
-      header,
-      isOpen,
-      qualities,
-      onRequestClose,
-    } = this.props;
+    const { activateButtonLabel, header, isOpen, qualities, onRequestClose } =
+      this.props;
     const { filterString } = this.state;
 
     return (
@@ -52,9 +47,7 @@ export default class QualityPicker extends Component<Props, State> {
         onRequestClose={onRequestClose}
       >
         <div className="quality-picker">
-          <h1 className="heading heading--3">
-            {header}
-          </h1>
+          <h1 className="heading heading--3">{header}</h1>
           <input
             className="form__control"
             placeholder="Search"
@@ -64,9 +57,14 @@ export default class QualityPicker extends Component<Props, State> {
           />
           <div className="quality-picker__items">
             {qualities
-              .filter(q => normalize(q.name).indexOf(normalize(filterString)) >= 0)
-              .map(item => (
-                <div className="icon icon--inventory quality-picker__item" key={item.id}>
+              .filter(
+                (q) => normalize(q.name).indexOf(normalize(filterString)) >= 0
+              )
+              .map((item) => (
+                <div
+                  className="icon icon--inventory quality-picker__item"
+                  key={item.id}
+                >
                   <Image
                     icon={item.image}
                     alt={item.nameAndLevel || item.name}
@@ -74,13 +72,15 @@ export default class QualityPicker extends Component<Props, State> {
                     width={50}
                     height={50}
                     onClick={() => this.handleClick(item)}
-                    style={{ cursor: 'pointer', imageRendering: 'auto' }}
+                    style={{ cursor: "pointer", imageRendering: "auto" }}
                     tooltipData={{
                       ...buildTooltipData(item),
-                      smallButtons: [{
-                        label: activateButtonLabel,
-                        action: () => this.handleClick(item),
-                      }],
+                      smallButtons: [
+                        {
+                          label: activateButtonLabel,
+                          action: () => this.handleClick(item),
+                        },
+                      ],
                     }}
                   />
                 </div>
@@ -89,14 +89,14 @@ export default class QualityPicker extends Component<Props, State> {
         </div>
       </Modal>
     );
-  }
+  };
 }
 
 interface Props {
-  activateButtonLabel: string,
-  header: string,
-  isOpen: boolean,
-  qualities: IQuality[],
-  onChoose: (quality: IQuality) => void,
-  onRequestClose: () => void,
+  activateButtonLabel: string;
+  header: string;
+  isOpen: boolean;
+  qualities: IQuality[];
+  onChoose: (quality: IQuality) => void;
+  onRequestClose: () => void;
 }

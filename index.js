@@ -1,52 +1,54 @@
 /* eslint-disable import/prefer-default-export, no-underscore-dangle */
-import 'react-app-polyfill/ie11';
+import "react-app-polyfill/ie11";
 // react
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 // redux
-import { Provider } from 'react-redux';
-import { APP_ROOT_SELECTOR } from 'constants/selectors';
-import App from 'components/App';
-import createStaticUpgradeDOM from 'features/startup/createStaticUpgradeDOM';
-import parseMaintenanceEndTime from 'utils/parseMaintenanceEndTime';
-import unpackJwt from 'utils/unpackJwt';
-import ReactModal from 'react-modal';
-import { FlagsProvider } from 'flagged';
+import { Provider } from "react-redux";
+import { APP_ROOT_SELECTOR } from "constants/selectors";
+import App from "components/App";
+import createStaticUpgradeDOM from "features/startup/createStaticUpgradeDOM";
+import parseMaintenanceEndTime from "utils/parseMaintenanceEndTime";
+import unpackJwt from "utils/unpackJwt";
+import ReactModal from "react-modal";
+import { FlagsProvider } from "flagged";
 
-import { store } from 'features/app/store';
+import { store } from "features/app/store";
 
-import { bootstrap } from 'actions/app';
-import createStaticErrorDOM from 'features/startup/createStaticErrorDOM';
-import getAirbrakeClient from 'shared/airbrake/getClient';
+import { bootstrap } from "actions/app";
+import createStaticErrorDOM from "features/startup/createStaticErrorDOM";
+import getAirbrakeClient from "shared/airbrake/getClient";
 // Non-Redux behaviours
-import { applyFractionalTileSizeWorkaround, checkOtp } from 'features/startup';
+import { applyFractionalTileSizeWorkaround, checkOtp } from "features/startup";
 // All css styles
-import 'leaflet/dist/leaflet.css';
-import './assets/styles/main.scss';
-import isTimestampStillValid from 'features/startup/isTimestampStillValid';
-import destructureJwt from 'utils/destructureJwt';
-import clearAuthenticationTokens from 'features/startup/clearAuthenticationTokens';
-import logoutUser from 'actions/user/logoutUser';
-import { FALLBACK_MAP_PREFERRED } from 'actiontypes/map';
-import { InMaintenance, VersionMismatch } from 'services/BaseService';
-import createMaintenanceModeDOM from 'features/startup/createMaintenanceModeDOM';
-import didUserRequestCompatibilityInQueryString from 'features/startup/didUserRequestCompatibilityInQueryString';
-import shouldUserBeFunnelledToCompatibilityMap from 'features/startup/shouldUserBeFunnelledToCompatibilityMap';
+import "leaflet/dist/leaflet.css";
+import "./assets/styles/main.scss";
+import isTimestampStillValid from "features/startup/isTimestampStillValid";
+import destructureJwt from "utils/destructureJwt";
+import clearAuthenticationTokens from "features/startup/clearAuthenticationTokens";
+import logoutUser from "actions/user/logoutUser";
+import { FALLBACK_MAP_PREFERRED } from "actiontypes/map";
+import { InMaintenance, VersionMismatch } from "services/BaseService";
+import createMaintenanceModeDOM from "features/startup/createMaintenanceModeDOM";
+import didUserRequestCompatibilityInQueryString from "features/startup/didUserRequestCompatibilityInQueryString";
+import shouldUserBeFunnelledToCompatibilityMap from "features/startup/shouldUserBeFunnelledToCompatibilityMap";
 
 // service worker
-import { FEATURE_FLAGS } from 'features/feature-flags';
-import { unregister as unregisterServiceWorker } from './registerServiceWorker';
+import { FEATURE_FLAGS } from "features/feature-flags";
+import { unregister as unregisterServiceWorker } from "./registerServiceWorker";
 
 // Get our feature flags
 
 // This import is how we set up moment to support formatting durations. Yes, it's weird!
-require('moment-duration-format');
+require("moment-duration-format");
 
 runApp();
 
 function runApp() {
-  const inMaintenance = process.env.REACT_APP_MAINTENANCE_MODE === 'true';
-  const maintenanceEndTime = parseMaintenanceEndTime(process.env.REACT_APP_MAINTENANCE_END_TIME);
+  const inMaintenance = process.env.REACT_APP_MAINTENANCE_MODE === "true";
+  const maintenanceEndTime = parseMaintenanceEndTime(
+    process.env.REACT_APP_MAINTENANCE_END_TIME
+  );
   if (inMaintenance && maintenanceEndTime) {
     const ctr = document.querySelector(APP_ROOT_SELECTOR).firstElementChild;
     ctr.removeChild(ctr.firstElementChild);
@@ -62,10 +64,10 @@ function runApp() {
   // If the user has asked for compatibility map in the query string, then persist that preference to local storage
   if (compatibilityInQueryString) {
     try {
-      window.localStorage.setItem('use-fallback-map', 'true');
+      window.localStorage.setItem("use-fallback-map", "true");
     } catch (e) {
       // again, no-op is OK
-      console.error('Failed to set compatibility preference; continuing');
+      console.error("Failed to set compatibility preference; continuing");
     }
   }
 
@@ -90,25 +92,29 @@ function runApp() {
     // Inspect the token for character and user IDs, and if we have both, then
     // start retrieving data before we render the app, and render it no matter what happens
 
-    store.dispatch(bootstrap({ fetchSpritesNow: false }))
+    store
+      .dispatch(bootstrap({ fetchSpritesNow: false }))
       .then(() => {
         const duration = window.performance.now() - startAt;
         // eslint-disable-next-line no-console
-        console.info(`Bootstrapping took ${(Math.round(duration) / 1000).toFixed(2)}s`);
+        console.info(
+          `Bootstrapping took ${(Math.round(duration) / 1000).toFixed(2)}s`
+        );
         setTimeout(renderApp, 400);
       })
       .catch((error) => {
         if (error instanceof VersionMismatch) {
-          console.error('version mismatch found during bootstrap');
-          const ctr = document.querySelector(APP_ROOT_SELECTOR).firstElementChild;
+          console.error("version mismatch found during bootstrap");
+          const ctr =
+            document.querySelector(APP_ROOT_SELECTOR).firstElementChild;
           ctr.removeChild(ctr.firstElementChild);
           ctr.append(createStaticUpgradeDOM(document));
           return;
         }
 
-
         if (error instanceof InMaintenance) {
-          const ctr = document.querySelector(APP_ROOT_SELECTOR).firstElementChild;
+          const ctr =
+            document.querySelector(APP_ROOT_SELECTOR).firstElementChild;
           ctr.removeChild(ctr.firstElementChild);
           ctr.appendChild(createMaintenanceModeDOM(document));
           return;
@@ -152,7 +158,7 @@ function runApp() {
           <App />
         </FlagsProvider>
       </Provider>,
-      document.querySelector(APP_ROOT_SELECTOR),
+      document.querySelector(APP_ROOT_SELECTOR)
     );
   }
 
@@ -164,11 +170,11 @@ function runApp() {
 
   // Find out what the actual height of the window is and set it as a CSS custom variable
   // See https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
-  window.addEventListener('resize', setVHCSSVariable);
+  window.addEventListener("resize", setVHCSSVariable);
   setVHCSSVariable();
 }
 
 function setVHCSSVariable() {
   const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
 }

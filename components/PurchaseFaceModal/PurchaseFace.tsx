@@ -1,22 +1,17 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import classnames from 'classnames';
-import { connect } from 'react-redux';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import classnames from "classnames";
+import { connect } from "react-redux";
 
-import { fetch as fetchAvatars } from 'actions/registration';
-import Loading from 'components/Loading';
+import { fetch as fetchAvatars } from "actions/registration";
+import Loading from "components/Loading";
 
-import { ThunkDispatch } from 'redux-thunk';
-import getFaceChangeFateCost from 'selectors/fate/getFaceChangeFateCost';
-import getCanChangeFaceForFree from 'selectors/myself/getCanChangeFaceForFree';
-import { IAppState } from 'types/app';
-import NotEnoughFateWarning from './NotEnoughFateWarning';
-import Avatar from './Avatar';
-import ConfirmModal from './ConfirmModal';
+import { ThunkDispatch } from "redux-thunk";
+import getFaceChangeFateCost from "selectors/fate/getFaceChangeFateCost";
+import getCanChangeFaceForFree from "selectors/myself/getCanChangeFaceForFree";
+import { IAppState } from "types/app";
+import NotEnoughFateWarning from "./NotEnoughFateWarning";
+import Avatar from "./Avatar";
+import ConfirmModal from "./ConfirmModal";
 
 export function PurchaseFace(props: Props) {
   const {
@@ -30,11 +25,13 @@ export function PurchaseFace(props: Props) {
 
   const [hasLoadedAvatars, setHasLoadedAvatars] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState<string | undefined>(undefined);
+  const [selectedAvatar, setSelectedAvatar] = useState<string | undefined>(
+    undefined
+  );
 
   const canAffordFaceChange = useMemo(
-    () => (fateCost !== undefined) && currentFate >= fateCost,
-    [currentFate, fateCost],
+    () => fateCost !== undefined && currentFate >= fateCost,
+    [currentFate, fateCost]
   );
 
   const handleAvatarClick = useCallback((avatar: string) => {
@@ -55,9 +52,9 @@ export function PurchaseFace(props: Props) {
     return (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          width: '100%',
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
         }}
       >
         <Loading spinner />
@@ -67,11 +64,11 @@ export function PurchaseFace(props: Props) {
 
   return (
     <>
-      <div
-        style={{ flex: 1 }}
-      >
-        <h3 className="heading heading--2 heading--inverse">Change your face</h3>
-        {(fateCost > 0) && (
+      <div style={{ flex: 1 }}>
+        <h3 className="heading heading--2 heading--inverse">
+          Change your face
+        </h3>
+        {fateCost > 0 && (
           <NotEnoughFateWarning
             currentFate={currentFate}
             isFree={canChangeFaceForFree}
@@ -80,7 +77,8 @@ export function PurchaseFace(props: Props) {
         )}
         {canChangeFaceForFree && (
           <div>
-            You have an opportunity to change your face. Choose your new face below.
+            You have an opportunity to change your face. Choose your new face
+            below.
           </div>
         )}
         <hr />
@@ -88,22 +86,20 @@ export function PurchaseFace(props: Props) {
           <ul
             className="list--unstyled avatar-list"
             style={{
-              maxHeight: '60vh',
-              overflowY: 'scroll',
+              maxHeight: "60vh",
+              overflowY: "scroll",
             }}
           >
-            {avatars.map(avatar => (
+            {avatars.map((avatar) => (
               <li
                 key={avatar}
                 className={classnames(
-                  'avatar-list__item',
-                  !(canChangeFaceForFree || canAffordFaceChange) && 'avatar-list__item--disabled',
+                  "avatar-list__item",
+                  !(canChangeFaceForFree || canAffordFaceChange) &&
+                    "avatar-list__item--disabled"
                 )}
               >
-                <Avatar
-                  avatar={avatar}
-                  onClick={handleAvatarClick}
-                />
+                <Avatar avatar={avatar} onClick={handleAvatarClick} />
               </li>
             ))}
           </ul>
@@ -222,10 +218,9 @@ const mapStateToProps = ({
   fateCost: getFaceChangeFateCost({ fate }),
 });
 
-type Props = ReturnType<typeof mapStateToProps>
-  & {
-  dispatch: ThunkDispatch<any, any, any>,
-  onRequestClose: (_args?: any) => void,
+type Props = ReturnType<typeof mapStateToProps> & {
+  dispatch: ThunkDispatch<any, any, any>;
+  onRequestClose: (_args?: any) => void;
 };
 
 export default connect(mapStateToProps)(PurchaseFace);

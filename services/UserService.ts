@@ -1,71 +1,76 @@
-import {
-  AreaWithNestedJsonInfo,
-  ISetting,
-} from 'types/map';
-import { PrivilegeLevel } from 'types/user';
-import BaseService, { Either } from './BaseMonadicService';
-
+import { AreaWithNestedJsonInfo, ISetting } from "types/map";
+import { PrivilegeLevel } from "types/user";
+import BaseService, { Either } from "./BaseMonadicService";
 
 export interface ILoginCredentials {
-  emailAddress: string,
-  password: string,
-  accessCodeName?: string,
+  emailAddress: string;
+  password: string;
+  accessCodeName?: string;
 }
 
 export type LoginResponseUser = {
-  emailAddress?: string,
-  id?: number,
-  name?: string,
-  nex?: string,
+  emailAddress?: string;
+  id?: number;
+  name?: string;
+  nex?: string;
 };
 
 export type LoginResponse = {
-  accessCodeResult?: { message: string, isSuccess: boolean },
-  area?: AreaWithNestedJsonInfo,
-  hasCharacter: boolean,
-  jwt?: string,
-  message?: string,
-  privilegeLevel: PrivilegeLevel,
+  accessCodeResult?: { message: string; isSuccess: boolean };
+  area?: AreaWithNestedJsonInfo;
+  hasCharacter: boolean;
+  jwt?: string;
+  message?: string;
+  privilegeLevel: PrivilegeLevel;
   request?: {
-    emailAddress?: string,
-    password?: string,
-    accessCodeName?: string,
-    gender?: string,
-    avatar?: string,
-    userName?: string,
-  },
-  user?: LoginResponseUser,
+    emailAddress?: string;
+    password?: string;
+    accessCodeName?: string;
+    gender?: string;
+    avatar?: string;
+    userName?: string;
+  };
+  user?: LoginResponseUser;
 };
 
 export interface FetchUserResponse {
-  area: AreaWithNestedJsonInfo,
-  hasCharacter: boolean,
-  jwt: string,
-  privilegeLevel: PrivilegeLevel,
-  setting: ISetting,
-  shouldDisplayAuthNag: boolean,
-  user: LoginResponseUser,
+  area: AreaWithNestedJsonInfo;
+  hasCharacter: boolean;
+  jwt: string;
+  privilegeLevel: PrivilegeLevel;
+  setting: ISetting;
+  shouldDisplayAuthNag: boolean;
+  user: LoginResponseUser;
 }
 
 export interface IUserState {
-  hasCharacter: boolean,
-  isFetching: boolean,
-  isTwitterNagScreenOpen: boolean,
-  loggedIn: boolean,
-  privilegeLevel: PrivilegeLevel | undefined,
-  user: {
-    createdAt: string,
-    name: string,
-    id: number,
-  } | undefined,
+  hasCharacter: boolean;
+  isFetching: boolean;
+  isTwitterNagScreenOpen: boolean;
+  loggedIn: boolean;
+  privilegeLevel: PrivilegeLevel | undefined;
+  user:
+    | {
+        createdAt: string;
+        name: string;
+        id: number;
+      }
+    | undefined;
 }
 
 export interface IUserService {
-  fetchUser: () => Promise<Either<FetchUserResponse>>,
-  facebookLogin: (arg: any) => Promise<Either<LoginResponse>>,
-  googleLogin: (arg: { accessCodeName?: string, token: string }) => Promise<Either<LoginResponse>>,
-  login: (credentials: ILoginCredentials) => Promise<Either<LoginResponse>>,
-  logout: () => Promise<Either<{/* empty response expected */}>>,
+  fetchUser: () => Promise<Either<FetchUserResponse>>;
+  facebookLogin: (arg: any) => Promise<Either<LoginResponse>>;
+  googleLogin: (arg: {
+    accessCodeName?: string;
+    token: string;
+  }) => Promise<Either<LoginResponse>>;
+  login: (credentials: ILoginCredentials) => Promise<Either<LoginResponse>>;
+  logout: () => Promise<
+    Either<{
+      /* empty response expected */
+    }>
+  >;
 }
 
 class UserService extends BaseService implements IUserService {
@@ -74,13 +79,13 @@ class UserService extends BaseService implements IUserService {
 
     this.config = {
       ...this.config,
-      method: 'post',
+      method: "post",
     };
   }
 
   login = (creds: ILoginCredentials) => {
     const config = {
-      url: '/login',
+      url: "/login",
       data: {
         accessCodeName: creds.accessCodeName,
         email: creds.emailAddress,
@@ -92,15 +97,15 @@ class UserService extends BaseService implements IUserService {
 
   fetchUser = () => {
     const config = {
-      url: 'login/user',
-      method: 'get',
+      url: "login/user",
+      method: "get",
     };
     return this.doRequest(config);
   };
 
   facebookLogin = (data: any) => {
     const config = {
-      url: '/facebook/processsignedrequest',
+      url: "/facebook/processsignedrequest",
       data,
     };
     return this.doRequest(config);
@@ -108,8 +113,8 @@ class UserService extends BaseService implements IUserService {
 
   googleLogin = (token: any) => {
     const config = {
-      method: 'post',
-      url: '/google/callback',
+      method: "post",
+      url: "/google/callback",
       data: token,
     };
     return this.doRequest<LoginResponse>(config);
@@ -117,7 +122,7 @@ class UserService extends BaseService implements IUserService {
 
   logout = () => {
     const config = {
-      url: '/login/logout',
+      url: "/login/logout",
     };
     return this.doRequest(config);
   };

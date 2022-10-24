@@ -1,13 +1,13 @@
-import Buttonlet from 'components/Buttonlet';
-import React from 'react';
-import ReactModal, { Props as ReactModalProps } from 'react-modal';
-import classnames from 'classnames';
+import Buttonlet from "components/Buttonlet";
+import React from "react";
+import ReactModal, { Props as ReactModalProps } from "react-modal";
+import classnames from "classnames";
 
 interface Props extends ReactModalProps {
-  children?: React.ReactNode,
-  disableTouchEvents?: boolean,
-  hasExplicitCloseButton?: boolean,
-  large?: boolean,
+  children?: React.ReactNode;
+  disableTouchEvents?: boolean;
+  hasExplicitCloseButton?: boolean;
+  large?: boolean;
 }
 
 export default function Modal(props: Props) {
@@ -27,9 +27,9 @@ export default function Modal(props: Props) {
   } = props;
 
   const baseclass = classnames(
-    'modal-dialog media--root',
-    large && 'modal-dialog--large',
-    className,
+    "modal-dialog media--root",
+    large && "modal-dialog--large",
+    className
   );
 
   return (
@@ -43,22 +43,22 @@ export default function Modal(props: Props) {
       closeTimeoutMS={150}
       className={{
         base: baseclass,
-        afterOpen: 'modal-dialog--after-open',
-        beforeClose: 'modal-dialog--before-close',
+        afterOpen: "modal-dialog--after-open",
+        beforeClose: "modal-dialog--before-close",
       }}
       overlayClassName={{
-        base: classnames('modal-dialog__overlay', overlayClassName),
-        afterOpen: 'modal-dialog__overlay--after-open',
-        beforeClose: 'modal-dialog__overlay--before-close',
+        base: classnames("modal-dialog__overlay", overlayClassName),
+        afterOpen: "modal-dialog__overlay--after-open",
+        beforeClose: "modal-dialog__overlay--before-close",
       }}
       style={{
         overlay: {
           ...style?.overlay,
-          touchAction: disableTouchEvents ? 'none' : undefined,
+          touchAction: disableTouchEvents ? "none" : undefined,
         },
         content: {
           ...style?.overlay,
-          touchAction: disableTouchEvents ? 'pan-x pan-y' : undefined,
+          touchAction: disableTouchEvents ? "pan-x pan-y" : undefined,
         },
       }}
     >
@@ -67,7 +67,7 @@ export default function Modal(props: Props) {
           <Buttonlet
             type="delete"
             onClick={onRequestClose}
-            style={{ margin: '-22px' }}
+            style={{ margin: "-22px" }}
           />
         </div>
       )}
@@ -76,4 +76,4 @@ export default function Modal(props: Props) {
   );
 }
 
-Modal.displayName = 'Modal';
+Modal.displayName = "Modal";

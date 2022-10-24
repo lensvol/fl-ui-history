@@ -1,14 +1,14 @@
-import { NEW_OUTFIT_BEHAVIOUR } from 'features/feature-flags';
-import React from 'react';
-import { connect } from 'react-redux';
+import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
+import React from "react";
+import { connect } from "react-redux";
 
-import Loading from 'components/Loading';
-import ActionCounter from 'components/ActionCounter';
-import { IAppState } from 'types/app';
-import { Feature } from 'flagged';
-import PlayerEchoes from './PlayerEchoes';
-import PlayerFate from './PlayerFate';
-import PlayerScrip from './PlayerScrip';
+import Loading from "components/Loading";
+import ActionCounter from "components/ActionCounter";
+import { IAppState } from "types/app";
+import { Feature } from "flagged";
+import PlayerEchoes from "./PlayerEchoes";
+import PlayerFate from "./PlayerFate";
+import PlayerScrip from "./PlayerScrip";
 
 const mapStateToProps = (state: IAppState) => ({
   actions: state.actions,
@@ -35,6 +35,6 @@ export function PlayerStats({ actions }: Props) {
   );
 }
 
-PlayerStats.displayName = 'PlayerStats';
+PlayerStats.displayName = "PlayerStats";
 
 export default connect(mapStateToProps)(PlayerStats);

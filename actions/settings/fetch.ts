@@ -1,33 +1,39 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as SettingsActionTypes from 'actiontypes/settings';
-import { ActionCreator } from 'redux';
-import {
-  Either,
-  Success,
-} from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
+import { handleVersionMismatch } from "actions/versionSync";
+import * as SettingsActionTypes from "actiontypes/settings";
+import { ActionCreator } from "redux";
+import { Either, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
 import SettingsService, {
   FetchSettingsResponse,
   ISettingsService,
-} from 'services/SettingsService';
+} from "services/SettingsService";
 
 export type FetchSettingsSuccess = {
-  type: typeof SettingsActionTypes.FETCH_SETTINGS_SUCCESS,
-  payload: FetchSettingsResponse,
-}
+  type: typeof SettingsActionTypes.FETCH_SETTINGS_SUCCESS;
+  payload: FetchSettingsResponse;
+};
 
-export type FetchSettingsRequested = { type: typeof SettingsActionTypes.FETCH_SETTINGS_REQUESTED };
+export type FetchSettingsRequested = {
+  type: typeof SettingsActionTypes.FETCH_SETTINGS_REQUESTED;
+};
 
-export type FetchSettingsFailure = { type: typeof SettingsActionTypes.FETCH_SETTINGS_FAILURE };
+export type FetchSettingsFailure = {
+  type: typeof SettingsActionTypes.FETCH_SETTINGS_FAILURE;
+};
 
-export type FetchSettingsActions = FetchSettingsSuccess | FetchSettingsRequested | FetchSettingsFailure;
+export type FetchSettingsActions =
+  | FetchSettingsSuccess
+  | FetchSettingsRequested
+  | FetchSettingsFailure;
 
 export const fetchSettingsRequested = () => ({
   type: SettingsActionTypes.FETCH_SETTINGS_REQUESTED,
   isFetching: true,
 });
 
-export const fetchSettingsSuccess: ActionCreator<FetchSettingsSuccess> = (response: FetchSettingsResponse) => ({
+export const fetchSettingsSuccess: ActionCreator<FetchSettingsSuccess> = (
+  response: FetchSettingsResponse
+) => ({
   type: SettingsActionTypes.FETCH_SETTINGS_SUCCESS,
   payload: response,
 });

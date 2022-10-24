@@ -1,12 +1,9 @@
-import {
-  isUnterzeePlanningSetting,
-  isUnterzeeSetting,
-} from 'features/mapping';
-import { createSelector } from 'reselect';
-import { IAppState } from 'types/app';
+import { isUnterzeePlanningSetting, isUnterzeeSetting } from "features/mapping";
+import { createSelector } from "reselect";
+import { IAppState } from "types/app";
 
-const GATE_ICON_IMAGE_PATH_GATE = '/img/gate-icon.png';
-const GATE_ICON_IMAGE_PATH_WHEEL = '/img/ships-wheel-icon.png';
+const GATE_ICON_IMAGE_PATH_GATE = "/img/gate-icon.png";
+const GATE_ICON_IMAGE_PATH_WHEEL = "/img/ships-wheel-icon.png";
 
 const getCurrentSetting = (state: IAppState) => state.map.setting;
 

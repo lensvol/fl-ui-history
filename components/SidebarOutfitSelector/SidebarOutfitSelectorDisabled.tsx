@@ -1,40 +1,45 @@
-import { openModalTooltip } from 'actions/modalTooltip';
-import React, {
-  SyntheticEvent,
-  useCallback,
-  useMemo,
-} from 'react';
-import Interactive, { State as ReactInteractiveState } from 'react-interactive';
-import TippyWrapper from 'components/TippyWrapper';
-import { connect, useDispatch } from 'react-redux';
+import { openModalTooltip } from "actions/modalTooltip";
+import React, { SyntheticEvent, useCallback, useMemo } from "react";
+import Interactive, { State as ReactInteractiveState } from "react-interactive";
+import TippyWrapper from "components/TippyWrapper";
+import { connect, useDispatch } from "react-redux";
 
-import getOrderedOutfits from 'selectors/outfit/getOrderedOutfits';
-import { DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT } from 'components/Equipment/constants';
-import { IAppState } from 'types/app';
+import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
+import { DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT } from "components/Equipment/constants";
+import { IAppState } from "types/app";
 
-import Title from './Title';
+import Title from "./Title";
 
 export function SidebarOutfitSelectorDisabled({ outfits }: Props) {
   const dispatch = useDispatch();
 
-  const selectedOutfit = useMemo(() => outfits.find(o => o.selected), [outfits]);
+  const selectedOutfit = useMemo(
+    () => outfits.find((o) => o.selected),
+    [outfits]
+  );
 
-  const tooltipData = useMemo(() => ({
-    description: DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT,
-  }), []);
+  const tooltipData = useMemo(
+    () => ({
+      description: DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT,
+    }),
+    []
+  );
 
-  const onStateChange = useCallback(({ nextState, event }: {
-    nextState: ReactInteractiveState,
-    event: SyntheticEvent<Element, Event>,
-  }) => {
-    event.preventDefault();
-    if (/touch/.test(nextState.iState)) {
-      dispatch(openModalTooltip(tooltipData));
-    }
-  }, [
-    dispatch,
-    tooltipData,
-  ]);
+  const onStateChange = useCallback(
+    ({
+      nextState,
+      event,
+    }: {
+      nextState: ReactInteractiveState;
+      event: SyntheticEvent<Element, Event>;
+    }) => {
+      event.preventDefault();
+      if (/touch/.test(nextState.iState)) {
+        dispatch(openModalTooltip(tooltipData));
+      }
+    },
+    [dispatch, tooltipData]
+  );
 
   if (selectedOutfit === undefined) {
     return null;
@@ -43,14 +48,9 @@ export function SidebarOutfitSelectorDisabled({ outfits }: Props) {
   return (
     <div>
       <Title />
-      <Interactive
-        as="div"
-        onStateChange={onStateChange}
-      >
+      <Interactive as="div" onStateChange={onStateChange}>
         <TippyWrapper tooltipData={tooltipData}>
-          <div
-            className="form__control outfit-selector outfit-selector--disabled"
-          >
+          <div className="form__control outfit-selector outfit-selector--disabled">
             {selectedOutfit.name}
             <i className="fa fa-lg fa-lock" />
           </div>

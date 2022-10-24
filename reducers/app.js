@@ -2,9 +2,7 @@
  * Initial state
  * @type {Object}
  */
-const initialState = {
-
-};
+const initialState = {};
 
 /**
  * App Reducer

@@ -1,4 +1,4 @@
-import { IMyselfState } from 'types/myself';
+import { IMyselfState } from "types/myself";
 
 export default function nameChanged(state: IMyselfState, payload: string) {
   return {

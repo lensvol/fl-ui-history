@@ -1,7 +1,7 @@
-import { areaToTooltipData } from 'features/mapping';
-import { ITooltipData } from 'components/ModalTooltip/types';
-import { useCallback } from 'react';
-import { IArea, ISetting } from 'types/map';
+import { areaToTooltipData } from "features/mapping";
+import { ITooltipData } from "components/ModalTooltip/types";
+import { useCallback } from "react";
+import { IArea, ISetting } from "types/map";
 
 export default function useHandleHitboxTap(
   currentArea: IArea,
@@ -12,39 +12,42 @@ export default function useHandleHitboxTap(
   setIsModalTooltipOpen: (isOpen: boolean) => void,
   setTooltipData: (tooltipData: ITooltipData) => void,
   zoomLevel: number,
-  zoomToDistrict: (area: IArea) => void,
+  zoomToDistrict: (area: IArea) => void
 ) {
-  return useCallback((area) => {
-    if (area.isDistrict && !area.isLit) {
-      return;
-    }
+  return useCallback(
+    (area) => {
+      if (area.isDistrict && !area.isLit) {
+        return;
+      }
 
-    if (area.isDistrict && zoomLevel < minimumZoomLevelForDestinations) {
-      return zoomToDistrict(area);
-    }
+      if (area.isDistrict && zoomLevel < minimumZoomLevelForDestinations) {
+        return zoomToDistrict(area);
+      }
 
-    onAreaSelect(area);
+      onAreaSelect(area);
 
-    const baseTooltipData = areaToTooltipData(
-      area,
+      const baseTooltipData = areaToTooltipData(
+        area,
+        currentArea,
+        !!setting?.canTravel,
+        (e) => onAreaClick(e, area)
+      );
+      setIsModalTooltipOpen(true);
+
+      if (zoomLevel >= minimumZoomLevelForDestinations) {
+        return setTooltipData(baseTooltipData);
+      }
+    },
+    [
       currentArea,
-      !!setting?.canTravel,
-      (e) => onAreaClick(e, area),
-    );
-    setIsModalTooltipOpen(true);
-
-    if (zoomLevel >= minimumZoomLevelForDestinations) {
-      return setTooltipData(baseTooltipData);
-    }
-  }, [
-    currentArea,
-    minimumZoomLevelForDestinations,
-    onAreaClick,
-    onAreaSelect,
-    setIsModalTooltipOpen,
-    setTooltipData,
-    setting,
-    zoomLevel,
-    zoomToDistrict,
-  ]);
+      minimumZoomLevelForDestinations,
+      onAreaClick,
+      onAreaSelect,
+      setIsModalTooltipOpen,
+      setTooltipData,
+      setting,
+      zoomLevel,
+      zoomToDistrict,
+    ]
+  );
 }

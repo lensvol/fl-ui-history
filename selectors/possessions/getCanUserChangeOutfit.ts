@@ -1,10 +1,10 @@
-import { createSelector } from 'reselect';
-import { IAppState } from 'types/app';
-import { StoryletPhase } from 'types/storylet';
+import { createSelector } from "reselect";
+import { IAppState } from "types/app";
+import { StoryletPhase } from "types/storylet";
 
 type Props = {
-  areOutfitsLockable: boolean,
-  doesStoryletStateLockOutfits: boolean,
+  areOutfitsLockable: boolean;
+  doesStoryletStateLockOutfits: boolean;
 };
 
 function getAreOutfitsLockable(_state: IAppState, props: Props) {
@@ -37,7 +37,7 @@ function outputFn(
   canChangeOutfitInSetting: boolean,
   canChangeOutfitInStorylet: boolean,
   doesStoryletStateLockOutfits: boolean,
-  phase: StoryletPhase,
+  phase: StoryletPhase
 ) {
   // If outfits are not lockable (feature is not enabled) then return true
   if (!areOutfitsLockable) {
@@ -55,14 +55,17 @@ function outputFn(
   }
 
   // Otherwise, check slet phase or whether this storylet allows outfit changing
-  return phase === 'Available' || canChangeOutfitInStorylet;
+  return phase === "Available" || canChangeOutfitInStorylet;
 }
 
-export default createSelector([
-  getAreOutfitsLockable,
-  getCanChangeOutfitInArea,
-  getCanChangeOutfitInSetting,
-  getCanChangeOutfitInStorylet,
-  getDoesStoryletStateLockOutfits,
-  getStoryletPhase,
-], outputFn);
+export default createSelector(
+  [
+    getAreOutfitsLockable,
+    getCanChangeOutfitInArea,
+    getCanChangeOutfitInSetting,
+    getCanChangeOutfitInStorylet,
+    getDoesStoryletStateLockOutfits,
+    getStoryletPhase,
+  ],
+  outputFn
+);

@@ -1,10 +1,10 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import JournalEntry from 'components/JournalEntry';
+import JournalEntry from "components/JournalEntry";
 
-import { IAppState } from 'types/app';
-import NavigationControls from './components/NavigationControls';
+import { IAppState } from "types/app";
+import NavigationControls from "./components/NavigationControls";
 
 function JournalEntries({
   fetchDirection,
@@ -31,13 +31,10 @@ function JournalEntries({
         />
       </div>
       <div className="journal-entries">
-        {sharedContent && sharedContent.map(entry => (
-          <JournalEntry
-            isFetching={isFetching}
-            key={entry.id}
-            data={entry}
-          />
-        ))}
+        {sharedContent &&
+          sharedContent.map((entry) => (
+            <JournalEntry isFetching={isFetching} key={entry.id} data={entry} />
+          ))}
       </div>
       <NavigationControls
         fetchDirection={fetchDirection}
@@ -77,13 +74,13 @@ JournalEntries.defaultProps = {
 
  */
 type OwnProps = {
-  fetchDirection: 'next' | 'prev' | undefined;
-  isFetching: boolean,
-  next: string | null | undefined,
-  onJumpToDate: (value: Date) => Promise<void>,
-  onNext: () => void,
-  onPrev: () => void,
-  prev: string | null | undefined,
+  fetchDirection: "next" | "prev" | undefined;
+  isFetching: boolean;
+  next: string | null | undefined;
+  onJumpToDate: (value: Date) => Promise<void>;
+  onNext: () => void;
+  onPrev: () => void;
+  prev: string | null | undefined;
 };
 
 const mapStateToProps = ({

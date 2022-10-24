@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 interface Props {
-  message: string,
-  onGoBack: () => void,
-  onClose: () => void,
+  message: string;
+  onGoBack: () => void;
+  onClose: () => void;
 }
 
 export default function PurchaseFateFailure({
@@ -14,7 +14,8 @@ export default function PurchaseFateFailure({
   return (
     <div>
       <p>
-        Something went wrong and we weren't able to complete your transaction. Here's the message we received:
+        Something went wrong and we weren't able to complete your transaction.
+        Here's the message we received:
       </p>
       <p dangerouslySetInnerHTML={{ __html: message }} />
       <div className="buttons buttons--no-squash">

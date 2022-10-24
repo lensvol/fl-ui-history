@@ -1,9 +1,5 @@
-import Subscription from 'components/Account/Sections/Subscription';
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import Subscription from "components/Account/Sections/Subscription";
+import React, { useEffect, useMemo, useState } from "react";
 
 import AccountContext, {
   TAB_TYPE_AUTH,
@@ -14,19 +10,19 @@ import AccountContext, {
   TAB_TYPE_SUBSCRIPTION,
   TAB_TYPE_USER,
   TabType,
-} from './AccountContext';
+} from "./AccountContext";
 
-import AccountTabs from './AccountTabs';
+import AccountTabs from "./AccountTabs";
 
-import Authentication from './Sections/Authentication';
-import ContactsSection from './Sections/Contacts';
-import Deletion from './Sections/Deletion';
-import Messaging from './Sections/Messaging';
-import Preferences from './Sections/Preferences';
-import UserProfile from './Sections/UserProfile';
+import Authentication from "./Sections/Authentication";
+import ContactsSection from "./Sections/Contacts";
+import Deletion from "./Sections/Deletion";
+import Messaging from "./Sections/Messaging";
+import Preferences from "./Sections/Preferences";
+import UserProfile from "./Sections/UserProfile";
 
 type OwnProps = {
-  hash?: string,
+  hash?: string;
 };
 
 export function Account(props: Props) {
@@ -36,7 +32,7 @@ export function Account(props: Props) {
 
   useEffect(() => {
     if (hash) {
-      setCurrentTab(hash.replace('#', '') as TabType);
+      setCurrentTab(hash.replace("#", "") as TabType);
     }
   }, [hash, setCurrentTab]);
 
@@ -63,21 +59,14 @@ export function Account(props: Props) {
   return (
     <div className="content container">
       <div className="account">
-        <AccountContext.Provider
-          value={{ currentTab, setCurrentTab }}
-        >
-          <h1 className="heading heading--1">
-            Account
-          </h1>
+        <AccountContext.Provider value={{ currentTab, setCurrentTab }}>
+          <h1 className="heading heading--1">Account</h1>
           <div className="nav nav--stacked nav--stacked--1-of-4 nav--stacked--roman">
             <AccountTabs />
           </div>
 
           <div className="stack-content">
-            <div
-              role="tabpanel"
-              aria-labelledby={`tab--${currentTab}`}
-            >
+            <div role="tabpanel" aria-labelledby={`tab--${currentTab}`}>
               {tabContent}
             </div>
           </div>
@@ -199,7 +188,7 @@ export function Account(props: Props) {
   );
 }
 
-Account.displayName = 'Account';
+Account.displayName = "Account";
 
 type Props = OwnProps;
 

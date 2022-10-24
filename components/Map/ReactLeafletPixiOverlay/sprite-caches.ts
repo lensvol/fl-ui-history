@@ -1,40 +1,37 @@
-import { MAP_ROOT_AREA_THE_FIFTH_CITY } from 'features/mapping/constants';
-import * as PIXI from 'pixi.js';
+import { MAP_ROOT_AREA_THE_FIFTH_CITY } from "features/mapping/constants";
+import * as PIXI from "pixi.js";
 
-import {
-  IArea,
-  IStateAwareArea,
-  SpriteType,
-} from 'types/map';
-import {
-  getMapDimensionsForSetting,
-  isDistrict,
-} from 'features/mapping';
-import GlobalSpriteMap from 'components/Map/PixiMap/GlobalSpriteMap';
-import getPositionForSprite from 'features/mapping/getPositionForSprite';
+import { IArea, IStateAwareArea, SpriteType } from "types/map";
+import { getMapDimensionsForSetting, isDistrict } from "features/mapping";
+import GlobalSpriteMap from "components/Map/PixiMap/GlobalSpriteMap";
+import getPositionForSprite from "features/mapping/getPositionForSprite";
 import {
   getPixiContainer,
   getPixiMainRenderer,
   clearPixiContainer,
-} from './PixiSingletons';
+} from "./PixiSingletons";
 
 export const AVAILABLE_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
 export const FIXED_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
 export const SELECTION_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
 export const MAIN_DESTINATION_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
-export const MAIN_DESTINATION_SELECTION_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
+export const MAIN_DESTINATION_SELECTION_SPRITE_CACHE: {
+  [key: string]: PIXI.Sprite;
+} = {};
 
 const FOREGROUND_STALAGMITE_SPRITE_HEIGHT = 510;
 
-export function addForegroundStalagmiteSprite(sprite: PIXI.Sprite, aOrB: string) {
+export function addForegroundStalagmiteSprite(
+  sprite: PIXI.Sprite,
+  aOrB: string
+) {
   /* eslint-disable no-param-reassign */
-  const {
-    width: mapWidth,
-    height: mapHeight,
-  } = getMapDimensionsForSetting({ mapRootArea: { areaKey: MAP_ROOT_AREA_THE_FIFTH_CITY } });
+  const { width: mapWidth, height: mapHeight } = getMapDimensionsForSetting({
+    mapRootArea: { areaKey: MAP_ROOT_AREA_THE_FIFTH_CITY },
+  });
   sprite.scale = new PIXI.Point(0.5, 0.5);
-  const y = (mapHeight / 2 - FOREGROUND_STALAGMITE_SPRITE_HEIGHT / 2);
-  if (aOrB === 'a' || aOrB === 'stalagmites-a') {
+  const y = mapHeight / 2 - FOREGROUND_STALAGMITE_SPRITE_HEIGHT / 2;
+  if (aOrB === "a" || aOrB === "stalagmites-a") {
     sprite.position = new PIXI.Point(0, y);
   } else {
     sprite.position = new PIXI.Point(mapWidth / 4, y);
@@ -43,7 +40,10 @@ export function addForegroundStalagmiteSprite(sprite: PIXI.Sprite, aOrB: string)
   /* eslint-enable no-param-reassign */
 }
 
-export async function addAreaSpriteToContainer(area: IArea, spriteType: SpriteType) {
+export async function addAreaSpriteToContainer(
+  area: IArea,
+  spriteType: SpriteType
+) {
   const pixiContainer = getPixiContainer();
   // Sprite has already been added, go away
   if (isSpriteInCache(area, spriteType)) {
@@ -52,7 +52,11 @@ export async function addAreaSpriteToContainer(area: IArea, spriteType: SpriteTy
   }
 
   // Only districts have main destination art
-  if (!isDistrict(area) && (spriteType === 'main-destination' || spriteType === 'main-destination-selection')) {
+  if (
+    !isDistrict(area) &&
+    (spriteType === "main-destination" ||
+      spriteType === "main-destination-selection")
+  ) {
     return;
   }
 
@@ -74,7 +78,7 @@ export async function addAreaSpriteToContainer(area: IArea, spriteType: SpriteTy
  * This refreshes the map when we change Setting.
  */
 export function clearContainerAndCaches() {
-  console.info('SpriteCache.clearContainerAndCaches()');
+  console.info("SpriteCache.clearContainerAndCaches()");
   clearPixiContainer();
   clearCaches();
 }
@@ -86,18 +90,18 @@ function clearCaches() {
     MAIN_DESTINATION_SPRITE_CACHE,
     MAIN_DESTINATION_SELECTION_SPRITE_CACHE,
     SELECTION_SPRITE_CACHE,
-  ].forEach(cache => Object.keys(cache).forEach(key => delete cache[key]));
+  ].forEach((cache) => Object.keys(cache).forEach((key) => delete cache[key]));
 }
 
 export function getCacheForSpriteType(whatKind: SpriteType) {
   switch (whatKind) {
-    case 'available':
+    case "available":
       return AVAILABLE_SPRITE_CACHE;
-    case 'selection':
+    case "selection":
       return SELECTION_SPRITE_CACHE;
-    case 'main-destination-selection':
+    case "main-destination-selection":
       return MAIN_DESTINATION_SELECTION_SPRITE_CACHE;
-    case 'main-destination':
+    case "main-destination":
     default:
       return MAIN_DESTINATION_SPRITE_CACHE;
   }
@@ -117,7 +121,9 @@ export async function getSpriteFromCache(area: IArea, whatKind: SpriteType) {
     } else {
       // console.error(`No sprite for area '${areaKey || areaName}' in state '${whatKind}'`);
       // throw new Error(`No sprite for area '${areaKey || areaName}' in state '${whatKind}'`);
-      console.warn(`No sprite for area '${areaKey || areaName}' in state '${whatKind}'`);
+      console.warn(
+        `No sprite for area '${areaKey || areaName}' in state '${whatKind}'`
+      );
     }
   }
   return cache[areaKey];
@@ -155,12 +161,14 @@ export async function updateSpriteForArea(area: IStateAwareArea) {
 
     // Hide main destinations for districts we haven't unlocked
     if (MAIN_DESTINATION_SPRITE_CACHE[areaKey]?.filters?.length > 1) {
-      MAIN_DESTINATION_SPRITE_CACHE[areaKey].filters[1].enabled = !area.shouldShowMainDestination;
+      MAIN_DESTINATION_SPRITE_CACHE[areaKey].filters[1].enabled =
+        !area.shouldShowMainDestination;
     }
 
     // Hide main destination selection sprites to start with
     if (MAIN_DESTINATION_SELECTION_SPRITE_CACHE[areaKey]?.filters?.length > 1) {
-      MAIN_DESTINATION_SELECTION_SPRITE_CACHE[areaKey].filters[1].enabled = true;
+      MAIN_DESTINATION_SELECTION_SPRITE_CACHE[areaKey].filters[1].enabled =
+        true;
     }
   }
 }
@@ -171,17 +179,17 @@ export async function updateSpriteForArea(area: IStateAwareArea) {
  */
 function addAreaSpritesToContainer(area: IStateAwareArea): Promise<void>[] {
   const promises = [];
-  if (!isSpriteInCache(area, 'available')) {
-    promises.push(addAreaSpriteToContainer(area, 'available'));
+  if (!isSpriteInCache(area, "available")) {
+    promises.push(addAreaSpriteToContainer(area, "available"));
   }
-  if (!isSpriteInCache(area, 'selection')) {
-    promises.push(addAreaSpriteToContainer(area, 'selection'));
+  if (!isSpriteInCache(area, "selection")) {
+    promises.push(addAreaSpriteToContainer(area, "selection"));
   }
-  if (!isSpriteInCache(area, 'main-destination')) {
-    promises.push(addAreaSpriteToContainer(area, 'main-destination'));
+  if (!isSpriteInCache(area, "main-destination")) {
+    promises.push(addAreaSpriteToContainer(area, "main-destination"));
   }
-  if (!isSpriteInCache(area, 'main-destination-selection')) {
-    promises.push(addAreaSpriteToContainer(area, 'main-destination-selection'));
+  if (!isSpriteInCache(area, "main-destination-selection")) {
+    promises.push(addAreaSpriteToContainer(area, "main-destination-selection"));
   }
   return promises;
 }

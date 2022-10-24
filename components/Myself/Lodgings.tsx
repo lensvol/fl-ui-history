@@ -1,17 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import Image from 'components/Image';
-import TippyWrapper from 'components/TippyWrapper';
+import Image from "components/Image";
+import TippyWrapper from "components/TippyWrapper";
 
-import { IAppState } from 'types/app';
+import { IAppState } from "types/app";
 
-export function Lodgings({
-  description,
-  image,
-  name,
-  owner,
-}: Props) {
+export function Lodgings({ description, image, name, owner }: Props) {
   if (!name) {
     return null;
   }
@@ -34,17 +29,13 @@ export function Lodgings({
   );
 }
 
-Lodgings.displayName = 'Lodgings';
+Lodgings.displayName = "Lodgings";
 
 const mapStateToProps = ({
   myself: {
     character: {
       name: owner,
-      currentDomicile: {
-        description,
-        image,
-        name,
-      },
+      currentDomicile: { description, image, name },
     },
   },
 }: IAppState) => ({

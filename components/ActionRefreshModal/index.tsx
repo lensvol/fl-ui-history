@@ -1,9 +1,7 @@
-import React, {
-  CSSProperties,
-} from 'react';
-import { connect } from 'react-redux';
-import PurchaseModal from 'components/PurchaseModal';
-import { IAppState } from 'types/app';
+import React, { CSSProperties } from "react";
+import { connect } from "react-redux";
+import PurchaseModal from "components/PurchaseModal";
+import { IAppState } from "types/app";
 
 export function ActionRefreshModal({
   actionRefillFateCard,
@@ -32,15 +30,19 @@ export function ActionRefreshModal({
 }
 
 interface OwnProps {
-  className?: string,
-  disableTouchEvents?: boolean,
-  isOpen: boolean,
-  onRequestClose: () => void,
-  overlayClassName?: string,
-  style?: { overlay?: CSSProperties, content?: CSSProperties },
+  className?: string;
+  disableTouchEvents?: boolean;
+  isOpen: boolean;
+  onRequestClose: () => void;
+  overlayClassName?: string;
+  style?: { overlay?: CSSProperties; content?: CSSProperties };
 }
 
-const mapStateToProps = ({ fate: { data: { actionRefillFateCard } } }: IAppState) => ({ actionRefillFateCard });
+const mapStateToProps = ({
+  fate: {
+    data: { actionRefillFateCard },
+  },
+}: IAppState) => ({ actionRefillFateCard });
 
 export type Props = OwnProps & ReturnType<typeof mapStateToProps>;
 

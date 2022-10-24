@@ -1,9 +1,11 @@
-import Loading from 'components/Loading';
-import React from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
+import Loading from "components/Loading";
+import React from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
 
-const mapStateToProps = ({ cards: { cardsCount, deckSize, isFetching } }: IAppState) => ({
+const mapStateToProps = ({
+  cards: { cardsCount, deckSize, isFetching },
+}: IAppState) => ({
   cardsCount,
   deckSize,
   isFetching,
@@ -12,13 +14,9 @@ const mapStateToProps = ({ cards: { cardsCount, deckSize, isFetching } }: IAppSt
 type Props = ReturnType<typeof mapStateToProps>;
 
 export function Message(props: Props) {
-  const {
-    cardsCount,
-    isFetching,
-    deckSize,
-  } = props;
+  const { cardsCount, isFetching, deckSize } = props;
 
-  const noDrawLimit = (cardsCount > deckSize);
+  const noDrawLimit = cardsCount > deckSize;
   const noCards = cardsCount === 0;
 
   if (isFetching) {
@@ -37,6 +35,6 @@ export function Message(props: Props) {
   return <span>{`${cardsCount} cards waiting!`}</span>;
 }
 
-Message.displayName = 'Message';
+Message.displayName = "Message";
 
 export default connect(mapStateToProps)(Message);

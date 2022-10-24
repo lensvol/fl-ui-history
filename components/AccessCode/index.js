@@ -1,20 +1,17 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-import { fetchAccessCode } from 'actions/accessCodes';
+import { fetchAccessCode } from "actions/accessCodes";
 
-import StoryTabContent from 'components/StoryTabContent';
-import AccessCodeLogin from './AccessCodeLogin';
-import AccessCodeChallengeDialog from './AccessCodeChallengeDialog';
-import AccessCodeResultDialog from './AccessCodeResultDialog';
+import StoryTabContent from "components/StoryTabContent";
+import AccessCodeLogin from "./AccessCodeLogin";
+import AccessCodeChallengeDialog from "./AccessCodeChallengeDialog";
+import AccessCodeResultDialog from "./AccessCodeResultDialog";
 
 // Re-export these components so that they can be imported directly from components/AccessCode
-export {
-  AccessCodeChallengeDialog,
-  AccessCodeResultDialog,
-};
+export { AccessCodeChallengeDialog, AccessCodeResultDialog };
 
 class AccessCodeContainer extends Component {
   /**
@@ -24,20 +21,19 @@ class AccessCodeContainer extends Component {
   componentDidMount = async () => {
     // Fetch the access code info
     const { dispatch, history, match } = this.props;
-    const data = await dispatch(fetchAccessCode(match.params.accessCodeName, history));
+    const data = await dispatch(
+      fetchAccessCode(match.params.accessCodeName, history)
+    );
     if (data.isSuccess) {
       // We successfully fetched a valid access code; nothing left for us to do
       return;
     }
     // This wasn't a valid access code; redirect to root
-    history.push('/');
+    history.push("/");
   };
 
   render() {
-    const {
-      isFetching,
-      loggedIn,
-    } = this.props;
+    const { isFetching, loggedIn } = this.props;
 
     // If we're fetching an access code, don't render anything
     if (isFetching) {
@@ -54,7 +50,7 @@ class AccessCodeContainer extends Component {
   }
 }
 
-AccessCodeContainer.displayName = 'AccessCodeContainer';
+AccessCodeContainer.displayName = "AccessCodeContainer";
 
 AccessCodeContainer.propTypes = {
   isFetching: PropTypes.bool.isRequired,

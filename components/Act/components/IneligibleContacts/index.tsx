@@ -1,8 +1,5 @@
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import { IneligibleContact } from 'types/storylet';
+import React, { useCallback, useState } from "react";
+import { IneligibleContact } from "types/storylet";
 
 export default function IneligibleContacts({ ineligibleContacts }: Props) {
   const [showing, setShowing] = useState(false);
@@ -16,26 +13,22 @@ export default function IneligibleContacts({ ineligibleContacts }: Props) {
           className="ineligible-contacts__button"
           type="button"
           onClick={onClick}
-          style={{ background: 'transparent', border: 'none' }}
+          style={{ background: "transparent", border: "none" }}
         >
-          <i className="fa fa-caret-right" />
-          {' '}
-          {`${showing ? 'Hide' : 'Show'} contacts I can't invite`}
+          <i className="fa fa-caret-right" />{" "}
+          {`${showing ? "Hide" : "Show"} contacts I can't invite`}
         </button>
       </p>
-      <div style={{ margin: '0 0 0 24px' }}>
+      <div style={{ margin: "0 0 0 24px" }}>
         {showing && (
           <ul className="list--bulleted">
-            {ineligibleContacts.map(({
-              name,
-              qualifies,
-              correctInstance,
-              youQualify,
-            }) => (
-              <li key={name}>
-                {`${name} ${qualifies}${correctInstance}${youQualify}`}
-              </li>
-            ))}
+            {ineligibleContacts.map(
+              ({ name, qualifies, correctInstance, youQualify }) => (
+                <li key={name}>
+                  {`${name} ${qualifies}${correctInstance}${youQualify}`}
+                </li>
+              )
+            )}
           </ul>
         )}
       </div>
@@ -43,8 +36,8 @@ export default function IneligibleContacts({ ineligibleContacts }: Props) {
   );
 }
 
-IneligibleContacts.displayName = 'IneligibleContacts';
+IneligibleContacts.displayName = "IneligibleContacts";
 
 type Props = {
-  ineligibleContacts: IneligibleContact[],
+  ineligibleContacts: IneligibleContact[];
 };

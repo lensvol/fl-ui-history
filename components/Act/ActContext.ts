@@ -1,20 +1,22 @@
-import { createContext } from 'react';
-import { IneligibleContact } from 'types/storylet';
+import { createContext } from "react";
+import { IneligibleContact } from "types/storylet";
 
 type ActContextValue = {
-  ineligibleContacts: IneligibleContact[],
-  onSelectContact: (args?: any) => void,
-  onAddContact: unknown,
-  selectedContactId: number | undefined,
+  ineligibleContacts: IneligibleContact[];
+  onSelectContact: (args?: any) => void;
+  onAddContact: unknown;
+  selectedContactId: number | undefined;
 };
 
 const ActContext = createContext<ActContextValue>({
   ineligibleContacts: [],
   onAddContact: undefined,
-  onSelectContact: () => { /* no op */ },
+  onSelectContact: () => {
+    /* no op */
+  },
   selectedContactId: undefined,
 });
 
-ActContext.displayName = 'ActContext';
+ActContext.displayName = "ActContext";
 
 export default ActContext;

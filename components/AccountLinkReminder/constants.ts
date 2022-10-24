@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-import { MessageVia } from 'services/SettingsService';
+import { MessageVia } from "services/SettingsService";
 
 export enum AccountLinkReminderStep {
   Ready,
@@ -8,8 +8,8 @@ export enum AccountLinkReminderStep {
 }
 
 export const SUPPORTED_LINK_METHODS: MessageVia[] = [
-  'Email',
-  'Facebook',
-  'Google',
-  'Twitter',
+  "Email",
+  "Facebook",
+  "Google",
+  "Twitter",
 ];

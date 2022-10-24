@@ -1,26 +1,26 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as StoryletActionTypes from 'actiontypes/storylet';
-import { VersionMismatch } from 'services/BaseService';
+import { handleVersionMismatch } from "actions/versionSync";
+import * as StoryletActionTypes from "actiontypes/storylet";
+import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
   IApiStoryletResponseData,
   IStoryletService,
-} from 'services/StoryletService';
+} from "services/StoryletService";
 
 export type RenameQualityRequestedAction = {
-  type: typeof StoryletActionTypes.RENAME_QUALITY_REQUESTED,
+  type: typeof StoryletActionTypes.RENAME_QUALITY_REQUESTED;
 };
 
 export type RenameQualitySuccessAction = {
-  type: typeof StoryletActionTypes.RENAME_QUALITY_SUCCESS,
-  payload: IApiStoryletResponseData,
+  type: typeof StoryletActionTypes.RENAME_QUALITY_SUCCESS;
+  payload: IApiStoryletResponseData;
 };
 
 export type RenameQualityFailureAction = {
-  type: typeof StoryletActionTypes.RENAME_QUALITY_FAILURE,
+  type: typeof StoryletActionTypes.RENAME_QUALITY_FAILURE;
 };
 
 export type RenameQualityAction =
-  RenameQualityRequestedAction
+  | RenameQualityRequestedAction
   | RenameQualityFailureAction
   | RenameQualitySuccessAction;
 

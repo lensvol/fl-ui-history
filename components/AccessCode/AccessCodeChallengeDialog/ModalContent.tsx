@@ -1,17 +1,9 @@
-import React, {
-  Fragment,
-  useCallback,
-  useState,
-} from 'react';
+import React, { Fragment, useCallback, useState } from "react";
 
-import Image from 'components/Image';
-import useIsMounted from 'hooks/useIsMounted';
+import Image from "components/Image";
+import useIsMounted from "hooks/useIsMounted";
 
-export default function ModalContent({
-  image,
-  message,
-  onClick,
-}: Props) {
+export default function ModalContent({ image, message, onClick }: Props) {
   const [isWorking, setIsWorking] = useState(false);
 
   const isMounted = useIsMounted();
@@ -22,19 +14,13 @@ export default function ModalContent({
     if (isMounted.current) {
       setIsWorking(false);
     }
-  }, [
-    isMounted,
-    onClick,
-  ]);
+  }, [isMounted, onClick]);
 
   return (
     <Fragment>
       <div className="media">
         <div className="media__left">
-          <Image
-            type="icon"
-            icon={image}
-          />
+          <Image type="icon" icon={image} />
         </div>
         {message !== undefined && (
           <div
@@ -57,10 +43,10 @@ export default function ModalContent({
   );
 }
 
-ModalContent.displayName = 'ModalContent';
+ModalContent.displayName = "ModalContent";
 
 interface Props {
-  image: string | undefined,
-  message: string | undefined,
-  onClick: () => Promise<void>,
+  image: string | undefined;
+  message: string | undefined;
+  onClick: () => Promise<void>;
 }

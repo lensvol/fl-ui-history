@@ -1,11 +1,11 @@
-import { MapActions } from 'actions/map';
-import { FetchMyselfSuccess } from 'actions/myself/fetchMyself';
-import * as MapActionTypes from 'actiontypes/map';
-import * as MyselfActionTypes from 'actiontypes/myself';
-import { IMapState } from 'types/map';
-import fetchMapSuccess from './fetchMapSuccess';
-import setCurrentArea from './setCurrentArea';
-import setCurrentSetting from './setCurrentSetting';
+import { MapActions } from "actions/map";
+import { FetchMyselfSuccess } from "actions/myself/fetchMyself";
+import * as MapActionTypes from "actiontypes/map";
+import * as MyselfActionTypes from "actiontypes/myself";
+import { IMapState } from "types/map";
+import fetchMapSuccess from "./fetchMapSuccess";
+import setCurrentArea from "./setCurrentArea";
+import setCurrentSetting from "./setCurrentSetting";
 
 /**
  * Initial state
@@ -27,8 +27,10 @@ const INITIAL_STATE: IMapState = {
   zoomLevel: 0,
 };
 
-
-export default function reducer(state = INITIAL_STATE, action: MapActions | FetchMyselfSuccess): IMapState {
+export default function reducer(
+  state = INITIAL_STATE,
+  action: MapActions | FetchMyselfSuccess
+): IMapState {
   switch (action.type) {
     case MapActionTypes.HIDE_MAP:
       return {

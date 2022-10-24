@@ -1,137 +1,160 @@
 /* eslint-disable camelcase */
-import { ReactFacebookLoginInfo } from 'react-facebook-login';
-import { IQuality } from 'types/qualities';
-import BaseService, { Either } from './BaseMonadicService';
+import { ReactFacebookLoginInfo } from "react-facebook-login";
+import { IQuality } from "types/qualities";
+import BaseService, { Either } from "./BaseMonadicService";
 
-export type MessageVia = 'None' | 'Twitter' | 'Facebook' | 'Email' | 'Google' | 'All';
+export type MessageVia =
+  | "None"
+  | "Twitter"
+  | "Facebook"
+  | "Email"
+  | "Google"
+  | "All";
 
 export type AuthMethod = {
-  type: MessageVia,
-  displayName?: string,
-  profileUrl?: string,
-  email?: string,
+  type: MessageVia;
+  displayName?: string;
+  profileUrl?: string;
+  email?: string;
 };
 
 export type FetchAuthMethodsResponse = {
-  authMethods: AuthMethod[],
+  authMethods: AuthMethod[];
 };
 
 export type FetchTimeTheHealerResponse = null | {
-  name: string,
-  dateTimeToExecute: string,
-  isSuccess: boolean,
-}
+  name: string;
+  dateTimeToExecute: string;
+  isSuccess: boolean;
+};
 
 export interface ISettingsService {
-  fetch: () => Promise<Either<FetchSettingsResponse>>,
-  fetchAuthMethods: () => Promise<Either<FetchAuthMethodsResponse>>,
-  fetchTimeTheHealer: () => Promise<Either<FetchTimeTheHealerResponse>>,
-  saveMessagePreferences: (req: SaveMessagePreferencesRequest) => Promise<Either<SaveMessagePreferencesResponse>>,
-  requestPasswordReset: (emailAddress: string) => Promise<Either<RequestPasswordResetResponse>>,
-  resetPassword: (req: ResetPasswordRequest) => Promise<Either<ResetPasswordResponse>>,
-  changeUsername: (username: string) => Promise<Either<ChangeUsernameResponse>>,
-  messagesVia: (type: MessageVia) => Promise<Either<MessagesViaResponse>>,
-  deactivateAccount: () => Promise<Either<DeactivateAccountResponse>>,
-  linkEmailToAccount: (req: LinkEmailRequest) => Promise<Either<LinkEmailResponse>>,
-  updateEmailAddress: (emailAddress: string) => Promise<Either<UpdateEmailResponse>>,
-  unlinkTwitter: () => Promise<Either<UnlinkTwitterResponse>>,
-  unlinkFacebook: () => Promise<Either<UnlinkFacebookResponse>>,
-  unlinkGoogle: () => Promise<Either<UnlinkGoogleResponse>>,
-  linkFacebook: (payload: FacebookPayload) => Promise<Either<LinkFacebookResponse>>,
-  linkGoogle: (req: LinkGoogleRequest) => Promise<Either<LinkGoogleResponse>>,
-  linkTwitter: (req: LinkTwitterRequest) => Promise<Either<{ /* empty response object */ }>>
+  fetch: () => Promise<Either<FetchSettingsResponse>>;
+  fetchAuthMethods: () => Promise<Either<FetchAuthMethodsResponse>>;
+  fetchTimeTheHealer: () => Promise<Either<FetchTimeTheHealerResponse>>;
+  saveMessagePreferences: (
+    req: SaveMessagePreferencesRequest
+  ) => Promise<Either<SaveMessagePreferencesResponse>>;
+  requestPasswordReset: (
+    emailAddress: string
+  ) => Promise<Either<RequestPasswordResetResponse>>;
+  resetPassword: (
+    req: ResetPasswordRequest
+  ) => Promise<Either<ResetPasswordResponse>>;
+  changeUsername: (username: string) => Promise<Either<ChangeUsernameResponse>>;
+  messagesVia: (type: MessageVia) => Promise<Either<MessagesViaResponse>>;
+  deactivateAccount: () => Promise<Either<DeactivateAccountResponse>>;
+  linkEmailToAccount: (
+    req: LinkEmailRequest
+  ) => Promise<Either<LinkEmailResponse>>;
+  updateEmailAddress: (
+    emailAddress: string
+  ) => Promise<Either<UpdateEmailResponse>>;
+  unlinkTwitter: () => Promise<Either<UnlinkTwitterResponse>>;
+  unlinkFacebook: () => Promise<Either<UnlinkFacebookResponse>>;
+  unlinkGoogle: () => Promise<Either<UnlinkGoogleResponse>>;
+  linkFacebook: (
+    payload: FacebookPayload
+  ) => Promise<Either<LinkFacebookResponse>>;
+  linkGoogle: (req: LinkGoogleRequest) => Promise<Either<LinkGoogleResponse>>;
+  linkTwitter: (req: LinkTwitterRequest) => Promise<
+    Either<{
+      /* empty response object */
+    }>
+  >;
 }
-
 
 export type ChangeUsernameResponse = { message: string };
 
 export type DeactivateAccountResponse = { message: string };
 
 export type FacebookPayload = ReactFacebookLoginInfo & {
-  expiresIn?: number,
-  signedRequest?: string,
-  accessCodeName?: string,
+  expiresIn?: number;
+  signedRequest?: string;
+  accessCodeName?: string;
 };
 
 export type FetchSettingsResponse = {
-  qualitiesPossessedList: IQuality[],
-  twitterAuth: boolean,
-  facebookAuth: boolean,
-  emailAuth: boolean,
-  hasBraintreeSubscription: boolean,
-  storyEventMessage: boolean,
-  messageAboutAnnouncements: boolean,
-  messageAboutNastiness: boolean,
-  messageAboutNiceness: boolean,
-  messageAboutStorylets: boolean,
-  messageViaNetwork: MessageVia,
-  charactersInWorlds: string[],
-  name: string,
-  emailAddress: string,
-  nex: number,
-  id: number,
+  qualitiesPossessedList: IQuality[];
+  twitterAuth: boolean;
+  facebookAuth: boolean;
+  emailAuth: boolean;
+  hasBraintreeSubscription: boolean;
+  storyEventMessage: boolean;
+  messageAboutAnnouncements: boolean;
+  messageAboutNastiness: boolean;
+  messageAboutNiceness: boolean;
+  messageAboutStorylets: boolean;
+  messageViaNetwork: MessageVia;
+  charactersInWorlds: string[];
+  name: string;
+  emailAddress: string;
+  nex: number;
+  id: number;
 };
 
 export type LinkEmailRequest = {
-  emailAddress: string,
-  password: string,
+  emailAddress: string;
+  password: string;
 };
 
 export type LinkEmailResponse = {
-  message: string,
+  message: string;
 };
 
 export type LinkFacebookResponse = { message: string };
 
 export type LinkGoogleRequest = { token: string };
 
-export type LinkGoogleResponse = { /* empty response on success */ };
+export type LinkGoogleResponse = {
+  /* empty response on success */
+};
 
 export type LinkTwitterRequest = {
-  oauth_token: string,
-  oauth_verifier: string,
+  oauth_token: string;
+  oauth_verifier: string;
 };
 
 export type MessagesViaResponse = {
-  message: string,
+  message: string;
 };
 
 export type RequestPasswordResetRequest = {
-  emailAddress: string,
-}
+  emailAddress: string;
+};
 
 export type RequestPasswordResetResponse = {
-  message: string,
+  message: string;
 };
 
 export type ResetPasswordRequest = {
-  password: string,
-  token: string,
+  password: string;
+  token: string;
 };
 
 export type ResetPasswordResponse = {
-  message: string,
+  message: string;
 };
 
 export type SaveMessagePreferencesRequest = {
-  messageAboutNiceness: boolean,
-  messageAboutNastiness: boolean,
-  messageAboutAnnouncements: boolean,
-  messageAboutStorylets: boolean,
+  messageAboutNiceness: boolean;
+  messageAboutNastiness: boolean;
+  messageAboutAnnouncements: boolean;
+  messageAboutStorylets: boolean;
 };
 
 export type SaveMessagePreferencesResponse = {
   settings: {
-    messageAboutNiceness: boolean,
-    messageAboutNastiness: boolean,
-    messageAboutAnnouncements: boolean,
-    messageAboutStorylets: boolean,
-  },
-  message: string,
+    messageAboutNiceness: boolean;
+    messageAboutNastiness: boolean;
+    messageAboutAnnouncements: boolean;
+    messageAboutStorylets: boolean;
+  };
+  message: string;
 };
 
 export type UnlinkFacebookResponse = {
-  message: string,
+  message: string;
 };
 
 export type UnlinkGoogleResponse = {
@@ -139,43 +162,48 @@ export type UnlinkGoogleResponse = {
 };
 
 export type UnlinkTwitterResponse = {
-  message: string,
+  message: string;
 };
 
 export type UpdateEmailRequest = {
-  emailAddress: string,
+  emailAddress: string;
 };
 
 export type UpdateEmailResponse = {
-  message: string,
-}
+  message: string;
+};
 
-export default class SettingsService extends BaseService implements ISettingsService {
+export default class SettingsService
+  extends BaseService
+  implements ISettingsService
+{
   fetch = () => {
     const config = {
-      url: '/settings',
+      url: "/settings",
     };
     return this.doRequest<FetchSettingsResponse>(config);
   };
 
   fetchAuthMethods = () => {
     const config = {
-      url: '/settings/authmethods',
+      url: "/settings/authmethods",
     };
     return this.doRequest<FetchAuthMethodsResponse>(config);
   };
 
   fetchTimeTheHealer = () => {
     const config = {
-      url: '/settings/timethehealer',
+      url: "/settings/timethehealer",
     };
     return this.doRequest<FetchTimeTheHealerResponse>(config);
   };
 
-  saveMessagePreferences = (messagePreferences: SaveMessagePreferencesRequest) => {
+  saveMessagePreferences = (
+    messagePreferences: SaveMessagePreferencesRequest
+  ) => {
     const config = {
-      method: 'post',
-      url: '/settings/messagesettings',
+      method: "post",
+      url: "/settings/messagesettings",
       data: messagePreferences,
     };
     return this.doRequest<SaveMessagePreferencesResponse>(config);
@@ -185,8 +213,8 @@ export default class SettingsService extends BaseService implements ISettingsSer
     const data: RequestPasswordResetRequest = { emailAddress };
     const config = {
       data,
-      method: 'post',
-      url: '/settings/requestpasswordreset',
+      method: "post",
+      url: "/settings/requestpasswordreset",
     };
     return this.doRequest<RequestPasswordResetResponse>(config);
   };
@@ -194,15 +222,15 @@ export default class SettingsService extends BaseService implements ISettingsSer
   resetPassword = (data: ResetPasswordRequest) => {
     const config = {
       data,
-      method: 'post',
-      url: 'settings/resetpassword',
+      method: "post",
+      url: "settings/resetpassword",
     };
     return this.doRequest<ResetPasswordResponse>(config);
   };
 
   changeUsername = (username: string) => {
     const config = {
-      method: 'post',
+      method: "post",
       url: `/settings/username/${username}`,
     };
     return this.doRequest<ChangeUsernameResponse>(config);
@@ -210,7 +238,7 @@ export default class SettingsService extends BaseService implements ISettingsSer
 
   messagesVia = (type: MessageVia) => {
     const config = {
-      method: 'post',
+      method: "post",
       url: `/settings/messagevia/${type}`,
     };
     return this.doRequest<MessagesViaResponse>(config);
@@ -218,16 +246,16 @@ export default class SettingsService extends BaseService implements ISettingsSer
 
   deactivateAccount = () => {
     const config = {
-      method: 'post',
-      url: '/settings/deactivate',
+      method: "post",
+      url: "/settings/deactivate",
     };
     return this.doRequest<DeactivateAccountResponse>(config);
   };
 
   linkEmailToAccount = (data: LinkEmailRequest) => {
     const config = {
-      method: 'post',
-      url: '/settings/linkemail',
+      method: "post",
+      url: "/settings/linkemail",
       data,
     };
     return this.doRequest<LinkEmailResponse>(config);
@@ -237,32 +265,32 @@ export default class SettingsService extends BaseService implements ISettingsSer
     const data: UpdateEmailRequest = { emailAddress };
     const config = {
       data,
-      method: 'post',
-      url: '/settings/updateemail',
+      method: "post",
+      url: "/settings/updateemail",
     };
     return this.doRequest<UpdateEmailResponse>(config);
   };
 
   unlinkTwitter = () => {
     const config = {
-      method: 'post',
-      url: '/settings/unlinktwitter',
+      method: "post",
+      url: "/settings/unlinktwitter",
     };
     return this.doRequest<UnlinkTwitterResponse>(config);
   };
 
   unlinkFacebook = () => {
     const config = {
-      method: 'post',
-      url: '/settings/unlinkfacebook',
+      method: "post",
+      url: "/settings/unlinkfacebook",
     };
     return this.doRequest<UnlinkFacebookResponse>(config);
   };
 
   unlinkGoogle = () => {
     const config = {
-      method: 'post',
-      url: '/settings/unlinkgoogle',
+      method: "post",
+      url: "/settings/unlinkgoogle",
     };
     return this.doRequest<UnlinkGoogleResponse>(config);
   };
@@ -270,8 +298,8 @@ export default class SettingsService extends BaseService implements ISettingsSer
   linkFacebook = (data: FacebookPayload) => {
     const config = {
       data,
-      url: '/facebook/link',
-      method: 'post',
+      url: "/facebook/link",
+      method: "post",
     };
     return this.doRequest(config);
   };
@@ -279,8 +307,8 @@ export default class SettingsService extends BaseService implements ISettingsSer
   linkGoogle = (data: LinkGoogleRequest) => {
     const config = {
       data,
-      url: '/google/link',
-      method: 'post',
+      url: "/google/link",
+      method: "post",
     };
     return this.doRequest<LinkGoogleResponse>(config);
   };
@@ -288,9 +316,11 @@ export default class SettingsService extends BaseService implements ISettingsSer
   linkTwitter = (data: LinkTwitterRequest) => {
     const config = {
       data,
-      url: '/twitter/linkaccount',
-      method: 'post',
+      url: "/twitter/linkaccount",
+      method: "post",
     };
-    return this.doRequest<{ /* empty */ }>(config);
+    return this.doRequest<{
+      /* empty */
+    }>(config);
   };
 }

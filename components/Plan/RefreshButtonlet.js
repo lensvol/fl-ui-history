@@ -1,13 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import Buttonlet from 'components/Buttonlet';
+import Buttonlet from "components/Buttonlet";
 
 export default function RefreshButtonlet({ onClick }) {
   return (
-    <Buttonlet
-      type="refresh"
-      title="Restart this plan"
-      onClick={onClick}
-    />
+    <Buttonlet type="refresh" title="Restart this plan" onClick={onClick} />
   );
 }

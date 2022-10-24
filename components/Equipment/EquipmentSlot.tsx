@@ -1,21 +1,20 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import getQualityBySlotName from 'selectors/possessions/getQualityBySlotName';
-import { IAppState } from 'types/app';
-import Loading from 'components/Loading';
-import { OutfitSlotName } from 'types/outfit';
+import getQualityBySlotName from "selectors/possessions/getQualityBySlotName";
+import { IAppState } from "types/app";
+import Loading from "components/Loading";
+import { OutfitSlotName } from "types/outfit";
 
-import EquippedItem from 'components/Equipment/EquippedItem';
-import EmptySlot from 'components/Equipment/EmptySlot';
-import PossessionsContext from 'components/Possessions/PossessionsContext';
-import { Feature } from 'flagged';
+import EquippedItem from "components/Equipment/EquippedItem";
+import EmptySlot from "components/Equipment/EmptySlot";
+import PossessionsContext from "components/Possessions/PossessionsContext";
+import { Feature } from "flagged";
 import {
   FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS,
   NEW_OUTFIT_BEHAVIOUR,
-} from 'features/feature-flags';
-import EquipmentContext from './EquipmentContext';
-
+} from "features/feature-flags";
+import EquipmentContext from "./EquipmentContext";
 
 function EquipmentSlot(props: Props) {
   const { isChanging, quality } = props;
@@ -23,13 +22,8 @@ function EquipmentSlot(props: Props) {
   // If we're in mid-change, just display a loading icon
   if (isChanging) {
     return (
-      <div
-        className="equipment-slot--is-changing"
-      >
-        <Loading
-          spinner
-          small
-        />
+      <div className="equipment-slot--is-changing">
+        <Loading spinner small />
       </div>
     );
   }
@@ -39,10 +33,7 @@ function EquipmentSlot(props: Props) {
       <PossessionsContext.Consumer>
         {({ currentlyInStorylet }) => (
           <EquipmentContext.Consumer>
-            {({
-              filterString,
-              openUseOrEquipModal,
-            }) => (
+            {({ filterString, openUseOrEquipModal }) => (
               <Feature name={NEW_OUTFIT_BEHAVIOUR}>
                 {(isEnabled: boolean) => (
                   <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
@@ -52,7 +43,9 @@ function EquipmentSlot(props: Props) {
                         areOutfitsLockable={isEnabled}
                         category={quality!.category as OutfitSlotName}
                         currentlyInStorylet={currentlyInStorylet}
-                        doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
+                        doesStoryletStateLockOutfits={
+                          doesStoryletStateLockOutfits
+                        }
                         filterString={filterString}
                         openUseOrEquipModal={openUseOrEquipModal}
                       />
@@ -61,7 +54,6 @@ function EquipmentSlot(props: Props) {
                 )}
               </Feature>
             )}
-
           </EquipmentContext.Consumer>
         )}
       </PossessionsContext.Consumer>
@@ -71,7 +63,7 @@ function EquipmentSlot(props: Props) {
   return <EmptySlot isChanging={isChanging} />;
 }
 
-EquipmentSlot.displayName = 'EquipmentSlot';
+EquipmentSlot.displayName = "EquipmentSlot";
 
 type OwnProps = { name: OutfitSlotName };
 

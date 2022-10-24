@@ -1,7 +1,7 @@
-import { IQuality } from 'types/qualities';
+import { IQuality } from "types/qualities";
 
 interface IQualityGroup {
-  possessions: IQuality[],
+  possessions: IQuality[];
 }
 
 export default function createQualities(qualityGroups: IQualityGroup[]) {

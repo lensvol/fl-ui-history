@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 interface Props {
-  message: string,
-  onClick: () => void,
+  message: string;
+  onClick: () => void;
 }
 
 export default function PaymentSuccess({ message, onClick }: Props) {

@@ -1,33 +1,26 @@
-import React, {
-  ChangeEvent,
-  useCallback,
-} from 'react';
-import { connect, DispatchProp } from 'react-redux';
-import classnames from 'classnames';
+import React, { ChangeEvent, useCallback } from "react";
+import { connect, DispatchProp } from "react-redux";
+import classnames from "classnames";
 
-import Image from 'components/Image';
+import Image from "components/Image";
 import { IChallenge } from "types/storylet";
 
 const SECOND_CHANCE_ICONS = {
-  Dangerous: 'fist',
-  Persuasive: 'confidentsmile',
-  Shadowy: 'blackglove',
-  Watchful: 'eye',
+  Dangerous: "fist",
+  Persuasive: "confidentsmile",
+  Shadowy: "blackglove",
+  Watchful: "eye",
 };
 
 export interface OwnProps {
-  data: IChallenge,
-  locked: boolean,
-  toggleSecondChance: (checked: boolean, id: number) => void,
+  data: IChallenge;
+  locked: boolean;
+  toggleSecondChance: (checked: boolean, id: number) => void;
 }
 
 type Props = OwnProps & DispatchProp;
 
-function SecondChance({
-  data,
-  locked,
-  toggleSecondChance,
-}: Props) {
+function SecondChance({ data, locked, toggleSecondChance }: Props) {
   const {
     id,
     name,
@@ -36,24 +29,21 @@ function SecondChance({
     secondChanceLevel,
   } = data;
 
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    toggleSecondChance(e.target.checked, secondChanceId);
-  }, [
-    secondChanceId,
-    toggleSecondChance,
-  ]);
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      toggleSecondChance(e.target.checked, secondChanceId);
+    },
+    [secondChanceId, toggleSecondChance]
+  );
 
   return (
-    <div className={classnames('second-chance', locked && 'second-chance--locked')}>
+    <div
+      className={classnames("second-chance", locked && "second-chance--locked")}
+    >
       <div className="second-chance__left">
         <div className="icon second-chance__icon">
-          <Image
-            icon={SECOND_CHANCE_ICONS[name]}
-            type="small-icon"
-          />
-          <div className="icon__value">
-            {secondChanceLevel}
-          </div>
+          <Image icon={SECOND_CHANCE_ICONS[name]} type="small-icon" />
+          <div className="icon__value">{secondChanceLevel}</div>
         </div>
       </div>
       <div className="second-chance__body">
@@ -65,15 +55,12 @@ function SecondChance({
             type="checkbox"
             onChange={handleChange}
           />
-          <span
-            dangerouslySetInnerHTML={{ __html: secondChanceDescription }}
-          />
+          <span dangerouslySetInnerHTML={{ __html: secondChanceDescription }} />
         </label>
       </div>
     </div>
   );
-
 }
-SecondChance.displayName = 'SecondChance';
+SecondChance.displayName = "SecondChance";
 
 export default connect()(SecondChance);

@@ -1,25 +1,24 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import { begin } from 'actions/storylet';
+import { begin } from "actions/storylet";
 
-import MessageComponent from '../MessageComponent';
-import PrimaryButton from '../PrimaryButton';
+import MessageComponent from "../MessageComponent";
+import PrimaryButton from "../PrimaryButton";
 
 export class StoryletMessage extends Component {
-  mounted = false
+  mounted = false;
 
-  state = {
-  }
+  state = {};
 
   componentDidMount = () => {
     this.mounted = true;
-  }
+  };
 
   componentWillUnmount = () => {
     this.mounted = false;
-  }
+  };
 
   handleClick = () => {
     const {
@@ -28,21 +27,18 @@ export class StoryletMessage extends Component {
       data: { relatedId: eventId }, // TODO: is this the correct eventId??
     } = this.props;
     dispatch(begin(eventId)).then(() => {
-      history.push('/');
+      history.push("/");
     });
-  }
+  };
 
   render = () => {
     const { data } = this.props;
     return (
       <MessageComponent data={data}>
-        <PrimaryButton onClick={this.handleClick}>
-          Go
-        </PrimaryButton>
-;
+        <PrimaryButton onClick={this.handleClick}>Go</PrimaryButton>;
       </MessageComponent>
     );
-  }
+  };
 }
 
 StoryletMessage.propTypes = {

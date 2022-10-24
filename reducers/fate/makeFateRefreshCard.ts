@@ -1,28 +1,28 @@
-import { FetchFateResponse } from 'services/FateService';
-import {
-  MultipleChoiceActionRefillFateCard,
-} from 'types/fate';
+import { FetchFateResponse } from "services/FateService";
+import { MultipleChoiceActionRefillFateCard } from "types/fate";
 
-export default function makeFateRefreshCard(payload: FetchFateResponse): MultipleChoiceActionRefillFateCard {
+export default function makeFateRefreshCard(
+  payload: FetchFateResponse
+): MultipleChoiceActionRefillFateCard {
   const { fateCards } = payload;
   return {
     id: 0,
-    image: 'fate_candledouble_exceptional',
-    name: 'Refresh your Actions with Fate',
-    description: 'Restore 6 Actions for 4 Fate or 20 Actions for 10 Fate',
+    image: "fate_candledouble_exceptional",
+    name: "Refresh your Actions with Fate",
+    description: "Restore 6 Actions for 4 Fate or 20 Actions for 10 Fate",
     hidden: true,
-    action: 'RefillActions',
+    action: "RefillActions",
     price: [4, 10],
-    type: 'Digital',
+    type: "Digital",
     canAfford: true,
-    border: 'Gold',
+    border: "Gold",
     buttons: [
       {
-        description: 'Refresh 6 Actions',
+        description: "Refresh 6 Actions",
         correspondingActivePurchase: fateCards.find(({ id }) => id === 7),
       },
       {
-        description: 'Refresh 20 Actions',
+        description: "Refresh 20 Actions",
         correspondingActivePurchase: fateCards.find(({ id }) => id === 6),
       },
     ],

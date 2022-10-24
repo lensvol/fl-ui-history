@@ -1,28 +1,26 @@
 import {
   FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS,
   NEW_OUTFIT_BEHAVIOUR,
-} from 'features/feature-flags';
-import React, {
-  useMemo,
-} from 'react';
-import { useIsChangeable } from 'components/Equipment/hooks';
-import LockedSlotIcon from 'components/Equipment/LockedSlotIcon';
-import { connect } from 'react-redux';
-import classnames from 'classnames';
-import getCanUserChangeOutfit from 'selectors/possessions/getCanUserChangeOutfit';
-import { OutfitSlotName } from 'types/outfit';
-import AvailableItem from 'components/Equipment/AvailableItem';
-import EquipmentSlot from 'components/Equipment/EquipmentSlot';
-import PossessionsContext from 'components/Possessions/PossessionsContext';
+} from "features/feature-flags";
+import React, { useMemo } from "react";
+import { useIsChangeable } from "components/Equipment/hooks";
+import LockedSlotIcon from "components/Equipment/LockedSlotIcon";
+import { connect } from "react-redux";
+import classnames from "classnames";
+import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
+import { OutfitSlotName } from "types/outfit";
+import AvailableItem from "components/Equipment/AvailableItem";
+import EquipmentSlot from "components/Equipment/EquipmentSlot";
+import PossessionsContext from "components/Possessions/PossessionsContext";
 
-import getQualityBySlotName from 'selectors/possessions/getQualityBySlotName';
-import getAvailableQualitiesForSlot from 'selectors/possessions/getAvailableQualitiesForSlot';
-import categoryNameToHumanReadableCategoryName from 'utils/categoryNameToHumanReadableCategoryName';
+import getQualityBySlotName from "selectors/possessions/getQualityBySlotName";
+import getAvailableQualitiesForSlot from "selectors/possessions/getAvailableQualitiesForSlot";
+import categoryNameToHumanReadableCategoryName from "utils/categoryNameToHumanReadableCategoryName";
 
-import { IAppState } from 'types/app';
-import { Feature } from 'flagged';
-import { normalize } from 'utils/stringFunctions';
-import EquipmentContext, { EquipmentContextValue } from './EquipmentContext';
+import { IAppState } from "types/app";
+import { Feature } from "flagged";
+import { normalize } from "utils/stringFunctions";
+import EquipmentContext, { EquipmentContextValue } from "./EquipmentContext";
 
 function EquipmentGroup(props: Props) {
   const {
@@ -34,11 +32,17 @@ function EquipmentGroup(props: Props) {
     outfit,
   } = props;
 
-  const isAvailableItemsEmpty = useMemo(() => availableQualities.length <= 0, [availableQualities.length]);
+  const isAvailableItemsEmpty = useMemo(
+    () => availableQualities.length <= 0,
+    [availableQualities.length]
+  );
 
   const isChangeable = useIsChangeable(name);
 
-  const isItemEquippedInThisSlot = useMemo(() => outfit[name] !== undefined, [name, outfit]);
+  const isItemEquippedInThisSlot = useMemo(
+    () => outfit[name] !== undefined,
+    [name, outfit]
+  );
 
   // If we have no item in this slot and no available items to put in it, then don't show it
   if (isAvailableItemsEmpty && !isItemEquippedInThisSlot) {
@@ -47,11 +51,7 @@ function EquipmentGroup(props: Props) {
 
   return (
     <EquipmentContext.Consumer>
-      {({
-        filterString,
-        openUseOrEquipModal,
-      }) => (
-
+      {({ filterString, openUseOrEquipModal }) => (
         <div className="equipment-group">
           <h2 className="heading heading--2 equipment-group__name">
             {categoryNameToHumanReadableCategoryName(name)}
@@ -59,43 +59,48 @@ function EquipmentGroup(props: Props) {
           <div className="equipment-group__slot-and-available-items">
             <div
               className={classnames(
-                'equipment-group__equipment-slot-container',
-                (equippedQuality === undefined)
-                  ? 'equipment-group__equipment-slot-container--empty'
-                  : 'equipment-group__equipment-slot-container--full',
-                !canChangeOutfits && 'equipment-group__equipment-slot-container--locked',
-                !isChangeable && 'equipment-group__equipment-slot-container--unchangeable',
+                "equipment-group__equipment-slot-container",
+                equippedQuality === undefined
+                  ? "equipment-group__equipment-slot-container--empty"
+                  : "equipment-group__equipment-slot-container--full",
+                !canChangeOutfits &&
+                  "equipment-group__equipment-slot-container--locked",
+                !isChangeable &&
+                  "equipment-group__equipment-slot-container--unchangeable"
               )}
             >
               <EquipmentSlot name={name} />
-              {isChangeable && !canChangeOutfits && (<LockedSlotIcon />)}
+              {isChangeable && !canChangeOutfits && <LockedSlotIcon />}
             </div>
             <ul
               className={classnames(
-                'available-item-list',
-                isChanging && 'available-item-list--is-changing',
+                "available-item-list",
+                isChanging && "available-item-list--is-changing"
               )}
             >
               {availableQualities.map((quality) => {
-                if (normalize(quality.name).indexOf(normalize(filterString)) < 0) {
+                if (
+                  normalize(quality.name).indexOf(normalize(filterString)) < 0
+                ) {
                   return null;
                 }
                 return (
-                  <li
-                    className="available-item-list__item"
-                    key={quality.id}
-                  >
+                  <li className="available-item-list__item" key={quality.id}>
                     <PossessionsContext.Consumer>
                       {({ currentlyInStorylet }) => (
                         <Feature name={NEW_OUTFIT_BEHAVIOUR}>
                           {(areOutfitsLockable: boolean) => (
-                            <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
+                            <Feature
+                              name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}
+                            >
                               {(doesStoryletStateLockOutfits: boolean) => (
                                 <AvailableItem
                                   {...quality}
                                   key={quality.id}
                                   areOutfitsLockable={areOutfitsLockable}
-                                  doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
+                                  doesStoryletStateLockOutfits={
+                                    doesStoryletStateLockOutfits
+                                  }
                                   currentlyInStorylet={currentlyInStorylet}
                                   openUseOrEquipModal={openUseOrEquipModal}
                                 />
@@ -116,12 +121,12 @@ function EquipmentGroup(props: Props) {
   );
 }
 
-EquipmentGroup.displayName = 'EquippedGroup';
+EquipmentGroup.displayName = "EquippedGroup";
 
 type OwnProps = {
-  areOutfitsLockable: boolean,
-  doesStoryletStateLockOutfits: boolean,
-  name: OutfitSlotName,
+  areOutfitsLockable: boolean;
+  doesStoryletStateLockOutfits: boolean;
+  name: OutfitSlotName;
 };
 
 const mapStateToProps = (state: IAppState, props: OwnProps) => ({
@@ -132,9 +137,8 @@ const mapStateToProps = (state: IAppState, props: OwnProps) => ({
   outfit: state.outfit,
 });
 
-type Props
-  = Pick<EquipmentContextValue, 'filterString'>
-  & OwnProps
-  & ReturnType<typeof mapStateToProps>;
+type Props = Pick<EquipmentContextValue, "filterString"> &
+  OwnProps &
+  ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(EquipmentGroup);

@@ -1,23 +1,21 @@
-import RenameQualityForm from 'components/Rename/RenameQualityForm';
-import StoryletRoot from 'components/StoryletRoot';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import RenameQualityForm from "components/Rename/RenameQualityForm";
+import StoryletRoot from "components/StoryletRoot";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import {
-  goBackFromSocialAct,
-} from 'actions/storylet';
+import { goBackFromSocialAct } from "actions/storylet";
 
-import { IAppState } from 'types/app';
-import { IQuality } from 'types/qualities';
+import { IAppState } from "types/app";
+import { IQuality } from "types/qualities";
 
 class RenameContainer extends Component<Props> {
-  static displayName = 'RenameContainer';
+  static displayName = "RenameContainer";
 
   handleGoBack = () => {
     const { dispatch } = this.props;
     dispatch(goBackFromSocialAct());
-  }
+  };
 
   render() {
     const { branch, qualities } = this.props;
@@ -40,9 +38,7 @@ class RenameContainer extends Component<Props> {
             onClick={onGoBack}
             type="button"
           >
-            <i className="fa fa-arrow-left" />
-            {' '}
-            Back
+            <i className="fa fa-arrow-left" /> Back
           </button>
         </p>
       </div>
@@ -52,18 +48,17 @@ class RenameContainer extends Component<Props> {
 
 const mapStateToProps = ({
   storylet: {
-    rename: {
-      branch,
-      namableQualitiesPossessed: qualities,
-    },
+    rename: { branch, namableQualitiesPossessed: qualities },
   },
 }: IAppState) => ({
   branch,
   qualities,
 });
 
-interface Props extends ReturnType<typeof mapStateToProps>, RouteComponentProps {
-  dispatch: Function // eslint-disable-line
-};
+interface Props
+  extends ReturnType<typeof mapStateToProps>,
+    RouteComponentProps {
+  dispatch: Function; // eslint-disable-line
+}
 
 export default withRouter(connect(mapStateToProps)(RenameContainer));

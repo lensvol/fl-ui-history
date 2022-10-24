@@ -1,11 +1,10 @@
-import { SignUpActions } from 'actions/registration/signUp';
-import { UserActions } from 'actions/user';
-import { SIGNUP_SUCCESS } from 'actiontypes/registration';
-import * as UserActionTypes from 'actiontypes/user';
-import { IUserState } from 'services/UserService';
+import { SignUpActions } from "actions/registration/signUp";
+import { UserActions } from "actions/user";
+import { SIGNUP_SUCCESS } from "actiontypes/registration";
+import * as UserActionTypes from "actiontypes/user";
+import { IUserState } from "services/UserService";
 
-import signupSuccess from './signupSuccess';
-
+import signupSuccess from "./signupSuccess";
 
 /**
  * Initial state
@@ -20,13 +19,15 @@ const initialState: IUserState = {
   privilegeLevel: undefined,
 };
 
-
 /**
  * User Reducer
  * @param {Object} state
  * @param {[Object]} action
  */
-const User = (state = initialState, action: UserActions | SignUpActions): IUserState => {
+const User = (
+  state = initialState,
+  action: UserActions | SignUpActions
+): IUserState => {
   // const { payload = {} } = action;
 
   switch (action.type) {

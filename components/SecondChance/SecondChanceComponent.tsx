@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import Branch from 'components/Branch';
-import QualityUpdates from 'components/QualityUpdates';
-import { IMessages } from 'types/app/messages';
+import Branch from "components/Branch";
+import QualityUpdates from "components/QualityUpdates";
+import { IMessages } from "types/app/messages";
 
 type Props = {
-  messages: IMessages | undefined,
-  onChooseBranch?: any,
-  onGoBack: any,
-  secondChance: any,
-  storylet: any,
+  messages: IMessages | undefined;
+  onChooseBranch?: any;
+  onGoBack: any;
+  secondChance: any;
+  storylet: any;
 };
 
 export default function SecondChanceComponent({
@@ -22,20 +22,15 @@ export default function SecondChanceComponent({
   return (
     <div>
       {messages !== undefined && <QualityUpdates data={messages} />}
-      <Branch
-        branch={secondChance.branch}
-        onChooseBranch={onChooseBranch}
-      />
+      <Branch branch={secondChance.branch} onChooseBranch={onChooseBranch} />
       <div className="buttons buttons--left buttons--storylet-exit-options">
-        {(storylet && storylet.canGoBack) && (
+        {storylet && storylet.canGoBack && (
           <button
             type="button"
             className="button button--primary"
             onClick={onGoBack}
           >
-            <i className="fa fa-arrow-left" />
-            {' '}
-            Perhaps not
+            <i className="fa fa-arrow-left" /> Perhaps not
           </button>
         )}
       </div>

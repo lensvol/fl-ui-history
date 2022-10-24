@@ -1,13 +1,13 @@
-import { StoryletActions } from 'actions/storylet';
-import { IMessagesState } from 'types/messages';
-import { MessagesAction } from 'actions/messages';
+import { StoryletActions } from "actions/storylet";
+import { IMessagesState } from "types/messages";
+import { MessagesAction } from "actions/messages";
 
-import * as MessageActionTypes from 'actiontypes/messages';
-import * as StoryletActionTypes from 'actiontypes/storylet';
+import * as MessageActionTypes from "actiontypes/messages";
+import * as StoryletActionTypes from "actiontypes/storylet";
 
-import acceptSuccess from './acceptSuccess';
-import sortByDate from './sortByDate';
-import updateAndExclude from './updateAndExclude';
+import acceptSuccess from "./acceptSuccess";
+import sortByDate from "./sortByDate";
+import updateAndExclude from "./updateAndExclude";
 
 /**
  * Initial state
@@ -24,7 +24,7 @@ const INITIAL_STATE: IMessagesState = {
   interactions: [],
   dialogOpen: false,
   dialogMessage: null,
-  subtab: 'blah',
+  subtab: "blah",
 };
 
 /**
@@ -32,7 +32,10 @@ const INITIAL_STATE: IMessagesState = {
  * @param {Object} state
  * @param {[Object]} action
  */
-export default function reducer(state = INITIAL_STATE, action: MessagesAction | StoryletActions) {
+export default function reducer(
+  state = INITIAL_STATE,
+  action: MessagesAction | StoryletActions
+) {
   // const { payload } = action;
   // const { payload = {} } = action;
 
@@ -49,14 +52,11 @@ export default function reducer(state = INITIAL_STATE, action: MessagesAction | 
     case MessageActionTypes.FETCH_ALL_SUCCESS: {
       const { payload } = action;
 
-      const isChanged = state.isChanged != null
-        && (
-          state.isChanged
-          || (
-            state.feedMessages.length !== payload.feedMessages.length
-            || state.interactions.length !== payload.interactions.length
-          )
-        );
+      const isChanged =
+        state.isChanged != null &&
+        (state.isChanged ||
+          state.feedMessages.length !== payload.feedMessages.length ||
+          state.interactions.length !== payload.interactions.length);
 
       return {
         ...state,
@@ -98,7 +98,10 @@ export default function reducer(state = INITIAL_STATE, action: MessagesAction | 
 
     case MessageActionTypes.DELETE_SUCCESS: {
       const { payload } = action;
-      return updateAndExclude(state, payload, { isDeleting: true, isRequesting: false });
+      return updateAndExclude(state, payload, {
+        isDeleting: true,
+        isRequesting: false,
+      });
     }
 
     case MessageActionTypes.CANCEL_REQUESTED:
@@ -109,7 +112,9 @@ export default function reducer(state = INITIAL_STATE, action: MessagesAction | 
 
     case MessageActionTypes.CANCEL_SUCCESS: {
       const { payload } = action;
-      return updateAndExclude(state, payload.cancelledId, { isRequesting: false });
+      return updateAndExclude(state, payload.cancelledId, {
+        isRequesting: false,
+      });
     }
 
     case MessageActionTypes.REJECT_REQUESTED:
@@ -120,7 +125,9 @@ export default function reducer(state = INITIAL_STATE, action: MessagesAction | 
 
     case MessageActionTypes.REJECT_SUCCESS: {
       const { payload } = action;
-      return updateAndExclude(state, payload.invitationId, { isRequesting: false });
+      return updateAndExclude(state, payload.invitationId, {
+        isRequesting: false,
+      });
     }
 
     case StoryletActionTypes.BEGIN_SOCIAL_EVENT_REQUESTED:

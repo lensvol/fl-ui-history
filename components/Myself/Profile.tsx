@@ -1,17 +1,14 @@
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React, { useCallback, useState } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-import getCanChangeFaceForFree from 'selectors/myself/getCanChangeFaceForFree';
+import getCanChangeFaceForFree from "selectors/myself/getCanChangeFaceForFree";
 
-import PurchaseFaceModal from 'components/PurchaseFaceModal';
-import { IAppState } from 'types/app';
-import CameoAndViewButton from './CameoAndViewButton';
-import DisplayQualitiesAndPrivacy from './DisplayQualitiesAndPrivacy';
-import Lodgings from './Lodgings';
+import PurchaseFaceModal from "components/PurchaseFaceModal";
+import { IAppState } from "types/app";
+import CameoAndViewButton from "./CameoAndViewButton";
+import DisplayQualitiesAndPrivacy from "./DisplayQualitiesAndPrivacy";
+import Lodgings from "./Lodgings";
 
 function Profile(props: Props) {
   const [isViewCameosModalOpen, setIsViewCameosOpen] = useState(false);
@@ -22,7 +19,9 @@ function Profile(props: Props) {
 
   return (
     <>
-      <h2 className="heading heading--2 myself-profile__header">Cameo &amp; Lodgings</h2>
+      <h2 className="heading heading--2 myself-profile__header">
+        Cameo &amp; Lodgings
+      </h2>
 
       <div className="myself-profile__cameo-and-lodgings">
         <CameoAndViewButton {...props} viewCameos={viewCameos} />

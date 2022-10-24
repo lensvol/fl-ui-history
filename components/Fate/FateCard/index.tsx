@@ -1,34 +1,23 @@
-import { getFormattedReleaseDate } from 'components/Fate/utils';
-import TippyWrapper from 'components/TippyWrapper';
-import { RESET_STORY } from 'constants/fate';
-import React, {
-  Fragment,
-  useCallback,
-  useMemo,
-} from 'react';
-import classnames from 'classnames';
-import Image from 'components/Image';
-import { connect } from 'react-redux';
-import { IFateCard } from 'types/fate';
-import MediaSmDown from 'components/Responsive/MediaSmDown';
-import MediaMdUp from 'components/Responsive/MediaMdUp';
-import FateCardTitleAndByline from './FateCardTitleAndByline';
+import { getFormattedReleaseDate } from "components/Fate/utils";
+import TippyWrapper from "components/TippyWrapper";
+import { RESET_STORY } from "constants/fate";
+import React, { Fragment, useCallback, useMemo } from "react";
+import classnames from "classnames";
+import Image from "components/Image";
+import { connect } from "react-redux";
+import { IFateCard } from "types/fate";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import FateCardTitleAndByline from "./FateCardTitleAndByline";
 
 type Props = {
-  data: IFateCard,
-  onClick: (data: IFateCard) => void,
-  story?: boolean,
+  data: IFateCard;
+  onClick: (data: IFateCard) => void;
+  story?: boolean;
 };
 
-export function FateCard({
-  data,
-  onClick,
-  story,
-}: Props) {
-  const {
-    description,
-    shortDescription,
-  } = data;
+export function FateCard({ data, onClick, story }: Props) {
+  const { description, shortDescription } = data;
 
   const handleClick = useCallback(() => {
     onClick(data);
@@ -38,26 +27,26 @@ export function FateCard({
     <Fragment>
       <div
         className={classnames(
-          'media storylet fate-card',
-          story && 'fate-card--story',
+          "media storylet fate-card",
+          story && "fate-card--story"
         )}
       >
         <div
           className={classnames(
-            'storylet__bordered-container fate-card__bordered-container',
-            story && 'fate-card__bordered-container--story',
+            "storylet__bordered-container fate-card__bordered-container",
+            story && "fate-card__bordered-container--story"
           )}
         >
           <div
             className={classnames(
-              'fate-card__left',
-              story && 'fate-card__left--story',
+              "fate-card__left",
+              story && "fate-card__left--story"
             )}
           >
             <div
               className={classnames(
-                'media__object icon icon--fate',
-                'fate-card__image-container',
+                "media__object icon icon--fate",
+                "fate-card__image-container"
               )}
             >
               <FateCardImage {...data} />
@@ -71,8 +60,8 @@ export function FateCard({
 
           <div
             className={classnames(
-              'media__body fate-card__body',
-              story && 'fate-card__body--story',
+              "media__body fate-card__body",
+              story && "fate-card__body--story"
             )}
           >
             {!!story && <FateCardFanFavouriteIcon {...data} />}
@@ -85,13 +74,17 @@ export function FateCard({
               <FateCardTitleAndByline {...data} story={story} />
             )}
 
-            <p dangerouslySetInnerHTML={{ __html: shortDescription || description }} />
+            <p
+              dangerouslySetInnerHTML={{
+                __html: shortDescription || description,
+              }}
+            />
 
             <div className="buttons">
               <button
                 className={classnames(
-                  'button button--secondary',
-                  !(story || data.canAfford) && 'button--disabled',
+                  "button button--secondary",
+                  !(story || data.canAfford) && "button--disabled"
                 )}
                 disabled={!(story || data.canAfford)}
                 onClick={handleClick}
@@ -101,12 +94,8 @@ export function FateCard({
                   <span>Learn more</span>
                 ) : (
                   <span>
-                    {data.type === RESET_STORY ? 'Reset' : 'Purchase'}
-                    {' '}
-                    (
-                    {data.price}
-                    {' '}
-                    Fate)
+                    {data.type === RESET_STORY ? "Reset" : "Purchase"} (
+                    {data.price} Fate)
                   </span>
                 )}
               </button>
@@ -118,11 +107,13 @@ export function FateCard({
   );
 }
 
-FateCard.displayName = 'FateCard';
+FateCard.displayName = "FateCard";
 
 export default connect()(FateCard);
 
-export function FateCardFanFavouriteIcon({ fanFavourite }: Pick<IFateCard, 'fanFavourite'>) {
+export function FateCardFanFavouriteIcon({
+  fanFavourite,
+}: Pick<IFateCard, "fanFavourite">) {
   if (!fanFavourite) {
     return null;
   }
@@ -130,28 +121,20 @@ export function FateCardFanFavouriteIcon({ fanFavourite }: Pick<IFateCard, 'fanF
   return (
     <TippyWrapper
       tooltipData={{
-        description: 'This story is a fan favourite!',
+        description: "This story is a fan favourite!",
       }}
     >
-      <button
-        className="button--link fan-favourite"
-        tabIndex={0}
-        type="button"
-      >
-        <span
-          className="fl-ico fl-ico-2x fl-ico-star fan-favourite__icon"
-        />
+      <button className="button--link fan-favourite" tabIndex={0} type="button">
+        <span className="fl-ico fl-ico-2x fl-ico-star fan-favourite__icon" />
       </button>
     </TippyWrapper>
   );
 }
 
-export function FateCardImage(data: Pick<IFateCard, 'border' | 'image' | 'name'>) {
-  const {
-    border,
-    image,
-    name,
-  } = data;
+export function FateCardImage(
+  data: Pick<IFateCard, "border" | "image" | "name">
+) {
+  const { border, image, name } = data;
   return (
     <Image
       borderContainerClassName="fate-card__border"
@@ -164,8 +147,14 @@ export function FateCardImage(data: Pick<IFateCard, 'border' | 'image' | 'name'>
   );
 }
 
-export function FateCardReleaseDate({ releaseDate, season }: Pick<IFateCard, 'releaseDate' | 'season'>) {
-  const formattedReleaseDate = useMemo(() => getFormattedReleaseDate({ releaseDate }), [releaseDate]);
+export function FateCardReleaseDate({
+  releaseDate,
+  season,
+}: Pick<IFateCard, "releaseDate" | "season">) {
+  const formattedReleaseDate = useMemo(
+    () => getFormattedReleaseDate({ releaseDate }),
+    [releaseDate]
+  );
 
   if (!releaseDate) {
     return null;
@@ -175,14 +164,9 @@ export function FateCardReleaseDate({ releaseDate, season }: Pick<IFateCard, 're
     <p className="fate-card__release-date">
       {formattedReleaseDate}
       {season && (
-        <span
-          style={{ fontSize: '95%' }}
-        >
-          {' '}
-          (a part of the Season of
-          {' '}
-          {season}
-          )
+        <span style={{ fontSize: "95%" }}>
+          {" "}
+          (a part of the Season of {season})
         </span>
       )}
     </p>

@@ -1,14 +1,15 @@
-import React from 'react';
+import React from "react";
 
 export interface DomManipulationContextValue {
-  onOpenSubscriptionModal: (arg?: any) => void,
+  onOpenSubscriptionModal: (arg?: any) => void;
 }
 
-const DomManipulationContext = React.createContext<DomManipulationContextValue>({
-  onOpenSubscriptionModal: () => {
-  },
-});
+const DomManipulationContext = React.createContext<DomManipulationContextValue>(
+  {
+    onOpenSubscriptionModal: () => {},
+  }
+);
 
-DomManipulationContext.displayName = 'DomManipulationContext';
+DomManipulationContext.displayName = "DomManipulationContext";
 
 export default DomManipulationContext;

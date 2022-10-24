@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import ReactModal from 'react-modal';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import ReactModal from "react-modal";
 
 import {
   clearAccessCodeResult,
   flushAccessCodeState,
-} from 'actions/accessCodes';
+} from "actions/accessCodes";
 
-import CombinedMessage from './components/CombinedMessage';
+import CombinedMessage from "./components/CombinedMessage";
 
 class AccessCodeResultDialog extends Component {
   state = {
@@ -34,7 +34,7 @@ class AccessCodeResultDialog extends Component {
     this.setState({ modalIsOpen: false });
     dispatch(clearAccessCodeResult());
     dispatch(flushAccessCodeState());
-    history.push('/');
+    history.push("/");
   };
 
   render() {
@@ -64,7 +64,7 @@ class AccessCodeResultDialog extends Component {
   }
 }
 
-AccessCodeResultDialog.displayName = 'AccessCodeResultDialog';
+AccessCodeResultDialog.displayName = "AccessCodeResultDialog";
 
 const mapStateToProps = ({
   accessCodes: {

@@ -1,8 +1,7 @@
-import * as RegistrationActionTypes from 'actiontypes/registration';
+import * as RegistrationActionTypes from "actiontypes/registration";
 
-
-import flattenAvatars from 'reducers/registration/flattenAvatars';
-import { IRegistrationState } from 'types/registration';
+import flattenAvatars from "reducers/registration/flattenAvatars";
+import { IRegistrationState } from "types/registration";
 
 /**
  * Initial state

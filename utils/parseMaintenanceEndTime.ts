@@ -1,4 +1,6 @@
-export default function parseMaintenanceEndTime(endTime: string | undefined): string | undefined {
+export default function parseMaintenanceEndTime(
+  endTime: string | undefined
+): string | undefined {
   if (endTime === undefined) {
     return undefined;
   }

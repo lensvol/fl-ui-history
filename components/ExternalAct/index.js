@@ -1,20 +1,20 @@
-import React from 'react';
-import classnames from 'classnames';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React from "react";
+import classnames from "classnames";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import {
   goBackFromSocialAct,
   sendExternalSocialInvite,
-} from 'actions/storylet';
-import StoryletRoot from 'components/StoryletRoot';
+} from "actions/storylet";
+import StoryletRoot from "components/StoryletRoot";
 
 class ExternalAct extends React.Component {
   state = {
-    targetEmailAddress: '',
-    userEmailAddress: '',
+    targetEmailAddress: "",
+    userEmailAddress: "",
     branchId: null,
-  }
+  };
 
   componentDidMount = () => {
     const branchId = this.props.externalSocialAct.branch.id;
@@ -23,19 +23,19 @@ class ExternalAct extends React.Component {
       branchId,
       userEmailAddress: this.props.userEmailAddress,
     });
-  }
+  };
 
   handleTargetChange = (e) => {
     this.setState({
       targetEmailAddress: e.target.value,
     });
-  }
+  };
 
   handleUserChange = (e) => {
     this.setState({
       userEmailAddress: e.target.value,
     });
-  }
+  };
 
   /**
    * Go Back
@@ -43,8 +43,7 @@ class ExternalAct extends React.Component {
    */
   goBack = () => {
     this.props.dispatch(goBackFromSocialAct());
-  }
-
+  };
 
   /**
    * Submit form
@@ -59,7 +58,7 @@ class ExternalAct extends React.Component {
     };
 
     this.props.dispatch(sendExternalSocialInvite(data));
-  }
+  };
 
   /**
    * Render
@@ -70,11 +69,13 @@ class ExternalAct extends React.Component {
 
     const buttonClass = classnames({
       button: true,
-      'button--primary': true,
+      "button--primary": true,
       // 'button--disabled' : !(this.state.userInput.targetCharacterId)
     });
 
-    const errorMessage = externalSocialAct.message ? <p style={{ color: 'red' }}>{externalSocialAct.message}</p> : null;
+    const errorMessage = externalSocialAct.message ? (
+      <p style={{ color: "red" }}>{externalSocialAct.message}</p>
+    ) : null;
 
     return (
       <div>
@@ -82,29 +83,54 @@ class ExternalAct extends React.Component {
         <div className="branch">
           <div className="media__left" />
           <div className="media__body">
-            <h2 className="media__heading heading heading--3">Invite a friend to join you</h2>
-            <p>Send an email inviting your friend to join you in Fallen London.</p>
+            <h2 className="media__heading heading heading--3">
+              Invite a friend to join you
+            </h2>
+            <p>
+              Send an email inviting your friend to join you in Fallen London.
+            </p>
             {errorMessage}
             <form onSubmit={this.sendInvitation}>
               <div className="externalInviteEmail">
                 <label htmlFor="user-email">From: </label>
-                <input id="user-email" type="text" placeholder="Your email" name="userEmail" defaultValue={userEmailAddress} onChange={this.handleUserChange} />
+                <input
+                  id="user-email"
+                  type="text"
+                  placeholder="Your email"
+                  name="userEmail"
+                  defaultValue={userEmailAddress}
+                  onChange={this.handleUserChange}
+                />
               </div>
               <div>
                 <label>To: </label>
-                <input type="text" placeholder="Your friend's email" name="inviteeEmail" onChange={this.handleTargetChange} />
+                <input
+                  type="text"
+                  placeholder="Your friend's email"
+                  name="inviteeEmail"
+                  onChange={this.handleTargetChange}
+                />
               </div>
               <div className="buttons">
-                <button id="ChooseActButton" type="submit" className={buttonClass} disabled={false}>Send invitation!</button>
+                <button
+                  id="ChooseActButton"
+                  type="submit"
+                  className={buttonClass}
+                  disabled={false}
+                >
+                  Send invitation!
+                </button>
               </div>
             </form>
           </div>
         </div>
         <p className="buttons buttons--left">
-          <button type="button" className="button button--primary" onClick={this.goBack}>
-            <i className="fa fa-arrow-left" />
-            {' '}
-            Back
+          <button
+            type="button"
+            className="button button--primary"
+            onClick={this.goBack}
+          >
+            <i className="fa fa-arrow-left" /> Back
           </button>
         </p>
       </div>
@@ -112,7 +138,7 @@ class ExternalAct extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   // isSaving: state.storylet.isSaving,
   externalSocialAct: state.storylet.externalSocialAct,
   userEmailAddress: state.user.user.emailAddress,

@@ -1,18 +1,13 @@
-import React, {
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback, useRef, useState } from "react";
+import { connect } from "react-redux";
 
-import { IAppState } from 'types/app';
-import TippyWrapper from 'components/TippyWrapper';
-import ChangeNameModal from './ChangeNameModal';
-
+import { IAppState } from "types/app";
+import TippyWrapper from "components/TippyWrapper";
+import ChangeNameModal from "./ChangeNameModal";
 
 const tooltipData = {
-  name: 'Change your name!',
-  description: 'You need at least 15 Fate to do this',
+  name: "Change your name!",
+  description: "You need at least 15 Fate to do this",
 };
 
 function Name({ name }: Props) {
@@ -48,9 +43,13 @@ function Name({ name }: Props) {
   );
 }
 
-Name.displayName = 'Name';
+Name.displayName = "Name";
 
-const mapStateToProps = ({ myself: { character: { name } } }: IAppState) => ({ name });
+const mapStateToProps = ({
+  myself: {
+    character: { name },
+  },
+}: IAppState) => ({ name });
 type Props = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(Name);

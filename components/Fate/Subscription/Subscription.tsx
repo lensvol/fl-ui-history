@@ -1,15 +1,12 @@
-import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import React, { useCallback } from "react";
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import { openDialog } from 'actions/payment';
+import { openDialog } from "actions/payment";
 
-import Loading from 'components/Loading';
-import { IAppState } from 'types/app';
-import { ISubscriptionData } from 'types/subscription';
+import Loading from "components/Loading";
+import { IAppState } from "types/app";
+import { ISubscriptionData } from "types/subscription";
 
 export function Subscription({
   data,
@@ -22,17 +19,12 @@ export function Subscription({
       onParentClick();
       return;
     }
-    dispatch(openDialog('subscribe'));
+    dispatch(openDialog("subscribe"));
   }, [dispatch, onParentClick]);
 
   // Show spinner while we're loading
   if (!data) {
-    return (
-      <Loading
-        spinner
-        small
-      />
-    );
+    return <Loading spinner small />;
   }
 
   if (data.hasSubscription) {
@@ -41,11 +33,13 @@ export function Subscription({
         <button
           type="button"
           className="button button--secondary"
-          onClick={() => history.push('/account')}
+          onClick={() => history.push("/account")}
         >
           Manage Your Subscriptions
         </button>
-        <strong>You are already an Exceptional Friend. Thanks for your support.</strong>
+        <strong>
+          You are already an Exceptional Friend. Thanks for your support.
+        </strong>
       </p>
     );
   }
@@ -64,13 +58,13 @@ export function Subscription({
   );
 }
 
-Subscription.displayName = 'Subscription';
+Subscription.displayName = "Subscription";
 
 interface Props extends RouteComponentProps {
-  data?: ISubscriptionData,
-  dispatch: Function, // eslint-disable-line
-  history: any,
-  onClick?: () => void,
+  data?: ISubscriptionData;
+  dispatch: Function; // eslint-disable-line
+  history: any;
+  onClick?: () => void;
 }
 
 const mapStateToProps = ({ subscription: { data } }: IAppState) => ({ data });

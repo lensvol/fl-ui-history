@@ -1,13 +1,15 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
+import React from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
 
 type OwnProps = {
-  onClick: () => void,
-  undiscardable?: boolean,
+  onClick: () => void;
+  undiscardable?: boolean;
 };
 
-const mapStateToProps = ({ cards: { isFetching } }: IAppState) => ({ isFetching });
+const mapStateToProps = ({ cards: { isFetching } }: IAppState) => ({
+  isFetching,
+});
 
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;
 
@@ -28,6 +30,6 @@ export function DiscardButton({ isFetching, onClick, undiscardable }: Props) {
   );
 }
 
-DiscardButton.displayName = 'DiscardButton';
+DiscardButton.displayName = "DiscardButton";
 
 export default connect(mapStateToProps)(DiscardButton);

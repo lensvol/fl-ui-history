@@ -1,29 +1,26 @@
-import useIsMounted from 'hooks/useIsMounted';
-import React, {
-  useCallback,
-} from 'react';
-import { connect } from 'react-redux';
-import classnames from 'classnames';
+import useIsMounted from "hooks/useIsMounted";
+import React, { useCallback } from "react";
+import { connect } from "react-redux";
+import classnames from "classnames";
 import {
   Formik,
   Field,
   Form,
   FormikValues,
   FormikHelpers as FormikActions,
-} from 'formik';
+} from "formik";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
-import {
-  renameQuality,
-} from 'actions/storylet';
+import { renameQuality } from "actions/storylet";
 
 // eslint-disable-next-line no-useless-escape
 // Preserved for historical interest:
 // const DANGEROUS_AND_UNMAINTAINABLE_REGEX = /^(?:(?!([<>.|'&*/\\?:%"+]|(__)|(\s\s))).)*$/;
-const ERROR_MESSAGE = 'Names may only contain letters, numbers, spaces, and apostrophes.';
+const ERROR_MESSAGE =
+  "Names may only contain letters, numbers, spaces, and apostrophes.";
 
-const SIMPLIFIED_REGEX_STRING = '[A-Za-zÀ-ÖØ-öø-ÿ0-9 \']*';
+const SIMPLIFIED_REGEX_STRING = "[A-Za-zÀ-ÖØ-öø-ÿ0-9 ']*";
 
 function NameableQualityForm({
   branchId,
@@ -35,41 +32,45 @@ function NameableQualityForm({
 
   const regexp = new RegExp(`^(?:${SIMPLIFIED_REGEX_STRING})$`);
 
-  const handleSubmit = useCallback(async ({ name }: FormikValues, actions: FormikActions<{ name: string }>) => {
-    await dispatch(renameQuality({
-      branchId,
-      qualityPossessedId,
-      name: name.trim(), // trim before sending
-    }));
-    if (isMounted.current) {
-      actions.setSubmitting(false);
-    }
-  }, [
-    branchId,
-    dispatch,
-    isMounted,
-    qualityPossessedId,
-  ]);
+  const handleSubmit = useCallback(
+    async (
+      { name }: FormikValues,
+      actions: FormikActions<{ name: string }>
+    ) => {
+      await dispatch(
+        renameQuality({
+          branchId,
+          qualityPossessedId,
+          name: name.trim(), // trim before sending
+        })
+      );
+      if (isMounted.current) {
+        actions.setSubmitting(false);
+      }
+    },
+    [branchId, dispatch, isMounted, qualityPossessedId]
+  );
 
-  const validate = useCallback(({ name }: { name: string }) => {
-    if (!regexp.test(name)) {
-      return { name: ERROR_MESSAGE };
-    }
-    return {};
-  }, [regexp]);
+  const validate = useCallback(
+    ({ name }: { name: string }) => {
+      if (!regexp.test(name)) {
+        return { name: ERROR_MESSAGE };
+      }
+      return {};
+    },
+    [regexp]
+  );
 
   return (
     <Formik
-      initialValues={{ name: '' }}
+      initialValues={{ name: "" }}
       onSubmit={handleSubmit}
       validate={validate}
     >
       {({ values, errors, isSubmitting }) => (
         <Form>
           <label htmlFor={`rename-${qualityPossessedId}`}>
-            Choose a name for your
-            {' '}
-            <strong>{qualityName}</strong>
+            Choose a name for your <strong>{qualityName}</strong>
           </label>
           <Field
             type="text"
@@ -77,8 +78,8 @@ function NameableQualityForm({
             id={`rename-${qualityPossessedId}`}
             name="name"
             className={classnames(
-              'form__control form__control--has-validation form__control--has-buttons',
-              errors.name && 'form__control--invalid',
+              "form__control form__control--has-validation form__control--has-buttons",
+              errors.name && "form__control--invalid"
             )}
             autoComplete="off"
             value={values.name}
@@ -86,7 +87,7 @@ function NameableQualityForm({
           />
           <p
             className="form__error"
-            style={{ color: '#b11818' }}
+            style={{ color: "#b11818" }}
             aria-live="assertive" // Read out errors immediately
           >
             {errors.name}
@@ -94,18 +95,13 @@ function NameableQualityForm({
           <p className="buttons">
             <button
               className={classnames(
-                'button button--primary',
-                errors.name && 'button--disabled',
+                "button button--primary",
+                errors.name && "button--disabled"
               )}
               disabled={isSubmitting || !!errors.name}
               type="submit"
             >
-              {isSubmitting ? (
-                <Loading
-                  spinner
-                  small
-                />
-              ) : <span>Rename</span>}
+              {isSubmitting ? <Loading spinner small /> : <span>Rename</span>}
             </button>
           </p>
         </Form>
@@ -115,10 +111,10 @@ function NameableQualityForm({
 }
 
 type Props = {
-  branchId: number,
-  dispatch: Function, // eslint-disable-line
-  qualityName: string,
-  qualityPossessedId: number,
+  branchId: number;
+  dispatch: Function; // eslint-disable-line
+  qualityName: string;
+  qualityPossessedId: number;
 };
 
 export default connect()(NameableQualityForm);

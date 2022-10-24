@@ -1,15 +1,16 @@
-import { formatEnhancementList } from 'components/Tooltip/util';
-import React, {
-  useMemo,
-} from 'react';
-import { IEnhancement } from 'types/qualities';
+import { formatEnhancementList } from "components/Tooltip/util";
+import React, { useMemo } from "react";
+import { IEnhancement } from "types/qualities";
 
 type Props = {
-  enhancements: IEnhancement[] | undefined,
+  enhancements: IEnhancement[] | undefined;
 };
 
 export default function EnhancementDescription({ enhancements }: Props) {
-  const enhancementDescription: string = useMemo(() => formatEnhancementList(enhancements), [enhancements]);
+  const enhancementDescription: string = useMemo(
+    () => formatEnhancementList(enhancements),
+    [enhancements]
+  );
 
   if (!enhancements?.length) {
     return null;
@@ -17,8 +18,7 @@ export default function EnhancementDescription({ enhancements }: Props) {
 
   return (
     <strong className="enhancements-description">
-      {enhancementDescription}
-      .
+      {enhancementDescription}.
     </strong>
   );
 }

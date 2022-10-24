@@ -4,9 +4,9 @@
 export default function clearAuthenticationTokens() {
   [
     // Explicitly remove access token from storage
-    'access_token',
+    "access_token",
     // Remove preferences, too --- prevent us from looking in the wrong place
-    'storage',
+    "storage",
   ].forEach((key) => {
     window.localStorage.removeItem(key);
     window.sessionStorage.removeItem(key);

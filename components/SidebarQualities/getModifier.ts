@@ -1,4 +1,10 @@
-export default function getModifier({ effectiveLevel, level }: { effectiveLevel: number, level: number }) {
+export default function getModifier({
+  effectiveLevel,
+  level,
+}: {
+  effectiveLevel: number;
+  level: number;
+}) {
   const difference = effectiveLevel - level;
   if (difference === 0) {
     return null; // Render nothing if there's no modifier

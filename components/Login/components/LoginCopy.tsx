@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
+import React, { Fragment } from "react";
+import { connect } from "react-redux";
 
-import Image from 'components/Image';
-import Loading from 'components/Loading';
-import { IAppState } from 'types/app';
+import Image from "components/Image";
+import Loading from "components/Loading";
+import { IAppState } from "types/app";
 
 function LoginCopy({ accessCode, isFetching }: Props) {
   if (isFetching) {
@@ -38,24 +38,24 @@ function LoginCopy({ accessCode, isFetching }: Props) {
       <h2 className="heading heading--2">
         Forty years ago, London was stolen by bats.
       </h2>
-      <p style={{ marginTop: '.5em' }}>
+      <p style={{ marginTop: ".5em" }}>
         Discover a dark and hilarious Gothic underworld where Hell is close,
         immortality is cheap, and the screaming has largely stopped…
       </p>
       <p>Welcome. Delicious friend.</p>
       <hr />
       <p style={{ marginBottom: 0 }}>
-        “Fallen London [is] a free-to-play text-based browser game…
-        an open-world RPG that subsists mostly on the written word
-        to spin bizarre tales.”
+        “Fallen London [is] a free-to-play text-based browser game… an
+        open-world RPG that subsists mostly on the written word to spin bizarre
+        tales.”
       </p>
-      <p style={{ textAlign: 'right', marginBottom: '1em' }}>
+      <p style={{ textAlign: "right", marginBottom: "1em" }}>
         <em>Unwinnable</em>
       </p>
       <p style={{ marginBottom: 0 }}>
         “Far and away the best browser game of today. Why? Flavour and story.”
       </p>
-      <p style={{ textAlign: 'right', marginBottom: '1em' }}>
+      <p style={{ textAlign: "right", marginBottom: "1em" }}>
         <em>The New Yorker</em>
       </p>
     </Fragment>
@@ -74,7 +74,9 @@ LoginCopy.propTypes = {
 
  */
 
-const mapStateToProps = ({ accessCodes: { accessCode, isFetching } }: IAppState) => ({
+const mapStateToProps = ({
+  accessCodes: { accessCode, isFetching },
+}: IAppState) => ({
   accessCode,
   isFetching,
 });

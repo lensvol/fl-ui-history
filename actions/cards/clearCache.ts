@@ -1,5 +1,5 @@
-import { CLEAR_CACHE } from 'actiontypes/cards';
-import { Dispatch } from 'redux';
+import { CLEAR_CACHE } from "actiontypes/cards";
+import { Dispatch } from "redux";
 
 export type ClearCardsCache = { type: typeof CLEAR_CACHE };
 

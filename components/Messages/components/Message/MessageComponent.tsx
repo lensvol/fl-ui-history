@@ -1,13 +1,10 @@
-import useIsMounted from 'hooks/useIsMounted';
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
+import useIsMounted from "hooks/useIsMounted";
+import React, { useCallback, useState } from "react";
+import { connect } from "react-redux";
 
-import Buttonlet from 'components/Buttonlet';
-import Image from 'components/Image';
-import { IAppState } from 'types/app';
+import Buttonlet from "components/Buttonlet";
+import Image from "components/Image";
+import { IAppState } from "types/app";
 
 export function MessageComponent({
   children,
@@ -15,12 +12,7 @@ export function MessageComponent({
   deletable,
   onDelete,
 }: Props) {
-  const {
-    ago,
-    description,
-    image,
-    title,
-  } = data;
+  const { ago, description, image, title } = data;
 
   const isMounted = useIsMounted();
 
@@ -34,10 +26,7 @@ export function MessageComponent({
     if (isMounted.current) {
       setIsDeleting(false);
     }
-  }, [
-    onDelete,
-    isMounted,
-  ]);
+  }, [onDelete, isMounted]);
 
   return (
     <div className="media--message">
@@ -67,40 +56,30 @@ export function MessageComponent({
           </div>
         )}
         <div>
-          {ago && (
-            <b>
-              (
-              {ago}
-              )
-            </b>
-          )}
-          {' '}
-          <span>{title}</span>
+          {ago && <b>({ago})</b>} <span>{title}</span>
         </div>
         <div
           className="message__description"
           dangerouslySetInnerHTML={{ __html: description }}
         />
-        <div className="buttons">
-          {children}
-        </div>
+        <div className="buttons">{children}</div>
       </div>
     </div>
   );
 }
 
-MessageComponent.displayName = 'MessageComponent';
+MessageComponent.displayName = "MessageComponent";
 
 interface OwnProps {
-  children?: React.ReactNode,
+  children?: React.ReactNode;
   data: {
-    ago: string,
-    description: string,
-    image: string,
-    title: string,
-  },
-  deletable?: boolean,
-  onDelete?: () => Promise<void>,
+    ago: string;
+    description: string;
+    image: string;
+    title: string;
+  };
+  deletable?: boolean;
+  onDelete?: () => Promise<void>;
 }
 
 const mapStateToProps = (_: IAppState) => ({});

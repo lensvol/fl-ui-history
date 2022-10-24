@@ -1,12 +1,12 @@
-import { FetchCategoriesSuccess } from 'actions/categories/fetchCategories';
-import { FetchMyselfSuccess } from 'actions/myself/fetchMyself';
-import { FETCH_CATEGORIES_SUCCESS } from 'actiontypes/categories';
-import { FETCH_MYSELF_SUCCESS } from 'actiontypes/myself';
-import { Nature } from 'types/qualities';
+import { FetchCategoriesSuccess } from "actions/categories/fetchCategories";
+import { FetchMyselfSuccess } from "actions/myself/fetchMyself";
+import { FETCH_CATEGORIES_SUCCESS } from "actiontypes/categories";
+import { FETCH_MYSELF_SUCCESS } from "actiontypes/myself";
+import { Nature } from "types/qualities";
 
 export type ICategoriesState = {
-  Status: string[],
-  Thing: string[],
+  Status: string[];
+  Thing: string[];
 };
 
 export const INITIAL_STATE: ICategoriesState = {
@@ -16,7 +16,10 @@ export const INITIAL_STATE: ICategoriesState = {
 
 type CategoriesReducerActions = FetchCategoriesSuccess | FetchMyselfSuccess;
 
-export default function reducer(state: ICategoriesState = INITIAL_STATE, action: CategoriesReducerActions) {
+export default function reducer(
+  state: ICategoriesState = INITIAL_STATE,
+  action: CategoriesReducerActions
+) {
   switch (action.type) {
     case FETCH_CATEGORIES_SUCCESS: {
       return fetchCategoriesSuccess(state, action);
@@ -31,7 +34,10 @@ export default function reducer(state: ICategoriesState = INITIAL_STATE, action:
   }
 }
 
-function fetchCategoriesSuccess(state: ICategoriesState, action: FetchCategoriesSuccess) {
+function fetchCategoriesSuccess(
+  state: ICategoriesState,
+  action: FetchCategoriesSuccess
+) {
   return {
     ...state,
     Status: action.payload.status,
@@ -39,7 +45,10 @@ function fetchCategoriesSuccess(state: ICategoriesState, action: FetchCategories
   };
 }
 
-function fetchMyselfSuccess(state: ICategoriesState, action: FetchMyselfSuccess) {
+function fetchMyselfSuccess(
+  state: ICategoriesState,
+  action: FetchMyselfSuccess
+) {
   const all: { [key in Nature]: string[] } = {
     Thing: [...state.Thing],
     Status: [...state.Status],
@@ -54,8 +63,8 @@ function fetchMyselfSuccess(state: ICategoriesState, action: FetchMyselfSuccess)
         continue;
       }
       // Handle Election Career and other odd things
-      if ((nature as Nature | 'DerivedQuality') === 'DerivedQuality') {
-        if (all['Thing'].indexOf(category) < 0) {
+      if ((nature as Nature | "DerivedQuality") === "DerivedQuality") {
+        if (all["Thing"].indexOf(category) < 0) {
           all.Thing.push(category);
         }
         continue;

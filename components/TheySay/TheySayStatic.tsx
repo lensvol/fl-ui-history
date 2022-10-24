@@ -1,6 +1,10 @@
-import React from 'react';
+import React from "react";
 
-export default function TheySayStatic({ description }: { description: string }) {
+export default function TheySayStatic({
+  description,
+}: {
+  description: string;
+}) {
   return (
     <p>
       <span className="they-say__quote">“</span>

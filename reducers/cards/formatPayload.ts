@@ -1,4 +1,4 @@
-import { FetchCardsResponse } from 'services/CardsService';
+import { FetchCardsResponse } from "services/CardsService";
 
 export default function formatPayload({
   displayCards,
@@ -8,11 +8,11 @@ export default function formatPayload({
   // timeDifference,
   ...rest
 }: // {
-  // displayCards: any[],
-  // eligibleForCardsCount: number,
-  // maxHandSize: number,
-  // maxDeckSize: number,
-  // timeDifference: number
+// displayCards: any[],
+// eligibleForCardsCount: number,
+// maxHandSize: number,
+// maxDeckSize: number,
+// timeDifference: number
 //}
 FetchCardsResponse) {
   return {

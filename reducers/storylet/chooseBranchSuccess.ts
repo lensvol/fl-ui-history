@@ -1,7 +1,10 @@
-import { ChooseBranchSuccessAction } from 'actions/storylet/chooseBranch/chooseBranchSuccess';
-import { IStoryletState } from 'types/storylet';
+import { ChooseBranchSuccessAction } from "actions/storylet/chooseBranch/chooseBranchSuccess";
+import { IStoryletState } from "types/storylet";
 
-export default function chooseBranchSuccess(state: IStoryletState, action: ChooseBranchSuccessAction): IStoryletState {
+export default function chooseBranchSuccess(
+  state: IStoryletState,
+  action: ChooseBranchSuccessAction
+): IStoryletState {
   const {
     canChangeOutfit,
     eligibleFriends,
@@ -15,7 +18,6 @@ export default function chooseBranchSuccess(state: IStoryletState, action: Choos
     storylet,
     storylets,
   } = action.payload;
-
 
   return {
     ...state,

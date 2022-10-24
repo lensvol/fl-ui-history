@@ -1,6 +1,6 @@
-import { BaseResponse } from 'types/app';
-import { IContact, IContactService } from 'types/contacts';
-import BaseService from './BaseService';
+import { BaseResponse } from "types/app";
+import { IContact, IContactService } from "types/contacts";
+import BaseService from "./BaseService";
 
 class ContactService extends BaseService implements IContactService {
   /**
@@ -9,7 +9,7 @@ class ContactService extends BaseService implements IContactService {
    */
   fetch = () => {
     const config = {
-      url: '/contact',
+      url: "/contact",
     };
     return this.doRequest<IContact[]>(config);
   };
@@ -21,13 +21,12 @@ class ContactService extends BaseService implements IContactService {
    */
   addContact = (userName: string) => {
     const config = {
-      url: '/contact/addcontact',
-      method: 'post',
+      url: "/contact/addcontact",
+      method: "post",
       data: { userName },
     };
-    return this.doRequest<BaseResponse & {contact: IContact }>(config);
+    return this.doRequest<BaseResponse & { contact: IContact }>(config);
   };
-
 
   /**
    * delete contact
@@ -36,33 +35,31 @@ class ContactService extends BaseService implements IContactService {
    */
   deleteContact = (contactId: number) => {
     const config = {
-      method: 'post',
-      url: '/contact/deletecontact',
+      method: "post",
+      url: "/contact/deletecontact",
       data: { contactId },
     };
     return this.doRequest<BaseResponse>(config);
   };
-
 
   /**
    * add facebook contacts
    */
   addFacebookContacts = () => {
     const config = {
-      method: 'post',
-      url: '/contacts/addfacebookcontacts',
+      method: "post",
+      url: "/contacts/addfacebookcontacts",
     };
     return this.doRequest(config);
   };
-
 
   /**
    * Add twitter contacts
    */
   addTwitterContacts = () => {
     const config = {
-      method: 'post',
-      url: '/contacts/addtwittercontacts',
+      method: "post",
+      url: "/contacts/addtwittercontacts",
     };
     return this.doRequest(config);
   };

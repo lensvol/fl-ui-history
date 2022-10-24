@@ -1,27 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Modal from 'components/Modal';
-import ShareDialogContent from './ShareDialogContent';
-import { LOADING, READY, SHARE_COMPLETE } from './constants';
-
+import Modal from "components/Modal";
+import ShareDialogContent from "./ShareDialogContent";
+import { LOADING, READY, SHARE_COMPLETE } from "./constants";
 
 interface Props {
-  borderColour?: string,
+  borderColour?: string;
   data: {
-    description: string,
-    name: string,
-    image: string,
-  },
-  isOpen: boolean,
-  isSharing: boolean,
-  onRequestClose: Function,
-  onSubmit: Function,
-  shareMessageResponse?: string,
+    description: string;
+    name: string;
+    image: string;
+  };
+  isOpen: boolean;
+  isSharing: boolean;
+  onRequestClose: Function;
+  onSubmit: Function;
+  shareMessageResponse?: string;
 }
 
 interface State {
-  currentStep: string,
-  title?: string,
+  currentStep: string;
+  title?: string;
 }
 
 const INITIAL_STATE: State = {
@@ -30,7 +29,7 @@ const INITIAL_STATE: State = {
 };
 
 export class ShareDialogContainer extends Component<Props, State> {
-  static displayName = 'ShareDialogContainer';
+  static displayName = "ShareDialogContainer";
 
   mounted = false;
 
@@ -48,12 +47,11 @@ export class ShareDialogContainer extends Component<Props, State> {
     const { data } = this.props;
     this.setState({
       currentStep: READY,
-      title: (data && data.name) ? data.name : '',
+      title: data && data.name ? data.name : "",
     });
   };
 
-  handleChange = () => {
-  };
+  handleChange = () => {};
 
   handleRequestClose = () => {
     const { onRequestClose } = this.props;
@@ -74,13 +72,8 @@ export class ShareDialogContainer extends Component<Props, State> {
   };
 
   render = () => {
-    const {
-      borderColour,
-      data,
-      isOpen,
-      isSharing,
-      shareMessageResponse,
-    } = this.props;
+    const { borderColour, data, isOpen, isSharing, shareMessageResponse } =
+      this.props;
     const { currentStep, title } = this.state;
 
     return (
@@ -102,9 +95,9 @@ export class ShareDialogContainer extends Component<Props, State> {
         />
       </Modal>
     );
-  }
+  };
 }
 
-ShareDialogContainer.displayName = 'ShareDialogContainer';
+ShareDialogContainer.displayName = "ShareDialogContainer";
 
 export default ShareDialogContainer;

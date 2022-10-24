@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
 
 function usePortal(id: string, containerClassName?: string) {
-  const rootElementRef = React.useRef(document.createElement('div'));
+  const rootElementRef = React.useRef(document.createElement("div"));
 
   if (containerClassName) {
     rootElementRef.current.classList.add(containerClassName);
@@ -19,20 +19,19 @@ function usePortal(id: string, containerClassName?: string) {
 }
 
 interface Props {
-  onClick: (_: any) => void,
+  onClick: (_: any) => void;
 }
 
 export const CloseButtonContainer: React.FC<Props> = (props) => {
-  const target = usePortal('close-map-button-root', 'map__close-button-container');
+  const target = usePortal(
+    "close-map-button-root",
+    "map__close-button-container"
+  );
   return ReactDOM.createPortal(<CloseButton {...props} />, target);
-}
+};
 
 export const CloseButton: React.FC<Props> = ({ onClick }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className="map__close-button"
-  >
+  <button type="button" onClick={onClick} className="map__close-button">
     <i className="fa fa-compass fa-3x icon--has-transition" />
   </button>
 );

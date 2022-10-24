@@ -1,12 +1,11 @@
-import { SignUpSuccess } from 'actions/registration/signUp';
-import { IUserState } from 'services/UserService';
+import { SignUpSuccess } from "actions/registration/signUp";
+import { IUserState } from "services/UserService";
 
-export default function signupSuccess(state: IUserState, action: SignUpSuccess): IUserState {
-  const {
-    hasCharacter,
-    privilegeLevel,
-    user,
-  } = action.payload;
+export default function signupSuccess(
+  state: IUserState,
+  action: SignUpSuccess
+): IUserState {
+  const { hasCharacter, privilegeLevel, user } = action.payload;
 
   return {
     ...state,

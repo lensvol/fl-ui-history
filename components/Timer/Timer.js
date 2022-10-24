@@ -1,29 +1,23 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import { fetchActions } from 'actions/actions';
-import { fetch as fetchCards } from 'actions/cards';
-import { fetch as fetchMessages } from 'actions/messages';
-import { setRemaining } from 'actions/timer';
+import { fetchActions } from "actions/actions";
+import { fetch as fetchCards } from "actions/cards";
+import { fetch as fetchMessages } from "actions/messages";
+import { setRemaining } from "actions/timer";
 
-import {
-  MESSAGE_POLL_INTERVAL,
-  TICK_RATE,
-} from 'constants/timer';
+import { MESSAGE_POLL_INTERVAL, TICK_RATE } from "constants/timer";
 
 export class Timer extends Component {
   componentDidMount() {
     // Update action timer
-    this.interval = setInterval(
-      this.onTick,
-      TICK_RATE,
-    );
+    this.interval = setInterval(this.onTick, TICK_RATE);
 
     // Poll /messages for new messages
     this.messageInterval = setInterval(
       this.pollMessages,
-      MESSAGE_POLL_INTERVAL,
+      MESSAGE_POLL_INTERVAL
     );
   }
 
@@ -33,7 +27,9 @@ export class Timer extends Component {
   }
 
   getRemainingTime = () => {
-    const { timer: { timeNextActionIsAvailable } } = this.props;
+    const {
+      timer: { timeNextActionIsAvailable },
+    } = this.props;
     const now = new Date();
     return new Date(timeNextActionIsAvailable) - now;
   };
@@ -55,7 +51,9 @@ export class Timer extends Component {
     }
 
     // Are we logged in, and do we have a character?
-    return user && user.loggedIn && user.hasCharacter && user.user && user.user.id;
+    return (
+      user && user.loggedIn && user.hasCharacter && user.user && user.user.id
+    );
   };
 
   onTick = () => {
@@ -124,10 +122,12 @@ export class Timer extends Component {
   // We're not rendering anything for this component, just keeping it
   // running in the background
   render() {
-    const { actions: { error } } = this.props;
+    const {
+      actions: { error },
+    } = this.props;
     // Throw on render if we have an error (this stops runaway request creation)
     if (error) {
-      if (error.message === 'Network Error') {
+      if (error.message === "Network Error") {
         return null;
       }
       throw error;
@@ -136,7 +136,7 @@ export class Timer extends Component {
   }
 }
 
-Timer.displayName = 'Timer';
+Timer.displayName = "Timer";
 
 Timer.propTypes = {
   actions: PropTypes.shape({
@@ -152,8 +152,7 @@ Timer.propTypes = {
   timer: PropTypes.shape({
     timeNextActionIsAvailable: PropTypes.string,
   }).isRequired,
-  user: PropTypes.shape({
-  }).isRequired,
+  user: PropTypes.shape({}).isRequired,
 };
 
 export const mapStateToProps = ({

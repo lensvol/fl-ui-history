@@ -1,14 +1,14 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import * as PlansActionCreators from 'actions/plans';
+import * as PlansActionCreators from "actions/plans";
 
-import QualityRequirement from 'components/QualityRequirement';
-import PlanComponent from './PlanComponent';
-import ConfirmDeleteModal from './ConfirmDeleteModal';
-import ConfirmRefreshModal from './ConfirmRefreshModal';
-import PlanStateContext from './PlanStateContext';
+import QualityRequirement from "components/QualityRequirement";
+import PlanComponent from "./PlanComponent";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import ConfirmRefreshModal from "./ConfirmRefreshModal";
+import PlanStateContext from "./PlanStateContext";
 
 const MAX_ACTIVE_PLANS = 20;
 
@@ -39,7 +39,12 @@ export class PlanContainer extends Component {
   };
 
   handleConfirmDelete = () => {
-    const { dispatch, data: { branch: { id } } } = this.props;
+    const {
+      dispatch,
+      data: {
+        branch: { id },
+      },
+    } = this.props;
     dispatch(PlansActionCreators.deletePlan(id));
   };
 
@@ -84,15 +89,17 @@ export class PlanContainer extends Component {
     const { branch } = data;
 
     const playerHasMaximumActivePlans = activePlans.length >= MAX_ACTIVE_PLANS;
-    const qualityRequirements = branch.qualityRequirements.map(q => (
+    const qualityRequirements = branch.qualityRequirements.map((q) => (
       <QualityRequirement key={q.qualityId} data={q} />
     ));
 
     return (
       <Fragment>
-        <PlanStateContext.Provider value={{
-          isSaving,
-        }}>
+        <PlanStateContext.Provider
+          value={{
+            isSaving,
+          }}
+        >
           <PlanComponent
             canRefresh={canRefresh}
             data={data}
@@ -118,10 +125,10 @@ export class PlanContainer extends Component {
         />
       </Fragment>
     );
-  }
+  };
 }
 
-PlanContainer.displayName = 'PlanContainer';
+PlanContainer.displayName = "PlanContainer";
 
 PlanContainer.propTypes = {
   activePlans: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

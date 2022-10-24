@@ -1,28 +1,24 @@
-import * as FateActionTypes from 'actiontypes/fate';
+import * as FateActionTypes from "actiontypes/fate";
 
-import fetchSuccess from 'reducers/fate/fetchSuccess';
-import purchaseItemSuccess from 'reducers/fate/purchaseItemSuccess';
-import {
-  FateData,
-  FateSubtab,
-  SUBTAB_GAMEPLAY,
-} from 'types/fate';
-import { FateActions } from 'actions/fate';
-import processFateChange from './processFateChange';
+import fetchSuccess from "reducers/fate/fetchSuccess";
+import purchaseItemSuccess from "reducers/fate/purchaseItemSuccess";
+import { FateData, FateSubtab, SUBTAB_GAMEPLAY } from "types/fate";
+import { FateActions } from "actions/fate";
+import processFateChange from "./processFateChange";
 
 export interface IFateState {
-  activePurchase: any | null,
-  activeSubtab: FateSubtab,
-  avatarSelected: any | null,
-  hasFetched: boolean,
-  isDialogOpen: boolean,
-  isExceptionalFriend: boolean,
-  isFetching: boolean,
-  isPurchasing: boolean,
-  message: string | null,
-  premiumSubExpiryDateTime: string,
-  purchaseComplete: boolean,
-  data: FateData,
+  activePurchase: any | null;
+  activeSubtab: FateSubtab;
+  avatarSelected: any | null;
+  hasFetched: boolean;
+  isDialogOpen: boolean;
+  isExceptionalFriend: boolean;
+  isFetching: boolean;
+  isPurchasing: boolean;
+  message: string | null;
+  premiumSubExpiryDateTime: string;
+  purchaseComplete: boolean;
+  data: FateData;
 }
 
 export const INITIAL_STATE: IFateState = {
@@ -32,7 +28,7 @@ export const INITIAL_STATE: IFateState = {
   isExceptionalFriend: false,
   isFetching: true,
   isPurchasing: false,
-  premiumSubExpiryDateTime: '0001-01-01T00:00:00', // this is the default value for non-EFs
+  premiumSubExpiryDateTime: "0001-01-01T00:00:00", // this is the default value for non-EFs
   purchaseComplete: false,
   data: {
     actionRefillFateCard: undefined,
@@ -45,7 +41,10 @@ export const INITIAL_STATE: IFateState = {
   avatarSelected: null,
 };
 
-export default function fateReducer(state = INITIAL_STATE, action: FateActions): IFateState {
+export default function fateReducer(
+  state = INITIAL_STATE,
+  action: FateActions
+): IFateState {
   switch (action.type) {
     case FateActionTypes.PROCESS_FATE_CHANGE:
       return processFateChange(state, action);

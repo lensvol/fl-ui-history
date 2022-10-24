@@ -1,16 +1,16 @@
-import React from 'react';
-import { IGateEvent } from 'types/map';
-import Image from 'components/Image/index';
+import React from "react";
+import { IGateEvent } from "types/map";
+import Image from "components/Image/index";
 
 interface Props {
-  gateEvent: IGateEvent,
-  onClick: () => void,
+  gateEvent: IGateEvent;
+  onClick: () => void;
 }
 
 export default function Available({ gateEvent, onClick }: Props) {
   return (
     <div className="gate-event">
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: "flex" }}>
         <Image
           className="gate-event__image"
           icon={gateEvent.image}
@@ -33,7 +33,6 @@ export default function Available({ gateEvent, onClick }: Props) {
             >
               Unlock
             </button>
-
           </div>
         </div>
       </div>

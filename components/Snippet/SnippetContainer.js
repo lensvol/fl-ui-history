@@ -1,16 +1,15 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { Success } from 'services/BaseMonadicService';
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { Success } from "services/BaseMonadicService";
 
-import { stripHtml } from 'utils/stringFunctions';
+import { stripHtml } from "utils/stringFunctions";
 
-import { shareContent } from 'actions/profile';
-import { fetchSnippets } from 'actions/infoBar';
-import ShareDialog from 'components/ShareDialog';
-import SnippetComponent from './SnippetComponent';
-
+import { shareContent } from "actions/profile";
+import { fetchSnippets } from "actions/infoBar";
+import ShareDialog from "components/ShareDialog";
+import SnippetComponent from "./SnippetComponent";
 
 class SnippetContainer extends Component {
   /**
@@ -29,19 +28,21 @@ class SnippetContainer extends Component {
     const { dispatch, snippets } = this.props;
     const { index } = this.state;
     const snippet = snippets[index];
-    const contentClass = 'Sidebar';
+    const contentClass = "Sidebar";
     const contentKey = snippet.id;
     const image = snippet.image || null;
     const message = stripHtml(title);
 
     this.setState({ isSharing: true });
 
-    const result = await dispatch(shareContent({
-      contentClass,
-      contentKey,
-      image,
-      message,
-    }));
+    const result = await dispatch(
+      shareContent({
+        contentClass,
+        contentKey,
+        image,
+        message,
+      })
+    );
 
     this.setState({ isSharing: false });
 
@@ -102,10 +103,7 @@ class SnippetContainer extends Component {
       return null;
     }
 
-    const {
-      description,
-      title,
-    } = snippet;
+    const { description, title } = snippet;
 
     return (
       <Fragment>
@@ -136,7 +134,7 @@ class SnippetContainer extends Component {
   }
 }
 
-SnippetContainer.displayName = 'SnippetContainer';
+SnippetContainer.displayName = "SnippetContainer";
 
 SnippetContainer.propTypes = {
   snippets: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

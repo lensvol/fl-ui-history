@@ -1,7 +1,7 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { ThunkDispatch } from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
-import RegisterService from 'services/RegisterService';
+import { handleVersionMismatch } from "actions/versionSync";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
+import RegisterService from "services/RegisterService";
 
 export default checkAvailability(new RegisterService());
 

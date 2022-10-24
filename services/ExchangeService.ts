@@ -3,24 +3,33 @@ import {
   IFetchExchangeResponse,
   ITransactionRequest,
   ITransactionResponse,
-} from 'types/exchange';
-import BaseService, { Either } from './BaseMonadicService';
+} from "types/exchange";
+import BaseService, { Either } from "./BaseMonadicService";
 
 export interface IExchangeService {
-  buyItems: (transactionRequest: ITransactionRequest) => Promise<Either<ITransactionResponse>>,
-  fetchExchange: () => Promise<Either<IFetchExchangeResponse>>,
-  fetchAvailableItems: (shopId?: number | 'null') => Promise<Either<IFetchAvailableItemsResponse>>,
-  sellItems: (transactionRequest: ITransactionRequest) => Promise<Either<ITransactionResponse>>,
+  buyItems: (
+    transactionRequest: ITransactionRequest
+  ) => Promise<Either<ITransactionResponse>>;
+  fetchExchange: () => Promise<Either<IFetchExchangeResponse>>;
+  fetchAvailableItems: (
+    shopId?: number | "null"
+  ) => Promise<Either<IFetchAvailableItemsResponse>>;
+  sellItems: (
+    transactionRequest: ITransactionRequest
+  ) => Promise<Either<ITransactionResponse>>;
 }
 
-export default class ExchangeService extends BaseService implements IExchangeService {
+export default class ExchangeService
+  extends BaseService
+  implements IExchangeService
+{
   /**
    * Fetch
    * @return {Promise}
    */
   fetchExchange = () => {
     const config = {
-      url: '/exchange',
+      url: "/exchange",
     };
     return this.doRequest<IFetchExchangeResponse>(config);
   };
@@ -30,7 +39,7 @@ export default class ExchangeService extends BaseService implements IExchangeSer
    * @param  {Number} shopId
    * @return {Promise}
    */
-  fetchAvailableItems = (shopId: number | 'null' = 'null') => {
+  fetchAvailableItems = (shopId: number | "null" = "null") => {
     const config = {
       url: `/exchange/availabilities?shopId=${shopId}`,
     };
@@ -43,8 +52,8 @@ export default class ExchangeService extends BaseService implements IExchangeSer
    */
   sellItems = (transactionRequest: ITransactionRequest) => {
     const config = {
-      url: '/exchange/sell',
-      method: 'post',
+      url: "/exchange/sell",
+      method: "post",
       data: {
         availabilityId: transactionRequest.availabilityId,
         amount: transactionRequest.amount,
@@ -59,8 +68,8 @@ export default class ExchangeService extends BaseService implements IExchangeSer
    */
   buyItems = (transactionRequest: ITransactionRequest) => {
     const config = {
-      url: '/exchange/buy',
-      method: 'post',
+      url: "/exchange/buy",
+      method: "post",
       data: {
         availabilityId: transactionRequest.availabilityId,
         amount: transactionRequest.amount,

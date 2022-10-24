@@ -1,18 +1,13 @@
-import React, {
-  Component,
-} from 'react';
-import { connect } from 'react-redux';
-import {
-  RouteComponentProps,
-  withRouter,
-} from 'react-router-dom';
-import { IAppState } from 'types/app';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { IAppState } from "types/app";
 
-import ActionCountModal from './ActionCountModal';
-import FooterLink from './FooterLink';
+import ActionCountModal from "./ActionCountModal";
+import FooterLink from "./FooterLink";
 
 interface State {
-  actionCountModalIsOpen: boolean,
+  actionCountModalIsOpen: boolean;
 }
 
 class ResponsiveFooter extends Component<Props, State> {
@@ -29,26 +24,19 @@ class ResponsiveFooter extends Component<Props, State> {
   };
 
   render = () => {
-    const {
-      actions,
-      actionBankSize,
-      history,
-      subtabs,
-    } = this.props;
+    const { actions, actionBankSize, history, subtabs } = this.props;
     const { actionCountModalIsOpen } = this.state;
 
     const current = history.location.pathname;
 
     const myselfPath = `/${subtabs.myself}`;
-    const myselfHighlightAlso = subtabs.myself === 'myself' ? '/possessions' : '/myself';
+    const myselfHighlightAlso =
+      subtabs.myself === "myself" ? "/possessions" : "/myself";
 
     return (
       <>
         <nav className="footer-xs">
-          <ul
-            className="footer-menu"
-            role="tablist"
-          >
+          <ul className="footer-menu" role="tablist">
             <FooterLink
               to="/"
               title="Story"
@@ -64,7 +52,10 @@ class ResponsiveFooter extends Component<Props, State> {
               highlightAlso={myselfHighlightAlso}
               role="tab"
             />
-            <li className="footer-menu__item footer-menu__item--actions" role="tab">
+            <li
+              className="footer-menu__item footer-menu__item--actions"
+              role="tab"
+            >
               <button
                 className="button--link"
                 onClick={this.handleOpenModal}
@@ -74,10 +65,10 @@ class ResponsiveFooter extends Component<Props, State> {
               >
                 <div className="footer-menu__item--actions" />
                 <div>
-                  <span className="action__count__item js-action-count">{actions}</span>
-                  {' '}
-                  /
-                  {' '}
+                  <span className="action__count__item js-action-count">
+                    {actions}
+                  </span>{" "}
+                  /{" "}
                   <span className="action__count__item">{actionBankSize}</span>
                 </div>
               </button>

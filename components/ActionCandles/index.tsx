@@ -1,9 +1,9 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import { IAppState } from 'types/app';
-import Candle from './Candle';
-import { getContainerTop } from './utils';
+import { IAppState } from "types/app";
+import Candle from "./Candle";
+import { getContainerTop } from "./utils";
 
 function ActionCandles({ actions, isExceptionalFriend }: Props) {
   // Exceptional Friends have 40 actions, which are rendered as two candles
@@ -17,31 +17,22 @@ function ActionCandles({ actions, isExceptionalFriend }: Props) {
   // For EFS, return two candles (one of which may be snuffed)
   if (isExceptional) {
     return (
-      <div
-        className="candle-container"
-        style={{ top: containerTop }}
-      >
+      <div className="candle-container" style={{ top: containerTop }}>
         <Candle actions={Math.min(actions, 20)} />
-        <Candle
-          actions={Math.max(actions - 20, 0)}
-          right
-        />
+        <Candle actions={Math.max(actions - 20, 0)} right />
       </div>
     );
   }
 
   // For non-EFs, return a single candle
   return (
-    <div
-      className="candle-container"
-      style={{ top: containerTop }}
-    >
+    <div className="candle-container" style={{ top: containerTop }}>
       <Candle actions={actions} />
     </div>
   );
 }
 
-ActionCandles.displayName = 'ActionCandles';
+ActionCandles.displayName = "ActionCandles";
 
 const mapStateToProps = ({
   actions: { actions },

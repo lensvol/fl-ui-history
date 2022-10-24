@@ -1,30 +1,16 @@
-import RequestPasswordResetModal from 'components/RequestPasswordResetModal';
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import {
-  Formik,
-  Form,
-  Field,
-  FormikHelpers as FormikActions,
-} from 'formik';
-import { IAppState } from 'types/app';
-import Loading from 'components/Loading';
-import * as UserActionCreators from 'actions/user';
-import {
-  RouteComponentProps,
-  withRouter,
-} from 'react-router-dom';
+import RequestPasswordResetModal from "components/RequestPasswordResetModal";
+import React, { useCallback, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { Formik, Form, Field, FormikHelpers as FormikActions } from "formik";
+import { IAppState } from "types/app";
+import Loading from "components/Loading";
+import * as UserActionCreators from "actions/user";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
 interface FormValues {
-  emailAddress: string,
-  password: string,
-  rememberMe: boolean,
+  emailAddress: string;
+  password: string;
+  rememberMe: boolean;
 }
 
 export function EmailPasswordLoginForm({
@@ -34,36 +20,39 @@ export function EmailPasswordLoginForm({
 }: Props) {
   const dispatch = useDispatch();
 
-  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
+    useState(false);
 
-  const handleSubmit = useCallback(async (
-    values: FormValues,
-    { setErrors }: FormikActions<FormValues>,
-  ) => {
-    const { emailAddress, password, rememberMe } = values;
+  const handleSubmit = useCallback(
+    async (values: FormValues, { setErrors }: FormikActions<FormValues>) => {
+      const { emailAddress, password, rememberMe } = values;
 
-    // Where does the user want us to keep the access token?
-    const storage = rememberMe ? 'localStorage' : 'sessionStorage';
+      // Where does the user want us to keep the access token?
+      const storage = rememberMe ? "localStorage" : "sessionStorage";
 
-    // API services will check this to decide where to put the token
-    window.sessionStorage.setItem('storage', storage);
+      // API services will check this to decide where to put the token
+      window.sessionStorage.setItem("storage", storage);
 
-    try {
-      await dispatch(UserActionCreators.loginUser({ emailAddress, password }, location, history));
-    } catch (e) {
-      setErrors({ password: 'error' });
-    }
-  }, [
-    dispatch,
-    history,
-    location,
-  ]);
+      try {
+        await dispatch(
+          UserActionCreators.loginUser(
+            { emailAddress, password },
+            location,
+            history
+          )
+        );
+      } catch (e) {
+        setErrors({ password: "error" });
+      }
+    },
+    [dispatch, history, location]
+  );
 
   return (
     <Formik
       initialValues={{
-        emailAddress: '',
-        password: '',
+        emailAddress: "",
+        password: "",
         rememberMe: false,
       }}
       onSubmit={handleSubmit}
@@ -101,8 +90,7 @@ export function EmailPasswordLoginForm({
                       type="checkbox"
                       name="rememberMe"
                       checked={values.rememberMe}
-                    />
-                    {' '}
+                    />{" "}
                     Remember me
                   </label>
                 </span>
@@ -112,16 +100,15 @@ export function EmailPasswordLoginForm({
                 disabled={isFetching}
                 type="submit"
               >
-                {isFetching ? (
-                  <Loading
-                    spinner
-                    small
-                  />
-                ) : 'Log in'}
+                {isFetching ? <Loading spinner small /> : "Log in"}
               </button>
             </div>
-            <p>{isFetching ? 'Logging in...' : null}</p>
-            <p>{errors.password ? 'We were not able to log you in with the credentials you supplied.' : null}</p>
+            <p>{isFetching ? "Logging in..." : null}</p>
+            <p>
+              {errors.password
+                ? "We were not able to log you in with the credentials you supplied."
+                : null}
+            </p>
             <p>
               <button
                 className="button--link button--link-inverse"
@@ -142,7 +129,9 @@ export function EmailPasswordLoginForm({
   );
 }
 
-const mapStateToProps = (state: IAppState) => ({ isFetching: state.user.isFetching });
+const mapStateToProps = (state: IAppState) => ({
+  isFetching: state.user.isFetching,
+});
 
 type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 

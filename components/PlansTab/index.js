@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import * as PlansActionCreators from 'actions/plans';
+import * as PlansActionCreators from "actions/plans";
 
-import Plans from 'components/Plans';
-import GeneralContainer from 'components/GeneralContainer';
+import Plans from "components/Plans";
+import GeneralContainer from "components/GeneralContainer";
 
 class PlansContainer extends React.Component {
   /**
@@ -17,7 +17,7 @@ class PlansContainer extends React.Component {
     if (!firstFetchHasOccurred) {
       dispatch(PlansActionCreators.fetchPlans());
     }
-  }
+  };
 
   /**
    * Render
@@ -32,13 +32,15 @@ class PlansContainer extends React.Component {
   }
 }
 
-PlansContainer.displayName = 'PlansContainer';
+PlansContainer.displayName = "PlansContainer";
 
 PlansContainer.propTypes = {
   dispatch: PropTypes.func.isRequired,
   firstFetchHasOccurred: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ plans: { firstFetchHasOccurred } }) => ({ firstFetchHasOccurred });
+const mapStateToProps = ({ plans: { firstFetchHasOccurred } }) => ({
+  firstFetchHasOccurred,
+});
 
 export default connect(mapStateToProps)(PlansContainer);

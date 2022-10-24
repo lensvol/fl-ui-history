@@ -1,55 +1,55 @@
-import { SettingsActions } from 'actions/settings';
-import { FetchSettingsSuccess } from 'actions/settings/fetch';
-import { FetchSubscriptionSuccess } from 'actions/subscription';
-import * as SubscriptionActionTypes from 'actiontypes/subscription';
+import { SettingsActions } from "actions/settings";
+import { FetchSettingsSuccess } from "actions/settings/fetch";
+import { FetchSubscriptionSuccess } from "actions/subscription";
+import * as SubscriptionActionTypes from "actiontypes/subscription";
 import {
   AuthMethod,
   FetchSettingsResponse,
   MessageVia,
-} from 'services/SettingsService';
-import { IQuality } from 'types/qualities';
-import * as SettingsActionTypes from '../actiontypes/settings';
+} from "services/SettingsService";
+import { IQuality } from "types/qualities";
+import * as SettingsActionTypes from "../actiontypes/settings";
 
 export type MessagePreferences = {
-  messageAboutAnnouncements: boolean,
-  messageAboutNastiness: boolean,
-  messageAboutNiceness: boolean,
-  messageAboutStorylets: boolean,
+  messageAboutAnnouncements: boolean;
+  messageAboutNastiness: boolean;
+  messageAboutNiceness: boolean;
+  messageAboutStorylets: boolean;
 };
 
 export type ISettingsState = {
-  authMethods: AuthMethod[] | undefined,
-  isFetching: boolean,
-  isFetchingAuthMethods: boolean,
-  isSaving: boolean,
-  isCreating: boolean,
-  isDeleting: boolean,
-  isChangingVia: boolean,
-  isResetting: boolean,
-  isUsernameDialogOpen: boolean,
-  isChangingUsername: boolean,
-  isDeactivateDialogVisible: boolean,
-  isEmailLinkDialogVisible: boolean,
-  isUpdatingEmail: boolean,
-  isEmailUpdateDialogVisible: boolean,
-  isUnlinking: boolean,
-  isLinkingEmail: boolean,
-  isDeactivating: boolean,
+  authMethods: AuthMethod[] | undefined;
+  isFetching: boolean;
+  isFetchingAuthMethods: boolean;
+  isSaving: boolean;
+  isCreating: boolean;
+  isDeleting: boolean;
+  isChangingVia: boolean;
+  isResetting: boolean;
+  isUsernameDialogOpen: boolean;
+  isChangingUsername: boolean;
+  isDeactivateDialogVisible: boolean;
+  isEmailLinkDialogVisible: boolean;
+  isUpdatingEmail: boolean;
+  isEmailUpdateDialogVisible: boolean;
+  isUnlinking: boolean;
+  isLinkingEmail: boolean;
+  isDeactivating: boolean;
   data: {
-    name: string | undefined,
-    emailAddress: string | undefined,
-    emailAuth: boolean,
-    facebookAuth: boolean,
-    messageViaNetwork: MessageVia | undefined,
-    qualitiesPossessedList: IQuality[],
-    twitterAuth: boolean,
-  },
-  messagePreferences: MessagePreferences,
+    name: string | undefined;
+    emailAddress: string | undefined;
+    emailAuth: boolean;
+    facebookAuth: boolean;
+    messageViaNetwork: MessageVia | undefined;
+    qualitiesPossessedList: IQuality[];
+    twitterAuth: boolean;
+  };
+  messagePreferences: MessagePreferences;
   subscriptions: {
-    hasAndroidSubscription: boolean,
-    hasAppleSubscrption: boolean,
-    hasBraintreeSubscription: boolean,
-  },
+    hasAndroidSubscription: boolean;
+    hasAppleSubscrption: boolean;
+    hasBraintreeSubscription: boolean;
+  };
 };
 
 export const INITIAL_STATE: ISettingsState = {
@@ -94,7 +94,7 @@ export const INITIAL_STATE: ISettingsState = {
 
 export default function reducer(
   state: ISettingsState = INITIAL_STATE,
-  action: SettingsActions | FetchSubscriptionSuccess,
+  action: SettingsActions | FetchSubscriptionSuccess
 ): ISettingsState {
   switch (action.type) {
     case SettingsActionTypes.FETCH_SETTINGS_REQUESTED:
@@ -263,8 +263,14 @@ export default function reducer(
         data: {
           ...state.data,
           // Which account did we just unlink?
-          twitterAuth: (action.payload.accountType === 'twitter') ? false : state.data.twitterAuth,
-          facebookAuth: (action.payload.accountType === 'facebook') ? false : state.data.facebookAuth,
+          twitterAuth:
+            action.payload.accountType === "twitter"
+              ? false
+              : state.data.twitterAuth,
+          facebookAuth:
+            action.payload.accountType === "facebook"
+              ? false
+              : state.data.facebookAuth,
         },
       };
 
@@ -273,8 +279,14 @@ export default function reducer(
         ...state,
         data: {
           ...state.data,
-          twitterAuth: (action.payload.accountType === 'twitter') ? true : state.data.twitterAuth,
-          facebookAuth: (action.payload.accountType === 'facebook') ? true : state.data.facebookAuth,
+          twitterAuth:
+            action.payload.accountType === "twitter"
+              ? true
+              : state.data.twitterAuth,
+          facebookAuth:
+            action.payload.accountType === "facebook"
+              ? true
+              : state.data.facebookAuth,
         },
       };
 

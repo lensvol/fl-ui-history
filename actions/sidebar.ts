@@ -1,8 +1,5 @@
-import { Dispatch } from 'redux';
-import {
-  SIDEBAR_CLOSE,
-  SIDEBAR_OPEN,
-} from 'actiontypes/sidebar';
+import { Dispatch } from "redux";
+import { SIDEBAR_CLOSE, SIDEBAR_OPEN } from "actiontypes/sidebar";
 
 export type OpenSidebar = { type: typeof SIDEBAR_OPEN };
 export type CloseSidebar = { type: typeof SIDEBAR_CLOSE };
@@ -18,11 +15,11 @@ function setBodyOverflow(val: string) {
 }
 
 export function openSidebar() {
-  setBodyOverflow('hidden');
+  setBodyOverflow("hidden");
   return (dispatch: Dispatch) => dispatch({ type: SIDEBAR_OPEN });
 }
 
 export function closeSidebar() {
-  setBodyOverflow('auto');
+  setBodyOverflow("auto");
   return (dispatch: Dispatch) => dispatch({ type: SIDEBAR_CLOSE });
 }

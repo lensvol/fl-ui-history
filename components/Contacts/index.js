@@ -1,34 +1,34 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-import Loading from 'components/Loading';
-import SearchField from 'components/SearchField';
+import Loading from "components/Loading";
+import SearchField from "components/SearchField";
 
 import {
   addContact,
   addFromFacebook,
   addFromTwitter,
   deleteContact,
-} from 'actions/contacts';
-import AddContactForm from './components/AddContactForm';
-import ContactsHeader from './components/ContactsHeader';
-import ContactList from './components/ContactList';
+} from "actions/contacts";
+import AddContactForm from "./components/AddContactForm";
+import ContactsHeader from "./components/ContactsHeader";
+import ContactList from "./components/ContactList";
 
 // import * as SettingsActionCreators from '../../actions/settings';
 
 class Contacts extends React.Component {
-  static displayName = 'Contacts';
+  static displayName = "Contacts";
 
   /**
    * State
    * @type {Object}
    */
   state = {
-    userInput: '',
-    filterString: '',
+    userInput: "",
+    filterString: "",
   };
 
   /**
@@ -39,7 +39,6 @@ class Contacts extends React.Component {
   handleChange = (e) => {
     this.setState({ userInput: e.target.value });
   };
-
 
   /**
    * Add new contact
@@ -59,7 +58,6 @@ class Contacts extends React.Component {
     dispatch(addContact(userName));
   };
 
-
   /**
    * Delete Contact
    * @param  {Object} contact
@@ -74,7 +72,6 @@ class Contacts extends React.Component {
     dispatch(deleteContact(contact.id));
   };
 
-
   /**
    * Add from facebook
    */
@@ -82,7 +79,6 @@ class Contacts extends React.Component {
     const { dispatch } = this.props;
     dispatch(addFromFacebook());
   };
-
 
   /**
    * Add from Twitter
@@ -96,15 +92,12 @@ class Contacts extends React.Component {
     this.setState({ filterString: e.currentTarget.value });
   };
 
-
   /**
    * Render
    * @return {JSX}
    */
   render() {
-    const {
-      isFetching, contacts, data, isAdding, message,
-    } = this.props;
+    const { isFetching, contacts, data, isAdding, message } = this.props;
     const { facebookAuth, twitterAuth } = data;
     const { filterString, userInput } = this.state;
 
@@ -114,7 +107,6 @@ class Contacts extends React.Component {
 
     return (
       <div>
-
         <ContactsHeader />
 
         <AddContactForm
@@ -143,7 +135,7 @@ class Contacts extends React.Component {
             onClick={this.addFromFacebook}
             type="button"
           >
-            {isAdding ? 'fetching...' : 'Add from Facebook'}
+            {isAdding ? "fetching..." : "Add from Facebook"}
           </button>
         )}
         {twitterAuth && (
@@ -152,7 +144,7 @@ class Contacts extends React.Component {
             onClick={this.addFromTwitter}
             type="button"
           >
-            {isAdding ? 'fetching...' : 'Add from Twitter'}
+            {isAdding ? "fetching..." : "Add from Twitter"}
           </button>
         )}
       </div>
@@ -176,11 +168,8 @@ Contacts.defaultProps = {
   message: undefined,
 };
 
-
 const mapStateToProps = ({
-  contacts: {
-    contacts, isAdding, isFetching, message,
-  },
+  contacts: { contacts, isAdding, isFetching, message },
   settings: { data },
 }) => ({
   contacts,

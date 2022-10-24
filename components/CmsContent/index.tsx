@@ -1,17 +1,14 @@
-import React, {
-  useEffect,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
-import { fetchPage } from 'actions/pages';
-import Loading from 'components/Loading';
-import { ThunkDispatch } from 'redux-thunk';
-import { Success } from 'services/BaseMonadicService';
-import { PageName } from 'services/PageService';
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { fetchPage } from "actions/pages";
+import Loading from "components/Loading";
+import { ThunkDispatch } from "redux-thunk";
+import { Success } from "services/BaseMonadicService";
+import { PageName } from "services/PageService";
 
 interface Props {
-  dispatch: ThunkDispatch<any, any, any>,
-  pageName: PageName,
+  dispatch: ThunkDispatch<any, any, any>;
+  pageName: PageName;
 }
 
 export function CmsContent({ dispatch, pageName }: Props) {
@@ -47,7 +44,7 @@ export function CmsContent({ dispatch, pageName }: Props) {
 
   if (!contentHtml) {
     return (
-      <div style={{ margin: '1rem auto' }}>
+      <div style={{ margin: "1rem auto" }}>
         <Loading spinner />
       </div>
     );

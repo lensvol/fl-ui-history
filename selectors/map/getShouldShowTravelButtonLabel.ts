@@ -1,12 +1,14 @@
-import { createSelector } from 'reselect';
-import { IAppState } from 'types/app';
+import { createSelector } from "reselect";
+import { IAppState } from "types/app";
 
 const getCurrentArea = (state: IAppState) => state.map.currentArea;
 const getSetting = (state: IAppState) => state.map.setting;
 
 const outputFn = (
   currentArea: ReturnType<typeof getCurrentArea>,
-  setting: ReturnType<typeof getSetting>,
-) => currentArea?.shouldShowTravelButton && (setting?.jsonInfo?.shouldShowTravelButton ?? true);
+  setting: ReturnType<typeof getSetting>
+) =>
+  currentArea?.shouldShowTravelButton &&
+  (setting?.jsonInfo?.shouldShowTravelButton ?? true);
 
 export default createSelector(getCurrentArea, getSetting, outputFn);

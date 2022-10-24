@@ -1,6 +1,12 @@
-import moment from 'moment';
+import moment from "moment";
 
-export default function computeNextActionsAt({ currentTime, nextActionAt }: { currentTime: string, nextActionAt: string }) {
+export default function computeNextActionsAt({
+  currentTime,
+  nextActionAt,
+}: {
+  currentTime: string;
+  nextActionAt: string;
+}) {
   // The difference between the `CurrentTime` and `NextActionsAt` on the server
   // is the amount of time left before the rollover. It doesn't matter what the
   // time is on the client.

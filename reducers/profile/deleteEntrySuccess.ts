@@ -1,7 +1,10 @@
-import { DeleteEntrySuccess } from 'actions/profile/deleteEntry';
-import { IProfileState } from 'types/profile';
+import { DeleteEntrySuccess } from "actions/profile/deleteEntry";
+import { IProfileState } from "types/profile";
 
-export default function deleteEntrySuccess(state: IProfileState, action: DeleteEntrySuccess) {
+export default function deleteEntrySuccess(
+  state: IProfileState,
+  action: DeleteEntrySuccess
+) {
   const { toDelete } = action.payload;
 
   return {

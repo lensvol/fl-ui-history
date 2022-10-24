@@ -1,7 +1,10 @@
-import mergeShops from './mergeShops';
-import { IExchangeState, IFetchExchangeResponse } from 'types/exchange';
+import mergeShops from "./mergeShops";
+import { IExchangeState, IFetchExchangeResponse } from "types/exchange";
 
-export default function fetchExchangeSuccess(state: IExchangeState, payload: IFetchExchangeResponse) {
+export default function fetchExchangeSuccess(
+  state: IExchangeState,
+  payload: IFetchExchangeResponse
+) {
   return {
     ...state,
     description: payload.exchange.description,

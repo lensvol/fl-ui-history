@@ -1,14 +1,14 @@
-import BaseService, { Either } from './BaseMonadicService';
+import BaseService, { Either } from "./BaseMonadicService";
 
-export type PageName = 'help' | 'termsandconditions' | 'privacy';
+export type PageName = "help" | "termsandconditions" | "privacy";
 
 export interface FetchPageResponse {
-  name: string,
-  text: string,
+  name: string;
+  text: string;
 }
 
 export interface IPageService {
-  fetch: (name: PageName) => Promise<Either<FetchPageResponse>>,
+  fetch: (name: PageName) => Promise<Either<FetchPageResponse>>;
 }
 
 export default class PageService extends BaseService implements IPageService {

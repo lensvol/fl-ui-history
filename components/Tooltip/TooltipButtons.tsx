@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 interface Props {
   buttons: {
-    label: string,
-    action: () => void,
-  }[],
+    label: string;
+    action: () => void;
+  }[];
 }
 
 export default function TooltipButtons({ buttons }: Props) {

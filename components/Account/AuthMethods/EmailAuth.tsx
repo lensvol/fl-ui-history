@@ -1,12 +1,9 @@
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import classnames from 'classnames';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
-import LinkEmailModal from './LinkEmailModal';
-import UpdateEmailModal from './UpdateEmailModal';
+import React, { useCallback, useState } from "react";
+import classnames from "classnames";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
+import LinkEmailModal from "./LinkEmailModal";
+import UpdateEmailModal from "./UpdateEmailModal";
 
 export function EmailAuth(props: Props) {
   const {
@@ -17,30 +14,36 @@ export function EmailAuth(props: Props) {
   const [isLinkEmailModalOpen, setIsLinkEmailModalOpen] = useState(false);
   const [isUpdateEmailModalOpen, setIsUpdateEmailModalOpen] = useState(false);
 
-  const handleCloseLinkEmailModal = useCallback(() => setIsLinkEmailModalOpen(false), []);
-  const handleCloseUpdateEmailModal = useCallback(() => setIsUpdateEmailModalOpen(false), []);
+  const handleCloseLinkEmailModal = useCallback(
+    () => setIsLinkEmailModalOpen(false),
+    []
+  );
+  const handleCloseUpdateEmailModal = useCallback(
+    () => setIsUpdateEmailModalOpen(false),
+    []
+  );
   const onClickToLink = useCallback(() => setIsLinkEmailModalOpen(true), []);
-  const onClickToUpdate = useCallback(() => setIsUpdateEmailModalOpen(true), []);
+  const onClickToUpdate = useCallback(
+    () => setIsUpdateEmailModalOpen(true),
+    []
+  );
 
-  const buttonLabel = emailAuth ? emailAddress : 'Link your email account';
+  const buttonLabel = emailAuth ? emailAddress : "Link your email account";
   const onClick = emailAuth ? onClickToUpdate : onClickToLink;
   return (
     <>
-      <i className="fa fa-fw fa-envelope" />
-      {' '}
+      <i className="fa fa-fw fa-envelope" />{" "}
       <button
         type="button"
-        className={classnames('button--link', buttonClassName)}
+        className={classnames("button--link", buttonClassName)}
         onClick={onClick}
       >
         {buttonLabel}
       </button>
-
       <LinkEmailModal
         isOpen={isLinkEmailModalOpen}
         onRequestClose={handleCloseLinkEmailModal}
       />
-
       <UpdateEmailModal
         isOpen={isUpdateEmailModalOpen}
         onRequestClose={handleCloseUpdateEmailModal}
@@ -52,7 +55,7 @@ export function EmailAuth(props: Props) {
 const mapStateToProps = (state: IAppState) => ({ data: state.settings.data });
 
 type OwnProps = {
-  buttonClassName?: string,
+  buttonClassName?: string;
 };
 
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;

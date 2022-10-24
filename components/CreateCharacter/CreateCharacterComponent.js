@@ -1,13 +1,13 @@
-import React from 'react';
-import classnames from 'classnames';
-import PropTypes from 'prop-types';
+import React from "react";
+import classnames from "classnames";
+import PropTypes from "prop-types";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
-import AvatarSelection from './components/AvatarSelection';
-import NameForm from './components/NameForm';
-import TitleBar from './components/TitleBar';
-import GenderOptions from './components/GenderOptions';
+import AvatarSelection from "./components/AvatarSelection";
+import NameForm from "./components/NameForm";
+import TitleBar from "./components/TitleBar";
+import GenderOptions from "./components/GenderOptions";
 
 export default function CreateCharacterComponent(props) {
   const {
@@ -27,7 +27,9 @@ export default function CreateCharacterComponent(props) {
       <div className="tab-content tab-content--inverse create-character__form">
         <div className="tab-content__bordered-container">
           <h2 className="heading heading--2">Welcome, Delicious Friend</h2>
-          <p className="lede">You are only a few moments away from Fallen London…</p>
+          <p className="lede">
+            You are only a few moments away from Fallen London…
+          </p>
           <p className="create-character__initial-rubric">
             First we need to know a little about you.
             <button
@@ -39,28 +41,20 @@ export default function CreateCharacterComponent(props) {
             </button>
           </p>
           <hr />
-          <NameForm
-            error={errors.character}
-          />
-          <GenderOptions
-            gender={gender}
-            onChange={onChangeGender}
-          />
-          <AvatarSelection
-            avatar={avatar}
-            onSelect={onSelectAvatar}
-          />
+          <NameForm error={errors.character} />
+          <GenderOptions gender={gender} onChange={onChangeGender} />
+          <AvatarSelection avatar={avatar} onSelect={onSelectAvatar} />
           <p className="u-text-center">
             <button
               className={classnames(
-                'button button--primary',
-                !canSubmit && 'button--disabled',
+                "button button--primary",
+                !canSubmit && "button--disabled"
               )}
               disabled={isSubmitting || !canSubmit}
               type="button"
               onClick={onSubmit}
             >
-              {isSubmitting ? <Loading spinner small /> : 'Play Fallen London'}
+              {isSubmitting ? <Loading spinner small /> : "Play Fallen London"}
             </button>
           </p>
         </div>
@@ -69,7 +63,7 @@ export default function CreateCharacterComponent(props) {
   );
 }
 
-CreateCharacterComponent.displayName = 'CreateCharacterComponent';
+CreateCharacterComponent.displayName = "CreateCharacterComponent";
 
 CreateCharacterComponent.propTypes = {
   avatar: PropTypes.string,

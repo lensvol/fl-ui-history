@@ -1,14 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import Modal from 'components/Modal';
-import PurchaseSubscriptionWizard from 'components/PurchaseSubscriptionWizard';
+import Modal from "components/Modal";
+import PurchaseSubscriptionWizard from "components/PurchaseSubscriptionWizard";
 
 interface Props {
-  isOpen: boolean,
-  onRequestClose: () => void,
+  isOpen: boolean;
+  onRequestClose: () => void;
 }
 
-export default function PurchaseSubscriptionModal({ isOpen, onRequestClose }: Props) {
+export default function PurchaseSubscriptionModal({
+  isOpen,
+  onRequestClose,
+}: Props) {
   return (
     <Modal
       isOpen={isOpen}
@@ -16,9 +19,7 @@ export default function PurchaseSubscriptionModal({ isOpen, onRequestClose }: Pr
       shouldCloseOnEsc={false}
       shouldCloseOnOverlayClick={false}
     >
-      <PurchaseSubscriptionWizard
-        onClickToClose={onRequestClose}
-      />
+      <PurchaseSubscriptionWizard onClickToClose={onRequestClose} />
     </Modal>
   );
 }

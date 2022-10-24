@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import Modal from 'components/Modal';
+import Modal from "components/Modal";
 
 type Props = {
-  isOpen: boolean,
-  message: string | undefined,
-  onAfterClose: () => void,
-  onRequestClose: () => void,
+  isOpen: boolean;
+  message: string | undefined;
+  onAfterClose: () => void;
+  onRequestClose: () => void;
 };
 
 export default function FailureModal({
@@ -15,7 +15,6 @@ export default function FailureModal({
   onAfterClose,
   onRequestClose,
 }: Props) {
-
   return (
     <Modal
       isOpen={isOpen && message !== undefined}

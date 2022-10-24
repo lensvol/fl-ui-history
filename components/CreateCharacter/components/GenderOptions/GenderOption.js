@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export default class GenderOption extends Component {
-  static displayName = 'GenderOption';
+  static displayName = "GenderOption";
 
   handleChange = () => {
     const { value, onChange } = this.props;
@@ -10,12 +10,7 @@ export default class GenderOption extends Component {
   };
 
   render = () => {
-    const {
-      children,
-      gender,
-      id,
-      value,
-    } = this.props;
+    const { children, gender, id, value } = this.props;
     return (
       <p className="radio gender-option">
         <label className="gender-option__label" htmlFor={id}>
@@ -27,13 +22,12 @@ export default class GenderOption extends Component {
             type="radio"
             onChange={this.handleChange}
             checked={gender === value}
-          />
-          {' '}
+          />{" "}
           {children}
         </label>
       </p>
     );
-  }
+  };
 }
 
 GenderOption.propTypes = {

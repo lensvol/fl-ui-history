@@ -1,6 +1,6 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { VersionMismatch } from 'services/BaseService';
-import StoryletService, { IStoryletService } from 'services/StoryletService';
+import { handleVersionMismatch } from "actions/versionSync";
+import { VersionMismatch } from "services/BaseService";
+import StoryletService, { IStoryletService } from "services/StoryletService";
 
 export default suggestContact(new StoryletService());
 

@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import isWebGLSupported from 'features/startup/isWebGLSupported';
+import isWebGLSupported from "features/startup/isWebGLSupported";
 
 let PIXI_MAIN_RENDERER: PIXI.Renderer | undefined;
 let PIXI_AUX_RENDERER: PIXI.Renderer | undefined;
@@ -16,7 +16,7 @@ export function clearPixiContainer(): void {
 
 export function getPixiContainer(): PIXI.Container {
   if (!isWebGLSupported()) {
-    throw new Error('Tried to create a PIXI Container without WebGL');
+    throw new Error("Tried to create a PIXI Container without WebGL");
   }
   if (!PIXI_CONTAINER) {
     PIXI_CONTAINER = new PIXI.Container();
@@ -26,7 +26,7 @@ export function getPixiContainer(): PIXI.Container {
 
 export function getPixiMainRenderer(): PIXI.Renderer {
   if (!isWebGLSupported()) {
-    throw new Error('Tried to create a PIXI Container without WebGL');
+    throw new Error("Tried to create a PIXI Container without WebGL");
   }
   if (!PIXI_MAIN_RENDERER) {
     PIXI_MAIN_RENDERER = PIXI.autoDetectRenderer(RENDERER_OPTIONS);
@@ -36,7 +36,7 @@ export function getPixiMainRenderer(): PIXI.Renderer {
 
 export function getPixiAuxRenderer(): PIXI.Renderer {
   if (!isWebGLSupported()) {
-    throw new Error('Tried to create a PIXI Container without WebGL');
+    throw new Error("Tried to create a PIXI Container without WebGL");
   }
   if (!PIXI_AUX_RENDERER) {
     PIXI_AUX_RENDERER = PIXI.autoDetectRenderer(RENDERER_OPTIONS);

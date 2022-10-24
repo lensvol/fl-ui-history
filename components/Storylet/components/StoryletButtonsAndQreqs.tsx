@@ -1,20 +1,20 @@
-import classnames from 'classnames';
+import classnames from "classnames";
 
-import ActionButton from 'components/ActionButton';
-import Loading from 'components/Loading';
-import { UI_INTEGRATION_REGEX } from 'features/content-behaviour-integration/constants';
-import React, { useMemo } from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
-import { ApiAvailableStorylet } from 'types/storylet';
+import ActionButton from "components/ActionButton";
+import Loading from "components/Loading";
+import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
+import React, { useMemo } from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
+import { ApiAvailableStorylet } from "types/storylet";
 
 export interface Props {
-  data: ApiAvailableStorylet,
-  forceClearQreqs: boolean,
-  isChoosing: boolean,
-  isWorking: boolean,
-  onChoose: () => void,
-  qualityRequirements: React.ReactNode,
+  data: ApiAvailableStorylet;
+  forceClearQreqs: boolean;
+  isChoosing: boolean;
+  isWorking: boolean;
+  onChoose: () => void;
+  qualityRequirements: React.ReactNode;
 }
 
 function StoryletButtonsAndQreqs(props: Props) {
@@ -46,29 +46,19 @@ function StoryletButtonsAndQreqs(props: Props) {
       return (
         <>
           <span>{label}</span>
-          {isWorking && (
-            <Loading
-              spinner
-              small
-            />
-          )}
+          {isWorking && <Loading spinner small />}
         </>
       );
     }
 
-    return (isWorking && (
-      <Loading
-        spinner
-        small
-      />
-    ));
+    return isWorking && <Loading spinner small />;
   }, [isWorking, label]);
 
   return (
     <div
       className={classnames(
-        'buttons storylet__buttons',
-        forceClearQreqs && 'storylet__buttons--force-clear',
+        "buttons storylet__buttons",
+        forceClearQreqs && "storylet__buttons--force-clear"
       )}
     >
       <ActionButton
@@ -85,6 +75,8 @@ function StoryletButtonsAndQreqs(props: Props) {
   );
 }
 
-const mapStateToProps = ({ storylet: { isChoosing } }: IAppState) => ({ isChoosing });
+const mapStateToProps = ({ storylet: { isChoosing } }: IAppState) => ({
+  isChoosing,
+});
 
 export default connect(mapStateToProps)(StoryletButtonsAndQreqs);

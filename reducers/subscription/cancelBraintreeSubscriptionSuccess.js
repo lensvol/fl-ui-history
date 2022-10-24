@@ -1,5 +1,7 @@
 export default function cancelBraintreeSubscriptionSuccess(state, payload) {
-  let hasBraintreeSubscription = state.data ? state.data.hasBraintreeSubscription : null;
+  let hasBraintreeSubscription = state.data
+    ? state.data.hasBraintreeSubscription
+    : null;
 
   if (payload.isSuccess) {
     hasBraintreeSubscription = false;

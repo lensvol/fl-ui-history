@@ -1,8 +1,8 @@
-import { fetchOutfitSuccess } from 'actions/outfit/fetchOutfit';
-import { handleVersionMismatch } from 'actions/versionSync';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import OutfitService from 'services/OutfitService';
+import { fetchOutfitSuccess } from "actions/outfit/fetchOutfit";
+import { handleVersionMismatch } from "actions/versionSync";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import OutfitService from "services/OutfitService";
 
 export default function saveCurrentOutfit() {
   return async (dispatch: Function) => {

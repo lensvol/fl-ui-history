@@ -1,30 +1,23 @@
-import React, {
-  useMemo,
-} from 'react';
-import classnames from 'classnames';
+import React, { useMemo } from "react";
+import classnames from "classnames";
 
-import Image from 'components/Image';
+import Image from "components/Image";
 import {
   ALLOWED_ON_WORLD,
   HIDDEN_CATEGORIES,
-} from 'constants/qualityRequirements';
-import { stripHtml } from 'utils/stringFunctions';
-import { ApiQualityRequirement } from 'types/storylet';
+} from "constants/qualityRequirements";
+import { stripHtml } from "utils/stringFunctions";
+import { ApiQualityRequirement } from "types/storylet";
 
 interface Props {
-  data: ApiQualityRequirement,
-  storylet?: boolean,
-  type?: string,
-  tooltipPos?: string,
+  data: ApiQualityRequirement;
+  storylet?: boolean;
+  type?: string;
+  tooltipPos?: string;
 }
 
 export default function QualityRequirement(props: Props) {
-  const {
-    data,
-    storylet,
-    tooltipPos,
-    type,
-  } = props;
+  const { data, storylet, tooltipPos, type } = props;
 
   const {
     availableAtMessage,
@@ -38,26 +31,30 @@ export default function QualityRequirement(props: Props) {
 
   const isExcluded = useMemo(
     () => category !== undefined && HIDDEN_CATEGORIES.indexOf(category) >= 0,
-    [category],
+    [category]
   );
 
-  const isWorldQuality = useMemo(() => data.allowedOn === ALLOWED_ON_WORLD, [data]);
+  const isWorldQuality = useMemo(
+    () => data.allowedOn === ALLOWED_ON_WORLD,
+    [data]
+  );
 
   const qreqClass = classnames({
     icon: true,
-    'icon--circular': nature === 'Status' && !isWorldQuality,
-    'icon--world-quality': isWorldQuality,
-    'icon--locked': status === 'Locked',
-    'icon--purchase': type === 'purchase',
-    'quality-requirement': true,
-    'quality-requirement--storylet': storylet,
+    "icon--circular": nature === "Status" && !isWorldQuality,
+    "icon--world-quality": isWorldQuality,
+    "icon--locked": status === "Locked",
+    "icon--purchase": type === "purchase",
+    "quality-requirement": true,
+    "quality-requirement--storylet": storylet,
   });
 
   const tooltipData = {
     ...data,
     description: tooltip,
     // If the player doesn't meet the qreq, then add the AvailableAt as a secondary description
-    secondaryDescription: (status === 'Locked' && !isWorldQuality) ? availableAtMessage : undefined,
+    secondaryDescription:
+      status === "Locked" && !isWorldQuality ? availableAtMessage : undefined,
     needsWorldQualityDescription: isWorldQuality,
   };
 
@@ -69,7 +66,7 @@ export default function QualityRequirement(props: Props) {
     <div className={qreqClass}>
       <Image
         icon={image}
-        alt={tooltip === undefined ? '' : stripHtml(tooltip)}
+        alt={tooltip === undefined ? "" : stripHtml(tooltip)}
         type="small-icon"
         tooltipData={tooltipData}
         tooltipPos={tooltipPos}
@@ -79,4 +76,4 @@ export default function QualityRequirement(props: Props) {
   );
 }
 
-QualityRequirement.displayName = 'QualityRequirementContainer';
+QualityRequirement.displayName = "QualityRequirementContainer";

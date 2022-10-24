@@ -1,18 +1,18 @@
-import React, { CSSProperties } from 'react';
-import { connect } from 'react-redux';
-import Dialog from 'components/Dialog';
-import PurchaseFate from 'components/Payment/components/PurchaseFate';
-import { IAppState } from 'types/app';
+import React, { CSSProperties } from "react";
+import { connect } from "react-redux";
+import Dialog from "components/Dialog";
+import PurchaseFate from "components/Payment/components/PurchaseFate";
+import { IAppState } from "types/app";
 
 interface Props {
-  disableTouchEvents?: boolean,
-  isModalOpen: boolean,
-  isSuccess: boolean,
-  onRequestClose: () => void,
+  disableTouchEvents?: boolean;
+  isModalOpen: boolean;
+  isSuccess: boolean;
+  onRequestClose: () => void;
   style?: {
-    overlay?: CSSProperties,
-    content?: CSSProperties,
-  },
+    overlay?: CSSProperties;
+    content?: CSSProperties;
+  };
 }
 
 export function PurchaseFateFromGateEvent(props: Props) {
@@ -29,6 +29,8 @@ export function PurchaseFateFromGateEvent(props: Props) {
   );
 }
 
-const mapStateToProps = ({ payment: { isSuccess } }: IAppState) => ({ isSuccess });
+const mapStateToProps = ({ payment: { isSuccess } }: IAppState) => ({
+  isSuccess,
+});
 
 export default connect(mapStateToProps)(PurchaseFateFromGateEvent);

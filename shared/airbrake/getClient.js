@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
-import AirbrakeClient from 'airbrake-js';
+import AirbrakeClient from "airbrake-js";
 
-import Config from 'configuration';
-import { isGreasemonkeyError, isNetworkError, isTimeoutOf0ms } from './filters';
-import { isExtensionContextInvalidated } from 'shared/airbrake/filters';
+import Config from "configuration";
+import { isGreasemonkeyError, isNetworkError, isTimeoutOf0ms } from "./filters";
+import { isExtensionContextInvalidated } from "shared/airbrake/filters";
 
 let instance = null;
 
@@ -11,7 +11,7 @@ export default function getClient() {
   if (instance == null) {
     const airbrake = new AirbrakeClient({
       projectId: 175794,
-      projectKey: '7f518739d29b3fe03280cdb1f8f90c85',
+      projectKey: "7f518739d29b3fe03280cdb1f8f90c85",
     });
 
     airbrake.addFilter((notice) => {

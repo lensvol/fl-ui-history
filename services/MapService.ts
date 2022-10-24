@@ -1,20 +1,20 @@
-import { AreaWithNestedJsonInfo } from 'types/map';
-import BaseService, { Either } from './BaseMonadicService';
+import { AreaWithNestedJsonInfo } from "types/map";
+import BaseService, { Either } from "./BaseMonadicService";
 
 export interface IMapService {
-  changeLocation: (areaId: number) => Promise<Either<IChangeLocationResponse>>,
-  fetch: () => Promise<Either<IFetchMapResponse>>,
+  changeLocation: (areaId: number) => Promise<Either<IChangeLocationResponse>>;
+  fetch: () => Promise<Either<IFetchMapResponse>>;
 }
 
 export interface IChangeLocationResponse {
-  area: AreaWithNestedJsonInfo,
-  isSuccess: boolean,
-  message: string,
+  area: AreaWithNestedJsonInfo;
+  isSuccess: boolean;
+  message: string;
 }
 
 export interface IFetchMapResponse {
-  areas: AreaWithNestedJsonInfo[],
-  currentArea: AreaWithNestedJsonInfo,
+  areas: AreaWithNestedJsonInfo[];
+  currentArea: AreaWithNestedJsonInfo;
 }
 
 class MapService extends BaseService implements IMapService {
@@ -24,7 +24,7 @@ class MapService extends BaseService implements IMapService {
    */
   fetch = () => {
     const config = {
-      url: 'map',
+      url: "map",
     };
     return this.doRequest<IFetchMapResponse>(config);
   };
@@ -36,9 +36,9 @@ class MapService extends BaseService implements IMapService {
    */
   changeLocation = (areaId: number) => {
     const config = {
-      method: 'post',
-      url: 'map/move',
-      data: { areaId }
+      method: "post",
+      url: "map/move",
+      data: { areaId },
     };
     return this.doRequest<IChangeLocationResponse>(config);
   };

@@ -1,20 +1,24 @@
-import React from 'react';
+import React from "react";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
-export default function LoadingScreen({ children }: { children?: React.ReactNode}) {
+export default function LoadingScreen({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   return (
     <div
       style={{
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        position: 'absolute',
-        height: '100vh',
-        width: '100vw',
-        top: '0',
-        left: '0',
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        position: "absolute",
+        height: "100vh",
+        width: "100vw",
+        top: "0",
+        left: "0",
       }}
     >
       <Loading spinner />
@@ -23,4 +27,4 @@ export default function LoadingScreen({ children }: { children?: React.ReactNode
   );
 }
 
-LoadingScreen.displayName = 'LoadingScreen';
+LoadingScreen.displayName = "LoadingScreen";

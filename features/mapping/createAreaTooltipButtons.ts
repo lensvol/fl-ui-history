@@ -1,13 +1,12 @@
-import { SmallButton } from 'features/mapping/types';
-import { IArea, IStateAwareArea } from 'types/map';
+import { SmallButton } from "features/mapping/types";
+import { IArea, IStateAwareArea } from "types/map";
 
 export default function createAreaTooltipButtons(
   area: IStateAwareArea,
   currentArea: IArea | undefined,
   canTravel: boolean,
-  onAreaClick?: (_: any, area: IArea) => void,
+  onAreaClick?: (_: any, area: IArea) => void
 ): SmallButton[] {
-
   // If this straight up is not an area we can move to,
   // or if we can't travel in this Setting,
   // then don't show any buttons
@@ -27,7 +26,7 @@ export default function createAreaTooltipButtons(
   }
 
   const action = (e: any) => onAreaClick(e, area);
-  const label = area.shouldShowGateIcon ? 'Go' : 'Travel';
+  const label = area.shouldShowGateIcon ? "Go" : "Travel";
 
   return [{ label, action }];
 }

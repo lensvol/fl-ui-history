@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React from "react";
+import { Link, withRouter } from "react-router-dom";
 
-import { NAV_ITEMS } from 'components/GeneralContainer/constants';
+import { NAV_ITEMS } from "components/GeneralContainer/constants";
 
 export function AccessibleNavigationTabs() {
   return (
@@ -9,9 +9,7 @@ export function AccessibleNavigationTabs() {
       <ul>
         {NAV_ITEMS.map(({ label, value }) => (
           <li key={value}>
-            <Link to={value}>
-              {label}
-            </Link>
+            <Link to={value}>{label}</Link>
           </li>
         ))}
       </ul>
@@ -19,6 +17,6 @@ export function AccessibleNavigationTabs() {
   );
 }
 
-AccessibleNavigationTabs.displayName = 'AccessibleNavigationTabs';
+AccessibleNavigationTabs.displayName = "AccessibleNavigationTabs";
 
 export default withRouter(AccessibleNavigationTabs);

@@ -1,46 +1,39 @@
-import { DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT } from 'components/Equipment/constants';
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
+import { DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT } from "components/Equipment/constants";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { connect, useDispatch } from "react-redux";
 
-import { openModalTooltip } from 'actions/modalTooltip';
-import { IOutfit } from 'types/outfit';
-import TippyWrapper from 'components/TippyWrapper';
+import { openModalTooltip } from "actions/modalTooltip";
+import { IOutfit } from "types/outfit";
+import TippyWrapper from "components/TippyWrapper";
 
-export function LockedOutfitControls({ selectedOutfit }: { selectedOutfit: IOutfit }) {
+export function LockedOutfitControls({
+  selectedOutfit,
+}: {
+  selectedOutfit: IOutfit;
+}) {
   const dispatch = useDispatch();
 
   const ref = useRef<HTMLDivElement>(null);
 
   const [isTooltipActive, setIsTooltipActive] = useState(false);
 
-  const tooltipData = useMemo(() => ({
-    description: DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT,
-  }), []);
+  const tooltipData = useMemo(
+    () => ({
+      description: DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT,
+    }),
+    []
+  );
 
   const onClick = useCallback(() => {
     if (isTooltipActive) {
       return;
     }
     dispatch(openModalTooltip(tooltipData));
-  }, [
-    dispatch,
-    isTooltipActive,
-    tooltipData,
-  ]);
+  }, [dispatch, isTooltipActive, tooltipData]);
 
   return (
     <>
-      <TippyWrapper
-        tooltipData={tooltipData}
-      >
+      <TippyWrapper tooltipData={tooltipData}>
         <div
           className="outfit-controls--locked"
           onBlur={() => setIsTooltipActive(false)}
@@ -57,9 +50,7 @@ export function LockedOutfitControls({ selectedOutfit }: { selectedOutfit: IOutf
           <i className="fa fa-lg fa-lock" />
         </div>
       </TippyWrapper>
-      <span className="heading heading--3">
-        Outfit
-      </span>
+      <span className="heading heading--3">Outfit</span>
     </>
   );
 }

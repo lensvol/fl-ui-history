@@ -5,7 +5,7 @@
  */
 export default function getBorderColour({ isAutofire = false, category } = {}) {
   if (isAutofire) {
-    return 'Autofire';
+    return "Autofire";
   }
   return category;
 }

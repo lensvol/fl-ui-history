@@ -1,33 +1,33 @@
-import React, { Component } from 'react';
-import { deactivateAccount } from 'actions/settings';
-import { logoutUser } from 'actions/user';
+import React, { Component } from "react";
+import { deactivateAccount } from "actions/settings";
+import { logoutUser } from "actions/user";
 
-import Modal from 'components/Modal';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+import Modal from "components/Modal";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
 
 import {
   CORRECT_CONFIRMATION_REGEX,
   CORRECT_CONFIRMATION_TEXT,
-} from './constants';
+} from "./constants";
 
 type OwnProps = {
-  dispatch: ThunkDispatch<any, any, any>,
-  isOpen: boolean,
-  onRequestClose: () => void,
+  dispatch: ThunkDispatch<any, any, any>;
+  isOpen: boolean;
+  onRequestClose: () => void;
 };
 
 type Props = OwnProps;
 
 type State = {
-  canDeactivate: boolean,
-  confirmationText: string,
+  canDeactivate: boolean;
+  confirmationText: string;
 };
 
 export class DeactivateAccountModalContainer extends Component<Props, State> {
   state = {
     canDeactivate: false,
-    confirmationText: '',
+    confirmationText: "",
   };
 
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,22 +56,16 @@ export class DeactivateAccountModalContainer extends Component<Props, State> {
     const onDeactivate = this.handleDeactivate;
 
     return (
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={onRequestClose}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <h2 className="media__heading heading heading--3">Are you sure?</h2>
           <p>
-            This will permanently remove your user account and all characters in Fallen London (and
-            all other StoryNexus worlds) attached to it.
+            This will permanently remove your user account and all characters in
+            Fallen London (and all other StoryNexus worlds) attached to it.
           </p>
           <p>
-            To proceed with deactivating, type
-            {' '}
-            <b>{CORRECT_CONFIRMATION_TEXT}</b>
-            {' '}
-            (all lower case) here:
+            To proceed with deactivating, type{" "}
+            <b>{CORRECT_CONFIRMATION_TEXT}</b> (all lower case) here:
           </p>
           <input
             className="form__control form__control--has-buttons"
@@ -92,7 +86,7 @@ export class DeactivateAccountModalContainer extends Component<Props, State> {
         </div>
       </Modal>
     );
-  }
+  };
 }
 
 export default connect()(DeactivateAccountModalContainer);

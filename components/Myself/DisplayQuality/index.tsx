@@ -1,27 +1,25 @@
-import { buildTooltipData } from 'components/SidebarQualities/utils';
-import React from 'react';
-import { IQuality } from 'types/qualities';
+import { buildTooltipData } from "components/SidebarQualities/utils";
+import React from "react";
+import { IQuality } from "types/qualities";
 
-import DisplayQualityMdUp from './DisplayQualityMdUp';
-import DisplayQualitySmDown from './DisplayQualitySmDown';
+import DisplayQualityMdUp from "./DisplayQualityMdUp";
+import DisplayQualitySmDown from "./DisplayQualitySmDown";
 
 type Props = {
-  isChanging: boolean,
-  item: IQuality,
-  onClick: () => any,
+  isChanging: boolean;
+  item: IQuality;
+  onClick: () => any;
 };
 
-export default function DisplayQuality({
-  isChanging,
-  item,
-  onClick,
-}: Props) {
+export default function DisplayQuality({ isChanging, item, onClick }: Props) {
   const tooltipData = {
     ...buildTooltipData(item),
-    smallButtons: [{
-      label: 'Change',
-      action: onClick,
-    }],
+    smallButtons: [
+      {
+        label: "Change",
+        action: onClick,
+      },
+    ],
   };
   return (
     <>
@@ -41,4 +39,4 @@ export default function DisplayQuality({
   );
 }
 
-DisplayQuality.displayName = 'DisplayQuality';
+DisplayQuality.displayName = "DisplayQuality";

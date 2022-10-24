@@ -1,11 +1,12 @@
-import { createSelector } from 'reselect';
-import { IAppState } from 'types/app';
-import { IFateCard } from 'types/fate';
+import { createSelector } from "reselect";
+import { IAppState } from "types/app";
+import { IFateCard } from "types/fate";
 
-const getFateCards = (state: Pick<IAppState, 'fate'>) => state.fate.data.fateCards;
+const getFateCards = (state: Pick<IAppState, "fate">) =>
+  state.fate.data.fateCards;
 
 const outputFn = (fateCards: IFateCard[]) => {
-  const card = fateCards.find(c => c.action === 'FaceChange');
+  const card = fateCards.find((c) => c.action === "FaceChange");
   if (card) {
     return card.price;
   }

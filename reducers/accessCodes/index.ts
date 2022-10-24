@@ -7,24 +7,24 @@ import {
   FETCH_ACCESS_CODE_REQUESTED,
   FETCH_ACCESS_CODE_SUCCESS,
   FLUSH_ACCESS_CODE_STATE,
-} from 'actiontypes/accessCodes';
+} from "actiontypes/accessCodes";
 
 import {
   FACEBOOK_LOGIN_SUCCESS,
   GOOGLE_LOGIN_SUCCESS,
   LOGIN_SUCCESS,
   TWITTER_LOGIN_SUCCESS,
-} from 'actiontypes/user';
-import { FetchAccessCodeResponse } from 'services/AccessCodeService';
+} from "actiontypes/user";
+import { FetchAccessCodeResponse } from "services/AccessCodeService";
 
 export interface IAccessCodesState {
-  isFetching: boolean,
-  accessCode: FetchAccessCodeResponse | undefined,
-  challenge: any,
-  active: boolean,
-  result: any,
-  displayChallenge: boolean,
-  displayResult: boolean,
+  isFetching: boolean;
+  accessCode: FetchAccessCodeResponse | undefined;
+  challenge: any;
+  active: boolean;
+  result: any;
+  displayChallenge: boolean;
+  displayResult: boolean;
 }
 
 /**
@@ -41,7 +41,10 @@ const INITIAL_STATE: IAccessCodesState = {
   displayResult: false,
 };
 
-export default function reducer(state = INITIAL_STATE, action: { type: string, payload: any }) {
+export default function reducer(
+  state = INITIAL_STATE,
+  action: { type: string; payload: any }
+) {
   switch (action.type) {
     case FETCH_ACCESS_CODE_REQUESTED:
       return { ...state, isFetching: true };
@@ -56,7 +59,6 @@ export default function reducer(state = INITIAL_STATE, action: { type: string, p
         displayChallenge: true,
         isFetching: false,
       };
-
 
     case FLUSH_ACCESS_CODE_STATE:
       return INITIAL_STATE;

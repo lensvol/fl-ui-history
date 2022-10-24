@@ -1,4 +1,4 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   CANCEL_BRAINTREE_SUBSCRIPTION_FAILURE,
   CANCEL_BRAINTREE_SUBSCRIPTION_REQUESTED,
@@ -6,33 +6,33 @@ import {
   FETCH_FAILURE,
   FETCH_REQUESTED,
   FETCH_SUCCESS,
-} from 'actiontypes/subscription';
-import { fetch as fetchMap } from 'actions/map';
-import { fetch as fetchSettings } from 'actions/settings';
-import { ThunkDispatch } from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
+} from "actiontypes/subscription";
+import { fetch as fetchMap } from "actions/map";
+import { fetch as fetchSettings } from "actions/settings";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
 
-import SubscriptionService from 'services/SubscriptionService';
-import { Dispatch } from 'redux';
+import SubscriptionService from "services/SubscriptionService";
+import { Dispatch } from "redux";
 import {
   FetchSubscriptionResponse,
   ICancelSubscriptionSuccessData,
   ISubscriptionService,
-} from 'types/subscription';
+} from "types/subscription";
 
 const service: ISubscriptionService = new SubscriptionService();
 
 export type FetchSubscriptionSuccess = {
-  type: typeof FETCH_SUCCESS,
-  payload: FetchSubscriptionResponse,
+  type: typeof FETCH_SUCCESS;
+  payload: FetchSubscriptionResponse;
 };
 
 type CancelOptions = {
-  cancelInBackground?: boolean,
+  cancelInBackground?: boolean;
 };
 
 type FetchOptions = {
-  fetchInBackground?: boolean,
+  fetchInBackground?: boolean;
 };
 
 export const fetchSubscriptionRequested = () => ({ type: FETCH_REQUESTED });
@@ -61,9 +61,13 @@ export const fetch = (options?: FetchOptions) => async (dispatch: Dispatch) => {
   }
 };
 
-export const cancelBraintreeSubscriptionRequested = () => ({ type: CANCEL_BRAINTREE_SUBSCRIPTION_REQUESTED });
+export const cancelBraintreeSubscriptionRequested = () => ({
+  type: CANCEL_BRAINTREE_SUBSCRIPTION_REQUESTED,
+});
 
-export const cancelBraintreeSubscriptionSuccess = (data: ICancelSubscriptionSuccessData) => ({
+export const cancelBraintreeSubscriptionSuccess = (
+  data: ICancelSubscriptionSuccessData
+) => ({
   type: CANCEL_BRAINTREE_SUBSCRIPTION_SUCCESS,
   payload: {
     isSuccess: data.isSuccess,
@@ -77,23 +81,23 @@ export const cancelBraintreeSubscriptionFailure = (error: any) => ({
   status: error.response?.status,
 });
 
-export const cancelBraintreeSubscription = (
-  options?: CancelOptions,
-) => async (dispatch: ThunkDispatch<any, any, any>) => {
-  if (!options?.cancelInBackground) {
-    dispatch(cancelBraintreeSubscriptionRequested());
-  }
-
-  try {
-    const { data } = await service.cancelBraintreeSubscription();
-    dispatch(cancelBraintreeSubscriptionSuccess(data));
-    dispatch(fetchSettings());
-    // We also need to update the map --- the House of Chimes is now off limits
-    dispatch(fetchMap());
-  } catch (error) {
-    if (error instanceof VersionMismatch) {
-      dispatch(handleVersionMismatch(error));
+export const cancelBraintreeSubscription =
+  (options?: CancelOptions) =>
+  async (dispatch: ThunkDispatch<any, any, any>) => {
+    if (!options?.cancelInBackground) {
+      dispatch(cancelBraintreeSubscriptionRequested());
     }
-    dispatch(cancelBraintreeSubscriptionFailure(error));
-  }
-};
+
+    try {
+      const { data } = await service.cancelBraintreeSubscription();
+      dispatch(cancelBraintreeSubscriptionSuccess(data));
+      dispatch(fetchSettings());
+      // We also need to update the map --- the House of Chimes is now off limits
+      dispatch(fetchMap());
+    } catch (error) {
+      if (error instanceof VersionMismatch) {
+        dispatch(handleVersionMismatch(error));
+      }
+      dispatch(cancelBraintreeSubscriptionFailure(error));
+    }
+  };

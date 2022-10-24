@@ -1,27 +1,20 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback, useMemo, useState } from "react";
+import { connect } from "react-redux";
 
-import Modal from 'components/Modal';
+import Modal from "components/Modal";
 
-import PurchaseResult from 'components/PurchaseModal/PurchaseResult';
-import { setAvatarImage } from 'actions/myself';
-import getCanChangeFaceForFree from 'selectors/myself/getCanChangeFaceForFree';
-import { SetAvatarImageResponse } from 'services/MyselfService';
-import { IAppState } from 'types/app';
+import PurchaseResult from "components/PurchaseModal/PurchaseResult";
+import { setAvatarImage } from "actions/myself";
+import getCanChangeFaceForFree from "selectors/myself/getCanChangeFaceForFree";
+import { SetAvatarImageResponse } from "services/MyselfService";
+import { IAppState } from "types/app";
 
-import getFaceChangeFateCost from 'selectors/fate/getFaceChangeFateCost';
-import {
-  Either,
-  Success,
-} from 'services/BaseMonadicService';
-import { purchaseItem, fetch as fetchFate } from 'actions/fate';
-import getFaceChangeFateCard from 'selectors/fate/getFaceChangeFateCard';
-import { newAvatarImage } from 'actions/myself/setAvatarImage';
-import ConfirmModalReady from './ConfirmModalReady';
+import getFaceChangeFateCost from "selectors/fate/getFaceChangeFateCost";
+import { Either, Success } from "services/BaseMonadicService";
+import { purchaseItem, fetch as fetchFate } from "actions/fate";
+import getFaceChangeFateCard from "selectors/fate/getFaceChangeFateCard";
+import { newAvatarImage } from "actions/myself/setAvatarImage";
+import ConfirmModalReady from "./ConfirmModalReady";
 
 export enum AvatarConfirmModalStep {
   Ready,
@@ -42,7 +35,9 @@ export function ConfirmModal(props: Props) {
     onRequestCloseModalStack,
   } = props;
 
-  const [currentStep, setCurrentStep] = useState<AvatarConfirmModalStep>(AvatarConfirmModalStep.Ready);
+  const [currentStep, setCurrentStep] = useState<AvatarConfirmModalStep>(
+    AvatarConfirmModalStep.Ready
+  );
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<string | undefined>(undefined);
@@ -56,7 +51,7 @@ export function ConfirmModal(props: Props) {
 
   const handleConfirmPurchase = useCallback(async () => {
     if (!avatar) {
-      console.error('Trying to purchase an undefined avatar');
+      console.error("Trying to purchase an undefined avatar");
       return;
     }
 
@@ -67,10 +62,17 @@ export function ConfirmModal(props: Props) {
       result = await dispatch(setAvatarImage({ avatarImage: avatar }));
     } else {
       if (!changeFaceFateCard) {
-        console.error('Trying to purchase an avatar, but can\'t find the Fate card');
+        console.error(
+          "Trying to purchase an avatar, but can't find the Fate card"
+        );
         return;
       }
-      result = await dispatch(purchaseItem({ avatarImage: avatar, storeItemId: changeFaceFateCard.id }));
+      result = await dispatch(
+        purchaseItem({
+          avatarImage: avatar,
+          storeItemId: changeFaceFateCard.id,
+        })
+      );
     }
 
     let responseMessage: string | undefined;
@@ -87,15 +89,13 @@ export function ConfirmModal(props: Props) {
     setIsSubmitting(false);
     setIsSuccess(true);
     setMessage(responseMessage);
-    setCurrentStep(isFree ? AvatarConfirmModalStep.CompleteFree : AvatarConfirmModalStep.Complete);
+    setCurrentStep(
+      isFree
+        ? AvatarConfirmModalStep.CompleteFree
+        : AvatarConfirmModalStep.Complete
+    );
     onConfirm();
-  }, [
-    avatar,
-    changeFaceFateCard,
-    dispatch,
-    isFree,
-    onConfirm,
-  ]);
+  }, [avatar, changeFaceFateCard, dispatch, isFree, onConfirm]);
 
   const content = useMemo(() => {
     switch (currentStep) {
@@ -108,7 +108,7 @@ export function ConfirmModal(props: Props) {
           <PurchaseResult
             image={avatar}
             isSuccess={isSuccess}
-            message={message ?? (isSuccess ? 'Success' : 'Failure')}
+            message={message ?? (isSuccess ? "Success" : "Failure")}
             name={avatar}
             onClick={onRequestCloseModalStack}
             type="cameo"
@@ -125,7 +125,7 @@ export function ConfirmModal(props: Props) {
           <PurchaseResult
             image={avatar}
             isSuccess={isSuccess}
-            message={message ?? (isSuccess ? 'Success' : 'Failure')}
+            message={message ?? (isSuccess ? "Success" : "Failure")}
             name={avatar}
             onClick={onRequestCloseModalStack}
             type="cameo"
@@ -173,11 +173,11 @@ export function ConfirmModal(props: Props) {
 }
 
 type OwnProps = {
-  avatar: string | undefined,
-  isOpen: boolean,
-  onConfirm: () => void,
-  onRequestClose: (_args?: any) => void,
-  onRequestCloseModalStack: (_args?: any) => void,
+  avatar: string | undefined;
+  isOpen: boolean;
+  onConfirm: () => void;
+  onRequestClose: (_args?: any) => void;
+  onRequestCloseModalStack: (_args?: any) => void;
 };
 
 const mapStateToProps = (state: IAppState) => ({
@@ -186,9 +186,10 @@ const mapStateToProps = (state: IAppState) => ({
   isFree: getCanChangeFaceForFree(state),
 });
 
-export type Props = OwnProps & ReturnType<typeof mapStateToProps> & {
-  dispatch: Function, // eslint-disable-line
-};
+export type Props = OwnProps &
+  ReturnType<typeof mapStateToProps> & {
+    dispatch: Function; // eslint-disable-line
+  };
 
 export default connect(mapStateToProps)(ConfirmModal);
 

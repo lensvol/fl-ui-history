@@ -1,18 +1,17 @@
-import axios, { AxiosInstance } from 'axios';
-import semver from 'semver';
+import axios, { AxiosInstance } from "axios";
+import semver from "semver";
 
-import Config from 'configuration';
+import Config from "configuration";
 
-import { getTokenAndStorage } from 'features/startup';
+import { getTokenAndStorage } from "features/startup";
 
-export class InMaintenance extends Error {
-}
+export class InMaintenance extends Error {}
 
 export class VersionMismatch extends Error {
   latestVersion: number;
 
   constructor(latestVersion: number) {
-    super('Version mismatch');
+    super("Version mismatch");
     this.latestVersion = latestVersion;
   }
 }
@@ -31,12 +30,12 @@ export default class BaseService {
     });
 
     this.config = {
-      method: 'get',
+      method: "get",
       withCredentials: true,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        Accept: 'application/json, *.*',
-        'Content-Type': 'application/json',
+        "X-Requested-With": "XMLHttpRequest",
+        Accept: "application/json, *.*",
+        "Content-Type": "application/json",
       },
     };
   }
@@ -53,7 +52,7 @@ export default class BaseService {
     };
 
     // Look for a JWT
-    const { token = '' } = getTokenAndStorage(window);
+    const { token = "" } = getTokenAndStorage(window);
     // If we have a token, then insert it into the request header
     if (token.length) {
       configData.headers = {
@@ -61,7 +60,8 @@ export default class BaseService {
         ...(config.headers ?? {}),
         Authorization: `Bearer ${token}`,
         // Only send major.minor.patch
-        'X-Current-Version': semver.coerce(Config.version)?.version ?? undefined,
+        "X-Current-Version":
+          semver.coerce(Config.version)?.version ?? undefined,
       };
     }
 
@@ -70,7 +70,8 @@ export default class BaseService {
       const response = await this.axiosInstance.request(configData);
 
       // Check the latest client version available
-      const latestVersion = response.headers['x-latest-available-client-version'];
+      const latestVersion =
+        response.headers["x-latest-available-client-version"];
 
       // We're only interested in major.minor.patch versions here; if those match,
       // we're happy (this is not intended to check compatibility between dev branches
@@ -79,10 +80,11 @@ export default class BaseService {
       const coercedCurrentVersion = semver.coerce(Config.version)?.version;
 
       // It's OK for the client to be a version ahead of the server
-      if (coercedCurrentVersion && coercedLatestVersion && !semver.gte(
-        coercedCurrentVersion,
-        coercedLatestVersion,
-      )) {
+      if (
+        coercedCurrentVersion &&
+        coercedLatestVersion &&
+        !semver.gte(coercedCurrentVersion, coercedLatestVersion)
+      ) {
         // noinspection ExceptionCaughtLocallyJS
         throw new VersionMismatch(latestVersion);
       }
@@ -120,6 +122,6 @@ export default class BaseService {
    * @return {undefined}
    */
   refreshAccessToken: (token: string) => void = (token: string) => {
-    window[getTokenAndStorage(window).storage].setItem('access_token', token);
-  }
+    window[getTokenAndStorage(window).storage].setItem("access_token", token);
+  };
 }

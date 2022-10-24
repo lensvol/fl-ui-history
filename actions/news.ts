@@ -1,26 +1,29 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   DISMISS_NEWS_ITEM,
   FETCH_NEWS_FAILURE,
   FETCH_NEWS_REQUESTED,
   FETCH_NEWS_SUCCESS,
-} from 'actiontypes/news';
-import { Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import store from 'store';
-import NewsService, { INewsService, NewsResponse } from 'services/NewsService';
+} from "actiontypes/news";
+import { Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import store from "store";
+import NewsService, { INewsService, NewsResponse } from "services/NewsService";
 
 export type FetchNewsRequested = { type: typeof FETCH_NEWS_REQUESTED };
 export type FetchNewsSuccess = {
-  type: typeof FETCH_NEWS_SUCCESS,
-  payload: NewsResponse,
+  type: typeof FETCH_NEWS_SUCCESS;
+  payload: NewsResponse;
 };
 export type FetchNewsFailure = { type: typeof FETCH_NEWS_FAILURE };
 
 export type DismissNewsItem = { type: typeof DISMISS_NEWS_ITEM };
 
-export type NewsActions = FetchNewsRequested | FetchNewsFailure | FetchNewsSuccess | DismissNewsItem;
-
+export type NewsActions =
+  | FetchNewsRequested
+  | FetchNewsFailure
+  | FetchNewsSuccess
+  | DismissNewsItem;
 
 /** ----------------------------------------------------------------------------
  * FETCH NEWS ITEM
@@ -62,7 +65,7 @@ export const fetchFailure = (error?: any) => ({
 });
 
 export const dismissNewsItem = (id: number) => {
-  store.set('dismissed_news_item', id);
+  store.set("dismissed_news_item", id);
   return {
     type: DISMISS_NEWS_ITEM,
     active: false,

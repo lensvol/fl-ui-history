@@ -1,22 +1,21 @@
-import { ExchangeActions } from 'actions/exchange';
-import { SetCurrentSetting } from 'actions/map/setCurrentSetting';
-import { IExchangeState } from 'types/exchange';
-import * as ExchangeActionTypes from 'actiontypes/exchange';
-import * as MapActionTypes from 'actiontypes/map';
+import { ExchangeActions } from "actions/exchange";
+import { SetCurrentSetting } from "actions/map/setCurrentSetting";
+import { IExchangeState } from "types/exchange";
+import * as ExchangeActionTypes from "actiontypes/exchange";
+import * as MapActionTypes from "actiontypes/map";
 
-
-import fetchAvailableSuccess from './fetchAvailableSuccess';
-import fetchExchangeSuccess from './fetchExchangeSuccess';
-import mergeShopData from './mergeShopData';
-import updateShopItems from './updateShopItems';
+import fetchAvailableSuccess from "./fetchAvailableSuccess";
+import fetchExchangeSuccess from "./fetchExchangeSuccess";
+import mergeShopData from "./mergeShopData";
+import updateShopItems from "./updateShopItems";
 
 /**
  * Initial state
  * @type {Object}
  */
 export const INITIAL_STATE: IExchangeState = {
-  activeStore: 'null',
-  description: '',
+  activeStore: "null",
+  description: "",
   isAvailable: true,
   isFetching: false,
   isFetchingAvailable: false,
@@ -25,11 +24,11 @@ export const INITIAL_STATE: IExchangeState = {
   shops: {
     null: {
       id: null,
-      name: 'Sell my things',
+      name: "Sell my things",
       items: [],
     },
   },
-  title: '',
+  title: "",
 };
 
 /**
@@ -37,7 +36,10 @@ export const INITIAL_STATE: IExchangeState = {
  * @param {Object} state
  * @param {[Object]} action
  */
-const Exchange = (state = INITIAL_STATE, action: ExchangeActions | SetCurrentSetting) => {
+const Exchange = (
+  state = INITIAL_STATE,
+  action: ExchangeActions | SetCurrentSetting
+) => {
   switch (action.type) {
     case ExchangeActionTypes.FETCH_EXCHANGE_REQUESTED:
       return {

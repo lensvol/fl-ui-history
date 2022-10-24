@@ -1,33 +1,52 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { ActionCreator } from 'redux';
-import AccessCodeService from 'services/AccessCodeService';
+import { handleVersionMismatch } from "actions/versionSync";
+import { ActionCreator } from "redux";
+import AccessCodeService from "services/AccessCodeService";
 import {
   DISPLAY_ACCESS_CODE_RESULT,
   PROCESS_ACCESS_CODE_REQUESTED,
   PROCESS_ACCESS_CODE_SUCCESS,
   PROCESS_ACCESS_CODE_FAILURE,
-} from 'actiontypes/accessCodes';
+} from "actiontypes/accessCodes";
 
-import { processMessages } from 'actions/app';
-import { VersionMismatch } from 'services/BaseService';
+import { processMessages } from "actions/app";
+import { VersionMismatch } from "services/BaseService";
 
-export type DisplayAccessCodeResult = { type: typeof DISPLAY_ACCESS_CODE_RESULT, payload: any };
-export type ProcessAccessCodeRequested = { type: typeof PROCESS_ACCESS_CODE_REQUESTED };
-export type ProcessAccessCodeSuccess = { type: typeof PROCESS_ACCESS_CODE_SUCCESS, payload: any };
-export type ProcessAccessCodeFailure = { type: typeof PROCESS_ACCESS_CODE_FAILURE, payload: any };
+export type DisplayAccessCodeResult = {
+  type: typeof DISPLAY_ACCESS_CODE_RESULT;
+  payload: any;
+};
+export type ProcessAccessCodeRequested = {
+  type: typeof PROCESS_ACCESS_CODE_REQUESTED;
+};
+export type ProcessAccessCodeSuccess = {
+  type: typeof PROCESS_ACCESS_CODE_SUCCESS;
+  payload: any;
+};
+export type ProcessAccessCodeFailure = {
+  type: typeof PROCESS_ACCESS_CODE_FAILURE;
+  payload: any;
+};
 
-const displayAccessCodeResult: ActionCreator<DisplayAccessCodeResult> = data => ({
+const displayAccessCodeResult: ActionCreator<DisplayAccessCodeResult> = (
+  data
+) => ({
   type: DISPLAY_ACCESS_CODE_RESULT,
   payload: data,
 });
-const processAccessCodeRequest: ActionCreator<ProcessAccessCodeRequested> = () => ({
+const processAccessCodeRequest: ActionCreator<
+  ProcessAccessCodeRequested
+> = () => ({
   type: PROCESS_ACCESS_CODE_REQUESTED,
 });
-const processAccessCodeSuccess: ActionCreator<ProcessAccessCodeSuccess> = data => ({
+const processAccessCodeSuccess: ActionCreator<ProcessAccessCodeSuccess> = (
+  data
+) => ({
   type: PROCESS_ACCESS_CODE_SUCCESS,
   payload: data,
 });
-const processAccessCodeFailure: ActionCreator<ProcessAccessCodeFailure> = error => ({
+const processAccessCodeFailure: ActionCreator<ProcessAccessCodeFailure> = (
+  error
+) => ({
   type: PROCESS_ACCESS_CODE_FAILURE,
   payload: error,
 });

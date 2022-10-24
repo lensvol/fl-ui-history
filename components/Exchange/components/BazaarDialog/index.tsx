@@ -1,25 +1,27 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import getQuantities from 'selectors/exchange/getQuantities';
+import getQuantities from "selectors/exchange/getQuantities";
 
-import Modal from 'components/Modal';
-import { IAppState } from 'types/app';
+import Modal from "components/Modal";
+import { IAppState } from "types/app";
 
-import BazaarDialogComponent from './BazaarDialogComponent';
+import BazaarDialogComponent from "./BazaarDialogComponent";
 
 type OwnProps = {
-  activeItem: any | null,
-  isOpen: boolean,
-  onRequestClose: () => void,
+  activeItem: any | null;
+  isOpen: boolean;
+  onRequestClose: () => void;
 };
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps> & OwnProps;
+type Props = RouteComponentProps &
+  ReturnType<typeof mapStateToProps> &
+  OwnProps;
 
 class BazaarDialogContainer extends Component<Props, {}> {
-  static displayName = 'BazaarDialogContainer';
+  static displayName = "BazaarDialogContainer";
 
   mounted = false;
 
@@ -57,10 +59,7 @@ class BazaarDialogContainer extends Component<Props, {}> {
     const { isFetchingSellItem, isOpen, quantities } = this.props;
 
     return (
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={this.handleRequestClose}
-      >
+      <Modal isOpen={isOpen} onRequestClose={this.handleRequestClose}>
         <BazaarDialogComponent
           isTransacting={isFetchingSellItem}
           quantities={quantities}
@@ -73,9 +72,7 @@ class BazaarDialogContainer extends Component<Props, {}> {
 
 const mapStateToProps = (state: IAppState) => {
   const {
-    exchange: {
-      isFetchingSellItem,
-    },
+    exchange: { isFetchingSellItem },
   } = state;
   const quantities = getQuantities(state);
   return {

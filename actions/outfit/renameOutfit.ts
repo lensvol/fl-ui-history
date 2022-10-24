@@ -1,15 +1,14 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { RENAME_OUTFIT_SUCCESS } from 'actiontypes/myself';
-import { ThunkDispatch } from 'redux-thunk';
-import {
-  Either,
-  Failure,
-  Success,
-} from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import OutfitService, { RenameOutfitResponse } from 'services/OutfitService';
+import { handleVersionMismatch } from "actions/versionSync";
+import { RENAME_OUTFIT_SUCCESS } from "actiontypes/myself";
+import { ThunkDispatch } from "redux-thunk";
+import { Either, Failure, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import OutfitService, { RenameOutfitResponse } from "services/OutfitService";
 
-export type RenameOutfitSuccess = { type: typeof RENAME_OUTFIT_SUCCESS, payload: { id: number, name: string } };
+export type RenameOutfitSuccess = {
+  type: typeof RENAME_OUTFIT_SUCCESS;
+  payload: { id: number; name: string };
+};
 
 const renameOutfitSuccess = (id: number, name: string) => ({
   type: RENAME_OUTFIT_SUCCESS,
@@ -18,10 +17,15 @@ const renameOutfitSuccess = (id: number, name: string) => ({
 
 export default function renameOutfit(id: number, newName: string) {
   return async (
-    dispatch: ThunkDispatch<Either<RenameOutfitResponse> | VersionMismatch, any, any>,
+    dispatch: ThunkDispatch<
+      Either<RenameOutfitResponse> | VersionMismatch,
+      any,
+      any
+    >
   ): Promise<Either<RenameOutfitResponse> | VersionMismatch> => {
     try {
-      const result: Success<RenameOutfitResponse> | Failure = await new OutfitService().renameOutfit(id, newName);
+      const result: Success<RenameOutfitResponse> | Failure =
+        await new OutfitService().renameOutfit(id, newName);
       if (result instanceof Success) {
         dispatch(renameOutfitSuccess(id, result.data.message));
       }

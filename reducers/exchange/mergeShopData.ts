@@ -1,10 +1,10 @@
-import { FetchAvailableItemsSuccess } from 'actions/exchange/fetchAvailable';
-import { SelectStoreSuccess } from 'actions/exchange/selectStore';
-import { IExchangeState } from 'types/exchange';
+import { FetchAvailableItemsSuccess } from "actions/exchange/fetchAvailable";
+import { SelectStoreSuccess } from "actions/exchange/selectStore";
+import { IExchangeState } from "types/exchange";
 
 export default function mergeShopData(
   state: IExchangeState,
-  action: FetchAvailableItemsSuccess | SelectStoreSuccess,
+  action: FetchAvailableItemsSuccess | SelectStoreSuccess
 ) {
   const { id, items } = action.payload;
   return {

@@ -1,21 +1,16 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import { fetchContacts } from 'actions/contacts';
-import { fetch as fetchSettings } from 'actions/settings';
+import { fetchContacts } from "actions/contacts";
+import { fetch as fetchSettings } from "actions/settings";
 
-import Account from 'components/Account';
-import Header from 'components/Header';
+import Account from "components/Account";
+import Header from "components/Header";
 
 class AccountPageContainer extends Component {
   componentDidMount = () => {
-    const {
-      contacts,
-      data,
-      dispatch,
-      user,
-    } = this.props;
+    const { contacts, data, dispatch, user } = this.props;
 
     if (user.loggedIn) {
       if (!data) {
@@ -26,7 +21,7 @@ class AccountPageContainer extends Component {
         dispatch(fetchContacts());
       }
     }
-  }
+  };
 
   render() {
     return (
@@ -38,7 +33,7 @@ class AccountPageContainer extends Component {
   }
 }
 
-AccountPageContainer.displayName = 'AccountPageContainer';
+AccountPageContainer.displayName = "AccountPageContainer";
 
 AccountPageContainer.propTypes = {
   contacts: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -53,7 +48,11 @@ AccountPageContainer.defaultProps = {
   data: null,
 };
 
-const mapStateToProps = ({ contacts: { contacts }, settings: { data }, user }) => ({
+const mapStateToProps = ({
+  contacts: { contacts },
+  settings: { data },
+  user,
+}) => ({
   user,
   contacts,
   data,

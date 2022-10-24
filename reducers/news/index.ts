@@ -1,13 +1,13 @@
-import { NewsActions } from 'actions/news';
-import * as NewsActionTypes from 'actiontypes/news';
-import { NewsResponse } from 'services/NewsService';
+import { NewsActions } from "actions/news";
+import * as NewsActionTypes from "actiontypes/news";
+import { NewsResponse } from "services/NewsService";
 
-import fetchNewsSuccess from './fetchNewsSuccess';
+import fetchNewsSuccess from "./fetchNewsSuccess";
 
 export type INewsState = {
-  active: boolean,
-  isFetching: boolean,
-  newsItem: NewsResponse | null,
+  active: boolean;
+  isFetching: boolean;
+  newsItem: NewsResponse | null;
 };
 
 /**

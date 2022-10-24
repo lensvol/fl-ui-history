@@ -1,50 +1,48 @@
 /* eslint-disable dot-notation */
 
-import { buyItems, fetchAvailableItems, sellItems, } from 'actions/exchange';
-import { MAX_SELL_AMOUNT } from 'components/Exchange/constants';
-import { ExchangeContextValue } from 'components/Exchange/ExchangeContext';
+import { buyItems, fetchAvailableItems, sellItems } from "actions/exchange";
+import { MAX_SELL_AMOUNT } from "components/Exchange/constants";
+import { ExchangeContextValue } from "components/Exchange/ExchangeContext";
 
-import { playerCanAffordTransaction } from 'components/Exchange/utils';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { playerCanAffordTransaction } from "components/Exchange/utils";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import getQuantities from 'selectors/exchange/getQuantities';
-import { Success } from 'services/BaseMonadicService';
-import { IAppState } from 'types/app';
-import { IAvailability } from 'types/exchange';
-import { IQuality } from 'types/qualities';
+import getQuantities from "selectors/exchange/getQuantities";
+import { Success } from "services/BaseMonadicService";
+import { IAppState } from "types/app";
+import { IAvailability } from "types/exchange";
+import { IQuality } from "types/qualities";
 
-import ExchangeUI from './ExchangeUIComponent';
+import ExchangeUI from "./ExchangeUIComponent";
 
 function isNewQuality(possession: IQuality, items: IAvailability[]) {
   // If we've received some Echoes, then definitely return false; Echoes don't
   // appear in any shop
-  if (possession.category === 'Currency') {
+  if (possession.category === "Currency") {
     return false;
   }
   // If we don't already have an Availability with this Quality, return true
-  return items.map(_ => _.availability.quality.id).indexOf(possession.id) < 0;
+  return items.map((_) => _.availability.quality.id).indexOf(possession.id) < 0;
 }
 
 type State = {
-  disabled: boolean,
-  errorMessage?: string | null,
-  sellAmount: number,
+  disabled: boolean;
+  errorMessage?: string | null;
+  sellAmount: number;
 };
 
 type OwnProps = {
-  onRequestClose: () => void,
-  onTransactionComplete: (message: string) => void,
+  onRequestClose: () => void;
+  onTransactionComplete: (message: string) => void;
 };
 
-type Props
-  = OwnProps
-  & Pick<ExchangeContextValue, 'activeItem'>
-  & ReturnType<typeof mapStateToProps>
-  & { dispatch: Function };
+type Props = OwnProps &
+  Pick<ExchangeContextValue, "activeItem"> &
+  ReturnType<typeof mapStateToProps> & { dispatch: Function };
 
 class ExchangeUIContainer extends Component<Props, State> {
-  static displayName = 'ExchangeUIContainer';
+  static displayName = "ExchangeUIContainer";
 
   state: State = {
     disabled: false,
@@ -60,7 +58,10 @@ class ExchangeUIContainer extends Component<Props, State> {
     const { sellAmount: oldSellAmount } = this.state;
     const sellAmount = (+oldSellAmount || 0) + Number(amount);
     // Update sell amount (clamping it to possible values) then update disabled state
-    this.setState({ sellAmount: this.clampAmount(sellAmount) }, this.updateDisabledState);
+    this.setState(
+      { sellAmount: this.clampAmount(sellAmount) },
+      this.updateDisabledState
+    );
   };
 
   handleChange = (e: any) => {
@@ -71,12 +72,7 @@ class ExchangeUIContainer extends Component<Props, State> {
   };
 
   handleSubmit = async (e: any) => {
-    const {
-      activeItem,
-      dispatch,
-      onTransactionComplete,
-      shops,
-    } = this.props;
+    const { activeItem, dispatch, onTransactionComplete, shops } = this.props;
 
     e.preventDefault();
 
@@ -98,23 +94,22 @@ class ExchangeUIContainer extends Component<Props, State> {
 
     // The action data are the same whether we're buying or selling;
     // it's just the API connection that's different
-    const action = buying ? buyItems(transactionData) : sellItems(transactionData);
+    const action = buying
+      ? buyItems(transactionData)
+      : sellItems(transactionData);
 
     const result = await dispatch(action);
     if (result instanceof Success) {
       const { data } = result;
-      const {
-        message: successMessage,
-        possessionsChanged: changes,
-      } = data;
+      const { message: successMessage, possessionsChanged: changes } = data;
       // We should update the UI to show the success message
       onTransactionComplete(successMessage);
 
       // Check whether, by buying or selling stuff, we have acquired something new
-      const myItems = shops['null'].items;
+      const myItems = shops["null"].items;
       if (changes?.some((q: IQuality) => isNewQuality(q, myItems))) {
         // Dispatch a full on re-fetch of sellable items
-        dispatch(fetchAvailableItems('null', { background: true }));
+        dispatch(fetchAvailableItems("null", { background: true }));
       }
     }
   };
@@ -133,11 +128,7 @@ class ExchangeUIContainer extends Component<Props, State> {
     }
     const { forSale: buying } = activeItem;
 
-    const {
-      cost,
-      purchaseQuality,
-      quality
-    } = activeItem.availability;
+    const { cost, purchaseQuality, quality } = activeItem.availability;
 
     // If we are buying an item, then the maximum amount is the largest number
     // that we can afford, given the purchase quality and how much of _that_ we have
@@ -174,12 +165,14 @@ class ExchangeUIContainer extends Component<Props, State> {
     }
 
     // If the player can't afford this (buying or selling), then disable
-    if (!playerCanAffordTransaction({
-      ...this.props,
-      ...this.state,
-      activeItem,
-      buying,
-    })) {
+    if (
+      !playerCanAffordTransaction({
+        ...this.props,
+        ...this.state,
+        activeItem,
+        buying,
+      })
+    ) {
       return this.setState({
         disabled: true,
         errorMessage: null,
@@ -193,10 +186,7 @@ class ExchangeUIContainer extends Component<Props, State> {
   };
 
   render() {
-    const {
-      activeItem,
-      quantities,
-    } = this.props;
+    const { activeItem, quantities } = this.props;
 
     const { disabled, sellAmount } = this.state;
 
@@ -210,7 +200,9 @@ class ExchangeUIContainer extends Component<Props, State> {
       <ExchangeUI
         activeItem={activeItem}
         buying={buying}
-        countCharacterAlreadyHas={quantities[activeItem.availability.quality.id]}
+        countCharacterAlreadyHas={
+          quantities[activeItem.availability.quality.id]
+        }
         disabled={disabled}
         maxAmount={this.getMaxAmount()}
         onChange={this.handleChange}
@@ -224,10 +216,7 @@ class ExchangeUIContainer extends Component<Props, State> {
 
 const mapStateToProps = (state: IAppState) => {
   const {
-    exchange: {
-      isFetchingSellItem,
-      shops,
-    },
+    exchange: { isFetchingSellItem, shops },
   } = state;
   return {
     isFetchingSellItem,

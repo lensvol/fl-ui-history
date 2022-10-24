@@ -1,11 +1,11 @@
-import { IAppState } from 'types/app';
-import FateHeader from 'components/Fate/Header';
-import React from 'react';
-import { connect } from 'react-redux';
+import { IAppState } from "types/app";
+import FateHeader from "components/Fate/Header";
+import React from "react";
+import { connect } from "react-redux";
 
 interface Props {
-  data: any,
-  onNext: (_?: any) => void,
+  data: any;
+  onNext: (_?: any) => void;
 }
 
 export function Blurb(props: Props) {
@@ -19,7 +19,7 @@ export function Blurb(props: Props) {
   );
 }
 
-Blurb.displayName = 'Blurb';
+Blurb.displayName = "Blurb";
 
 const mapStateToProps = ({ fate }: IAppState) => ({ data: fate.data });
 

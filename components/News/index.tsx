@@ -1,44 +1,31 @@
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React, { useCallback, useMemo } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-import Image from 'components/Image';
-import Loading from 'components/Loading';
-import Buttonlet from 'components/Buttonlet';
+import Image from "components/Image";
+import Loading from "components/Loading";
+import Buttonlet from "components/Buttonlet";
 
-import {
-  dismissNewsItem,
-} from 'actions/news';
+import { dismissNewsItem } from "actions/news";
 
-import moment from 'moment';
-import { IAppState } from 'types/app';
-
+import moment from "moment";
+import { IAppState } from "types/app";
 
 function News(props: Props) {
-  const {
-    active,
-    dispatch,
-    newsItem,
-  } = props;
+  const { active, dispatch, newsItem } = props;
 
   const dismiss = useCallback(() => {
     if (!newsItem) {
       return;
     }
     dispatch(dismissNewsItem(newsItem.id));
-  }, [
-    dispatch,
-    newsItem,
-  ]);
+  }, [dispatch, newsItem]);
 
   const date = useMemo(() => {
     if (!newsItem) {
-      return '';
+      return "";
     }
-    return moment(newsItem.atDateTime).format('DD MMMM YYYY');
+    return moment(newsItem.atDateTime).format("DD MMMM YYYY");
   }, [newsItem]);
 
   if (!active) {
@@ -46,7 +33,7 @@ function News(props: Props) {
   }
 
   if (!newsItem) {
-    return (<Loading spinner />);
+    return <Loading spinner />;
   }
 
   return (
@@ -54,16 +41,16 @@ function News(props: Props) {
       <div className="news-body">
         <Buttonlet
           classNames={{
-            containerClassName: 'news__close-button',
+            containerClassName: "news__close-button",
           }}
           type="close"
           onClick={dismiss}
         />
         <div
           style={{
-            display: 'flex',
-            marginBottom: '8px',
-            marginRight: '28px',
+            display: "flex",
+            marginBottom: "8px",
+            marginRight: "28px",
           }}
         >
           <Image
@@ -73,11 +60,7 @@ function News(props: Props) {
             width={40}
           />
           <div>
-            <div className="heading heading--2">
-              {' '}
-              {newsItem.heading}
-              {' '}
-            </div>
+            <div className="heading heading--2"> {newsItem.heading} </div>
             <div className="news-topline">
               <div className="heading heading--4">{date}</div>
             </div>
@@ -88,7 +71,6 @@ function News(props: Props) {
           style={{ marginBottom: 0 }}
         />
       </div>
-
     </div>
   );
 }
@@ -99,7 +81,7 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: Function, // eslint-disable-line
+  dispatch: Function; // eslint-disable-line
 };
 
 export default withRouter(connect(mapStateToProps)(News));

@@ -1,22 +1,24 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   ADD_FROM_TWITTER_FAILURE,
   ADD_FROM_TWITTER_REQUESTED,
   ADD_FROM_TWITTER_SUCCESS,
-} from 'actiontypes/contacts';
-import { VersionMismatch } from 'services/BaseService';
-import ContactService from 'services/ContactService';
+} from "actiontypes/contacts";
+import { VersionMismatch } from "services/BaseService";
+import ContactService from "services/ContactService";
 
-import fetchContacts from './fetchContacts';
+import fetchContacts from "./fetchContacts";
 
 const service = new ContactService();
 
-export type AddFromTwitterRequested = { type: typeof ADD_FROM_TWITTER_REQUESTED };
+export type AddFromTwitterRequested = {
+  type: typeof ADD_FROM_TWITTER_REQUESTED;
+};
 export type AddFromTwitterFailure = { type: typeof ADD_FROM_TWITTER_FAILURE };
 export type AddFromTwitterSuccess = { type: typeof ADD_FROM_TWITTER_SUCCESS };
 
-export type AddFromTwitterActions
-  = AddFromTwitterRequested
+export type AddFromTwitterActions =
+  | AddFromTwitterRequested
   | AddFromTwitterFailure
   | AddFromTwitterSuccess;
 
@@ -29,7 +31,7 @@ export default function addFromTwitter() {
 
     try {
       const { data } = await service.addTwitterContacts();
-      if (data.isSuccess || !('isSuccess' in data)) {
+      if (data.isSuccess || !("isSuccess" in data)) {
         dispatch(addFromTwitterSuccess(data));
         dispatch(fetchContacts());
         return data;

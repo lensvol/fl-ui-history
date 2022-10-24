@@ -1,44 +1,34 @@
-import React, {
-  ChangeEvent,
-  Component,
-  Fragment,
-} from 'react';
-import { connect } from 'react-redux';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import React, { ChangeEvent, Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import {
-  checkAvailability,
-  createCharacter,
-} from 'actions/registration';
-import { fetchUser } from 'actions/user';
+import { checkAvailability, createCharacter } from "actions/registration";
+import { fetchUser } from "actions/user";
 
-import Loading from 'components/Loading';
-import { IAppState } from 'types/app';
+import Loading from "components/Loading";
+import { IAppState } from "types/app";
 
-import { Success } from 'services/BaseMonadicService';
-import CreateCharacterComponent from './CreateCharacterComponent';
-import CharacterNameContext from './CharacterNameContext';
-import ConfirmCancelCreateModal from './components/ConfirmCancelCreateModal';
+import { Success } from "services/BaseMonadicService";
+import CreateCharacterComponent from "./CreateCharacterComponent";
+import CharacterNameContext from "./CharacterNameContext";
+import ConfirmCancelCreateModal from "./components/ConfirmCancelCreateModal";
 
 type State = {
-  avatar: string | undefined,
-  errors: any,
-  gender: any | undefined,
-  isCheckingAvailability: boolean,
-  isConfirmCancelModalOpen: boolean,
-  isFetching: boolean,
-  isSubmitting: boolean,
-  userName: string,
-  userNameIsAvailable: boolean,
+  avatar: string | undefined;
+  errors: any;
+  gender: any | undefined;
+  isCheckingAvailability: boolean;
+  isConfirmCancelModalOpen: boolean;
+  isFetching: boolean;
+  isSubmitting: boolean;
+  userName: string;
+  userNameIsAvailable: boolean;
 };
 
 export class CreateCharacterContainer extends Component<Props, State> {
   mounted = false;
 
-  static displayName = 'CreateCharacterContainer';
+  static displayName = "CreateCharacterContainer";
 
   state: State = {
     avatar: undefined,
@@ -48,7 +38,7 @@ export class CreateCharacterContainer extends Component<Props, State> {
     isConfirmCancelModalOpen: false,
     isFetching: false,
     isSubmitting: false,
-    userName: '',
+    userName: "",
     userNameIsAvailable: false,
   };
 
@@ -60,7 +50,9 @@ export class CreateCharacterContainer extends Component<Props, State> {
     this.setState({ isFetching: true });
     const result = await dispatch(fetchUser());
     if (result instanceof Success) {
-      const { user: { name: userName } } = result.data;
+      const {
+        user: { name: userName },
+      } = result.data;
       if (userName) {
         this.setState({ userName, isFetching: false }, () => {
           // Validate the user name after setting state
@@ -87,7 +79,7 @@ export class CreateCharacterContainer extends Component<Props, State> {
 
       const { isSuccess } = result;
 
-      this.setState(state => ({
+      this.setState((state) => ({
         isCheckingAvailability: false,
         userNameIsAvailable: isSuccess,
         errors: {
@@ -128,10 +120,12 @@ export class CreateCharacterContainer extends Component<Props, State> {
     const { avatar, gender, userName } = this.state;
     this.setState({ isSubmitting: true });
     // Send to the character-creation endpoint
-    const result = await dispatch(createCharacter({ avatar, gender, userName }));
+    const result = await dispatch(
+      createCharacter({ avatar, gender, userName })
+    );
     const { isSuccess } = result;
     if (isSuccess) {
-      history.push('/');
+      history.push("/");
     }
   };
 
@@ -152,14 +146,14 @@ export class CreateCharacterContainer extends Component<Props, State> {
       return (
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            height: '100vh',
-            width: '100vw',
-            top: '0',
-            left: '0',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            height: "100vh",
+            width: "100vw",
+            top: "0",
+            left: "0",
           }}
         >
           <Loading spinner />
@@ -168,10 +162,10 @@ export class CreateCharacterContainer extends Component<Props, State> {
     }
 
     const canSubmit = !!(
-      avatar !== undefined
-      && gender !== undefined
-      && userName.length
-      && userNameIsAvailable
+      avatar !== undefined &&
+      gender !== undefined &&
+      userName.length &&
+      userNameIsAvailable
     );
 
     return (
@@ -204,13 +198,14 @@ export class CreateCharacterContainer extends Component<Props, State> {
         </Fragment>
       </CharacterNameContext.Provider>
     );
-  }
+  };
 }
 
 const mapStateToProps = ({ user }: IAppState) => ({ user });
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps> & {
-  dispatch: Function, // eslint-disable-line
-};
+type Props = RouteComponentProps &
+  ReturnType<typeof mapStateToProps> & {
+    dispatch: Function; // eslint-disable-line
+  };
 
 export default withRouter(connect(mapStateToProps)(CreateCharacterContainer));

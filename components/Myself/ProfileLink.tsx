@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
-
+import React from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
 
 export function ProfileLink({ name }: Props) {
   return (
@@ -17,7 +16,11 @@ export function ProfileLink({ name }: Props) {
   );
 }
 
-const mapStateToProps = ({ myself: { character: { name } } }: IAppState) => ({ name });
+const mapStateToProps = ({
+  myself: {
+    character: { name },
+  },
+}: IAppState) => ({ name });
 
 type Props = ReturnType<typeof mapStateToProps>;
 

@@ -1,4 +1,4 @@
-import { FINISH } from 'actiontypes/storylet';
+import { FINISH } from "actiontypes/storylet";
 
 /** ----------------------------------------------------------------------------
  * FINISH

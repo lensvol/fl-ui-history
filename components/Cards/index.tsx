@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import { fetch as fetchCards } from 'actions/cards';
-import { IAppState } from 'types/app';
+import React, { useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
+import { fetch as fetchCards } from "actions/cards";
+import { IAppState } from "types/app";
 
-import DeckRefreshContext from 'components/DeckRefreshContext';
-import Deck from './components/Deck';
-import Hand from './components/Hand';
+import DeckRefreshContext from "components/DeckRefreshContext";
+import Deck from "./components/Deck";
+import Hand from "./components/Hand";
 
 const mapStateToProps = ({
   cards: { wasInvalidatedByEquipmentChange },
@@ -19,10 +16,7 @@ const mapStateToProps = ({
 });
 
 function Cards(props: ReturnType<typeof mapStateToProps>) {
-  const {
-    showOps,
-    wasInvalidatedByEquipmentChange,
-  } = props;
+  const { showOps, wasInvalidatedByEquipmentChange } = props;
 
   const dispatch = useDispatch();
 
@@ -39,13 +33,13 @@ function Cards(props: ReturnType<typeof mapStateToProps>) {
   return (
     <div className="cards">
       <DeckRefreshContext.Consumer>
-        {value => <Deck {...value} />}
+        {(value) => <Deck {...value} />}
       </DeckRefreshContext.Consumer>
       <Hand />
     </div>
   );
 }
 
-Cards.displayName = 'Cards';
+Cards.displayName = "Cards";
 
 export default connect(mapStateToProps)(Cards);

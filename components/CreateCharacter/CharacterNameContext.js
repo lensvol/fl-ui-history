@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
 const CharacterNameContext = React.createContext();
-CharacterNameContext.displayName = 'CharacterNameContext';
+CharacterNameContext.displayName = "CharacterNameContext";
 
 export default CharacterNameContext;

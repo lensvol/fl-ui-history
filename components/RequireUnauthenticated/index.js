@@ -1,12 +1,8 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import {
-  Route,
-  Redirect,
-  withRouter,
-} from 'react-router-dom';
+import React from "react";
+import { connect } from "react-redux";
+import { Route, Redirect, withRouter } from "react-router-dom";
 
-import destructureJwt from 'utils/destructureJwt';
+import destructureJwt from "utils/destructureJwt";
 
 export function RequireUnauthenticated({ component: Component, ...rest }) {
   const { userId } = destructureJwt();
@@ -15,7 +11,7 @@ export function RequireUnauthenticated({ component: Component, ...rest }) {
       {...rest}
       render={(props) => {
         if (userId) {
-          return <Redirect to={{ pathname: '/' }} />;
+          return <Redirect to={{ pathname: "/" }} />;
         }
         return <Component {...props} />;
       }}
@@ -23,7 +19,7 @@ export function RequireUnauthenticated({ component: Component, ...rest }) {
   );
 }
 
-RequireUnauthenticated.displayName = 'RequireUnauthenticated';
+RequireUnauthenticated.displayName = "RequireUnauthenticated";
 
 const mapStateToProps = ({ user: { loggedIn } }) => ({ loggedIn });
 

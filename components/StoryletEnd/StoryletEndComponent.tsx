@@ -1,27 +1,24 @@
-import React from 'react';
+import React from "react";
 
-import QualityUpdates from 'components/QualityUpdates';
-import StoryletRoot from 'components/StoryletRoot';
-import {
-  IMessages,
-} from 'types/app/messages';
+import QualityUpdates from "components/QualityUpdates";
+import StoryletRoot from "components/StoryletRoot";
+import { IMessages } from "types/app/messages";
 
-import AccessCode from './components/AccessCode';
-import ContinueButton from './components/ContinueButton';
+import AccessCode from "./components/AccessCode";
+import ContinueButton from "./components/ContinueButton";
 
 interface Props {
-  accessCode?: any,
-  canGoAgain: boolean,
-  disabled: boolean,
-  event: any,
-  isGoingOnwards: boolean,
-  isTryingAgain: boolean
-  messages: IMessages,
-  onGoOnwards: () => Promise<void>,
-  onTryAgain: () => Promise<void>,
-  rootEventId: string | number | undefined,
+  accessCode?: any;
+  canGoAgain: boolean;
+  disabled: boolean;
+  event: any;
+  isGoingOnwards: boolean;
+  isTryingAgain: boolean;
+  messages: IMessages;
+  onGoOnwards: () => Promise<void>;
+  onTryAgain: () => Promise<void>;
+  rootEventId: string | number | undefined;
 }
-
 
 export default function StoryletEndComponent({
   accessCode,

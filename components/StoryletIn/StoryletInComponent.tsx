@@ -1,16 +1,16 @@
-import React, { Fragment } from 'react';
+import React, { Fragment } from "react";
 
-import StoryletRoot from 'components/StoryletRoot';
-import Branch from 'components/Branch';
-import GoBack from 'components/StoryletIn/GoBack';
-import { IBranch, IStorylet } from 'types/storylet';
+import StoryletRoot from "components/StoryletRoot";
+import Branch from "components/Branch";
+import GoBack from "components/StoryletIn/GoBack";
+import { IBranch, IStorylet } from "types/storylet";
 
 interface Props {
-  branches: IBranch[],
-  isChoosing: boolean,
-  isGoingBack: boolean,
-  onGoBack: () => {},
-  storylet: IStorylet,
+  branches: IBranch[];
+  isChoosing: boolean;
+  isGoingBack: boolean;
+  onGoBack: () => {};
+  storylet: IStorylet;
 }
 
 export default function StoryletInComponent({
@@ -28,8 +28,12 @@ export default function StoryletInComponent({
 
   return (
     <Fragment>
-      <StoryletRoot data={storylet} shareData={storylet} rootEventId={storylet.id} />
-      {branches.map(branch => (
+      <StoryletRoot
+        data={storylet}
+        shareData={storylet}
+        rootEventId={storylet.id}
+      />
+      {branches.map((branch) => (
         <Branch
           key={branch.id}
           branch={branch}
@@ -47,7 +51,6 @@ export default function StoryletInComponent({
         />
       </div>
     </Fragment>
-
   );
 }
 

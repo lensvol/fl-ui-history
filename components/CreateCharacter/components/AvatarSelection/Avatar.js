@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import classnames from "classnames";
 
-import Image from 'components/Image';
+import Image from "components/Image";
 
 export default function Avatar(props) {
   const { name, onClick, active } = props;
 
   const avatarClass = classnames({
-    'button--link': true,
-    'signup-avatar': true,
-    'img-bordered': true,
-    'img-selectable': true,
-    'img-selected': active,
+    "button--link": true,
+    "signup-avatar": true,
+    "img-bordered": true,
+    "img-selectable": true,
+    "img-selected": active,
   });
 
   return (
@@ -29,7 +29,7 @@ export default function Avatar(props) {
   );
 }
 
-Avatar.displayName = 'Avatar';
+Avatar.displayName = "Avatar";
 
 Avatar.propTypes = {
   active: PropTypes.bool.isRequired,

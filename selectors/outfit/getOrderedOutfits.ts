@@ -1,7 +1,7 @@
-import { OUTFIT_TYPE_ORDERING } from 'constants/outfits';
-import { createSelector } from 'reselect';
-import { IAppState } from 'types/app';
-import { IOutfit } from 'types/outfit';
+import { OUTFIT_TYPE_ORDERING } from "constants/outfits";
+import { createSelector } from "reselect";
+import { IAppState } from "types/app";
+import { IOutfit } from "types/outfit";
 
 const getOutfits = (state: IAppState) => state.myself.character.outfits;
 

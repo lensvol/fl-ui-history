@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import ResponsiveFooter from 'components/Responsive/ResponsiveFooter';
-import MediaMdDown from 'components/Responsive/MediaMdDown';
-import MediaLgUp from 'components/Responsive/MediaLgUp';
-import FooterContent from './components/FooterContent';
+import ResponsiveFooter from "components/Responsive/ResponsiveFooter";
+import MediaMdDown from "components/Responsive/MediaMdDown";
+import MediaLgUp from "components/Responsive/MediaLgUp";
+import FooterContent from "./components/FooterContent";
 
 const Footer = () => (
   <div>
@@ -20,6 +20,6 @@ const Footer = () => (
   </div>
 );
 
-Footer.displayName = 'Footer';
+Footer.displayName = "Footer";
 
 export default Footer;

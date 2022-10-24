@@ -1,19 +1,13 @@
-import { isUnterzeeSetting } from 'features/mapping';
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
-import { ITooltipData } from 'components/ModalTooltip/types';
-import {
-  MAP_ROOT_AREA_THE_FIFTH_CITY,
-} from 'features/mapping/constants';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
-import LondonFallbackMap from './LondonFallbackMap';
-import UnterzeeFallbackMap from './UnterzeeFallbackMap';
-import MapModalTooltipContext from '../MapModalTooltipContext';
-import { OwnProps } from './props';
+import { isUnterzeeSetting } from "features/mapping";
+import React, { useCallback, useMemo, useState } from "react";
+import { ITooltipData } from "components/ModalTooltip/types";
+import { MAP_ROOT_AREA_THE_FIFTH_CITY } from "features/mapping/constants";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
+import LondonFallbackMap from "./LondonFallbackMap";
+import UnterzeeFallbackMap from "./UnterzeeFallbackMap";
+import MapModalTooltipContext from "../MapModalTooltipContext";
+import { OwnProps } from "./props";
 
 function FallbackMap({ setting, ...restProps }: Props) {
   const { onAreaSelect } = restProps;
@@ -52,12 +46,7 @@ function FallbackMap({ setting, ...restProps }: Props) {
       );
     }
     return null;
-  }, [
-    isModalTooltipOpen,
-    restProps,
-    setting,
-    tooltipData,
-  ]);
+  }, [isModalTooltipOpen, restProps, setting, tooltipData]);
 
   // If we have no map root area, return null
 

@@ -1,9 +1,12 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { FETCH_OUTFIT_REQUESTED, FETCH_OUTFIT_SUCCESS, } from 'actiontypes/myself';
-import { ActionCreator } from 'redux';
-import { Either, Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import OutfitService, { FetchOutfitResponse } from 'services/OutfitService';
+import { handleVersionMismatch } from "actions/versionSync";
+import {
+  FETCH_OUTFIT_REQUESTED,
+  FETCH_OUTFIT_SUCCESS,
+} from "actiontypes/myself";
+import { ActionCreator } from "redux";
+import { Either, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import OutfitService, { FetchOutfitResponse } from "services/OutfitService";
 
 /** ----------------------------------------------------------------------------
  * FETCH OUTFIT
@@ -11,7 +14,11 @@ import OutfitService, { FetchOutfitResponse } from 'services/OutfitService';
 
 export default fetchOutfit(new OutfitService());
 
-export function fetchOutfit(service: OutfitService): () => (dispatch: Function) => Promise<Either<FetchOutfitResponse> | VersionMismatch> {
+export function fetchOutfit(
+  service: OutfitService
+): () => (
+  dispatch: Function
+) => Promise<Either<FetchOutfitResponse> | VersionMismatch> {
   return () => async (dispatch: Function) => {
     dispatch(fetchOutfitRequested());
 
@@ -31,18 +38,22 @@ export function fetchOutfit(service: OutfitService): () => (dispatch: Function) 
   };
 }
 
-export type FetchOutfitRequestedAction = { type: typeof FETCH_OUTFIT_REQUESTED };
+export type FetchOutfitRequestedAction = {
+  type: typeof FETCH_OUTFIT_REQUESTED;
+};
 
 export type FetchOutfitSuccessAction = {
-  type: typeof FETCH_OUTFIT_SUCCESS,
-  payload: FetchOutfitResponse,
+  type: typeof FETCH_OUTFIT_SUCCESS;
+  payload: FetchOutfitResponse;
 };
 
 const fetchOutfitRequested: ActionCreator<FetchOutfitRequestedAction> = () => ({
   type: FETCH_OUTFIT_REQUESTED,
 });
 
-export const fetchOutfitSuccess: ActionCreator<FetchOutfitSuccessAction> = (data: FetchOutfitResponse) => ({
+export const fetchOutfitSuccess: ActionCreator<FetchOutfitSuccessAction> = (
+  data: FetchOutfitResponse
+) => ({
   type: FETCH_OUTFIT_SUCCESS,
   payload: data,
 });

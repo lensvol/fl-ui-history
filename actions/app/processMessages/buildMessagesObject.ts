@@ -1,4 +1,4 @@
-import findOutfitGrantedMessage from 'actions/app/processMessages/findOutfitGrantedMessage';
+import findOutfitGrantedMessage from "actions/app/processMessages/findOutfitGrantedMessage";
 import {
   ACTIONS_REFRESHED_MESSAGE,
   AREA_CHANGE_MESSAGE,
@@ -8,7 +8,7 @@ import {
   FATE_BRANCH_CURRENCY_USED_MESSAGE,
   FATE_POINT_CHANGE_MESSAGE,
   STORE_ITEM_CURRENCY_USED_MESSAGE,
-} from 'constants/message-types';
+} from "constants/message-types";
 import {
   ActionsRefreshedMessage,
   ApiResultMessageQualityEffect,
@@ -17,15 +17,18 @@ import {
   IMessages,
   IMessagesObject,
   DeckRefreshedMessage,
-} from 'types/app/messages';
+} from "types/app/messages";
 
-export default function buildMessagesObject(messages: IMessages): IMessagesObject {
+export default function buildMessagesObject(
+  messages: IMessages
+): IMessagesObject {
   if (!Array.isArray(messages)) {
     return {
       ...messages,
       // Live/staging API differ in where area change messages go; this line
       // ensures that we find it if it's in defaultMessages
-      areaMessage: messages.areaMessage ?? findAreaMessage(messages.defaultMessages),
+      areaMessage:
+        messages.areaMessage ?? findAreaMessage(messages.defaultMessages),
     };
   }
   return {
@@ -42,8 +45,10 @@ export default function buildMessagesObject(messages: IMessages): IMessagesObjec
   };
 }
 
-export function excludeSpecialMessages(messages: ApiResultMessageQualityEffect[]) {
-  return messages.filter(m => !isSpecialMessage(m));
+export function excludeSpecialMessages(
+  messages: ApiResultMessageQualityEffect[]
+) {
+  return messages.filter((m) => !isSpecialMessage(m));
 }
 
 export function findActionMessage(messages: ApiResultMessageQualityEffect[]) {
@@ -54,7 +59,9 @@ export function findActionMessage(messages: ApiResultMessageQualityEffect[]) {
   return undefined;
 }
 
-export function findDifficultyMessages(messages: ApiResultMessageQualityEffect[]) {
+export function findDifficultyMessages(
+  messages: ApiResultMessageQualityEffect[]
+) {
   return messages.filter(isDifficultyMessage);
 }
 
@@ -66,7 +73,9 @@ export function findAreaMessage(messages: ApiResultMessageQualityEffect[]) {
   return undefined;
 }
 
-export function findDeckRefreshedMessage(messages: ApiResultMessageQualityEffect[]) {
+export function findDeckRefreshedMessage(
+  messages: ApiResultMessageQualityEffect[]
+) {
   const deckRefreshedMessage = messages.find(isDeckRefreshedMessage);
   if (deckRefreshedMessage) {
     return deckRefreshedMessage as DeckRefreshedMessage;
@@ -82,12 +91,16 @@ export function findFateMessage(messages: ApiResultMessageQualityEffect[]) {
   return undefined;
 }
 
-export function findHeadlineMessages(messages: ApiResultMessageQualityEffect[]) {
-  return excludeSpecialMessages(messages).filter(m => m.priority === 1);
+export function findHeadlineMessages(
+  messages: ApiResultMessageQualityEffect[]
+) {
+  return excludeSpecialMessages(messages).filter((m) => m.priority === 1);
 }
 
-export function findStandardMessages(messages: ApiResultMessageQualityEffect[]) {
-  return excludeSpecialMessages(messages).filter(m => m.priority === 2);
+export function findStandardMessages(
+  messages: ApiResultMessageQualityEffect[]
+) {
+  return excludeSpecialMessages(messages).filter((m) => m.priority === 2);
 }
 
 export function isActionsRefreshedMessage(m: ApiResultMessageQualityEffect) {
@@ -103,24 +116,23 @@ export function isDeckRefreshedMessage(m: ApiResultMessageQualityEffect) {
 }
 
 export function isDifficultyMessage(m: ApiResultMessageQualityEffect) {
-  return [
-    DIFFICULTY_ROLL_FAILURE_MESSAGE,
-    DIFFICULTY_ROLL_SUCCESS_MESSAGE,
-  ].indexOf(m.type) >= 0;
+  return (
+    [DIFFICULTY_ROLL_FAILURE_MESSAGE, DIFFICULTY_ROLL_SUCCESS_MESSAGE].indexOf(
+      m.type
+    ) >= 0
+  );
 }
 
 export function isFateMessage(m: ApiResultMessageQualityEffect) {
-  return [
-    FATE_BRANCH_CURRENCY_USED_MESSAGE,
-    FATE_POINT_CHANGE_MESSAGE,
-    STORE_ITEM_CURRENCY_USED_MESSAGE,
-  ].indexOf(m.type) >= 0;
+  return (
+    [
+      FATE_BRANCH_CURRENCY_USED_MESSAGE,
+      FATE_POINT_CHANGE_MESSAGE,
+      STORE_ITEM_CURRENCY_USED_MESSAGE,
+    ].indexOf(m.type) >= 0
+  );
 }
 
 export function isSpecialMessage(m: ApiResultMessageQualityEffect) {
-  return (
-    isAreaChangeMessage(m)
-    || isDifficultyMessage(m)
-    || isFateMessage(m)
-  );
+  return isAreaChangeMessage(m) || isDifficultyMessage(m) || isFateMessage(m);
 }

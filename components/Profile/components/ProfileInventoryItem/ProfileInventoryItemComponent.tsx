@@ -1,22 +1,18 @@
-import React, {
-  Fragment,
-  useState,
-  useCallback,
-} from 'react';
-import { connect } from 'react-redux';
-import classnames from 'classnames';
+import React, { Fragment, useState, useCallback } from "react";
+import { connect } from "react-redux";
+import classnames from "classnames";
 
-import { equipQuality } from 'actions/outfit';
-import { fetchProfile } from 'actions/profile';
-import Image from 'components/Image';
-import QualityPicker from 'components/QualityPicker';
-import categoryNameToHumanReadableCategoryName from 'utils/categoryNameToHumanReadableCategoryName';
+import { equipQuality } from "actions/outfit";
+import { fetchProfile } from "actions/profile";
+import Image from "components/Image";
+import QualityPicker from "components/QualityPicker";
+import categoryNameToHumanReadableCategoryName from "utils/categoryNameToHumanReadableCategoryName";
 
-import getQualityPickerQualities from 'selectors/profile/getQualityPickerQualitiesByCategory';
-import { IAppState } from 'types/app';
-import { IQuality } from 'types/qualities';
-import { IProfileCharacter } from 'types/profile';
-import { ThunkDispatch } from 'redux-thunk';
+import getQualityPickerQualities from "selectors/profile/getQualityPickerQualitiesByCategory";
+import { IAppState } from "types/app";
+import { IQuality } from "types/qualities";
+import { IProfileCharacter } from "types/profile";
+import { ThunkDispatch } from "redux-thunk";
 
 export function ProfileInventoryItemComponent(props: Props) {
   const {
@@ -37,31 +33,21 @@ export function ProfileInventoryItemComponent(props: Props) {
       await dispatch(fetchProfile(profileName));
       setIsChanging(false);
     },
-    [dispatch, profileName],
+    [dispatch, profileName]
   );
 
-  const handleClick = useCallback(
-    () => {
-      if (!editable) {
-        return;
-      }
-      setIsQualityPickerOpen(true);
-    },
-    [editable],
-  );
+  const handleClick = useCallback(() => {
+    if (!editable) {
+      return;
+    }
+    setIsQualityPickerOpen(true);
+  }, [editable]);
 
   const handleRequestClose = useCallback(() => {
     setIsQualityPickerOpen(false);
   }, []);
 
-  const {
-    availableAt,
-    category,
-    description,
-    id,
-    image,
-    name,
-  } = data;
+  const { availableAt, category, description, id, image, name } = data;
 
   const categoryName = categoryNameToHumanReadableCategoryName(category);
 
@@ -69,7 +55,11 @@ export function ProfileInventoryItemComponent(props: Props) {
     ...data,
     description: `
         <p>${description}</p>
-        ${data.availableAt ? `<p class="tooltip__available-at">${availableAt}</p>` : ''}
+        ${
+          data.availableAt
+            ? `<p class="tooltip__available-at">${availableAt}</p>`
+            : ""
+        }
       `,
     level: undefined,
     levelDescription: undefined, // Don't let the tooltip override the quality name
@@ -80,9 +70,9 @@ export function ProfileInventoryItemComponent(props: Props) {
       <li
         data-quality-id={id}
         className={classnames(
-          'profile__inventory-item',
-          editable && 'profile__inventory-item--editable',
-          isChanging && 'icon--is-loading',
+          "profile__inventory-item",
+          editable && "profile__inventory-item--editable",
+          isChanging && "icon--is-loading"
         )}
       >
         <Image
@@ -108,18 +98,21 @@ export function ProfileInventoryItemComponent(props: Props) {
   );
 }
 
-ProfileInventoryItemComponent.displayName = 'ProfileInventoryItemComponent';
+ProfileInventoryItemComponent.displayName = "ProfileInventoryItemComponent";
 
 const mapStateToProps = (state: IAppState, props: OwnProps) => ({
   qualityPickerQualities: getQualityPickerQualities(state, props),
 });
 
 interface OwnProps {
-  data: IQuality,
-  editable: boolean,
-  profileCharacter: IProfileCharacter,
+  data: IQuality;
+  editable: boolean;
+  profileCharacter: IProfileCharacter;
 }
 
-type Props = OwnProps & ReturnType<typeof mapStateToProps> & { dispatch: ThunkDispatch<any, any, any> };
+type Props = OwnProps &
+  ReturnType<typeof mapStateToProps> & {
+    dispatch: ThunkDispatch<any, any, any>;
+  };
 
 export default connect(mapStateToProps)(ProfileInventoryItemComponent);

@@ -1,14 +1,11 @@
-import React, {
-  ChangeEvent,
-  Component,
-} from 'react';
+import React, { ChangeEvent, Component } from "react";
 
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import * as SettingsActionCreators from 'actions/settings';
-import { ThunkDispatch } from 'redux-thunk';
-import { IAppState } from 'types/app';
+import * as SettingsActionCreators from "actions/settings";
+import { ThunkDispatch } from "redux-thunk";
+import { IAppState } from "types/app";
 
 class MessagePreferences extends Component<Props> {
   updateMessagePreferences = () => {
@@ -19,10 +16,12 @@ class MessagePreferences extends Component<Props> {
   handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { dispatch, messagePreferences } = this.props;
 
-    dispatch(SettingsActionCreators.updateMessagePreferences({
-      ...messagePreferences,
-      [e.target.name]: e.target.checked,
-    }));
+    dispatch(
+      SettingsActionCreators.updateMessagePreferences({
+        ...messagePreferences,
+        [e.target.name]: e.target.checked,
+      })
+    );
   };
 
   render() {
@@ -30,7 +29,9 @@ class MessagePreferences extends Component<Props> {
 
     return (
       <div>
-        <h2 className="heading heading--2">When should we message you directly?</h2>
+        <h2 className="heading heading--2">
+          When should we message you directly?
+        </h2>
         <form onSubmit={this.updateMessagePreferences}>
           <ul>
             <li className="checkbox">
@@ -41,8 +42,7 @@ class MessagePreferences extends Component<Props> {
                   checked={messagePreferences.messageAboutNiceness}
                   type="checkbox"
                   onChange={this.handleChange}
-                />
-                {' '}
+                />{" "}
                 A player invites me to something
               </label>
             </li>
@@ -54,8 +54,7 @@ class MessagePreferences extends Component<Props> {
                   type="checkbox"
                   checked={messagePreferences.messageAboutNastiness}
                   onChange={this.handleChange}
-                />
-                {' '}
+                />{" "}
                 A player wants to engage me in combat
               </label>
             </li>
@@ -67,8 +66,7 @@ class MessagePreferences extends Component<Props> {
                   type="checkbox"
                   checked={messagePreferences.messageAboutAnnouncements}
                   onChange={this.handleChange}
-                />
-                {' '}
+                />{" "}
                 There is an announcement about the game
               </label>
             </li>
@@ -80,8 +78,7 @@ class MessagePreferences extends Component<Props> {
                   type="checkbox"
                   checked={messagePreferences.messageAboutStorylets}
                   onChange={this.handleChange}
-                />
-                {' '}
+                />{" "}
                 When a story develops
               </label>
             </li>
@@ -93,7 +90,7 @@ class MessagePreferences extends Component<Props> {
             onClick={this.updateMessagePreferences}
             type="button"
           >
-            {isSaving ? 'Saving...' : 'Update'}
+            {isSaving ? "Saving..." : "Update"}
           </button>
         </p>
       </div>
@@ -101,13 +98,16 @@ class MessagePreferences extends Component<Props> {
   }
 }
 
-const mapStateToProps = ({ settings: { messagePreferences, isSaving } }: IAppState) => ({
+const mapStateToProps = ({
+  settings: { messagePreferences, isSaving },
+}: IAppState) => ({
   isSaving,
   messagePreferences,
 });
 
-type Props = ReturnType<typeof mapStateToProps> & RouteComponentProps & {
-  dispatch: ThunkDispatch<any, any, any>,
-};
+type Props = ReturnType<typeof mapStateToProps> &
+  RouteComponentProps & {
+    dispatch: ThunkDispatch<any, any, any>;
+  };
 
 export default withRouter(connect(mapStateToProps)(MessagePreferences));

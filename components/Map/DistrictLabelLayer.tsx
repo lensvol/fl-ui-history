@@ -1,25 +1,18 @@
-import React, {
-  Fragment,
-  useCallback,
-} from 'react';
-import {
-  IArea,
-  ILabelledStateAwareArea,
-  IStateAwareArea,
-} from 'types/map';
-import { isMapArea } from 'features/mapping';
-import MapModalTooltipContext from 'components/Map/MapModalTooltipContext';
-import AreaMarker from './AreaMarker';
+import React, { Fragment, useCallback } from "react";
+import { IArea, ILabelledStateAwareArea, IStateAwareArea } from "types/map";
+import { isMapArea } from "features/mapping";
+import MapModalTooltipContext from "components/Map/MapModalTooltipContext";
+import AreaMarker from "./AreaMarker";
 
 interface Props {
-  areas: ILabelledStateAwareArea[],
-  currentArea: IArea,
-  minimumZoomLevel?: number,
-  onAreaClick: (e: any, area: IArea) => Promise<void>,
-  onAreaSelect: (area?: IArea) => void,
-  onTapAtLowZoomLevel: (area: IArea) => void,
-  tooltipClassName?: string,
-  zoomLevel: number,
+  areas: ILabelledStateAwareArea[];
+  currentArea: IArea;
+  minimumZoomLevel?: number;
+  onAreaClick: (e: any, area: IArea) => Promise<void>;
+  onAreaSelect: (area?: IArea) => void;
+  onTapAtLowZoomLevel: (area: IArea) => void;
+  tooltipClassName?: string;
+  zoomLevel: number;
 }
 
 export default function DistrictLabelLayer({
@@ -34,18 +27,25 @@ export default function DistrictLabelLayer({
 }: Props) {
   const shouldAreaOverrideMinimumZoom = useCallback(
     (area: IStateAwareArea) => area.areaKey === currentArea.areaKey,
-    [currentArea],
+    [currentArea]
   );
 
-  const isInteractiveArea = useCallback(() => zoomLevel >= (minimumZoomLevel ?? 0), [minimumZoomLevel, zoomLevel]);
+  const isInteractiveArea = useCallback(
+    () => zoomLevel >= (minimumZoomLevel ?? 0),
+    [minimumZoomLevel, zoomLevel]
+  );
 
   return (
     <Fragment>
       {areas
-        .filter(area => shouldAreaOverrideMinimumZoom(area) || zoomLevel >= (minimumZoomLevel ?? 0))
+        .filter(
+          (area) =>
+            shouldAreaOverrideMinimumZoom(area) ||
+            zoomLevel >= (minimumZoomLevel ?? 0)
+        )
         .filter(isMapArea)
-        .filter(area => !area.shouldHideLabel)
-        .map(area => (
+        .filter((area) => !area.shouldHideLabel)
+        .map((area) => (
           <MapModalTooltipContext.Consumer key={area.areaKey}>
             {({ openModalTooltip }) => (
               <AreaMarker
@@ -66,4 +66,4 @@ export default function DistrictLabelLayer({
   );
 }
 
-DistrictLabelLayer.displayName = 'DistrictLabelLayer';
+DistrictLabelLayer.displayName = "DistrictLabelLayer";

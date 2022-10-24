@@ -1,29 +1,34 @@
-import React, { Component } from 'react';
-import StoryletRoot from 'components/StoryletRoot';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
-import { handleVersionMismatch } from 'actions/versionSync';
+import React, { Component } from "react";
+import StoryletRoot from "components/StoryletRoot";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
+import { handleVersionMismatch } from "actions/versionSync";
 
-import StoryletService from 'services/StoryletService';
+import StoryletService from "services/StoryletService";
 
-import { IAppState } from 'types/app';
-import { IEligibleFriend } from 'types/storylet';
-import InvitationForm from './components/InvitationForm';
-import sortEligibleFriends from './sortEligibleFriends';
-import ActContext from './ActContext';
-import SelectContactOrDesignatedContact from './SelectContactOrDesignatedContact';
+import { IAppState } from "types/app";
+import { IEligibleFriend } from "types/storylet";
+import InvitationForm from "./components/InvitationForm";
+import sortEligibleFriends from "./sortEligibleFriends";
+import ActContext from "./ActContext";
+import SelectContactOrDesignatedContact from "./SelectContactOrDesignatedContact";
 
 interface State {
-  eligibleFriends: IEligibleFriend[] | undefined,
-  ineligibleContacts: { name: string, qualifies: string, correctInstance: string, youQualify: string }[],
-  selectedContactId?: number,
+  eligibleFriends: IEligibleFriend[] | undefined;
+  ineligibleContacts: {
+    name: string;
+    qualifies: string;
+    correctInstance: string;
+    youQualify: string;
+  }[];
+  selectedContactId?: number;
 }
 
 class Act extends Component<Props, State> {
   mounted = false;
 
-  static displayName = 'Act';
+  static displayName = "Act";
 
   state = {
     eligibleFriends: [],
@@ -35,7 +40,9 @@ class Act extends Component<Props, State> {
     const { socialAct } = this.props;
     const designatedFriend = socialAct?.inviteeData.designatedFriend;
     this.mounted = true;
-    const { eligibleFriends } = socialAct?.inviteeData ?? { eligibleFriends: [] };
+    const { eligibleFriends } = socialAct?.inviteeData ?? {
+      eligibleFriends: [],
+    };
     this.setState({ eligibleFriends });
 
     // Update ineligible contacts
@@ -55,13 +62,23 @@ class Act extends Component<Props, State> {
     this.mounted = false;
   };
 
-  handleAddContact = ({ addedFriendId, eligibleFriends }: { addedFriendId: number, eligibleFriends: any[] }) => {
+  handleAddContact = ({
+    addedFriendId,
+    eligibleFriends,
+  }: {
+    addedFriendId: number;
+    eligibleFriends: any[];
+  }) => {
     // Update state with sorted list of eligible friends
-    this.setState({ eligibleFriends: [...eligibleFriends.sort(sortEligibleFriends)] });
+    this.setState({
+      eligibleFriends: [...eligibleFriends.sort(sortEligibleFriends)],
+    });
     // Go get ineligible contacts (they'll update asynchronously)
     this.fetchIneligibleContacts();
     // Try to find the added friend in the updated list of eligible friends and select them if so
-    if (eligibleFriends.findIndex(friend => friend.id === addedFriendId) >= 0) {
+    if (
+      eligibleFriends.findIndex((friend) => friend.id === addedFriendId) >= 0
+    ) {
       this.setState({ selectedContactId: addedFriendId });
     }
   };
@@ -73,7 +90,7 @@ class Act extends Component<Props, State> {
     const id = Number(e.target.value);
 
     // @ts-ignore
-    if (eligibleFriends.find(_ => _.id === id)) {
+    if (eligibleFriends.find((_) => _.id === id)) {
       this.setState({ selectedContactId: id });
     }
   };
@@ -86,7 +103,9 @@ class Act extends Component<Props, State> {
     }
     try {
       // Fetch this branch's ineligible contacts from the server
-      const { data: { ineligibleContacts } } = await new StoryletService().fetchIneligibleContacts(id); // Update state
+      const {
+        data: { ineligibleContacts },
+      } = await new StoryletService().fetchIneligibleContacts(id); // Update state
       if (this.mounted) {
         this.setState({ ineligibleContacts });
       }
@@ -109,11 +128,8 @@ class Act extends Component<Props, State> {
       return null;
     }
 
-    const {
-      eligibleFriends,
-      ineligibleContacts,
-      selectedContactId,
-    } = this.state;
+    const { eligibleFriends, ineligibleContacts, selectedContactId } =
+      this.state;
 
     const onAddContact = this.handleAddContact;
     const onSelectContact = this.handleSelectContact;
@@ -128,10 +144,7 @@ class Act extends Component<Props, State> {
         }}
       >
         <div className="act">
-          <StoryletRoot
-            data={branch}
-            rootEventId={rootEventId}
-          />
+          <StoryletRoot data={branch} rootEventId={rootEventId} />
 
           <SelectContactOrDesignatedContact
             designatedFriend={designatedContact}
@@ -146,21 +159,16 @@ class Act extends Component<Props, State> {
         </div>
       </ActContext.Provider>
     );
-  }
+  };
 }
 
-const mapStateToProps = ({
-  storylet: {
-    socialAct,
-    storylet,
-  },
-}: IAppState) => ({
+const mapStateToProps = ({ storylet: { socialAct, storylet } }: IAppState) => ({
   socialAct,
   storylet,
 });
 
 interface Props extends ReturnType<typeof mapStateToProps> {
-  dispatch: ThunkDispatch<any, any, any>,
+  dispatch: ThunkDispatch<any, any, any>;
 }
 
 export default connect(mapStateToProps)(Act);

@@ -1,16 +1,15 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import Snippet from 'components/Snippet';
-import MediaXlUp from 'components/Responsive/MediaXlUp';
+import Snippet from "components/Snippet";
+import MediaXlUp from "components/Responsive/MediaXlUp";
 
-import Advert from 'components/Infobar/Advert';
-import Welcome from 'components/Infobar/Welcome';
-import { IAppState } from 'types/app';
-
+import Advert from "components/Infobar/Advert";
+import Welcome from "components/Infobar/Welcome";
+import { IAppState } from "types/app";
 
 class Infobar extends React.Component<Props> {
-  static displayName = 'Infobar';
+  static displayName = "Infobar";
 
   renderAdvert = () => {
     const { advert } = this.props;
@@ -25,9 +24,7 @@ class Infobar extends React.Component<Props> {
     if (!name || !currentArea?.name) {
       return null;
     }
-    return (
-      <Welcome name={name} currentAreaName={currentArea.name} />
-    );
+    return <Welcome name={name} currentAreaName={currentArea.name} />;
   };
 
   /**
@@ -48,15 +45,15 @@ class Infobar extends React.Component<Props> {
             </div>
           </div>
         </div>
-
       </MediaXlUp>
-
     );
   }
 }
 
 const mapStateToProps = ({
-  myself: { character: { name } },
+  myself: {
+    character: { name },
+  },
   infoBar: { advert, snippets },
   map: { currentArea },
 }: IAppState) => ({

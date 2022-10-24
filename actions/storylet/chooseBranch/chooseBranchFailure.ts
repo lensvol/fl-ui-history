@@ -1,9 +1,9 @@
-import * as StoryletActionTypes from 'actiontypes/storylet';
+import * as StoryletActionTypes from "actiontypes/storylet";
 
 export type ChooseBranchFailureAction = {
-  type: typeof StoryletActionTypes.CHOOSE_BRANCH_FAILURE,
-  error: boolean,
-  status?: number,
+  type: typeof StoryletActionTypes.CHOOSE_BRANCH_FAILURE;
+  error: boolean;
+  status?: number;
 };
 
 const chooseBranchFailure = (error: any) => ({

@@ -1,14 +1,14 @@
-import BaseService from './BaseService';
+import BaseService from "./BaseService";
 
 export interface IRegisterService {
-  emailRegister: (data: any) => Promise<{ data: any }>,
-  fetch: () => Promise<{ data: any }>,
+  emailRegister: (data: any) => Promise<{ data: any }>;
+  fetch: () => Promise<{ data: any }>;
 }
 
 export type FetchRegisterResponse = {
-  gentlemenAvatars: string[],
-  ladyAvatars: string[],
-  indistinctAvatars: string[],
+  gentlemenAvatars: string[];
+  ladyAvatars: string[];
+  indistinctAvatars: string[];
 };
 
 class RegisterService extends BaseService implements IRegisterService {
@@ -18,7 +18,7 @@ class RegisterService extends BaseService implements IRegisterService {
    */
   fetch = () => {
     const config = {
-      url: '/register',
+      url: "/register",
     };
     return this.doRequest(config);
   };
@@ -30,7 +30,6 @@ class RegisterService extends BaseService implements IRegisterService {
     return this.doRequest(config);
   };
 
-
   /**
    * Register
    * @param  {Object} data
@@ -38,13 +37,12 @@ class RegisterService extends BaseService implements IRegisterService {
    */
   emailRegister = (data = {}) => {
     const config = {
-      method: 'post',
-      url: '/register/emailregisteruser',
+      method: "post",
+      url: "/register/emailregisteruser",
       data,
     };
     return this.doRequest(config);
   };
-
 
   /**
    * Create Character
@@ -53,8 +51,8 @@ class RegisterService extends BaseService implements IRegisterService {
    */
   createCharacter = (data = {}) => {
     const config = {
-      method: 'post',
-      url: '/register/createcharacter',
+      method: "post",
+      url: "/register/createcharacter",
       data,
     };
     return this.doRequest(config);

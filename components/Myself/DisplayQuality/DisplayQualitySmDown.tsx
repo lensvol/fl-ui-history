@@ -1,15 +1,15 @@
-import React from 'react';
-import classnames from 'classnames';
+import React from "react";
+import classnames from "classnames";
 
-import Image from 'components/Image';
-import MediaSmDown from 'components/Responsive/MediaSmDown';
-import { ITooltipData } from 'components/ModalTooltip/types';
-import { IQuality } from 'types/qualities';
+import Image from "components/Image";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+import { ITooltipData } from "components/ModalTooltip/types";
+import { IQuality } from "types/qualities";
 
 type Props = IQuality & {
-  isChanging: boolean,
-  onClick: () => any,
-  tooltipData: ITooltipData,
+  isChanging: boolean;
+  onClick: () => any;
+  tooltipData: ITooltipData;
 };
 
 export default function DisplayQualitySmDown({
@@ -23,11 +23,17 @@ export default function DisplayQualitySmDown({
 }: Props) {
   return (
     <MediaSmDown>
-      <li className={classnames('js-item item', isChanging && 'display-quality--is-changing')}>
-        <div className={classnames(
-          'icon display-quality__image',
-          nature === 'Status' && 'icon--circular',
+      <li
+        className={classnames(
+          "js-item item",
+          isChanging && "display-quality--is-changing"
         )}
+      >
+        <div
+          className={classnames(
+            "icon display-quality__image",
+            nature === "Status" && "icon--circular"
+          )}
         >
           <Image
             alt={name}

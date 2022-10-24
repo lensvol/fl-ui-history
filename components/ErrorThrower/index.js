@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-unused-vars
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 export default class ErrorThrower extends Component {
-  static displayName = 'ErrorThrower';
+  static displayName = "ErrorThrower";
 
   async componentDidMount() {
     // throw new Error('An error has occurred in ErrorThrower!');
@@ -13,11 +13,10 @@ export default class ErrorThrower extends Component {
   }
 
   setStateRepeatedly = () => {
-    this.setState({ foo: 'bar'}, () => {
+    this.setState({ foo: "bar" }, () => {
       this.setStateRepeatedly();
     });
   };
-
 
   render() {
     // throw new Error('An error has occurred in ErrorThrower.render()!');

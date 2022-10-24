@@ -1,35 +1,19 @@
-import { FEATURE_IS_IT_ADVENT } from 'features/feature-flags';
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import {
-  withRouter,
-  Link,
-  RouteComponentProps,
-} from 'react-router-dom';
-import { Feature } from 'flagged';
-import {
-  enterFullScreen,
-  exitFullScreen,
-} from 'actions/screen';
-import { IAppState } from 'types/app';
+import { FEATURE_IS_IT_ADVENT } from "features/feature-flags";
+import React, { useCallback, useMemo } from "react";
+import { connect, useDispatch } from "react-redux";
+import { withRouter, Link, RouteComponentProps } from "react-router-dom";
+import { Feature } from "flagged";
+import { enterFullScreen, exitFullScreen } from "actions/screen";
+import { IAppState } from "types/app";
 
-import * as UserActionCreators from 'actions/user';
-import MediaLgUp from '../Responsive/MediaLgUp';
+import * as UserActionCreators from "actions/user";
+import MediaLgUp from "../Responsive/MediaLgUp";
 
-import AuthenticatedHeader from './AuthenticatedHeader';
-import UnauthenticatedHeader from './UnauthenticatedHeader';
+import AuthenticatedHeader from "./AuthenticatedHeader";
+import UnauthenticatedHeader from "./UnauthenticatedHeader";
 
 function Header(props: Props) {
-  const {
-    loggedIn,
-    screen,
-  } = props;
+  const { loggedIn, screen } = props;
 
   const dispatch = useDispatch();
 
@@ -42,10 +26,7 @@ function Header(props: Props) {
       return dispatch(exitFullScreen());
     }
     return dispatch(enterFullScreen());
-  }, [
-    dispatch,
-    screen.full,
-  ]);
+  }, [dispatch, screen.full]);
 
   const navContent = useMemo(() => {
     if (loggedIn) {
@@ -57,24 +38,17 @@ function Header(props: Props) {
       );
     }
     return <UnauthenticatedHeader />;
-  }, [
-    handleLogout,
-    loggedIn,
-    toggleFullScreen,
-  ]);
+  }, [handleLogout, loggedIn, toggleFullScreen]);
 
   return (
     <MediaLgUp>
-      <div
-        className="top-stripe"
-        role="banner"
-      >
+      <div className="top-stripe" role="banner">
         <Feature name={FEATURE_IS_IT_ADVENT}>
           <div
             style={{
-              alignItems: 'center',
-              display: 'flex',
-              marginLeft: '1rem',
+              alignItems: "center",
+              display: "flex",
+              marginLeft: "1rem",
             }}
           >
             <img
@@ -82,21 +56,17 @@ function Header(props: Props) {
               height="18"
               alt="Mr Sacks"
               style={{
-                marginRight: '.5rem',
+                marginRight: ".5rem",
               }}
             />
-            <a href="//advent.fallenlondon.com">
-              {' '}
-              It's Advent!
-              {' '}
-            </a>
+            <a href="//advent.fallenlondon.com"> It's Advent! </a>
           </div>
         </Feature>
         <div className="top-stripe__inner-container">
           <div
             style={{
-              display: 'flex',
-              alignItems: 'flex-end',
+              display: "flex",
+              alignItems: "flex-end",
             }}
           >
             <Link to="/">
@@ -105,9 +75,7 @@ function Header(props: Props) {
               </div>
             </Link>
           </div>
-          <nav className="top-stripe__user">
-            {navContent}
-          </nav>
+          <nav className="top-stripe__user">{navContent}</nav>
         </div>
       </div>
     </MediaLgUp>

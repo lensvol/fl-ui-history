@@ -1,15 +1,11 @@
-import React, { Fragment } from 'react';
-import { StoryletBodyProps } from '../props';
-import StoryletButtonsAndQreqs from 'components/Storylet/components/StoryletButtonsAndQreqs';
-import StoryletDescription from 'components/Storylet/components/StoryletDescription';
-import StoryletTitle from 'components/Storylet/components/StoryletTitle';
+import React, { Fragment } from "react";
+import { StoryletBodyProps } from "../props";
+import StoryletButtonsAndQreqs from "components/Storylet/components/StoryletButtonsAndQreqs";
+import StoryletDescription from "components/Storylet/components/StoryletDescription";
+import StoryletTitle from "components/Storylet/components/StoryletTitle";
 
 export default function StoryletBodyXsDown(props: StoryletBodyProps) {
-  const {
-    forceClearQreqs,
-    name,
-    teaser,
-  } = props;
+  const { forceClearQreqs, name, teaser } = props;
   return (
     <Fragment>
       <div className="storylet__body">

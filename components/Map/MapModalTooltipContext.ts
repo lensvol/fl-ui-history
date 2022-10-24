@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
 export interface MapModalTooltipContextValue {
-  openModalTooltip: (_: any) => void,
-  onRequestClose: () => void,
+  openModalTooltip: (_: any) => void;
+  onRequestClose: () => void;
 }
 
-const MapModalTooltipContext = React.createContext<MapModalTooltipContextValue>({
-  openModalTooltip: (_: any) => {
-  },
-  onRequestClose: () => {
-  },
-});
+const MapModalTooltipContext = React.createContext<MapModalTooltipContextValue>(
+  {
+    openModalTooltip: (_: any) => {},
+    onRequestClose: () => {},
+  }
+);
 
-MapModalTooltipContext.displayName = 'MapModalTooltipContext';
+MapModalTooltipContext.displayName = "MapModalTooltipContext";
 
 export default MapModalTooltipContext;

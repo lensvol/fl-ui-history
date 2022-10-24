@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Modal from 'components/Modal';
+import Modal from "components/Modal";
 
 export default function TravelFailureModal({
   disableTouchEvents,
@@ -26,7 +26,7 @@ export default function TravelFailureModal({
   );
 }
 
-TravelFailureModal.displayName = 'TravelFailureModal';
+TravelFailureModal.displayName = "TravelFailureModal";
 
 TravelFailureModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,

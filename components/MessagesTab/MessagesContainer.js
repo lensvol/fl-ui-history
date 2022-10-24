@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactCSSTransitionReplace from 'react-css-transition-replace';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import * as MessagesActionCreators from 'actions/messages';
-import Loading from 'components/Loading';
-import Messages from 'components/Messages';
-import GeneralContainer from 'components/GeneralContainer';
+import React from "react";
+import PropTypes from "prop-types";
+import ReactCSSTransitionReplace from "react-css-transition-replace";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import * as MessagesActionCreators from "actions/messages";
+import Loading from "components/Loading";
+import Messages from "components/Messages";
+import GeneralContainer from "components/GeneralContainer";
 
 class MessagesContainer extends React.Component {
   /**
@@ -14,12 +14,7 @@ class MessagesContainer extends React.Component {
    * @return {[type]} [description]
    */
   componentDidMount = () => {
-    const {
-      dispatch,
-      feedMessages,
-      interactions,
-      isFetching,
-    } = this.props;
+    const { dispatch, feedMessages, interactions, isFetching } = this.props;
 
     if (isFetching) {
       return;
@@ -33,7 +28,7 @@ class MessagesContainer extends React.Component {
     if (!feedMessages.length && !interactions.length) {
       dispatch(MessagesActionCreators.fetch());
     }
-  }
+  };
 
   /**
    * Render
@@ -43,7 +38,11 @@ class MessagesContainer extends React.Component {
     const { isFetching } = this.props;
     return (
       <GeneralContainer loading={isFetching}>
-        <ReactCSSTransitionReplace transitionName="fade-wait" transitionEnterTimeout={100} transitionLeaveTimeout={100}>
+        <ReactCSSTransitionReplace
+          transitionName="fade-wait"
+          transitionEnterTimeout={100}
+          transitionLeaveTimeout={100}
+        >
           {isFetching ? <Loading key="loading" /> : <Messages key="messages" />}
         </ReactCSSTransitionReplace>
       </GeneralContainer>
@@ -58,7 +57,9 @@ MessagesContainer.propTypes = {
   isFetching: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ messages: { feedMessages, interactions, isFetching } }) => ({
+const mapStateToProps = ({
+  messages: { feedMessages, interactions, isFetching },
+}) => ({
   feedMessages,
   interactions,
   isFetching,

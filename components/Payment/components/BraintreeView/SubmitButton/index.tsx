@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import Loading from 'components/Loading';
-import { NexQuantity } from 'types/payment';
+import Loading from "components/Loading";
+import { NexQuantity } from "types/payment";
 
 export default function SubmitButton(props: Props) {
   const {
@@ -12,7 +12,11 @@ export default function SubmitButton(props: Props) {
     onClick,
   } = props;
 
-  const disabled = isPurchasing || isWaitingForInstance || isWaitingForReCaptcha || (!selectedPackage);
+  const disabled =
+    isPurchasing ||
+    isWaitingForInstance ||
+    isWaitingForReCaptcha ||
+    !selectedPackage;
 
   return (
     <button
@@ -26,14 +30,14 @@ export default function SubmitButton(props: Props) {
   );
 }
 
-SubmitButton.displayName = 'SubmitButton';
+SubmitButton.displayName = "SubmitButton";
 
 type Props = {
-  isPurchasing: boolean,
-  isWaitingForInstance: boolean,
-  isWaitingForReCaptcha: boolean,
-  onClick: () => void,
-  selectedPackage: NexQuantity | undefined,
+  isPurchasing: boolean;
+  isWaitingForInstance: boolean;
+  isWaitingForReCaptcha: boolean;
+  onClick: () => void;
+  selectedPackage: NexQuantity | undefined;
 };
 
 function ButtonLabel({
@@ -42,23 +46,10 @@ function ButtonLabel({
   selectedPackage,
 }: Props) {
   if (isPurchasing || isWaitingForInstance) {
-    return (
-      <Loading
-        spinner
-        small
-      />
-    );
+    return <Loading spinner small />;
   }
   if (selectedPackage) {
-    return (
-      <span>
-        Buy
-        {' '}
-        {selectedPackage.quantity}
-        {' '}
-        FATE
-      </span>
-    );
+    return <span>Buy {selectedPackage.quantity} FATE</span>;
   }
   return <span>Complete purchase</span>;
 }

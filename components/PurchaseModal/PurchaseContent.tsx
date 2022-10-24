@@ -1,19 +1,14 @@
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import classnames from 'classnames';
-import { purchaseItem } from 'actions/fate';
-import PurchaseResult from 'components/PurchaseModal/PurchaseResult';
-import { connect } from 'react-redux';
-import MetaBlurb from 'components/Fate/MetaBlurb';
-import {
-  Success,
-} from 'services/BaseMonadicService';
-import { IFateCard } from 'types/fate';
-import { FateCardImage } from 'components/Fate/FateCard';
-import FateCardTitleAndByline from 'components/Fate/FateCard/FateCardTitleAndByline';
-import Loading from 'components/Loading';
+import React, { useCallback, useState } from "react";
+import classnames from "classnames";
+import { purchaseItem } from "actions/fate";
+import PurchaseResult from "components/PurchaseModal/PurchaseResult";
+import { connect } from "react-redux";
+import MetaBlurb from "components/Fate/MetaBlurb";
+import { Success } from "services/BaseMonadicService";
+import { IFateCard } from "types/fate";
+import { FateCardImage } from "components/Fate/FateCard";
+import FateCardTitleAndByline from "components/Fate/FateCard/FateCardTitleAndByline";
+import Loading from "components/Loading";
 
 enum PurchaseContentStep {
   Ready,
@@ -25,12 +20,14 @@ export function PurchaseContent({
   dispatch,
   onClickToClose,
 }: {
-  card: IFateCard | undefined,
-  dispatch: Function, // eslint-disable-line
-  onClickToClose: () => void,
+  card: IFateCard | undefined;
+  dispatch: Function; // eslint-disable-line
+  onClickToClose: () => void;
 }) {
   const [currentStep, setCurrentStep] = useState(PurchaseContentStep.Ready);
-  const [responseMessage, setResponseMessage] = useState<string | undefined>(undefined);
+  const [responseMessage, setResponseMessage] = useState<string | undefined>(
+    undefined
+  );
   const [isWorking, setIsWorking] = useState(false);
 
   const handlePurchase = useCallback(async () => {
@@ -62,7 +59,7 @@ export function PurchaseContent({
       return (
         <PurchaseContentSuccess
           card={card}
-          message={responseMessage ?? ''}
+          message={responseMessage ?? ""}
           onClick={onClickToClose}
         />
       );
@@ -85,14 +82,11 @@ function PurchaseContentSuccess({
   message,
   onClick,
 }: {
-  card: IFateCard,
-  message: string,
-  onClick: () => void,
+  card: IFateCard;
+  message: string;
+  onClick: () => void;
 }) {
-  const {
-    image,
-    name,
-  } = card;
+  const { image, name } = card;
   return (
     <PurchaseResult
       image={image}
@@ -109,16 +103,11 @@ function PurchaseContentReady({
   isWorking,
   onClick,
 }: {
-  card: IFateCard,
-  isWorking: boolean,
-  onClick: () => void,
+  card: IFateCard;
+  isWorking: boolean;
+  onClick: () => void;
 }) {
-  const {
-    canAfford,
-    description,
-    fanFavourite,
-    price,
-  } = card;
+  const { canAfford, description, fanFavourite, price } = card;
 
   return (
     <div className="media dialog__media">
@@ -129,40 +118,27 @@ function PurchaseContentReady({
           </div>
         </div>
         <div className="media__body">
-          <div style={{ marginBottom: '1rem' }}>
-            <FateCardTitleAndByline
-              {...card}
-              story
-              forceBreaks
-              noReleaseDate
-            />
+          <div style={{ marginBottom: "1rem" }}>
+            <FateCardTitleAndByline {...card} story forceBreaks noReleaseDate />
           </div>
           <p dangerouslySetInnerHTML={{ __html: description }} />
-          <MetaBlurb
-            card={card}
-          />
-          {
-            fanFavourite && (
+          <MetaBlurb card={card} />
+          {fanFavourite && (
+            <div style={{ position: "relative" }}>
               <div
-                style={{ position: 'relative' }}
+                style={{
+                  left: "-32px",
+                  position: "absolute",
+                  top: "-13px",
+                }}
               >
-                <div
-                  style={{
-                    left: '-32px',
-                    position: 'absolute',
-                    top: '-13px',
-                  }}
-                >
-                  <span
-                    className="fl-ico fl-ico-2x fl-ico-star fan-favourite__icon"
-                  />
-                </div>
-                <p style={{ fontStyle: 'italic' }}>
-                  This story is a fan favourite!
-                </p>
+                <span className="fl-ico fl-ico-2x fl-ico-star fan-favourite__icon" />
               </div>
-            )
-          }
+              <p style={{ fontStyle: "italic" }}>
+                This story is a fan favourite!
+              </p>
+            </div>
+          )}
         </div>
         <hr />
       </div>
@@ -170,24 +146,16 @@ function PurchaseContentReady({
         <button
           type="button"
           className={classnames(
-            'button button--secondary',
-            !canAfford && 'button--disabled',
+            "button button--secondary",
+            !canAfford && "button--disabled"
           )}
           onClick={onClick}
           disabled={!canAfford}
         >
           {isWorking ? (
-            <Loading
-              spinner
-              small
-            />
+            <Loading spinner small />
           ) : (
-            <span>
-              Purchase (
-              {price}
-              {' '}
-              Fate)
-            </span>
+            <span>Purchase ({price} Fate)</span>
           )}
         </button>
       </div>

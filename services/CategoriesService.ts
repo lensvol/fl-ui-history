@@ -1,19 +1,22 @@
-import BaseService, { Either } from './BaseMonadicService';
+import BaseService, { Either } from "./BaseMonadicService";
 
 export type FetchCategoriesResponse = {
-  thing: string[],
-  status: string[],
+  thing: string[];
+  status: string[];
 };
 
 export interface ICategoriesService {
-  fetchCategories: () => Promise<Either<FetchCategoriesResponse>>,
+  fetchCategories: () => Promise<Either<FetchCategoriesResponse>>;
 }
 
-export default class CategoriesService extends BaseService implements ICategoriesService {
+export default class CategoriesService
+  extends BaseService
+  implements ICategoriesService
+{
   fetchCategories = async () => {
     const config = {
-      method: 'GET',
-      url: '/app/categories',
+      method: "GET",
+      url: "/app/categories",
     };
     return this.doRequest<FetchCategoriesResponse>(config);
   };

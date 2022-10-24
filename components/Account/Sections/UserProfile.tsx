@@ -1,16 +1,12 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+import React, { useCallback, useMemo, useState } from "react";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
 
-import { logoutUser } from 'actions/user';
-import RequestPasswordResetModal from 'components/RequestPasswordResetModal';
-import { IAppState } from 'types/app';
-import ChangeUsernameModal from '../ChangeUsernameModal';
-import MetaQualities from '../MetaQualities';
+import { logoutUser } from "actions/user";
+import RequestPasswordResetModal from "components/RequestPasswordResetModal";
+import { IAppState } from "types/app";
+import ChangeUsernameModal from "../ChangeUsernameModal";
+import MetaQualities from "../MetaQualities";
 
 export function UserProfile(props: Props) {
   const { dispatch, user, timeTheHealer } = props;
@@ -23,11 +19,11 @@ export function UserProfile(props: Props) {
       return null;
     }
 
-    const formatter = Intl.DateTimeFormat('en-GB', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    const formatter = Intl.DateTimeFormat("en-GB", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
 
     return formatter.format(new Date(createdAt));
@@ -35,15 +31,23 @@ export function UserProfile(props: Props) {
 
   const userName = user.user?.name;
 
-  const [isChangeUsernameModalOpen, setIsChangeUsernameModalOpen] = useState(false);
-  const [isPasswordResetRequestModalOpen, setIsPasswordResetRequestModalOpen] = useState(false);
+  const [isChangeUsernameModalOpen, setIsChangeUsernameModalOpen] =
+    useState(false);
+  const [isPasswordResetRequestModalOpen, setIsPasswordResetRequestModalOpen] =
+    useState(false);
 
   const onLogout = useCallback(async () => {
     await dispatch(logoutUser());
   }, [dispatch]);
 
-  const handleRequestCloseChangeUsernameModal = useCallback(() => setIsChangeUsernameModalOpen(false), []);
-  const handleRequestClosePasswordResetRequestModal = useCallback(() => setIsPasswordResetRequestModalOpen(false), []);
+  const handleRequestCloseChangeUsernameModal = useCallback(
+    () => setIsChangeUsernameModalOpen(false),
+    []
+  );
+  const handleRequestClosePasswordResetRequestModal = useCallback(
+    () => setIsPasswordResetRequestModalOpen(false),
+    []
+  );
 
   const onSummonChangeUsernameModal = useCallback(() => {
     setIsChangeUsernameModalOpen(true);
@@ -58,11 +62,7 @@ export function UserProfile(props: Props) {
       <section>
         <h2 className="heading heading--2">User profile</h2>
         <p>
-          Username:
-          {' '}
-          {userName}
-          {' '}
-          (
+          Username: {userName} (
           <button
             className="button--link"
             onClick={onSummonChangeUsernameModal}
@@ -73,13 +73,7 @@ export function UserProfile(props: Props) {
           )
         </p>
 
-        {createdAtString && (
-          <p>
-            A Fallen Londoner since
-            {' '}
-            {createdAtString}
-          </p>
-        )}
+        {createdAtString && <p>A Fallen Londoner since {createdAtString}</p>}
 
         <ul className="list--padded">
           <li>
@@ -104,15 +98,9 @@ export function UserProfile(props: Props) {
 
         {dateTimeToExecute && (
           <>
-            <h2 className="heading heading--2">
-              Time, the Healer
-            </h2>
-            <p>
-              Your next visit from Time, the Healer should occur on:
-            </p>
-            <p>
-              {new Date(dateTimeToExecute).toString()}
-            </p>
+            <h2 className="heading heading--2">Time, the Healer</h2>
+            <p>Your next visit from Time, the Healer should occur on:</p>
+            <p>{new Date(dateTimeToExecute).toString()}</p>
           </>
         )}
 
@@ -132,10 +120,13 @@ export function UserProfile(props: Props) {
   );
 }
 
-const mapStateToProps = ({ user, timeTheHealer }: IAppState) => ({ user, timeTheHealer });
+const mapStateToProps = ({ user, timeTheHealer }: IAppState) => ({
+  user,
+  timeTheHealer,
+});
 
 type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: ThunkDispatch<any, any, any>,
+  dispatch: ThunkDispatch<any, any, any>;
 };
 
 export default connect(mapStateToProps)(UserProfile);

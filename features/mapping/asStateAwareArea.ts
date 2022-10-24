@@ -1,4 +1,4 @@
-import { shouldShowTooltip } from 'features/mapping/helpers';
+import { shouldShowTooltip } from "features/mapping/helpers";
 import {
   findParentArea,
   hasHitbox,
@@ -15,19 +15,15 @@ import {
   shouldShowGateIcon,
   shouldShowLockIcon,
   shouldShowMainDestination,
-} from 'features/mapping/index';
+} from "features/mapping/index";
 
-import {
-  IArea,
-  ISetting,
-  IStateAwareArea,
-} from 'types/map';
-
+import { IArea, ISetting, IStateAwareArea } from "types/map";
 
 export default function asStateAwareArea(
-  area: IArea, areas: IArea[],
+  area: IArea,
+  areas: IArea[],
   setting: ISetting | undefined,
-  currentArea: IArea | undefined,
+  currentArea: IArea | undefined
 ): IStateAwareArea {
   return {
     ...area,

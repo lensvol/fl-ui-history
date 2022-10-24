@@ -1,29 +1,33 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   ALLOW_LOGIN_FROM_APP_FAILURE,
   ALLOW_LOGIN_FROM_APP_REQUESTED,
   ALLOW_LOGIN_FROM_APP_SUCCESS,
-} from 'actiontypes/user';
-import * as UserActionTypes from 'actiontypes/user';
-import { ActionCreator } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import {
-  Either,
-  Success,
-} from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
+} from "actiontypes/user";
+import * as UserActionTypes from "actiontypes/user";
+import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { Either, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
 import UserService, {
   FetchUserResponse,
   IUserService,
-} from 'services/UserService';
+} from "services/UserService";
 
 export type FetchUserSuccess = { type: typeof ALLOW_LOGIN_FROM_APP_SUCCESS };
 export type FetchUserFailure = { type: typeof ALLOW_LOGIN_FROM_APP_FAILURE };
-export type FetchUserRequested = { type: typeof ALLOW_LOGIN_FROM_APP_REQUESTED };
+export type FetchUserRequested = {
+  type: typeof ALLOW_LOGIN_FROM_APP_REQUESTED;
+};
 
-export type FetchUserActions = FetchUserRequested | FetchUserFailure | FetchUserSuccess;
+export type FetchUserActions =
+  | FetchUserRequested
+  | FetchUserFailure
+  | FetchUserSuccess;
 
-const fetchUserSuccess: ActionCreator<FetchUserSuccess> = (data: FetchUserResponse) => ({
+const fetchUserSuccess: ActionCreator<FetchUserSuccess> = (
+  data: FetchUserResponse
+) => ({
   type: UserActionTypes.ALLOW_LOGIN_FROM_APP_SUCCESS,
   payload: data,
 });

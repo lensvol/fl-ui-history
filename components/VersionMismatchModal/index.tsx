@@ -1,16 +1,13 @@
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
-import { connect } from 'react-redux';
-import ReactModal from 'react-modal';
+import React, { useCallback, useMemo } from "react";
+import { connect } from "react-redux";
+import ReactModal from "react-modal";
 
-import * as phases from 'constants/phases';
-import { dismissVersionMismatchModal } from 'actions/versionSync';
-import { IAppState } from 'types/app';
+import * as phases from "constants/phases";
+import { dismissVersionMismatchModal } from "actions/versionSync";
+import { IAppState } from "types/app";
 
 type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: Function,
+  dispatch: Function;
 };
 
 export function VersionMismatchModal({
@@ -20,15 +17,8 @@ export function VersionMismatchModal({
   phase,
 }: Props) {
   const isOpen = useMemo(() => {
-    return isClientOutdated
-      && !isModalDismissed
-      && !(phase === phases.END);
-
-  }, [
-    isClientOutdated,
-    isModalDismissed,
-    phase,
-  ]);
+    return isClientOutdated && !isModalDismissed && !(phase === phases.END);
+  }, [isClientOutdated, isModalDismissed, phase]);
 
   const onRequestClose = useCallback(() => {
     dispatch(dismissVersionMismatchModal());
@@ -44,15 +34,13 @@ export function VersionMismatchModal({
       <h1
         className="heading heading--3"
         style={{
-          marginBottom: '.5rem',
-          textAlign: 'center',
+          marginBottom: ".5rem",
+          textAlign: "center",
         }}
       >
         Fallen London has updated!
       </h1>
-      <p>
-        Please refresh the page to continue.
-      </p>
+      <p>Please refresh the page to continue.</p>
       <div className="buttons">
         <button
           className="button button--primary"
@@ -67,10 +55,7 @@ export function VersionMismatchModal({
 
 const mapStateToProps = ({
   storylet: { phase },
-  versionSync: {
-    isClientOutdated,
-    isModalDismissed,
-  },
+  versionSync: { isClientOutdated, isModalDismissed },
 }: IAppState) => ({
   isClientOutdated,
   isModalDismissed,

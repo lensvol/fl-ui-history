@@ -1,24 +1,27 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   DELETE_PLAN_FAILURE,
   DELETE_PLAN_REQUESTED,
   DELETE_PLAN_SUCCESS,
-} from 'actiontypes/plans';
+} from "actiontypes/plans";
 // import * as PlansActionTypes from 'actiontypes/plans';
-import { clearCache } from 'actions/storylet';
-import { ActionCreator } from 'redux';
-import { VersionMismatch } from 'services/BaseService';
-import PlansService from 'services/PlansService';
-import { IPlansService } from 'types/plans';
+import { clearCache } from "actions/storylet";
+import { ActionCreator } from "redux";
+import { VersionMismatch } from "services/BaseService";
+import PlansService from "services/PlansService";
+import { IPlansService } from "types/plans";
 
 export type DeletePlanRequested = { type: typeof DELETE_PLAN_REQUESTED };
 export type DeletePlanFailure = { type: typeof DELETE_PLAN_FAILURE };
 export type DeletePlanSuccess = {
-  type: typeof DELETE_PLAN_SUCCESS,
-  payload: { toDelete: number },
+  type: typeof DELETE_PLAN_SUCCESS;
+  payload: { toDelete: number };
 };
 
-export type DeletePlanAction = DeletePlanRequested | DeletePlanFailure | DeletePlanSuccess;
+export type DeletePlanAction =
+  | DeletePlanRequested
+  | DeletePlanFailure
+  | DeletePlanSuccess;
 
 /** ----------------------------------------------------------------------------
  * DELETE PLAN
@@ -38,7 +41,7 @@ export function deletePlan(service: IPlansService) {
       // the Story tab. This is probably to avoid letting plan editing push players into Menace states
       dispatch(clearCache());
     } catch (error) {
-      if ( error instanceof VersionMismatch) {
+      if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
         return error;
       }
@@ -48,13 +51,19 @@ export function deletePlan(service: IPlansService) {
   };
 }
 
-export const deletePlanRequest: ActionCreator<DeletePlanRequested> = () => ({ type: DELETE_PLAN_REQUESTED });
+export const deletePlanRequest: ActionCreator<DeletePlanRequested> = () => ({
+  type: DELETE_PLAN_REQUESTED,
+});
 
-export const deletePlanSuccess: ActionCreator<DeletePlanSuccess> = (branchId: number) => ({
+export const deletePlanSuccess: ActionCreator<DeletePlanSuccess> = (
+  branchId: number
+) => ({
   type: DELETE_PLAN_SUCCESS,
   payload: {
     toDelete: branchId,
   },
 });
 
-export const deletePlanFailure: ActionCreator<DeletePlanFailure> = () => ({ type: DELETE_PLAN_FAILURE });
+export const deletePlanFailure: ActionCreator<DeletePlanFailure> = () => ({
+  type: DELETE_PLAN_FAILURE,
+});

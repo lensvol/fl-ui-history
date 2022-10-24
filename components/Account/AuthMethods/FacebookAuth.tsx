@@ -1,22 +1,14 @@
-import React, {
-  useCallback,
-} from 'react';
-import classnames from 'classnames';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
+import React, { useCallback } from "react";
+import classnames from "classnames";
+import { connect, useDispatch } from "react-redux";
 import FacebookLogin, {
   ReactFacebookLoginInfo,
   ReactFacebookFailureResponse,
-} from 'react-facebook-login';
+} from "react-facebook-login";
 
-import {
-  linkFacebook,
-  unlinkSocialAccount,
-} from 'actions/settings';
-import { IAppState } from 'types/app';
-import Config from 'configuration';
+import { linkFacebook, unlinkSocialAccount } from "actions/settings";
+import { IAppState } from "types/app";
+import Config from "configuration";
 
 export function FacebookAuth(props: Props) {
   const {
@@ -30,23 +22,25 @@ export function FacebookAuth(props: Props) {
     /* do nothing for now */
   }, []);
 
-  const onLoginSuccess = useCallback((res: ReactFacebookLoginInfo) => {
-    dispatch(linkFacebook(res));
-  }, [dispatch]);
+  const onLoginSuccess = useCallback(
+    (res: ReactFacebookLoginInfo) => {
+      dispatch(linkFacebook(res));
+    },
+    [dispatch]
+  );
 
   const onClickToUnlink = useCallback(() => {
-    dispatch(unlinkSocialAccount('facebook'));
+    dispatch(unlinkSocialAccount("facebook"));
   }, [dispatch]);
 
   if (facebookAuth) {
     return (
       <li>
-        <i className="fa fa-facebook-square" />
-        {' '}
+        <i className="fa fa-facebook-square" />{" "}
         <em>
           <button
             type="button"
-            className={classnames('button--link', buttonClassName)}
+            className={classnames("button--link", buttonClassName)}
             onClick={onClickToUnlink}
           >
             Unlink Facebook from this account
@@ -58,11 +52,10 @@ export function FacebookAuth(props: Props) {
 
   return (
     <>
-      <i className="fa fa-fw fa-facebook-square" />
-      {' '}
+      <i className="fa fa-fw fa-facebook-square" />{" "}
       <FacebookLogin
         appId={`${Config.facebookAppId}`}
-        cssClass={classnames('button--link', buttonClassName)}
+        cssClass={classnames("button--link", buttonClassName)}
         textButton="Link Facebook to this account"
         autoLoad={false}
         fields="name,email,picture"
@@ -74,7 +67,7 @@ export function FacebookAuth(props: Props) {
 }
 
 type OwnProps = {
-  buttonClassName?: string,
+  buttonClassName?: string;
 };
 
 const mapStateToProps = (state: IAppState) => ({

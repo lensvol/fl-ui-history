@@ -1,19 +1,19 @@
-import TippyWrapper from 'components/TippyWrapper';
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import TippyWrapper from "components/TippyWrapper";
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
-import Loading from 'components/Loading';
-import Image from 'components/Image';
-import QualityValue from 'components/QualityValue';
-import { IAppState } from 'types/app';
+import Loading from "components/Loading";
+import Image from "components/Image";
+import QualityValue from "components/QualityValue";
+import { IAppState } from "types/app";
 
 const mapStateToProps = ({ myself: { isFetching, qualities } }: IAppState) => {
   if (isFetching) {
     return { isFetching, pennies: 0 };
   }
 
-  const pennyQuality = qualities.find(({ name }) => name === 'Penny');
+  const pennyQuality = qualities.find(({ name }) => name === "Penny");
 
   if (!pennyQuality) {
     return { isFetching: isFetching as boolean, pennies: 0 };
@@ -27,9 +27,7 @@ type Props = ReturnType<typeof mapStateToProps>;
 function PlayerEchoes(props: Props) {
   return (
     <li className="item">
-      <TippyWrapper
-        tooltipData={{ description: 'Open the Bazaar tab' }}
-      >
+      <TippyWrapper tooltipData={{ description: "Open the Bazaar tab" }}>
         <Link
           to="/bazaar"
           className="icon--currency sidebar__echoes-button sidebar__button--has-focus-outline"
@@ -53,27 +51,20 @@ function PlayerEchoes(props: Props) {
   );
 }
 
-PlayerEchoes.displayName = 'PlayerEchoes';
+PlayerEchoes.displayName = "PlayerEchoes";
 
 function Value({ isFetching, pennies }: Props) {
   if (isFetching) {
     return (
       <div>
-        {' '}
-        <Loading
-          spinner
-          small
-        />
+        {" "}
+        <Loading spinner small />
       </div>
     );
   }
   return (
     <div className="item__value">
-      <QualityValue
-        value={pennies}
-        isCurrency
-        invert
-      />
+      <QualityValue value={pennies} isCurrency invert />
     </div>
   );
 }

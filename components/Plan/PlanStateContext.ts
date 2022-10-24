@@ -1,13 +1,13 @@
-import { createContext} from 'react';
+import { createContext } from "react";
 
 export type PlanStateContextValue = {
-  isSaving: boolean,
+  isSaving: boolean;
 };
 
 const PlanStateContext = createContext<PlanStateContextValue>({
   isSaving: false,
 });
 
-PlanStateContext.displayName = 'PlanStateContext';
+PlanStateContext.displayName = "PlanStateContext";
 
 export default PlanStateContext;

@@ -1,10 +1,10 @@
-import React from 'react';
-import Image from 'components/Image';
+import React from "react";
+import Image from "components/Image";
 
 type Props = {
-  avatarImage: string,
-  viewCameos: () => void,
-  canChangeFaceForFree: boolean,
+  avatarImage: string;
+  viewCameos: () => void;
+  canChangeFaceForFree: boolean;
 };
 
 export default function CameoAndViewButton({
@@ -27,7 +27,7 @@ export default function CameoAndViewButton({
         onClick={viewCameos}
         className="button button--primary u-space-above myself-profile__button--change-face"
       >
-        {canChangeFaceForFree ? 'Change face' : 'View cameos'}
+        {canChangeFaceForFree ? "Change face" : "View cameos"}
       </button>
     </div>
   );

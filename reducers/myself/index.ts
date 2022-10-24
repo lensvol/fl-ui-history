@@ -11,36 +11,33 @@ import {
   SET_JOURNAL_PRIVACY_REQUESTED,
   SET_CAN_CHANGE_OUTFIT,
   CHANGE_OUTFIT_REQUESTED,
-} from 'actiontypes/myself';
+} from "actiontypes/myself";
 
 import {
   SetJournalPrivacyRequested,
   SetJournalPrivacySuccess,
-} from 'actions/myself/setJournalPrivacy';
-import { TransactionAction } from 'actions/exchange/makeTransaction';
-import { MyselfActions } from 'actions/myself';
-import { OutfitActions } from 'actions/outfit';
+} from "actions/myself/setJournalPrivacy";
+import { TransactionAction } from "actions/exchange/makeTransaction";
+import { MyselfActions } from "actions/myself";
+import { OutfitActions } from "actions/outfit";
 
-import {
-  BUY_ITEMS_SUCCESS,
-  SELL_ITEMS_SUCCESS,
-} from 'actiontypes/exchange';
-import changeOutfitRequested from 'reducers/myself/changeOutfitRequested';
-import renameOutfitSuccess from 'reducers/myself/renameOutfitSuccess';
+import { BUY_ITEMS_SUCCESS, SELL_ITEMS_SUCCESS } from "actiontypes/exchange";
+import changeOutfitRequested from "reducers/myself/changeOutfitRequested";
+import renameOutfitSuccess from "reducers/myself/renameOutfitSuccess";
 
-import { IMyselfState } from 'types/myself';
-import chooseNewDisplayQualitySuccess from './chooseNewDisplayQualitySuccess';
-import exchangeTransactionSuccess from './exchangeTransactionSuccess';
-import fetchMyselfSuccess from './fetchMyselfSuccess';
-import myselfChanged from './myselfChanged';
-import nameChanged from './nameChanged';
+import { IMyselfState } from "types/myself";
+import chooseNewDisplayQualitySuccess from "./chooseNewDisplayQualitySuccess";
+import exchangeTransactionSuccess from "./exchangeTransactionSuccess";
+import fetchMyselfSuccess from "./fetchMyselfSuccess";
+import myselfChanged from "./myselfChanged";
+import nameChanged from "./nameChanged";
 
 // This is the expected state structure; we're explicitly setting
 // things as undefined so that we have a record of how we expect it to look
 export const INITIAL_STATE: IMyselfState = {
   categories: [],
   character: {
-    avatarImage: 'beardy',
+    avatarImage: "beardy",
     // canChangeOutfit: false,
     currentDomicile: {
       description: undefined,
@@ -53,7 +50,7 @@ export const INITIAL_STATE: IMyselfState = {
     id: undefined,
     journalIsPrivate: false,
     mantelpieceItemId: undefined,
-    name: 'Someone',
+    name: "Someone",
     outfits: [],
     scrapbookStatusId: undefined,
     setting: undefined,
@@ -66,7 +63,7 @@ export const INITIAL_STATE: IMyselfState = {
 
 export default function reducer(
   state = INITIAL_STATE,
-  action: MyselfActions | OutfitActions | TransactionAction,
+  action: MyselfActions | OutfitActions | TransactionAction
 ): IMyselfState {
   switch (action.type) {
     case FETCH_MYSELF_REQUESTED:
@@ -89,10 +86,10 @@ export default function reducer(
       return exchangeTransactionSuccess(state, action.payload);
 
     case CHOOSE_NEW_MANTELPIECE_SUCCESS:
-      return chooseNewDisplayQualitySuccess(state, action, 'mantelpieceItemId');
+      return chooseNewDisplayQualitySuccess(state, action, "mantelpieceItemId");
 
     case CHOOSE_NEW_SCRAPBOOK_SUCCESS:
-      return chooseNewDisplayQualitySuccess(state, action, 'scrapbookStatusId');
+      return chooseNewDisplayQualitySuccess(state, action, "scrapbookStatusId");
 
     case RENAME_OUTFIT_SUCCESS:
       return renameOutfitSuccess(state, action.payload);
@@ -124,7 +121,8 @@ export default function reducer(
         ...state,
         character: {
           ...state.character,
-          journalIsPrivate: (action as SetJournalPrivacyRequested).payload.journalIsPrivate,
+          journalIsPrivate: (action as SetJournalPrivacyRequested).payload
+            .journalIsPrivate,
         },
       };
     }
@@ -134,7 +132,8 @@ export default function reducer(
         ...state,
         character: {
           ...state.character,
-          journalIsPrivate: (action as SetJournalPrivacySuccess).payload.journalIsPrivate,
+          journalIsPrivate: (action as SetJournalPrivacySuccess).payload
+            .journalIsPrivate,
         },
       };
     }

@@ -1,7 +1,7 @@
-import WorldQualityDescription from 'components/Tooltip/WorldQualityDescription';
-import React from 'react';
-import { ITooltipData } from 'components/ModalTooltip/types';
-import EnhancementDescription from 'components/Tooltip/EnhancementDescription';
+import WorldQualityDescription from "components/Tooltip/WorldQualityDescription";
+import React from "react";
+import { ITooltipData } from "components/ModalTooltip/types";
+import EnhancementDescription from "components/Tooltip/EnhancementDescription";
 
 export default function ModalTooltipComponent(props: ITooltipData) {
   // Destructure tooltipData
@@ -24,40 +24,36 @@ export default function ModalTooltipComponent(props: ITooltipData) {
   return (
     <div
       className="tooltip--item-modal"
-      style={{ touchAction: disableTouchEvents ? 'none' : undefined }}
+      style={{ touchAction: disableTouchEvents ? "none" : undefined }}
     >
       {image && (
-        <div
-          className="icon icon--circular tooltip__icon"
-        >
-          <img
-            alt={alt}
-            src={imagePath}
-          />
+        <div className="icon icon--circular tooltip__icon">
+          <img alt={alt} src={imagePath} />
         </div>
       )}
-      <div className={Image ? 'tooltip__desc' : 'tooltip__desc__noImage'}>
+      <div className={Image ? "tooltip__desc" : "tooltip__desc__noImage"}>
         <span
           className="item__name"
-          dangerouslySetInnerHTML={{ __html: name ?? '' }}
-        />
-        {' '}
+          dangerouslySetInnerHTML={{ __html: name ?? "" }}
+        />{" "}
         <span className="item__value">
           {level}
           {cap !== undefined && ` / ${cap}`}
         </span>
         <p>
-          <span dangerouslySetInnerHTML={{ __html: description ?? '' }} />
-          {(enhancements?.length ?? 0) > 0 && <EnhancementDescription enhancements={enhancements} />}
+          <span dangerouslySetInnerHTML={{ __html: description ?? "" }} />
+          {(enhancements?.length ?? 0) > 0 && (
+            <EnhancementDescription enhancements={enhancements} />
+          )}
         </p>
         <div
           className="tooltip__secondary-description"
-          dangerouslySetInnerHTML={{ __html: secondaryDescription ?? '' }}
+          dangerouslySetInnerHTML={{ __html: secondaryDescription ?? "" }}
         />
         {needsWorldQualityDescription && <WorldQualityDescription />}
         {smallButtons && (
           <div className="tooltip__buttons">
-            {smallButtons.map(item => (
+            {smallButtons.map((item) => (
               <button
                 type="button"
                 className="button button--primary button--sm button--tooltip"
@@ -78,4 +74,4 @@ export default function ModalTooltipComponent(props: ITooltipData) {
   );
 }
 
-ModalTooltipComponent.displayName = 'ModalTooltipComponent';
+ModalTooltipComponent.displayName = "ModalTooltipComponent";

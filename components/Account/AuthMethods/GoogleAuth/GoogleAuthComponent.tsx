@@ -1,21 +1,14 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
-import classnames from 'classnames';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import { IAppState } from 'types/app';
-import Loading from 'components/Loading';
-import { Success } from 'services/BaseMonadicService';
-import GoogleLogin from 'react-google-login';
-import { unlinkSocialAccount } from 'actions/settings';
-import fetchAuthMethods from 'actions/settings/fetchAuthMethods';
-import { linkGoogle } from 'actions/settings/linkSocialAccount';
-import Config from 'configuration';
+import React, { useCallback, useMemo, useState } from "react";
+import classnames from "classnames";
+import { connect, useDispatch } from "react-redux";
+import { IAppState } from "types/app";
+import Loading from "components/Loading";
+import { Success } from "services/BaseMonadicService";
+import GoogleLogin from "react-google-login";
+import { unlinkSocialAccount } from "actions/settings";
+import fetchAuthMethods from "actions/settings/fetchAuthMethods";
+import { linkGoogle } from "actions/settings/linkSocialAccount";
+import Config from "configuration";
 
 export function GoogleAuthComponent({
   authMethods,
@@ -25,38 +18,41 @@ export function GoogleAuthComponent({
 }: Props) {
   const dispatch = useDispatch();
 
-  const hasGoogleAuth = useMemo(() => !!(authMethods?.find(m => m.type === 'Google')), [authMethods]);
+  const hasGoogleAuth = useMemo(
+    () => !!authMethods?.find((m) => m.type === "Google"),
+    [authMethods]
+  );
 
   const [isLinking, setIsLinking] = useState(false);
   const [isUnlinking, setIsUnlinking] = useState(false);
 
   const onClickToUnlink = useCallback(async () => {
     setIsUnlinking(true);
-    const result = await unlinkSocialAccount('google')(dispatch);
+    const result = await unlinkSocialAccount("google")(dispatch);
     await fetchAuthMethods()(dispatch);
     if (!(result instanceof Success)) {
       onUnlinkFailure?.(result.message);
     }
     setIsUnlinking(false);
-  }, [
-    dispatch,
-    onUnlinkFailure,
-  ]);
+  }, [dispatch, onUnlinkFailure]);
 
-  const onLoginSuccess = useCallback(async (res) => {
-    const authResponse = res.getAuthResponse?.();
-    if (authResponse) {
-      setIsLinking(true);
-      const request = { token: authResponse.access_token };
-      const result = await linkGoogle(request)(dispatch);
-      if (result instanceof Success) {
-        await fetchAuthMethods()(dispatch);
-      } else {
-        onLinkFailure?.(result.message);
+  const onLoginSuccess = useCallback(
+    async (res) => {
+      const authResponse = res.getAuthResponse?.();
+      if (authResponse) {
+        setIsLinking(true);
+        const request = { token: authResponse.access_token };
+        const result = await linkGoogle(request)(dispatch);
+        if (result instanceof Success) {
+          await fetchAuthMethods()(dispatch);
+        } else {
+          onLinkFailure?.(result.message);
+        }
+        setIsLinking(false);
       }
-      setIsLinking(false);
-    }
-  }, [dispatch, onLinkFailure]);
+    },
+    [dispatch, onLinkFailure]
+  );
 
   const onLoginFailure = useCallback((..._args) => {
     // TODO: handle Google auth failure gracefully. This is called when the
@@ -67,14 +63,11 @@ export function GoogleAuthComponent({
     return (
       <div
         style={{
-          display: 'flex',
-          marginLeft: '3px',
+          display: "flex",
+          marginLeft: "3px",
         }}
       >
-        <Loading
-          spinner
-          small
-        />
+        <Loading spinner small />
       </div>
     );
   }
@@ -82,16 +75,16 @@ export function GoogleAuthComponent({
   if (hasGoogleAuth) {
     return (
       <>
-        <i className="fa fa-fw fa-google" />
-        {' '}
+        <i className="fa fa-fw fa-google" />{" "}
         <button
           onClick={onClickToUnlink}
           type="button"
-          className={classnames('button--link', inverse && 'button--link-inverse')}
+          className={classnames(
+            "button--link",
+            inverse && "button--link-inverse"
+          )}
         >
-          <span>
-            Unlink Google
-          </span>
+          <span>Unlink Google</span>
         </button>
       </>
     );
@@ -99,16 +92,21 @@ export function GoogleAuthComponent({
 
   return (
     <>
-      <i className="fa fa-fw fa-google" />
-      {' '}
+      <i className="fa fa-fw fa-google" />{" "}
       <GoogleLogin
         onSuccess={onLoginSuccess}
         onFailure={onLoginFailure}
         clientId={Config.googleId}
-        className={classnames('button--link', inverse && 'button--link-inverse')}
+        className={classnames(
+          "button--link",
+          inverse && "button--link-inverse"
+        )}
         render={({ onClick, disabled }) => (
           <button
-            className={classnames('button--link', inverse && 'button--link-inverse')}
+            className={classnames(
+              "button--link",
+              inverse && "button--link-inverse"
+            )}
             onClick={onClick}
             disabled={disabled}
             type="button"
@@ -122,9 +120,9 @@ export function GoogleAuthComponent({
 }
 
 type OwnProps = {
-  inverse?: boolean,
-  onLinkFailure?: (message: string) => void,
-  onUnlinkFailure?: (message: string) => void,
+  inverse?: boolean;
+  onLinkFailure?: (message: string) => void;
+  onUnlinkFailure?: (message: string) => void;
 };
 
 const mapStateToProps = (state: IAppState) => ({

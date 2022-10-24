@@ -1,31 +1,34 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import { cancel as cancelInvitation } from 'actions/messages';
+import { cancel as cancelInvitation } from "actions/messages";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
-import MessageComponent from '../MessageComponent';
-import TertiaryButton from '../TertiaryButton';
+import MessageComponent from "../MessageComponent";
+import TertiaryButton from "../TertiaryButton";
 
 export class InvitationFromYou extends Component {
-  mounted = false
+  mounted = false;
 
   state = {
     isCancelling: false,
-  }
+  };
 
   componentDidMount = () => {
     this.mounted = true;
-  }
+  };
 
   componentWillUnmount = () => {
     this.mounted = false;
-  }
+  };
 
   handleClick = async () => {
-    const { data: { relatedId: eventId }, dispatch } = this.props;
+    const {
+      data: { relatedId: eventId },
+      dispatch,
+    } = this.props;
     if (!eventId) {
       return;
     }
@@ -35,7 +38,7 @@ export class InvitationFromYou extends Component {
     if (this.mounted) {
       this.setState({ isCancelling: false });
     }
-  }
+  };
 
   render = () => {
     const { data, disabled } = this.props;
@@ -43,11 +46,11 @@ export class InvitationFromYou extends Component {
     return (
       <MessageComponent data={data}>
         <TertiaryButton disabled={disabled} onClick={this.handleClick}>
-          {isCancelling ? <Loading spinner small /> : 'Cancel'}
+          {isCancelling ? <Loading spinner small /> : "Cancel"}
         </TertiaryButton>
       </MessageComponent>
     );
-  }
+  };
 }
 
 InvitationFromYou.propTypes = {

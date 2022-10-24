@@ -1,11 +1,14 @@
-import { EquipQualitySuccess } from 'actions/outfit/changeEquipped';
-import { ChangeOutfitSuccessAction } from 'actions/outfit/changeOutfit';
-import { FetchOutfitSuccessAction } from 'actions/outfit/fetchOutfit';
-import { IOutfitState } from 'reducers/outfit/index';
+import { EquipQualitySuccess } from "actions/outfit/changeEquipped";
+import { ChangeOutfitSuccessAction } from "actions/outfit/changeOutfit";
+import { FetchOutfitSuccessAction } from "actions/outfit/fetchOutfit";
+import { IOutfitState } from "reducers/outfit/index";
 
 export default function fetchOutfitSuccess(
   state: IOutfitState,
-  action: ChangeOutfitSuccessAction | EquipQualitySuccess | FetchOutfitSuccessAction,
+  action:
+    | ChangeOutfitSuccessAction
+    | EquipQualitySuccess
+    | FetchOutfitSuccessAction
 ): IOutfitState {
   const { payload } = action;
   return {
@@ -17,7 +20,10 @@ export default function fetchOutfitSuccess(
   };
 }
 
-function reduceFn(acc: { [key: string]: number | undefined }, next: { name: string, qualityId?: number | undefined }) {
+function reduceFn(
+  acc: { [key: string]: number | undefined },
+  next: { name: string; qualityId?: number | undefined }
+) {
   const { name, qualityId: id } = next;
-  return { ...acc, [name.replace(/ /g, '')]: id };
+  return { ...acc, [name.replace(/ /g, "")]: id };
 }

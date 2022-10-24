@@ -1,13 +1,10 @@
-import useIsMounted from 'hooks/useIsMounted';
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
+import useIsMounted from "hooks/useIsMounted";
+import React, { useCallback, useState } from "react";
+import { connect } from "react-redux";
 
-import { suggestContact } from 'actions/storylet';
+import { suggestContact } from "actions/storylet";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
 export function SuggestContactButton({
   branchId,
@@ -32,12 +29,7 @@ export function SuggestContactButton({
         setIsWaitingForSuggestion(false);
       }
     }
-  }, [
-    branchId,
-    dispatch,
-    mounted,
-    onSuggestComplete,
-  ]);
+  }, [branchId, dispatch, mounted, onSuggestComplete]);
 
   return (
     <button
@@ -46,20 +38,20 @@ export function SuggestContactButton({
       onClick={handleClick}
       type="button"
     >
-      {isWaitingForSuggestion ? <Loading spinner small /> : 'Suggest a contact'}
+      {isWaitingForSuggestion ? <Loading spinner small /> : "Suggest a contact"}
     </button>
   );
 }
 
-SuggestContactButton.displayName = 'SuggestContactButton';
+SuggestContactButton.displayName = "SuggestContactButton";
 
 type OwnProps = {
-  branchId: number,
-  onSuggestComplete: (args?: any) => void,
+  branchId: number;
+  onSuggestComplete: (args?: any) => void;
 };
 
 type Props = OwnProps & {
-  dispatch: Function, // eslint-disable-line
+  dispatch: Function; // eslint-disable-line
 };
 
 export default connect()(SuggestContactButton);

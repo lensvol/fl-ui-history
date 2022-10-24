@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import classnames from "classnames";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
 interface Props {
-  disabled: boolean,
-  isWorking: boolean,
-  label: string,
-  onClick: () => {},
+  disabled: boolean;
+  isWorking: boolean;
+  label: string;
+  onClick: () => {};
 }
 
 export default function TryAgainButton({
@@ -20,8 +20,8 @@ export default function TryAgainButton({
   return (
     <button
       className={classnames(
-        'button button--primary',
-        disabled && 'button--disabled',
+        "button button--primary",
+        disabled && "button--disabled"
       )}
       disabled={disabled}
       onClick={onClick}

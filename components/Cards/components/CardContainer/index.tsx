@@ -1,25 +1,16 @@
-import React, {
-  useCallback,
-  useMemo,
-} from 'react';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
+import React, { useCallback, useMemo } from "react";
+import { connect, useDispatch } from "react-redux";
 
-import {
-  discard,
-  shouldFetch,
-} from 'actions/cards';
-import { begin } from 'actions/storylet';
-import { IAppState } from 'types/app';
-import { ICard } from 'types/cards';
+import { discard, shouldFetch } from "actions/cards";
+import { begin } from "actions/storylet";
+import { IAppState } from "types/app";
+import { ICard } from "types/cards";
 
-import Card from './Card';
-import DiscardButton from './DiscardButton';
+import Card from "./Card";
+import DiscardButton from "./DiscardButton";
 
 type OwnProps = {
-  data: ICard,
+  data: ICard;
 };
 
 const mapStateToProps = ({
@@ -32,18 +23,11 @@ const mapStateToProps = ({
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;
 
 function CardContainer(props: Props) {
-  const {
-    data,
-    disabled,
-  } = props;
+  const { data, disabled } = props;
 
   const dispatch = useDispatch();
 
-  const {
-    eventId,
-    isAutofire,
-    stickiness,
-  } = data;
+  const { eventId, isAutofire, stickiness } = data;
 
   const discardCard = useCallback(() => {
     // If we are already doing some API work, then don't do anything
@@ -51,11 +35,7 @@ function CardContainer(props: Props) {
       return;
     }
     dispatch(discard(eventId));
-  }, [
-    disabled,
-    dispatch,
-    eventId,
-  ]);
+  }, [disabled, dispatch, eventId]);
 
   const playCard = useCallback(() => {
     // If we are already doing some API work, then don't do anything
@@ -66,24 +46,13 @@ function CardContainer(props: Props) {
       dispatch(shouldFetch());
     }
     dispatch(begin(eventId));
-  }, [
-    disabled,
-    dispatch,
-    eventId,
-    isAutofire,
-  ]);
+  }, [disabled, dispatch, eventId, isAutofire]);
 
-  const isUndiscardable = useMemo(() => stickiness === 'Sticky', [stickiness]);
+  const isUndiscardable = useMemo(() => stickiness === "Sticky", [stickiness]);
 
   return (
-    <div
-      className="hand__card-container"
-      data-event-id={eventId}
-    >
-      <Card
-        {...props}
-        onClick={playCard}
-      />
+    <div className="hand__card-container" data-event-id={eventId}>
+      <Card {...props} onClick={playCard} />
       <DiscardButton
         {...props}
         onClick={discardCard}
@@ -93,6 +62,6 @@ function CardContainer(props: Props) {
   );
 }
 
-CardContainer.displayName = 'CardContainer';
+CardContainer.displayName = "CardContainer";
 
 export default connect(mapStateToProps)(CardContainer);

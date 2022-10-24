@@ -1,16 +1,17 @@
-import { IFateCard } from 'types/fate';
-import { normalize } from 'utils/stringFunctions';
-import { isNotUndefined } from 'utils';
+import { IFateCard } from "types/fate";
+import { normalize } from "utils/stringFunctions";
+import { isNotUndefined } from "utils";
 
 export const DUMMY_YEAR_FOR_UNDATED_STORIES = 1970;
 
-export function containsMatchAnywhereInCard(card: IFateCard, filterString: string): boolean {
-  const stopPhraseList = [
-    'season of',
-  ];
+export function containsMatchAnywhereInCard(
+  card: IFateCard,
+  filterString: string
+): boolean {
+  const stopPhraseList = ["season of"];
 
   const normalizedFilterString = stopPhraseList
-    .reduce((acc, next) => acc.replace(next, ''), normalize(filterString))
+    .reduce((acc, next) => acc.replace(next, ""), normalize(filterString))
     .trim();
 
   return [
@@ -22,18 +23,25 @@ export function containsMatchAnywhereInCard(card: IFateCard, filterString: strin
     card.shortDescription,
   ]
     .filter(isNotUndefined)
-    .map(s => normalize(s))
+    .map((s) => normalize(s))
     .some((s: string) => s.indexOf(normalizedFilterString) >= 0);
 }
 
-export function getFactionList({ factions }: Partial<Pick<IFateCard, 'factions'>>): string[] {
-  return factions?.split(',')
-    .map(_ => _.trim())
-    .filter(isNotUndefined)
-    .filter(s => s !== '') ?? [];
+export function getFactionList({
+  factions,
+}: Partial<Pick<IFateCard, "factions">>): string[] {
+  return (
+    factions
+      ?.split(",")
+      .map((_) => _.trim())
+      .filter(isNotUndefined)
+      .filter((s) => s !== "") ?? []
+  );
 }
 
-export function getFormattedReleaseDate({ releaseDate }: Partial<Pick<IFateCard, 'releaseDate'>>): string | undefined {
+export function getFormattedReleaseDate({
+  releaseDate,
+}: Partial<Pick<IFateCard, "releaseDate">>): string | undefined {
   if (!releaseDate) {
     return undefined;
   }
@@ -43,26 +51,26 @@ export function getFormattedReleaseDate({ releaseDate }: Partial<Pick<IFateCard,
     return undefined;
   }
 
-  return new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' }).format(date);
+  return new Intl.DateTimeFormat("en-GB", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
 }
 
 export function findFateCardMetaText(
-  card: Partial<Pick<IFateCard, 'season' | 'releaseDate' | 'factions'>>,
+  card: Partial<Pick<IFateCard, "season" | "releaseDate" | "factions">>
 ): string | undefined {
-  const {
-    releaseDate,
-    season,
-  } = card;
+  const { releaseDate, season } = card;
 
-  let s = '';
+  let s = "";
 
   const factionList = getFactionList(card);
 
   if (season || releaseDate) {
     if (!factionList.length) {
-      s += 'This story was originally released';
+      s += "This story was originally released";
     } else {
-      s += 'Originally released';
+      s += "Originally released";
     }
 
     if (releaseDate) {
@@ -76,11 +84,11 @@ export function findFateCardMetaText(
 
   if (factionList.length) {
     if (s) {
-      s += ', this ';
+      s += ", this ";
     } else {
-      s += 'This ';
+      s += "This ";
     }
-    s += 'story features';
+    s += "story features";
   }
 
   if (s) {

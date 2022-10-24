@@ -1,17 +1,17 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import MainButton from './components/MainButton';
+import MainButton from "./components/MainButton";
 
 import ActionRefreshContext from "components/ActionRefreshContext";
-import FateRefreshButton from './components/FateRefreshButton';
-import ButtonLabel from './components/ButtonLabel';
+import FateRefreshButton from "./components/FateRefreshButton";
+import ButtonLabel from "./components/ButtonLabel";
 import { IAppState } from "types/app";
 import { IActionRefreshContextValues } from "components/ActionRefreshContext/ActionRefreshContext";
 
 class ActionButton extends Component<Props & RouteComponentProps> {
-  static displayName = 'ActionButton';
+  static displayName = "ActionButton";
 
   static defaultProps = {
     disabled: false,
@@ -67,17 +67,16 @@ class ActionButton extends Component<Props & RouteComponentProps> {
           go={go}
           onClick={this.handleClick}
         >
-          <ButtonLabel
-            actions={actions}
-            data={data}
-            isWorking={isWorking}
-          >
+          <ButtonLabel actions={actions} data={data} isWorking={isWorking}>
             {children}
           </ButtonLabel>
         </MainButton>
         {this.isActionLocked() && !isWorking && !suppressUnlockButton && (
           <ActionRefreshContext.Consumer>
-            {({ onOpenActionRefreshModal, onOpenPurchaseFateModal }: IActionRefreshContextValues) => (
+            {({
+              onOpenActionRefreshModal,
+              onOpenPurchaseFateModal,
+            }: IActionRefreshContextValues) => (
               <FateRefreshButton
                 hasEnoughFate={hasEnoughFate}
                 onOpenActionRefreshModal={onOpenActionRefreshModal}
@@ -93,18 +92,20 @@ class ActionButton extends Component<Props & RouteComponentProps> {
 }
 
 export type Props = ReturnType<typeof mapStateToProps> & {
-  data: any,
-  disabled?: boolean | undefined,
-  dispatch: Function,
-  go?: boolean | undefined,
-  isWorking?: boolean | undefined,
-  onClick: () => void,
-  suppressUnlockButton?: boolean | undefined,
-}
+  data: any;
+  disabled?: boolean | undefined;
+  dispatch: Function;
+  go?: boolean | undefined;
+  isWorking?: boolean | undefined;
+  onClick: () => void;
+  suppressUnlockButton?: boolean | undefined;
+};
 
 const mapStateToProps = ({
   actions: { actions },
-  fate: { data: { currentFate } },
+  fate: {
+    data: { currentFate },
+  },
 }: IAppState) => ({
   actions,
   currentFate,

@@ -1,26 +1,38 @@
-import { actionsUpdated } from 'actions/actions';
-import { processMessages } from 'actions/app';
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as StoryletActionTypes from 'actiontypes/storylet';
-import { ActionCreator } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
-import StoryletService, { IApiStoryletResponseData, IStoryletService } from 'services/StoryletService';
-import { shouldFetch as shouldFetchOpportunityCards } from 'actions/cards/fetch';
+import { actionsUpdated } from "actions/actions";
+import { processMessages } from "actions/app";
+import { handleVersionMismatch } from "actions/versionSync";
+import * as StoryletActionTypes from "actiontypes/storylet";
+import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
+import StoryletService, {
+  IApiStoryletResponseData,
+  IStoryletService,
+} from "services/StoryletService";
+import { shouldFetch as shouldFetchOpportunityCards } from "actions/cards/fetch";
 
-export type SendSocialInviteFailureAction = { type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_FAILURE };
-export type SendSocialInviteRequestedAction = { type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_REQUESTED };
+export type SendSocialInviteFailureAction = {
+  type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_FAILURE;
+};
+export type SendSocialInviteRequestedAction = {
+  type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_REQUESTED;
+};
 export type SendSocialInviteSuccessAction = {
-  type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_SUCCESS,
-  payload: Pick<IApiStoryletResponseData, 'phase' | 'endStorylet' | 'externalSocialAct' | 'messages'>,
+  type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_SUCCESS;
+  payload: Pick<
+    IApiStoryletResponseData,
+    "phase" | "endStorylet" | "externalSocialAct" | "messages"
+  >;
 };
 
 export type SendSocialInviteAction =
-  SendSocialInviteRequestedAction
+  | SendSocialInviteRequestedAction
   | SendSocialInviteFailureAction
   | SendSocialInviteSuccessAction;
 
-export const sendSocialInviteRequested: ActionCreator<SendSocialInviteRequestedAction> = () => ({
+export const sendSocialInviteRequested: ActionCreator<
+  SendSocialInviteRequestedAction
+> = () => ({
   type: StoryletActionTypes.SEND_SOCIAL_INVITATION_REQUESTED,
 });
 

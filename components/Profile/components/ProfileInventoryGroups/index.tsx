@@ -1,35 +1,40 @@
-import React, {
-  Fragment,
-  useMemo,
-} from 'react';
-import { connect } from 'react-redux';
+import React, { Fragment, useMemo } from "react";
+import { connect } from "react-redux";
 
-import InventoryGroup from 'components/Profile/components/ProfileInventoryGroups/InventoryGroup';
-import { IAppState } from 'types/app';
-import { IQuality } from 'types/qualities';
-import sortInPossessionsTabOrder from './sortInPossessionsTabOrder';
+import InventoryGroup from "components/Profile/components/ProfileInventoryGroups/InventoryGroup";
+import { IAppState } from "types/app";
+import { IQuality } from "types/qualities";
+import sortInPossessionsTabOrder from "./sortInPossessionsTabOrder";
 
-const withSortedPossessions = (group: { name: string, possessions: IQuality[] } | undefined) => {
+const withSortedPossessions = (
+  group: { name: string; possessions: IQuality[] } | undefined
+) => {
   if (group === undefined) {
     return undefined;
   }
 
-  return ({
+  return {
     ...group,
     possessions: sortInPossessionsTabOrder(group.possessions),
-  });
+  };
 };
 
 function ProfileInventoryGroups({ profile }: Props) {
-  const {
-    expandedEquipped,
-    standardEquipped,
-  } = profile;
+  const { expandedEquipped, standardEquipped } = profile;
 
-  const expandedWithSortedPossessions = useMemo(() => withSortedPossessions(expandedEquipped), [expandedEquipped]);
-  const standardWithSortedPossessions = useMemo(() => withSortedPossessions(standardEquipped), [standardEquipped]);
+  const expandedWithSortedPossessions = useMemo(
+    () => withSortedPossessions(expandedEquipped),
+    [expandedEquipped]
+  );
+  const standardWithSortedPossessions = useMemo(
+    () => withSortedPossessions(standardEquipped),
+    [standardEquipped]
+  );
 
-  if (expandedWithSortedPossessions === undefined || standardWithSortedPossessions === undefined) {
+  if (
+    expandedWithSortedPossessions === undefined ||
+    standardWithSortedPossessions === undefined
+  ) {
     return null;
   }
 
@@ -55,7 +60,7 @@ function ProfileInventoryGroups({ profile }: Props) {
   );
 }
 
-ProfileInventoryGroups.displayName = 'ProfileInventoryGroups';
+ProfileInventoryGroups.displayName = "ProfileInventoryGroups";
 
 const mapStateToProps = ({ profile }: IAppState) => ({
   profile,

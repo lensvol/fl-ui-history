@@ -1,24 +1,27 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as SettingsActionTypes from 'actiontypes/settings';
-import { ActionCreator } from 'redux';
-import {
-  Either,
-  Success,
-} from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
+import { handleVersionMismatch } from "actions/versionSync";
+import * as SettingsActionTypes from "actiontypes/settings";
+import { ActionCreator } from "redux";
+import { Either, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
 import SettingsService, {
   MessagesViaResponse,
   MessageVia,
-} from 'services/SettingsService';
+} from "services/SettingsService";
 
 const service = new SettingsService();
 
-export type SaveMessageViaRequested = { type: typeof SettingsActionTypes.SAVE_MESSAGES_VIA_REQUESTED };
-export type SaveMessageViaFailure = { type: typeof SettingsActionTypes.SAVE_MESSAGES_VIA_FAILURE };
-export type SaveMessageViaSuccess = { type: typeof SettingsActionTypes.SAVE_MESSAGES_VIA_SUCCESS };
+export type SaveMessageViaRequested = {
+  type: typeof SettingsActionTypes.SAVE_MESSAGES_VIA_REQUESTED;
+};
+export type SaveMessageViaFailure = {
+  type: typeof SettingsActionTypes.SAVE_MESSAGES_VIA_FAILURE;
+};
+export type SaveMessageViaSuccess = {
+  type: typeof SettingsActionTypes.SAVE_MESSAGES_VIA_SUCCESS;
+};
 
 export type SaveMessageViaActions =
-  SaveMessageViaFailure
+  | SaveMessageViaFailure
   | SaveMessageViaRequested
   | SaveMessageViaSuccess;
 
@@ -26,7 +29,9 @@ export const saveMessageViaRequested = () => ({
   type: SettingsActionTypes.SAVE_MESSAGES_VIA_REQUESTED,
 });
 
-export const saveMessageViaSuccess: ActionCreator<SaveMessageViaSuccess> = (_response: MessagesViaResponse) => ({
+export const saveMessageViaSuccess: ActionCreator<SaveMessageViaSuccess> = (
+  _response: MessagesViaResponse
+) => ({
   type: SettingsActionTypes.SAVE_MESSAGES_VIA_SUCCESS,
 });
 
@@ -39,7 +44,9 @@ export default function saveMessageVia(type: MessageVia) {
     dispatch(saveMessageViaRequested());
 
     try {
-      const result: Either<MessagesViaResponse> = await service.messagesVia(type);
+      const result: Either<MessagesViaResponse> = await service.messagesVia(
+        type
+      );
       if (result instanceof Success) {
         dispatch(saveMessageViaSuccess(result.data));
       } else {

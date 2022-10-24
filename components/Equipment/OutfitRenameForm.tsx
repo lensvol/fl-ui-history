@@ -1,13 +1,9 @@
-import React, { useMemo } from 'react';
-import { connect } from 'react-redux';
-import {
-  Formik,
-  Field,
-  Form,
-} from 'formik';
+import React, { useMemo } from "react";
+import { connect } from "react-redux";
+import { Formik, Field, Form } from "formik";
 
-import Buttonlet from 'components/Buttonlet';
-import { IAppState } from 'types/app';
+import Buttonlet from "components/Buttonlet";
+import { IAppState } from "types/app";
 
 export function OutfitRenameForm({
   initialName,
@@ -16,8 +12,11 @@ export function OutfitRenameForm({
   outfits,
 }: Props) {
   const otherOutfitNames = useMemo(
-    () => outfits.map(outfit => outfit.name).filter(name => name !== initialName),
-    [initialName, outfits],
+    () =>
+      outfits
+        .map((outfit) => outfit.name)
+        .filter((name) => name !== initialName),
+    [initialName, outfits]
   );
 
   return (
@@ -27,20 +26,15 @@ export function OutfitRenameForm({
       validate={(values) => {
         const errors: { [key: string]: string } = {};
         if (otherOutfitNames.indexOf(values.name) >= 0) {
-          errors.name = 'Outfit names must be unique.';
+          errors.name = "Outfit names must be unique.";
         }
 
         return errors;
       }}
-      render={({
-        errors,
-        handleSubmit,
-        values,
-        isSubmitting,
-      }) => (
+      render={({ errors, handleSubmit, values, isSubmitting }) => (
         <Form
           className="outfit-controls__outfit-rename-form"
-          style={{ position: 'relative' }}
+          style={{ position: "relative" }}
         >
           <Field
             autoFocus
@@ -55,19 +49,19 @@ export function OutfitRenameForm({
             </div>
           )}
           <Buttonlet
-            type={isSubmitting ? 'refresh' : 'check'}
+            type={isSubmitting ? "refresh" : "check"}
             onClick={handleSubmit}
             disabled={isSubmitting || errors.name !== undefined}
             spin={isSubmitting}
             style={{
-              minWidth: '32px',
+              minWidth: "32px",
             }}
           />
           <Buttonlet
             type="delete"
             onClick={onCancel}
             style={{
-              minWidth: '32px',
+              minWidth: "32px",
             }}
           />
         </Form>
@@ -81,9 +75,9 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 type OwnProps = {
-  initialName: string,
-  onCancel: () => void,
-  onSubmit: (v: { name: string }) => void,
+  initialName: string;
+  onCancel: () => void;
+  onSubmit: (v: { name: string }) => void;
 };
 
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;

@@ -1,23 +1,24 @@
-import {
-  useCallback,
-  useMemo,
-} from 'react';
+import { useCallback, useMemo } from "react";
 
-import { draw } from 'actions/cards';
-import { ICard } from 'types/cards';
+import { draw } from "actions/cards";
+import { ICard } from "types/cards";
 
 // eslint-disable-next-line
-export const useDrawCards = (dispatch: Function) => useCallback(() => dispatch(draw()), [dispatch]);
+export const useDrawCards = (dispatch: Function) =>
+  useCallback(() => dispatch(draw()), [dispatch]);
 
 export function useHandFull(displayCards: ICard[], handSize: number) {
-  return useMemo(() => displayCards && displayCards.length === handSize, [displayCards, handSize]);
+  return useMemo(
+    () => displayCards && displayCards.length === handSize,
+    [displayCards, handSize]
+  );
 }
 
 export function useNoCards(cardsCount: number, isFetching: boolean) {
-  return useMemo(() => cardsCount === 0 && !isFetching, [
-    cardsCount,
-    isFetching,
-  ]);
+  return useMemo(
+    () => cardsCount === 0 && !isFetching,
+    [cardsCount, isFetching]
+  );
 }
 
 export function useOnClickDeck({
@@ -27,11 +28,11 @@ export function useOnClickDeck({
   noCards,
   topUpCards,
 }: {
-  drawCards: () => void,
-  handFull: boolean,
-  isFetching: boolean,
-  noCards: boolean,
-  topUpCards: () => void,
+  drawCards: () => void;
+  handFull: boolean;
+  isFetching: boolean;
+  noCards: boolean;
+  topUpCards: () => void;
 }) {
   return useCallback(() => {
     // Do nothing if we're fetching
@@ -51,11 +52,5 @@ export function useOnClickDeck({
 
     // Otherwise, draw cards
     drawCards();
-  }, [
-    drawCards,
-    isFetching,
-    handFull,
-    noCards,
-    topUpCards,
-  ]);
+  }, [drawCards, isFetching, handFull, noCards, topUpCards]);
 }

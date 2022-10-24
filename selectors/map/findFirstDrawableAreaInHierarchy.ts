@@ -1,9 +1,15 @@
-import { isDrawable } from 'features/mapping';
-import { IStateAwareArea } from 'types/map';
+import { isDrawable } from "features/mapping";
+import { IStateAwareArea } from "types/map";
 
-type T = Pick<IStateAwareArea, 'areaKey' | 'parentArea' | 'spriteTopLeftX' | 'spriteTopLeftY'>;
+type T = Pick<
+  IStateAwareArea,
+  "areaKey" | "parentArea" | "spriteTopLeftX" | "spriteTopLeftY"
+>;
 
-export default function findFirstDrawableAreaInHierarchy(a: T | undefined, areas: T[]): T | null {
+export default function findFirstDrawableAreaInHierarchy(
+  a: T | undefined,
+  areas: T[]
+): T | null {
   // If we were passed undefined, return null
   if (!a) {
     return null;
@@ -22,5 +28,8 @@ export default function findFirstDrawableAreaInHierarchy(a: T | undefined, areas
   }
 
   // Recurse
-  return findFirstDrawableAreaInHierarchy(areas.find(b => b.areaKey === parentArea.areaKey), areas);
+  return findFirstDrawableAreaInHierarchy(
+    areas.find((b) => b.areaKey === parentArea.areaKey),
+    areas
+  );
 }

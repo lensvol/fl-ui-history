@@ -1,13 +1,16 @@
-import Config from 'configuration';
+import Config from "configuration";
 
-export const DUMMY_XY_COORDINATES = { x: Number.MIN_SAFE_INTEGER, y: Number.MAX_SAFE_INTEGER };
+export const DUMMY_XY_COORDINATES = {
+  x: Number.MIN_SAFE_INTEGER,
+  y: Number.MAX_SAFE_INTEGER,
+};
 
 // Normal behaviour is to fetch the current version's spritesheets, but in
 // rare cases (e.g. local development) we want to ensure that we fetch the
 // latest ones; we make this choice at build time here
 const SPRITESHEET_VERSION = (() => {
-  if (process.env.REACT_APP_USE_LATEST_SPRITESHEETS === 'true') {
-    return 'latest';
+  if (process.env.REACT_APP_USE_LATEST_SPRITESHEETS === "true") {
+    return "latest";
   }
   return Config.version;
 })();
@@ -38,15 +41,15 @@ export const SPRITE_SHEET_BASE_URL = `${MAP_BASE_URL}/spritesheets/${SPRITESHEET
 export const SPRITE_REGEX = /([^-]*)-(.*)\.png/;
 
 export const SELECTION_SPRITE_SUFFIXES = [
-  'selection',
-  'main-destination-selection',
+  "selection",
+  "main-destination-selection",
 ];
 
 export const SPRITE_TYPE_ORDERING = {
-  'available': 0,
-  'main-destination': 1,
-  'selection': 2,
-  'main-destination-selection': 3,
+  available: 0,
+  "main-destination": 1,
+  selection: 2,
+  "main-destination-selection": 3,
 };
 
 const spriteSheetFileNames: string[] = [];

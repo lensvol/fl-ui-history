@@ -1,34 +1,28 @@
-import { fetchTimeTheHealer } from 'features/timeTheHealer/timeTheHealerSlice';
-import React, {
-  Component,
-  Fragment,
-} from 'react';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
+import { fetchTimeTheHealer } from "features/timeTheHealer/timeTheHealerSlice";
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import { IAppState } from 'types/app';
-import { fetch as fetchSubscription } from 'actions/subscription';
+import { IAppState } from "types/app";
+import { fetch as fetchSubscription } from "actions/subscription";
 
-import Loading from 'components/Loading';
-import RequestPasswordResetModal from 'components/RequestPasswordResetModal';
-import AccountComponent from './AccountComponent';
-import ForgottenPasswordResetModal from './ForgottenPasswordResetModal';
-import PasswordResetModal from './PasswordResetModal';
+import Loading from "components/Loading";
+import RequestPasswordResetModal from "components/RequestPasswordResetModal";
+import AccountComponent from "./AccountComponent";
+import ForgottenPasswordResetModal from "./ForgottenPasswordResetModal";
+import PasswordResetModal from "./PasswordResetModal";
 
 type State = {
-  hash: any | undefined,
-  token: string | undefined,
-  isForgottenPasswordResetModalOpen: boolean,
-  isPasswordResetModalOpen: boolean,
-  isPasswordResetRequestModalOpen: boolean,
+  hash: any | undefined;
+  token: string | undefined;
+  isForgottenPasswordResetModalOpen: boolean;
+  isPasswordResetModalOpen: boolean;
+  isPasswordResetRequestModalOpen: boolean;
 };
 
 class AccountContainer extends Component<Props, State> {
-  static displayName = 'AccountContainer';
+  static displayName = "AccountContainer";
 
   state = {
     hash: undefined,
@@ -55,7 +49,7 @@ class AccountContainer extends Component<Props, State> {
       dispatch(fetchTimeTheHealer());
     }
 
-    const token = this.getQueryVariable('token');
+    const token = this.getQueryVariable("token");
 
     this.setState({ hash });
 
@@ -65,16 +59,16 @@ class AccountContainer extends Component<Props, State> {
         isForgottenPasswordResetModalOpen: true,
       });
     } else if (!loggedIn) {
-      history.push('/login');
+      history.push("/login");
     }
   };
 
   getQueryVariable = (variable: string) => {
     const query = window.location.search.substring(1);
-    const vars = query.split('&');
+    const vars = query.split("&");
 
     for (let i = 0; i < vars.length; i += 1) {
-      const pair = vars[i].split('=');
+      const pair = vars[i].split("=");
       if (decodeURIComponent(pair[0]) === variable) {
         return decodeURIComponent(pair[1]);
       }
@@ -132,11 +126,7 @@ class AccountContainer extends Component<Props, State> {
 
     return (
       <Fragment>
-        {data && loggedIn && (
-          <AccountComponent
-            hash={hash}
-          />
-        )}
+        {data && loggedIn && <AccountComponent hash={hash} />}
 
         {/* Don't mount the forgotten password modal if we don't have a token */}
         {token && (
@@ -157,9 +147,7 @@ class AccountContainer extends Component<Props, State> {
           isOpen={isPasswordResetRequestModalOpen}
           onRequestClose={this.handleDismissPasswordResetRequestModal}
         />
-
       </Fragment>
-
     );
   }
 }
@@ -174,8 +162,9 @@ const mapStateToProps = ({
   user,
 });
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps> & {
-  dispatch: ThunkDispatch<any, any, any>,
-};
+type Props = RouteComponentProps &
+  ReturnType<typeof mapStateToProps> & {
+    dispatch: ThunkDispatch<any, any, any>;
+  };
 
 export default withRouter(connect(mapStateToProps)(AccountContainer));

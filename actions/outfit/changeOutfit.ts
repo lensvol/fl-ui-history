@@ -1,38 +1,45 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   CHANGE_OUTFIT_REQUESTED,
   CHANGE_OUTFIT_SUCCESS,
-} from 'actiontypes/myself';
-import { clearCache as clearCardCache } from 'actions/cards';
-import { clearCache as clearStoryletCache } from 'actions/storylet';
-import { fetchPlans } from 'actions/plans';
-import { ActionCreator } from 'redux';
-import { Either, Success } from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import OutfitService, { IOutfitService, FetchOutfitResponse } from 'services/OutfitService';
+} from "actiontypes/myself";
+import { clearCache as clearCardCache } from "actions/cards";
+import { clearCache as clearStoryletCache } from "actions/storylet";
+import { fetchPlans } from "actions/plans";
+import { ActionCreator } from "redux";
+import { Either, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import OutfitService, {
+  IOutfitService,
+  FetchOutfitResponse,
+} from "services/OutfitService";
 
-import fetchMyself from 'actions/myself/fetchMyself';
+import fetchMyself from "actions/myself/fetchMyself";
 
 export type ChangeOutfitOptions = {
-  clearCacheImmediately: boolean,
+  clearCacheImmediately: boolean;
 };
 
 export type ChangeOutfitRequestedAction = {
-  type: typeof CHANGE_OUTFIT_REQUESTED,
-  payload: number,
+  type: typeof CHANGE_OUTFIT_REQUESTED;
+  payload: number;
 };
 
 export type ChangeOutfitSuccessAction = {
-  type: typeof CHANGE_OUTFIT_SUCCESS,
-  payload: FetchOutfitResponse,
+  type: typeof CHANGE_OUTFIT_SUCCESS;
+  payload: FetchOutfitResponse;
 };
 
-const changeOutfitRequested: ActionCreator<ChangeOutfitRequestedAction> = (outfitId: number) => ({
+const changeOutfitRequested: ActionCreator<ChangeOutfitRequestedAction> = (
+  outfitId: number
+) => ({
   type: CHANGE_OUTFIT_REQUESTED,
   payload: outfitId,
 });
 
-export const changeOutfitSuccess: ActionCreator<ChangeOutfitSuccessAction> = (data: FetchOutfitResponse) => ({
+export const changeOutfitSuccess: ActionCreator<ChangeOutfitSuccessAction> = (
+  data: FetchOutfitResponse
+) => ({
   type: CHANGE_OUTFIT_SUCCESS,
   payload: data,
 });
@@ -43,8 +50,13 @@ export const changeOutfitSuccess: ActionCreator<ChangeOutfitSuccessAction> = (da
 
 const service: IOutfitService = new OutfitService();
 
-export default function changeOutfit(outfitId: number, options?: ChangeOutfitOptions) {
-  return async (dispatch: Function): Promise<Either<FetchOutfitResponse> | VersionMismatch> => {
+export default function changeOutfit(
+  outfitId: number,
+  options?: ChangeOutfitOptions
+) {
+  return async (
+    dispatch: Function
+  ): Promise<Either<FetchOutfitResponse> | VersionMismatch> => {
     dispatch(changeOutfitRequested(outfitId));
 
     if (options?.clearCacheImmediately ?? true) {

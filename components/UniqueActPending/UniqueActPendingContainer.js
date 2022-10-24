@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import { goBackFromSocialAct } from 'actions/storylet';
+import { goBackFromSocialAct } from "actions/storylet";
 
-import UniqueActPendingComponent from './UniqueActPendingComponent';
+import UniqueActPendingComponent from "./UniqueActPendingComponent";
 
 export class UniqueActPendingContainer extends Component {
-  mounted = false
+  mounted = false;
 
   state = {
     isGoingBack: false,
-  }
+  };
 
   componentDidMount = () => {
     this.mounted = true;
-  }
+  };
 
   componentWillUnmount = () => {
     this.mounted = false;
-  }
+  };
 
   handleGoBack = async () => {
     const { dispatch } = this.props;
@@ -28,7 +28,7 @@ export class UniqueActPendingContainer extends Component {
     if (this.mounted) {
       this.setState({ isGoingBack: false });
     }
-  }
+  };
 
   render = () => {
     const { branch } = this.props;
@@ -40,15 +40,19 @@ export class UniqueActPendingContainer extends Component {
         onGoBack={this.handleGoBack}
       />
     );
-  }
+  };
 }
 
-UniqueActPendingContainer.displayName = 'UniqueActPendingContainer';
+UniqueActPendingContainer.displayName = "UniqueActPendingContainer";
 
 UniqueActPendingContainer.propTypes = {
   branch: PropTypes.shape({}).isRequired,
 };
 
-const mapStateToProps = ({ storylet: { socialAct: { branch } } }) => ({ branch });
+const mapStateToProps = ({
+  storylet: {
+    socialAct: { branch },
+  },
+}) => ({ branch });
 
 export default connect(mapStateToProps)(UniqueActPendingContainer);

@@ -1,4 +1,4 @@
-import { ContactsActions } from 'actions/contacts';
+import { ContactsActions } from "actions/contacts";
 import {
   ADD_CONTACT_FAILURE,
   ADD_CONTACT_REQUESTED,
@@ -15,11 +15,10 @@ import {
   ADD_FROM_TWITTER_FAILURE,
   ADD_FROM_TWITTER_REQUESTED,
   ADD_FROM_TWITTER_SUCCESS,
-} from 'actiontypes/contacts';
+} from "actiontypes/contacts";
 
-
-import addNewContactAndSort from './addNewContactAndSort';
-import { IContactsState } from 'types/contacts';
+import addNewContactAndSort from "./addNewContactAndSort";
+import { IContactsState } from "types/contacts";
 
 const INITIAL_STATE: IContactsState = {
   contacts: [],
@@ -28,8 +27,10 @@ const INITIAL_STATE: IContactsState = {
   isFetching: false,
 };
 
-
-export default function reducer(state = INITIAL_STATE, action: ContactsActions) {
+export default function reducer(
+  state = INITIAL_STATE,
+  action: ContactsActions
+) {
   switch (action.type) {
     // Fetch contacts
     case FETCH_CONTACTS_REQUESTED:
@@ -77,7 +78,7 @@ export default function reducer(state = INITIAL_STATE, action: ContactsActions) 
       return {
         ...state,
         isDeleting: false,
-        contacts: state.contacts.filter(c => c.id !== deletedUserId),
+        contacts: state.contacts.filter((c) => c.id !== deletedUserId),
       };
     }
 

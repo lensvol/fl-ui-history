@@ -1,13 +1,10 @@
-import React from 'react';
-import { Formik, Field, Form } from 'formik';
+import React from "react";
+import { Formik, Field, Form } from "formik";
 
 const THEY_SAY_MAX_LENGTH = 150;
 
 export default function TheySayForm(props: Props) {
-  const {
-    initialValue,
-    onSubmit,
-  } = props;
+  const { initialValue, onSubmit } = props;
 
   return (
     <Formik
@@ -23,7 +20,7 @@ export default function TheySayForm(props: Props) {
             name="description"
             value={values.description}
           />
-          <div className="buttons" style={{ marginTop: '.5rem' }}>
+          <div className="buttons" style={{ marginTop: ".5rem" }}>
             <button className="button button--primary" type="submit">
               Update
             </button>
@@ -35,6 +32,6 @@ export default function TheySayForm(props: Props) {
 }
 
 type Props = {
-  initialValue: string,
-  onSubmit: (values: any) => Promise<void>,
+  initialValue: string;
+  onSubmit: (values: any) => Promise<void>;
 };

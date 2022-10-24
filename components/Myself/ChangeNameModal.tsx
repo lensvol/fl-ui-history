@@ -1,29 +1,21 @@
-import classnames from 'classnames';
-import Loading from 'components/Loading';
-import {
-  Field,
-  Form,
-  Formik,
-} from 'formik';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import {
-  Link,
-  RouteComponentProps,
-  withRouter,
-} from 'react-router-dom';
+import classnames from "classnames";
+import Loading from "components/Loading";
+import { Field, Form, Formik } from "formik";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 
-import { nameChanged } from 'actions/myself';
-import { purchaseItem } from 'actions/fate';
-import Modal from 'components/Modal';
-import findAskNameChangeFateCard from 'selectors/fate/findAskNameChangeFateCard';
-import { Success } from 'services/BaseMonadicService';
+import { nameChanged } from "actions/myself";
+import { purchaseItem } from "actions/fate";
+import Modal from "components/Modal";
+import findAskNameChangeFateCard from "selectors/fate/findAskNameChangeFateCard";
+import { Success } from "services/BaseMonadicService";
 
-import { IAppState } from 'types/app';
+import { IAppState } from "types/app";
 
 interface State {
-  message?: any,
-  purchaseComplete: boolean,
+  message?: any;
+  purchaseComplete: boolean;
 }
 
 const INITIAL_STATE = {
@@ -43,17 +35,19 @@ export class ChangeNameModal extends Component<Props, State> {
     onRequestClose();
   };
 
-  handleSubmit = async ({ name }: { name: string }, { setSubmitting }: { setSubmitting: (_: boolean) => void }) => {
-    const {
-      dispatch,
-      fateCard,
-    } = this.props;
+  handleSubmit = async (
+    { name }: { name: string },
+    { setSubmitting }: { setSubmitting: (_: boolean) => void }
+  ) => {
+    const { dispatch, fateCard } = this.props;
 
     if (fateCard === undefined) {
       return;
     }
 
-    const result = await dispatch(purchaseItem({ storeItemId: fateCard.id, newName: name }));
+    const result = await dispatch(
+      purchaseItem({ storeItemId: fateCard.id, newName: name })
+    );
     setSubmitting(false);
     if (result instanceof Success) {
       const { characterName, message } = result.data;
@@ -75,15 +69,17 @@ export class ChangeNameModal extends Component<Props, State> {
     const cost = fateCard.price;
     const { message, purchaseComplete } = this.state;
     if (purchaseComplete) {
-      return (
-        <div>
-          {message}
-        </div>
-      );
+      return <div>{message}</div>;
     }
     if (currentFate < cost) {
       return (
-        <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <span>
             {`Changing your name costs ${cost} Fate; you have ${currentFate}.`}
           </span>
@@ -101,43 +97,32 @@ export class ChangeNameModal extends Component<Props, State> {
     return (
       <Formik
         initialValues={{
-          name: '',
+          name: "",
         }}
         onSubmit={this.handleSubmit}
       >
         {({ values, isSubmitting }) => (
           <Form>
-            <p>
-              {`This will cost ${cost} Fate.`}
-            </p>
+            <p>{`This will cost ${cost} Fate.`}</p>
             <Field
               type="text"
               className="form__control"
-              style={{ marginBottom: '1rem' }}
+              style={{ marginBottom: "1rem" }}
               value={values.name}
               name="name"
               required
             />
-            {message !== undefined && (
-              <div>
-                {message}
-              </div>
-            )}
+            {message !== undefined && <div>{message}</div>}
             <div className="buttons">
               <button
                 type="submit"
                 disabled={isSubmitting}
                 className={classnames(
-                  'button button--secondary',
-                  isSubmitting && 'button--disabled',
+                  "button button--secondary",
+                  isSubmitting && "button--disabled"
                 )}
               >
-                {isSubmitting ? (
-                  <Loading
-                    spinner
-                    small
-                  />
-                ) : 'Change'}
+                {isSubmitting ? <Loading spinner small /> : "Change"}
               </button>
             </div>
           </Form>
@@ -158,7 +143,7 @@ export class ChangeNameModal extends Component<Props, State> {
       >
         <div>
           <h3 className="heading heading--2 heading--inverse">
-            {purchaseComplete && message ? 'Success!' : 'Change your name'}
+            {purchaseComplete && message ? "Success!" : "Change your name"}
           </h3>
           {this.renderContent()}
         </div>
@@ -172,10 +157,11 @@ const mapStateToProps = (state: IAppState) => ({
   fateCard: findAskNameChangeFateCard(state),
 });
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps> & {
-  dispatch: Function, // eslint-disable-line
-  isOpen: boolean,
-  onRequestClose: () => void,
-}
+type Props = RouteComponentProps &
+  ReturnType<typeof mapStateToProps> & {
+    dispatch: Function; // eslint-disable-line
+    isOpen: boolean;
+    onRequestClose: () => void;
+  };
 
 export default withRouter(connect(mapStateToProps)(ChangeNameModal));

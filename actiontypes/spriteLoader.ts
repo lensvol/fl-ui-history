@@ -1,1 +1,1 @@
-export const SPRITE_LOADER_PROGRESS = 'spriteLoader/SPRITE_LOADER_PROGRESS';
+export const SPRITE_LOADER_PROGRESS = "spriteLoader/SPRITE_LOADER_PROGRESS";

@@ -1,8 +1,13 @@
-import { IMyselfState } from 'types/myself';
+import { IMyselfState } from "types/myself";
 
-export default function renameOutfitSuccess(state: IMyselfState, payload: { id: number, name: string }) {
-  const { character: { outfits } } = state;
-  const matchIndex = outfits.findIndex(o => o.id === payload.id);
+export default function renameOutfitSuccess(
+  state: IMyselfState,
+  payload: { id: number; name: string }
+) {
+  const {
+    character: { outfits },
+  } = state;
+  const matchIndex = outfits.findIndex((o) => o.id === payload.id);
 
   if (matchIndex < 0) {
     return state;

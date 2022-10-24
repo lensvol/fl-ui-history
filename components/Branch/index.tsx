@@ -1,36 +1,36 @@
-import { UI_INTEGRATION_REGEX } from 'features/content-behaviour-integration/constants';
-import { COMMAND_MAP } from 'features/content-behaviour-integration/integration';
+import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
+import { COMMAND_MAP } from "features/content-behaviour-integration/integration";
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+} from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import classnames from 'classnames';
-import { qreqsNeedClear } from 'components/utils';
-import { chooseBranch } from 'actions/storylet';
-import { shouldFetch as shouldUpdateOpportunities } from 'actions/cards';
-import useIsMounted from 'hooks/useIsMounted';
+import classnames from "classnames";
+import { qreqsNeedClear } from "components/utils";
+import { chooseBranch } from "actions/storylet";
+import { shouldFetch as shouldUpdateOpportunities } from "actions/cards";
+import useIsMounted from "hooks/useIsMounted";
 import {
   StoryletCard,
   StoryletDescription as Description,
   StoryletTitle as Title,
-} from 'components/common';
-import { Frequency, IBranch } from 'types/storylet';
-import { IAppState } from 'types/app';
-import BranchButtons from './BranchButtons';
-import Challenges from './Challenges';
-import PlanButtonlet from './PlanButtonlet';
+} from "components/common";
+import { Frequency, IBranch } from "types/storylet";
+import { IAppState } from "types/app";
+import BranchButtons from "./BranchButtons";
+import Challenges from "./Challenges";
+import PlanButtonlet from "./PlanButtonlet";
 
 const MAX_ACTIVE_PLANS = 20;
 
 export interface State {
-  isWorking: boolean,
-  secondChanceIds: number[],
+  isWorking: boolean;
+  secondChanceIds: number[];
 }
 
 export function Branch({
@@ -72,10 +72,10 @@ export function Branch({
   }, []);
 
   useEffect(() => {
-    window.addEventListener('resize', onResize);
+    window.addEventListener("resize", onResize);
     onResize();
     return () => {
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener("resize", onResize);
     };
   }, [onResize]);
 
@@ -83,7 +83,10 @@ export function Branch({
     // Check whether we should be making some UI changes instead
     const uiTriggerMatches = description.match(UI_INTEGRATION_REGEX);
     if ((uiTriggerMatches?.length ?? 0) > 0) {
-      const commandAction = uiTriggerMatches?.[1] === undefined ? undefined : COMMAND_MAP[uiTriggerMatches?.[1]];
+      const commandAction =
+        uiTriggerMatches?.[1] === undefined
+          ? undefined
+          : COMMAND_MAP[uiTriggerMatches?.[1]];
       if (commandAction) {
         dispatch(commandAction(history));
         return;
@@ -91,7 +94,7 @@ export function Branch({
     }
 
     const { id: branchId } = branch;
-    if (storyletFrequency === 'Sometimes') {
+    if (storyletFrequency === "Sometimes") {
       dispatch(shouldUpdateOpportunities());
     }
 
@@ -100,7 +103,9 @@ export function Branch({
     if (onChooseBranch) {
       await onChooseBranch({ branchId, qualityRequirements, secondChanceIds });
     } else {
-      await dispatch(chooseBranch({ branchId, qualityRequirements, secondChanceIds }));
+      await dispatch(
+        chooseBranch({ branchId, qualityRequirements, secondChanceIds })
+      );
     }
 
     if (isMounted.current) {
@@ -118,47 +123,48 @@ export function Branch({
     storyletFrequency,
   ]);
 
-  const handleToggleSecondChance = useCallback((checked: boolean, secondChanceId: number) => {
-    if (checked) {
-      setSecondChanceIds([...secondChanceIds, secondChanceId]);
-      return;
-    }
-    const newIds = secondChanceIds.filter(e => e !== secondChanceId);
-    setSecondChanceIds(newIds);
-  }, [secondChanceIds]);
+  const handleToggleSecondChance = useCallback(
+    (checked: boolean, secondChanceId: number) => {
+      if (checked) {
+        setSecondChanceIds([...secondChanceIds, secondChanceId]);
+        return;
+      }
+      const newIds = secondChanceIds.filter((e) => e !== secondChanceId);
+      setSecondChanceIds(newIds);
+    },
+    [secondChanceIds]
+  );
 
   const disabled = isChoosing || isWorking;
 
   // Compare actions to action cost directly
-  const isLocked = (actions < actionCost) || currencyLocked || qualityLocked;
+  const isLocked = actions < actionCost || currencyLocked || qualityLocked;
 
   // Is a player maxed out on active plans?
-  const playerHasMaximumActivePlans = activePlans && (activePlans.length >= MAX_ACTIVE_PLANS);
+  const playerHasMaximumActivePlans =
+    activePlans && activePlans.length >= MAX_ACTIVE_PLANS;
 
-  const branchButtons = useMemo(() => (
-    <BranchButtons
-      branch={branch}
-      disabled={disabled}
-      isWorking={isWorking}
-      onChooseBranch={handleChooseBranch}
-      qualityRequirements={qualityRequirements}
-    />
-  ), [
-    branch,
-    disabled,
-    handleChooseBranch,
-    isWorking,
-    qualityRequirements,
-  ]);
+  const branchButtons = useMemo(
+    () => (
+      <BranchButtons
+        branch={branch}
+        disabled={disabled}
+        isWorking={isWorking}
+        onChooseBranch={handleChooseBranch}
+        qualityRequirements={qualityRequirements}
+      />
+    ),
+    [branch, disabled, handleChooseBranch, isWorking, qualityRequirements]
+  );
 
   return (
     <div
       ref={ref}
       className={classnames(
-        'media branch media--branch',
-        isLocked && 'media--locked',
-        currencyCost > 0 && 'media--fate-locked',
-        (isGoingBack || isChoosing) && !isWorking && 'media--semi-transparent',
+        "media branch media--branch",
+        isLocked && "media--locked",
+        currencyCost > 0 && "media--fate-locked",
+        (isGoingBack || isChoosing) && !isWorking && "media--semi-transparent"
       )}
       data-branch-id={id}
     >
@@ -174,8 +180,8 @@ export function Branch({
       </div>
       <div
         className={classnames(
-          'media__body branch__body',
-          forceClearQreqs && 'branch__body--force-clear-qreqs',
+          "media__body branch__body",
+          forceClearQreqs && "branch__body--force-clear-qreqs"
         )}
       >
         <div>
@@ -190,13 +196,7 @@ export function Branch({
         </div>
         {currencyCost > 0 && (
           <div>
-            <strong>
-              This branch costs
-              {' '}
-              {currencyCost}
-              {' '}
-              Fate to play.
-            </strong>
+            <strong>This branch costs {currencyCost} Fate to play.</strong>
           </div>
         )}
         <Challenges
@@ -215,7 +215,10 @@ export function Branch({
           then render them here instead
       */}
       {forceClearQreqs && (
-        <div className="storylet__buttons--force-clear" style={{ width: '100%' }}>
+        <div
+          className="storylet__buttons--force-clear"
+          style={{ width: "100%" }}
+        >
           {branchButtons}
         </div>
       )}
@@ -223,16 +226,16 @@ export function Branch({
   );
 }
 
-Branch.displayName = 'Branch';
+Branch.displayName = "Branch";
 
 type OwnProps = {
-  branch: IBranch,
-  defaultCursor?: boolean,
-  dispatch: Function, // eslint-disable-line
-  isGoingBack?: boolean,
-  onChooseBranch?: (_: any) => Promise<void>,
-  storyletFrequency?: Frequency,
-}
+  branch: IBranch;
+  defaultCursor?: boolean;
+  dispatch: Function; // eslint-disable-line
+  isGoingBack?: boolean;
+  onChooseBranch?: (_: any) => Promise<void>;
+  storyletFrequency?: Frequency;
+};
 
 const mapStateToProps = ({
   actions: { actions },
@@ -244,6 +247,8 @@ const mapStateToProps = ({
   isChoosing,
 });
 
-type Props = ReturnType<typeof mapStateToProps> & RouteComponentProps & OwnProps;
+type Props = ReturnType<typeof mapStateToProps> &
+  RouteComponentProps &
+  OwnProps;
 
 export default withRouter(connect(mapStateToProps)(Branch));

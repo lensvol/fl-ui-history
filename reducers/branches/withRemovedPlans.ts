@@ -1,6 +1,9 @@
-import { IBranch } from 'types/storylet';
+import { IBranch } from "types/storylet";
 
-export default function withRemovedPlans(branches: IBranch[], { branchId }: { branchId: number }) {
+export default function withRemovedPlans(
+  branches: IBranch[],
+  { branchId }: { branchId: number }
+) {
   return branches.reduce(maybeRemovePlan, []);
 
   function maybeRemovePlan(acc: IBranch[], next: IBranch): IBranch[] {

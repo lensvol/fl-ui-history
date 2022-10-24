@@ -1,31 +1,25 @@
-import { IActionRefreshContextValues } from 'components/ActionRefreshContext/ActionRefreshContext';
-import React, {
-  Component,
-  Fragment,
-} from 'react';
-import { connect } from 'react-redux';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
-import moment from 'moment';
+import { IActionRefreshContextValues } from "components/ActionRefreshContext/ActionRefreshContext";
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import moment from "moment";
 
-import { withActionRefreshContext } from 'components/ActionRefreshContext';
+import { withActionRefreshContext } from "components/ActionRefreshContext";
 
-import Image from 'components/Image';
-import { IAppState } from 'types/app';
+import Image from "components/Image";
+import { IAppState } from "types/app";
 
-import ActionCounter from './ActionCounter';
+import ActionCounter from "./ActionCounter";
 
 class ActionCounterContainer extends Component<Props> {
-  static displayName = 'ActionCounterContainer';
+  static displayName = "ActionCounterContainer";
 
   handleClick = () => {
     const { actions, history, onOpenActionRefreshModal } = this.props;
     if (actions <= 6) {
       return onOpenActionRefreshModal();
     }
-    return history.push('/fate');
+    return history.push("/fate");
   };
 
   render = () => {
@@ -35,7 +29,7 @@ class ActionCounterContainer extends Component<Props> {
     // TS complains that duration.format is not a function, which it isn't in vanilla moment.js,
     // but we get it by requiring moment-duration-format.
     // @ts-ignore
-    const message = `Next in ${duration.format('m:ss', { trim: false })}`;
+    const message = `Next in ${duration.format("m:ss", { trim: false })}`;
 
     return (
       <Fragment>
@@ -51,14 +45,11 @@ class ActionCounterContainer extends Component<Props> {
         </div>
         <div className="item__desc">
           <span className="js-item-name item__name">Actions</span>
-          <ActionCounter
-            message={message}
-            onClick={this.handleClick}
-          />
+          <ActionCounter message={message} onClick={this.handleClick} />
         </div>
       </Fragment>
     );
-  }
+  };
 }
 
 const mapStateToProps = ({
@@ -71,10 +62,10 @@ const mapStateToProps = ({
   remainingTime,
 });
 
-type Props = ReturnType<typeof mapStateToProps>
-  & RouteComponentProps
-  & IActionRefreshContextValues;
+type Props = ReturnType<typeof mapStateToProps> &
+  RouteComponentProps &
+  IActionRefreshContextValues;
 
-export default withRouter(connect(mapStateToProps)(
-  withActionRefreshContext(ActionCounterContainer),
-));
+export default withRouter(
+  connect(mapStateToProps)(withActionRefreshContext(ActionCounterContainer))
+);

@@ -1,36 +1,23 @@
-import React, {
-  useMemo,
-} from 'react';
-import classnames from 'classnames';
+import React, { useMemo } from "react";
+import classnames from "classnames";
 
-import Image from 'components/Image';
-import { ApiResultMessageQualityEffect } from 'types/app/messages';
-import ProgressBar from './ProgressBar';
+import Image from "components/Image";
+import { ApiResultMessageQualityEffect } from "types/app/messages";
+import ProgressBar from "./ProgressBar";
 
 type Props = { data: ApiResultMessageQualityEffect };
 
 export default function QualityUpdate(props: Props) {
   const {
-    data: {
-      image,
-      possession,
-      progressBar,
-      message,
-      tooltip,
-    },
+    data: { image, possession, progressBar, message, tooltip },
   } = props;
 
   const bar = useMemo(() => {
     if (!progressBar) {
       return null;
     }
-    const {
-      endPercentage,
-      leftScore,
-      rightScore,
-      startPercentage,
-      type,
-    } = progressBar;
+    const { endPercentage, leftScore, rightScore, startPercentage, type } =
+      progressBar;
     return (
       <ProgressBar
         before={leftScore}
@@ -41,12 +28,9 @@ export default function QualityUpdate(props: Props) {
         type={type}
       />
     );
-  }, [
-    possession,
-    progressBar,
-  ]);
+  }, [possession, progressBar]);
 
-  const isWorldQuality = possession?.allowedOn === 'World';
+  const isWorldQuality = possession?.allowedOn === "World";
 
   const tooltipData = {
     image,
@@ -56,8 +40,8 @@ export default function QualityUpdate(props: Props) {
 
   const classes = classnames({
     icon: true,
-    'icon--circular': possession?.nature === 'Status' && !isWorldQuality,
-    'icon--world-quality': isWorldQuality,
+    "icon--circular": possession?.nature === "Status" && !isWorldQuality,
+    "icon--world-quality": isWorldQuality,
   });
 
   return (
@@ -77,7 +61,9 @@ export default function QualityUpdate(props: Props) {
         </div>
       </div>
       <div className="quality-update__body">
-        {(message !== undefined) && <div dangerouslySetInnerHTML={{ __html: message }} />}
+        {message !== undefined && (
+          <div dangerouslySetInnerHTML={{ __html: message }} />
+        )}
         {bar}
       </div>
     </div>

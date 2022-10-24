@@ -1,8 +1,8 @@
-import { createSelector } from 'reselect';
-import Config from 'configuration';
-import { IAppState } from 'types/app';
-import { IMyselfState } from 'types/myself';
-import { IQuality } from 'types/qualities';
+import { createSelector } from "reselect";
+import Config from "configuration";
+import { IAppState } from "types/app";
+import { IMyselfState } from "types/myself";
+import { IQuality } from "types/qualities";
 
 const { sidebarQualityCategories } = Config;
 
@@ -11,8 +11,8 @@ const getMyself = ({ myself }: IAppState) => myself;
 const outputFunc = (myself: IMyselfState) => {
   const { qualities } = myself;
   return [...qualities]
-    .filter(q => sidebarQualityCategories.indexOf(q.category) >= 0)
-    .filter(q => q.category !== 'Skills' || !!q.cap)
+    .filter((q) => sidebarQualityCategories.indexOf(q.category) >= 0)
+    .filter((q) => q.category !== "Skills" || !!q.cap)
     .sort(compareByCategoryOrdering);
 };
 

@@ -1,47 +1,51 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import { ActionCreator } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
-import * as StoryletActionTypes from 'actiontypes/storylet';
-import StoryletService from 'services/StoryletService';
-import { IneligibleContact } from 'types/storylet';
+import { handleVersionMismatch } from "actions/versionSync";
+import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
+import * as StoryletActionTypes from "actiontypes/storylet";
+import StoryletService from "services/StoryletService";
+import { IneligibleContact } from "types/storylet";
 
 export type FetchIneligibleContactsRequestedAction = {
-  type: typeof StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_REQUESTED,
+  type: typeof StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_REQUESTED;
 };
 
 export type FetchIneligibleContactsSuccessAction = {
-  type: typeof StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_SUCCESS,
+  type: typeof StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_SUCCESS;
   payload: {
-    ineligibleContacts: IneligibleContact[],
-  },
-}
+    ineligibleContacts: IneligibleContact[];
+  };
+};
 
 export type FetchIneligibleContactsFailureAction = {
-  type: typeof StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_FAILURE,
-  error: boolean,
-  status?: number,
+  type: typeof StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_FAILURE;
+  error: boolean;
+  status?: number;
 };
 
 export type FetchIneligibleContactsAction =
-  FetchIneligibleContactsRequestedAction
+  | FetchIneligibleContactsRequestedAction
   | FetchIneligibleContactsFailureAction
   | FetchIneligibleContactsSuccessAction;
 
-const fetchIneligibleContactsRequested: ActionCreator<FetchIneligibleContactsRequestedAction> = () => ({
+const fetchIneligibleContactsRequested: ActionCreator<
+  FetchIneligibleContactsRequestedAction
+> = () => ({
   type: StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_REQUESTED,
 });
 
-const fetchIneligibleContactsSuccess: ActionCreator<FetchIneligibleContactsSuccessAction> = (data: {
-  ineligibleContacts: IneligibleContact[],
-}) => ({
+const fetchIneligibleContactsSuccess: ActionCreator<
+  FetchIneligibleContactsSuccessAction
+> = (data: { ineligibleContacts: IneligibleContact[] }) => ({
   type: StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_SUCCESS,
   payload: {
     ineligibleContacts: data.ineligibleContacts,
   },
 });
 
-const fetchIneligibleContactsFailure: ActionCreator<FetchIneligibleContactsFailureAction> = (error: any) => ({
+const fetchIneligibleContactsFailure: ActionCreator<
+  FetchIneligibleContactsFailureAction
+> = (error: any) => ({
   type: StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_FAILURE,
   error: true,
   status: error?.response?.any,

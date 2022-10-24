@@ -1,43 +1,58 @@
-import { handleVersionMismatch } from 'actions/versionSync';
+import { handleVersionMismatch } from "actions/versionSync";
 import {
   CHOOSE_STORYLET_FAILURE,
   CHOOSE_STORYLET_REQUESTED,
   CHOOSE_STORYLET_SUCCESS,
-} from 'actiontypes/storylet';
-import { ActionCreator } from 'redux';
-import { VersionMismatch } from 'services/BaseService';
+} from "actiontypes/storylet";
+import { ActionCreator } from "redux";
+import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
   IApiStoryletResponseData,
   IStoryletService,
-} from 'services/StoryletService';
+} from "services/StoryletService";
 
-import { hideMap } from 'actions/map';
-import { processMessages } from 'actions/app';
-import { IAppState } from 'types/app';
+import { hideMap } from "actions/map";
+import { processMessages } from "actions/app";
+import { IAppState } from "types/app";
 
 export type BeginFailureAction = {
-  type: typeof CHOOSE_STORYLET_FAILURE,
-  error: boolean,
-  status?: number,
+  type: typeof CHOOSE_STORYLET_FAILURE;
+  error: boolean;
+  status?: number;
 };
 
 export type BeginRequestedAction = {
-  type: typeof CHOOSE_STORYLET_REQUESTED,
+  type: typeof CHOOSE_STORYLET_REQUESTED;
 };
 
 export type BeginSuccessAction = {
-  type: typeof CHOOSE_STORYLET_SUCCESS,
-  payload: Pick<IApiStoryletResponseData,
-    'actions' | 'canChangeOutfit' | 'phase' | 'storylets' | 'storylet' | 'endStorylet' | 'messages'>,
+  type: typeof CHOOSE_STORYLET_SUCCESS;
+  payload: Pick<
+    IApiStoryletResponseData,
+    | "actions"
+    | "canChangeOutfit"
+    | "phase"
+    | "storylets"
+    | "storylet"
+    | "endStorylet"
+    | "messages"
+  >;
 };
 
-export type BeginStoryletActions = BeginSuccessAction | BeginRequestedAction | BeginFailureAction;
+export type BeginStoryletActions =
+  | BeginSuccessAction
+  | BeginRequestedAction
+  | BeginFailureAction;
 
-const beginRequest: ActionCreator<BeginRequestedAction> = (_eventId: number) => ({
+const beginRequest: ActionCreator<BeginRequestedAction> = (
+  _eventId: number
+) => ({
   type: CHOOSE_STORYLET_REQUESTED,
 });
 
-const beginSuccess: ActionCreator<BeginSuccessAction> = (data: IApiStoryletResponseData) => ({
+const beginSuccess: ActionCreator<BeginSuccessAction> = (
+  data: IApiStoryletResponseData
+) => ({
   type: CHOOSE_STORYLET_SUCCESS,
   payload: {
     actions: data.actions,
@@ -62,9 +77,12 @@ const service: IStoryletService = new StoryletService();
  * BEGIN
  -----------------------------------------------------------------------------*/
 export default function begin(eventId: number) {
-  return async (dispatch: Function, getState: () => IAppState) => { // eslint-disable-line
+  return async (dispatch: Function, getState: () => IAppState) => {
+    // eslint-disable-line
     // If we are already choosing a storylet, don't send another request
-    const { storylet: { isChoosing } } = getState();
+    const {
+      storylet: { isChoosing },
+    } = getState();
     if (isChoosing) {
       return {};
     }

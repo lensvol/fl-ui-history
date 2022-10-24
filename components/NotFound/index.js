@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const NotFound = () => (
   <div>
@@ -6,6 +6,6 @@ const NotFound = () => (
   </div>
 );
 
-NotFound.displayName = 'NotFound';
+NotFound.displayName = "NotFound";
 
 export default NotFound;

@@ -1,27 +1,16 @@
-import { CURRENCY_CODE_GBP } from 'components/Payment/components/BraintreeView/currencyCodes';
-import useIsMounted from 'hooks/useIsMounted';
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import PaymentService from 'services/PaymentService';
-import {
-  IBraintreePlan,
-  IPaymentService,
-} from 'types/payment';
-import Loading from 'components/Loading';
-import {
-  Formik,
-  Form,
-} from 'formik';
-import Header from './Header';
+import { CURRENCY_CODE_GBP } from "components/Payment/components/BraintreeView/currencyCodes";
+import useIsMounted from "hooks/useIsMounted";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import PaymentService from "services/PaymentService";
+import { IBraintreePlan, IPaymentService } from "types/payment";
+import Loading from "components/Loading";
+import { Formik, Form } from "formik";
+import Header from "./Header";
 
 interface Props {
-  onCancel: () => void,
-  onPlanChosen: (plan: IBraintreePlan) => void,
-  onServerError: (message: string) => void,
+  onCancel: () => void;
+  onPlanChosen: (plan: IBraintreePlan) => void;
+  onServerError: (message: string) => void;
 }
 
 export default function SelectCurrency({
@@ -35,7 +24,9 @@ export default function SelectCurrency({
 
   const isMounted = useIsMounted();
 
-  const [selectedPlan, setSelectedPlan] = useState<IBraintreePlan | undefined>(undefined);
+  const [selectedPlan, setSelectedPlan] = useState<IBraintreePlan | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     fetchPlans();
@@ -43,11 +34,13 @@ export default function SelectCurrency({
     async function fetchPlans() {
       setLoading(true);
       const paymentService: IPaymentService = new PaymentService();
-      const { data } = (await paymentService.fetchPlans());
+      const { data } = await paymentService.fetchPlans();
 
       setPlans(data.plans);
 
-      const gbpPlan = data.plans.find(plan => plan.currencyIsoCode === CURRENCY_CODE_GBP);
+      const gbpPlan = data.plans.find(
+        (plan) => plan.currencyIsoCode === CURRENCY_CODE_GBP
+      );
       if (gbpPlan) {
         setSelectedPlan(gbpPlan);
       } else if (data.plans.length > 0) {
@@ -58,23 +51,23 @@ export default function SelectCurrency({
     }
   }, []);
 
-  const onSelect = useCallback((evt: ChangeEvent<HTMLSelectElement>) => {
-    const planId = evt.target.value;
-    const plan = plans.find(p => p.id === planId);
-    if (plan) {
-      setSelectedPlan(plan);
-      return;
-    }
+  const onSelect = useCallback(
+    (evt: ChangeEvent<HTMLSelectElement>) => {
+      const planId = evt.target.value;
+      const plan = plans.find((p) => p.id === planId);
+      if (plan) {
+        setSelectedPlan(plan);
+        return;
+      }
 
-    onServerError(`Couldn't find a plan with ID '${planId}'`);
-  }, [
-    plans,
-    onServerError,
-  ]);
+      onServerError(`Couldn't find a plan with ID '${planId}'`);
+    },
+    [plans, onServerError]
+  );
 
   const onSubmit = useCallback(async () => {
     if (!selectedPlan) {
-      onServerError('Couldn\'t find the selected plan.');
+      onServerError("Couldn't find the selected plan.");
       return;
     }
 
@@ -83,12 +76,7 @@ export default function SelectCurrency({
     if (isMounted.current) {
       setSubmitting(false);
     }
-  }, [
-    isMounted,
-    onPlanChosen,
-    onServerError,
-    selectedPlan,
-  ]);
+  }, [isMounted, onPlanChosen, onServerError, selectedPlan]);
 
   if (loading) {
     return <Loading spinner />;
@@ -108,30 +96,29 @@ export default function SelectCurrency({
             className="subscription-panel"
             method="post"
             style={{
-              width: '100%',
+              width: "100%",
             }}
           >
             <div
               style={{
-                textAlign: 'center',
+                textAlign: "center",
               }}
             >
               <label htmlFor="planId">Choose currency: </label>
               <select
                 name="planId"
                 id="planId"
-                style={{ border: '2px solid #666666', borderRadius: 2, marginLeft: 8 }}
+                style={{
+                  border: "2px solid #666666",
+                  borderRadius: 2,
+                  marginLeft: 8,
+                }}
                 onChange={onSelect}
                 value={selectedPlan?.id}
               >
-                {plans.map(plan => (
-                  <option
-                    key={plan.id}
-                    value={plan.id}
-                  >
-                    {plan.price}
-                    {' '}
-                    {plan.currencyIsoCode}
+                {plans.map((plan) => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.price} {plan.currencyIsoCode}
                   </option>
                 ))}
               </select>
@@ -143,12 +130,7 @@ export default function SelectCurrency({
                 disabled={loading || submitting || !selectedPlan}
                 type="submit"
               >
-                {submitting ? (
-                  <Loading
-                    spinner
-                    small
-                  />
-                ) : (<span>Next</span>)}
+                {submitting ? <Loading spinner small /> : <span>Next</span>}
               </button>
               <button
                 className="button button--primary"

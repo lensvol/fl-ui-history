@@ -1,7 +1,7 @@
-import React from 'react';
-import Header from 'components/Header';
-import Help from 'components/Help';
-import Footer from 'components/Footer';
+import React from "react";
+import Header from "components/Header";
+import Help from "components/Help";
+import Footer from "components/Footer";
 
 export default function HelpContainer() {
   return (
@@ -13,4 +13,4 @@ export default function HelpContainer() {
   );
 }
 
-HelpContainer.displayName = 'HelpContainer';
+HelpContainer.displayName = "HelpContainer";

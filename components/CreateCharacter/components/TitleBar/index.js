@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-const logo = '/img/FL_logo_white.png';
+const logo = "/img/FL_logo_white.png";
 
 export default function TitleBar() {
   return (
@@ -14,4 +14,4 @@ export default function TitleBar() {
   );
 }
 
-TitleBar.displayName = 'TitleBar';
+TitleBar.displayName = "TitleBar";

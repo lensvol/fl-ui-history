@@ -1,6 +1,9 @@
-import { IBraintreeNexOptionsResponse, IPaymentState } from 'types/payment';
+import { IBraintreeNexOptionsResponse, IPaymentState } from "types/payment";
 
-export default function selectCurrencySuccess(state: IPaymentState, payload: IBraintreeNexOptionsResponse) {
+export default function selectCurrencySuccess(
+  state: IPaymentState,
+  payload: IBraintreeNexOptionsResponse
+) {
   // add an id for each package
   const packages = payload.packages.map((item, i) => ({
     ...item,

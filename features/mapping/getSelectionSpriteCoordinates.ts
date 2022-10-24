@@ -1,15 +1,18 @@
-import { DUMMY_XY_COORDINATES } from 'components/Map/constants';
-import { IArea } from 'types/map';
-import { isDistrict } from 'features/mapping/index';
-import getDestinationSelectionSpriteCoordinates from 'features/mapping/getDestinationSelectionSpriteCoordinates';
+import { DUMMY_XY_COORDINATES } from "components/Map/constants";
+import { IArea } from "types/map";
+import { isDistrict } from "features/mapping/index";
+import getDestinationSelectionSpriteCoordinates from "features/mapping/getDestinationSelectionSpriteCoordinates";
 
-export default function getSelectionSpriteCoordinates(area: IArea): { x: number, y: number } {
-  const {
-    selectionSpriteTopLeftX,
-    selectionSpriteTopLeftY,
-  } = area;
+export default function getSelectionSpriteCoordinates(area: IArea): {
+  x: number;
+  y: number;
+} {
+  const { selectionSpriteTopLeftX, selectionSpriteTopLeftY } = area;
 
-  if (selectionSpriteTopLeftX === undefined || selectionSpriteTopLeftY === undefined) {
+  if (
+    selectionSpriteTopLeftX === undefined ||
+    selectionSpriteTopLeftY === undefined
+  ) {
     console.error(`no selection sprite coordinates for (${area.areaKey})`);
     return DUMMY_XY_COORDINATES;
   }
@@ -20,4 +23,3 @@ export default function getSelectionSpriteCoordinates(area: IArea): { x: number,
   const { x, y } = getDestinationSelectionSpriteCoordinates(area);
   return { x, y };
 }
-

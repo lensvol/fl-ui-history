@@ -1,15 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactCSSTransitionReplace from 'react-css-transition-replace';
+import React from "react";
+import PropTypes from "prop-types";
+import ReactCSSTransitionReplace from "react-css-transition-replace";
 
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { fetchOutfit } from 'actions/outfit';
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { fetchOutfit } from "actions/outfit";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
-import Possessions from 'components/Possessions';
-import GeneralContainer from 'components/GeneralContainer';
+import Possessions from "components/Possessions";
+import GeneralContainer from "components/GeneralContainer";
 
 class PossessionsContainer extends React.Component {
   /**
@@ -17,11 +17,7 @@ class PossessionsContainer extends React.Component {
    * @return {undefined}
    */
   componentDidMount = () => {
-    const {
-      dispatch,
-      isFetching,
-      character,
-    } = this.props;
+    const { dispatch, isFetching, character } = this.props;
     // If we're waiting for data, then don't re-fetch
     if (isFetching) {
       return;
@@ -40,15 +36,23 @@ class PossessionsContainer extends React.Component {
 
     return (
       <GeneralContainer sectionName="possessions">
-        <ReactCSSTransitionReplace transitionName="fade-wait" transitionEnterTimeout={100} transitionLeaveTimeout={100}>
-          {isFetching ? <Loading key="loading" /> : <Possessions key="possessions" />}
+        <ReactCSSTransitionReplace
+          transitionName="fade-wait"
+          transitionEnterTimeout={100}
+          transitionLeaveTimeout={100}
+        >
+          {isFetching ? (
+            <Loading key="loading" />
+          ) : (
+            <Possessions key="possessions" />
+          )}
         </ReactCSSTransitionReplace>
       </GeneralContainer>
     );
   }
 }
 
-PossessionsContainer.displayName = 'PossessionsContainer';
+PossessionsContainer.displayName = "PossessionsContainer";
 
 PossessionsContainer.propTypes = {
   character: PropTypes.shape({}),
@@ -60,10 +64,7 @@ PossessionsContainer.defaultProps = {
   character: undefined,
 };
 
-
-const mapStateToProps = ({
-  myself: { character, isFetching },
-}) => ({
+const mapStateToProps = ({ myself: { character, isFetching } }) => ({
   character,
   isFetching,
 });

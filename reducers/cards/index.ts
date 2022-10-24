@@ -1,20 +1,20 @@
-import { CardsActions } from 'actions/cards';
-import { OutfitActions } from 'actions/outfit';
-import { BeginStoryletActions } from 'actions/storylet/begin';
-import * as CardActionTypes from 'actiontypes/cards';
+import { CardsActions } from "actions/cards";
+import { OutfitActions } from "actions/outfit";
+import { BeginStoryletActions } from "actions/storylet/begin";
+import * as CardActionTypes from "actiontypes/cards";
 import {
   EQUIP_QUALITY_SUCCESS,
   CHANGE_OUTFIT_SUCCESS,
-} from 'actiontypes/myself';
+} from "actiontypes/myself";
 import {
   CHOOSE_STORYLET_REQUESTED,
   CHOOSE_STORYLET_SUCCESS,
   CHOOSE_STORYLET_FAILURE,
-} from 'actiontypes/storylet';
+} from "actiontypes/storylet";
 
-import { ICardsState } from 'types/cards';
-import formatPayload from './formatPayload';
-import reverseCards from './reverseCards';
+import { ICardsState } from "types/cards";
+import formatPayload from "./formatPayload";
+import reverseCards from "./reverseCards";
 
 /**
  * Initial state
@@ -34,7 +34,7 @@ const INITIAL_STATE: ICardsState = {
 
 export default function reducer(
   state = INITIAL_STATE,
-  action: CardsActions | BeginStoryletActions | OutfitActions,
+  action: CardsActions | BeginStoryletActions | OutfitActions
 ): ICardsState {
   switch (action.type) {
     case CardActionTypes.CARDS_SHOULD_FETCH:

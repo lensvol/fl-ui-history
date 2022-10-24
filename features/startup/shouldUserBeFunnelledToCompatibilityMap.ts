@@ -1,13 +1,13 @@
-import isWebGLSupported from 'features/startup/isWebGLSupported';
-import isDeviceMemoryTooLowForMapping from 'features/startup/isDeviceMemoryTooLowForMapping';
+import isWebGLSupported from "features/startup/isWebGLSupported";
+import isDeviceMemoryTooLowForMapping from "features/startup/isDeviceMemoryTooLowForMapping";
 
 export default function shouldUserBeFunnelledToCompatibilityMap() {
   // Check whether we have a stored preference in local storage
-  const storedPreference = window.localStorage.getItem('use-fallback-map');
-  if (storedPreference === 'false') {
+  const storedPreference = window.localStorage.getItem("use-fallback-map");
+  if (storedPreference === "false") {
     return false;
   }
-  if (storedPreference === 'true') {
+  if (storedPreference === "true") {
     return true;
   }
 

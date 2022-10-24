@@ -1,27 +1,30 @@
-import React from 'react';
+import React from "react";
 
-import CloseButtonSmDown from '../CloseButtonSmDown';
+import CloseButtonSmDown from "../CloseButtonSmDown";
 
 type Props = {
-  onRequestClose: () => void,
-  successMessage?: string | null,
+  onRequestClose: () => void;
+  successMessage?: string | null;
 };
 
-export default function TransactionComplete({ onRequestClose, successMessage }: Props) {
+export default function TransactionComplete({
+  onRequestClose,
+  successMessage,
+}: Props) {
   return (
     <div>
       <div className="exchange-ui__header">
-        <h3 className="heading heading--2" style={{ color: '#000' }}>
+        <h3 className="heading heading--2" style={{ color: "#000" }}>
           Transaction complete!
         </h3>
         <CloseButtonSmDown onClick={onRequestClose} />
       </div>
       <hr />
-      <div style={{ textAlign: 'center' }}>
-        <div dangerouslySetInnerHTML={{ __html: successMessage ?? '' }} />
+      <div style={{ textAlign: "center" }}>
+        <div dangerouslySetInnerHTML={{ __html: successMessage ?? "" }} />
       </div>
     </div>
   );
 }
 
-TransactionComplete.displayName = 'TransactionComplete';
+TransactionComplete.displayName = "TransactionComplete";

@@ -1,12 +1,12 @@
-import { InfoBarActions } from 'actions/infoBar';
-import * as InfoBarActionTypes from 'actiontypes/infoBar';
-import { Advert, Snippet } from 'services/InfoBarService';
+import { InfoBarActions } from "actions/infoBar";
+import * as InfoBarActionTypes from "actiontypes/infoBar";
+import { Advert, Snippet } from "services/InfoBarService";
 
 export type IInfobarState = {
-  advert: Advert | undefined,
-  isFetching: boolean,
-  error: boolean,
-  snippets: Snippet[],
+  advert: Advert | undefined;
+  isFetching: boolean;
+  error: boolean;
+  snippets: Snippet[];
 };
 
 const INITIAL_STATE = {
@@ -33,4 +33,4 @@ export default function reducer(state = INITIAL_STATE, action: InfoBarActions) {
     default:
       return state;
   }
-};
+}

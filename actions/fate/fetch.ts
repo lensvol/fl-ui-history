@@ -1,20 +1,21 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as FateActionTypes from 'actiontypes/fate';
-import { ActionCreator } from 'redux';
-import {
-  Either,
-  Success,
-} from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
+import { handleVersionMismatch } from "actions/versionSync";
+import * as FateActionTypes from "actiontypes/fate";
+import { ActionCreator } from "redux";
+import { Either, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
 import FateService, {
   FetchFateResponse,
   IFateService,
-} from 'services/FateService';
-import { ThunkDispatch } from 'redux-thunk';
+} from "services/FateService";
+import { ThunkDispatch } from "redux-thunk";
 
-const fetchFateRequested: ActionCreator<FetchFateRequested> = () => ({ type: FateActionTypes.FETCH_REQUESTED });
+const fetchFateRequested: ActionCreator<FetchFateRequested> = () => ({
+  type: FateActionTypes.FETCH_REQUESTED,
+});
 
-const fetchFateSuccess: ActionCreator<FetchFateSuccess> = (data: FetchFateResponse) => ({
+const fetchFateSuccess: ActionCreator<FetchFateSuccess> = (
+  data: FetchFateResponse
+) => ({
   type: FateActionTypes.FETCH_SUCCESS,
   payload: data,
 });
@@ -26,16 +27,26 @@ const fetchFateFailure: ActionCreator<FetchFateFailure> = (error: any) => ({
 });
 
 export type FetchFateFailure = { type: typeof FateActionTypes.FETCH_FAILURE };
-export type FetchFateRequested = { type: typeof FateActionTypes.FETCH_REQUESTED };
-export type FetchFateSuccess = { type: typeof FateActionTypes.FETCH_SUCCESS, payload: FetchFateResponse };
+export type FetchFateRequested = {
+  type: typeof FateActionTypes.FETCH_REQUESTED;
+};
+export type FetchFateSuccess = {
+  type: typeof FateActionTypes.FETCH_SUCCESS;
+  payload: FetchFateResponse;
+};
 
-export type FetchFateActions = FetchFateFailure | FetchFateRequested | FetchFateSuccess;
+export type FetchFateActions =
+  | FetchFateFailure
+  | FetchFateRequested
+  | FetchFateSuccess;
 
 export default fetch(new FateService());
 
-export function fetch(service: IFateService): ()
-  => (dispatch: ThunkDispatch<any, any, any>)
-  => Promise<Either<FetchFateResponse> | VersionMismatch> {
+export function fetch(
+  service: IFateService
+): () => (
+  dispatch: ThunkDispatch<any, any, any>
+) => Promise<Either<FetchFateResponse> | VersionMismatch> {
   return () => async (dispatch) => {
     dispatch(fetchFateRequested());
     try {

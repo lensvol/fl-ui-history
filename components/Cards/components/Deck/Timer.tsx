@@ -1,14 +1,10 @@
-import CardTimer from 'components/Cards/components/CardTimer';
-import React from 'react';
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
+import CardTimer from "components/Cards/components/CardTimer";
+import React from "react";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
 
 const mapStateToProps = ({
-  cards: {
-    cardsCount,
-    deckSize,
-    isFetching,
-  },
+  cards: { cardsCount, deckSize, isFetching },
   timer: { remainingTime },
 }: IAppState) => ({
   cardsCount,
@@ -40,6 +36,6 @@ export function Timer({
   return <CardTimer />;
 }
 
-Timer.displayName = 'Timer';
+Timer.displayName = "Timer";
 
 export default connect(mapStateToProps)(Timer);

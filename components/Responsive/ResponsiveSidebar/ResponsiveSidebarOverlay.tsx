@@ -1,10 +1,13 @@
-import classnames from 'classnames';
-import React from 'react';
+import classnames from "classnames";
+import React from "react";
 
 export default function ResponsiveSidebarOverlay({ isOpen, onClose }: Props) {
   return (
     <div
-      className={classnames('sidemenu-overlay', isOpen && 'sidemenu-overlay--open')}
+      className={classnames(
+        "sidemenu-overlay",
+        isOpen && "sidemenu-overlay--open"
+      )}
       onClick={onClose}
       onKeyUp={onClose}
       role="button"
@@ -14,6 +17,6 @@ export default function ResponsiveSidebarOverlay({ isOpen, onClose }: Props) {
 }
 
 interface Props {
-  isOpen: boolean,
-  onClose: () => void,
+  isOpen: boolean;
+  onClose: () => void;
 }

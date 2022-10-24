@@ -1,15 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Plan from 'components/Plan';
+import Plan from "components/Plan";
 
 export default function PlanList({ canRefresh, plans }) {
-  return plans.map(plan => (
-    <Plan
-      key={plan.branch.id}
-      data={plan}
-      canRefresh={canRefresh}
-    />
+  return plans.map((plan) => (
+    <Plan key={plan.branch.id} data={plan} canRefresh={canRefresh} />
   ));
 }
 

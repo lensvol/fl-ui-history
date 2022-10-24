@@ -1,24 +1,16 @@
-import React from 'react';
-import classnames from 'classnames';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
-import { IAppState } from 'types/app';
+import React from "react";
+import classnames from "classnames";
+import { connect, useDispatch } from "react-redux";
+import { IAppState } from "types/app";
 import {
   useDrawCards,
   useHandFull,
   useNoCards,
   useOnClickDeck,
-} from 'components/Cards/hooks';
+} from "components/Cards/hooks";
 
 const mapStateToProps = ({
-  cards: {
-    cardsCount,
-    displayCards,
-    handSize,
-    isFetching,
-  },
+  cards: { cardsCount, displayCards, handSize, isFetching },
   fate: { data: fateData },
 }: IAppState) => ({
   cardsCount,
@@ -29,7 +21,7 @@ const mapStateToProps = ({
 });
 
 type OwnProps = {
-  onOpenDeckRefreshModal: () => void,
+  onOpenDeckRefreshModal: () => void;
 };
 
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;
@@ -64,10 +56,10 @@ function SmallDeckContainer(props: Props) {
       <button
         type="button"
         className={classnames(
-          'deck deck--small-media',
-          handFull && !noCards && 'deck--full',
-          noCards && 'deck--empty',
-          isFetching && 'deck--fetching',
+          "deck deck--small-media",
+          handFull && !noCards && "deck--full",
+          noCards && "deck--empty",
+          isFetching && "deck--fetching"
         )}
         disabled={handFull}
         onClick={onClick}
@@ -76,6 +68,6 @@ function SmallDeckContainer(props: Props) {
   );
 }
 
-SmallDeckContainer.displayName = 'SmallDeckContainer';
+SmallDeckContainer.displayName = "SmallDeckContainer";
 
 export default connect(mapStateToProps)(SmallDeckContainer);

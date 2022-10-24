@@ -1,44 +1,50 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as StoryletActionTypes from 'actiontypes/storylet';
-import { ActionCreator } from 'redux';
-import {
-  ThunkDispatch,
-} from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
-import StoryletService, { IApiStoryletResponseData } from 'services/StoryletService';
+import { handleVersionMismatch } from "actions/versionSync";
+import * as StoryletActionTypes from "actiontypes/storylet";
+import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
+import StoryletService, {
+  IApiStoryletResponseData,
+} from "services/StoryletService";
 
-import { processMessages } from 'actions/app';
-import { fetch as fetchCards } from 'actions/cards';
-import { fetchAvailableSuccess } from './fetchAvailable';
+import { processMessages } from "actions/app";
+import { fetch as fetchCards } from "actions/cards";
+import { fetchAvailableSuccess } from "./fetchAvailable";
 
 export type GoBackFailureAction = {
-  type: typeof StoryletActionTypes.GOBACK_FAILURE,
-  error: boolean,
-  status?: number,
+  type: typeof StoryletActionTypes.GOBACK_FAILURE;
+  error: boolean;
+  status?: number;
 };
 
 export type GoBackRequestedAction = {
-  type: typeof StoryletActionTypes.GOBACK_REQUESTED,
+  type: typeof StoryletActionTypes.GOBACK_REQUESTED;
 };
 
 export type GoBackSuccessAction = {
-  type: typeof StoryletActionTypes.GOBACK_SUCCESS,
-  payload: Pick<IApiStoryletResponseData, 'actions' | 'canChangeOutfit' | 'phase'>
+  type: typeof StoryletActionTypes.GOBACK_SUCCESS;
+  payload: Pick<
+    IApiStoryletResponseData,
+    "actions" | "canChangeOutfit" | "phase"
+  >;
 };
 
 export type GoBackOptions = {
-  fetchOpportunityCards?: boolean,
+  fetchOpportunityCards?: boolean;
 };
 
-const goBackRequest: ActionCreator<GoBackRequestedAction> = () => ({ type: StoryletActionTypes.GOBACK_REQUESTED });
+const goBackRequest: ActionCreator<GoBackRequestedAction> = () => ({
+  type: StoryletActionTypes.GOBACK_REQUESTED,
+});
 
-export const goBackSuccess: ActionCreator<GoBackSuccessAction> = (
-  {
-    actions,
-    canChangeOutfit,
-    phase,
-  }: Pick<IApiStoryletResponseData, 'actions' | 'canChangeOutfit' | 'phase'>,
-) => ({
+export const goBackSuccess: ActionCreator<GoBackSuccessAction> = ({
+  actions,
+  canChangeOutfit,
+  phase,
+}: Pick<
+  IApiStoryletResponseData,
+  "actions" | "canChangeOutfit" | "phase"
+>) => ({
   type: StoryletActionTypes.GOBACK_SUCCESS,
   payload: {
     actions,

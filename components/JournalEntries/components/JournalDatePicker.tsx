@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import DatePicker from 'react-date-picker';
-import moment from 'moment';
+import React, { Component } from "react";
+import DatePicker from "react-date-picker";
+import moment from "moment";
 
 interface State {
-  value: Date,
+  value: Date;
 }
 
 export default class JournalDatePicker extends Component<Props, State> {
   state = {
-    value: moment(new Date()).subtract(122, 'years').toDate(),
-  }
+    value: moment(new Date()).subtract(122, "years").toDate(),
+  };
 
   handleChange = (date: Date | Date[]) => {
     const { onChange } = this.props;
@@ -17,7 +17,7 @@ export default class JournalDatePicker extends Component<Props, State> {
       this.setState({ value: date });
       onChange(date);
     }
-  }
+  };
 
   render = () => {
     const { value } = this.state;
@@ -29,11 +29,11 @@ export default class JournalDatePicker extends Component<Props, State> {
         value={value}
       />
     );
-  }
+  };
 }
 
 interface Props {
-  onChange: (date: Date) => void,
+  onChange: (date: Date) => void;
 }
 
 /*

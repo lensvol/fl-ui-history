@@ -1,45 +1,36 @@
 /* eslint-disable no-console */
-import { Dropin } from 'braintree-web-drop-in';
-import BraintreeDropIn from 'braintree-web-drop-in-react';
-import SubmitButton from 'components/Payment/components/BraintreeView/SubmitButton';
-import getDefaultPayPalOptions from 'components/Payment/getDefaultPayPalOptions';
-import { FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES } from 'features/feature-flags';
-import useIsMounted from 'hooks/useIsMounted';
-import React, {
-  useCallback,
-  useState,
-} from 'react';
-import ReCAPTCHA from 'react-google-recaptcha';
-import {
-  Either,
-  Failure,
-  Success,
-} from 'services/BaseMonadicService';
-import { VersionMismatch } from 'services/BaseService';
-import PaymentService from 'services/PaymentService';
+import { Dropin } from "braintree-web-drop-in";
+import BraintreeDropIn from "braintree-web-drop-in-react";
+import SubmitButton from "components/Payment/components/BraintreeView/SubmitButton";
+import getDefaultPayPalOptions from "components/Payment/getDefaultPayPalOptions";
+import { FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES } from "features/feature-flags";
+import useIsMounted from "hooks/useIsMounted";
+import React, { useCallback, useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { Either, Failure, Success } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import PaymentService from "services/PaymentService";
 import {
   IBraintreeNexOptionsResponse,
   IPaymentService,
   NexQuantity,
   PaymentResult,
-} from 'types/payment';
-import Loading from 'components/Loading';
-import {
-  Feature,
-  useFeature,
-} from 'flagged';
+} from "types/payment";
+import Loading from "components/Loading";
+import { Feature, useFeature } from "flagged";
 
 interface Props {
-  onGoBack: () => void,
-  onPaymentComplete: (result: Either<PaymentResult>) => void,
-  onSubmitFinished?: (result: Either<PaymentResult>) => void,
-  onSubmitStarted?: () => void,
-  options: IBraintreeNexOptionsResponse,
-  selectedPackage: NexQuantity,
+  onGoBack: () => void;
+  onPaymentComplete: (result: Either<PaymentResult>) => void;
+  onSubmitFinished?: (result: Either<PaymentResult>) => void;
+  onSubmitStarted?: () => void;
+  options: IBraintreeNexOptionsResponse;
+  selectedPackage: NexQuantity;
 }
 
-const ERROR_MESSAGE_THREE_D_SECURE_AUTHENTICATION_FAILED = '3D Secure authentication failed.'
-  + ' Please try a different payment method.';
+const ERROR_MESSAGE_THREE_D_SECURE_AUTHENTICATION_FAILED =
+  "3D Secure authentication failed." +
+  " Please try a different payment method.";
 
 export default function ProvidePaymentDetails({
   onGoBack,
@@ -57,7 +48,9 @@ export default function ProvidePaymentDetails({
 
   const requireReCaptcha = useFeature(FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES);
 
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  );
   const [instance, setInstance] = useState<Dropin | undefined>(undefined);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isSubmittingToAPI, setIsSubmittingToAPI] = useState(false);
@@ -81,11 +74,11 @@ export default function ProvidePaymentDetails({
     try {
       const payload = (await instance.requestPaymentMethod({
         threeDSecure: {
-          amount: (total).toFixed(2),
+          amount: total.toFixed(2),
         },
       })) as any;
 
-      console.info('payload from BT:');
+      console.info("payload from BT:");
       console.info(payload);
 
       const { liabilityShifted, liabilityShiftPossible } = payload;
@@ -116,7 +109,9 @@ export default function ProvidePaymentDetails({
         const { data } = await paymentService.purchaseWithBraintree(request);
 
         // Monadize the raw result
-        const either = data.isSuccess ? new Success(data) : new Failure(data.message ?? 'Unknown failure');
+        const either = data.isSuccess
+          ? new Success(data)
+          : new Failure(data.message ?? "Unknown failure");
 
         // Call the onSubmitFinished prop func that our parent passed us
         onSubmitFinished?.(either);
@@ -127,7 +122,7 @@ export default function ProvidePaymentDetails({
         return;
       }
 
-      console.error('Liability not shifted.');
+      console.error("Liability not shifted.");
       setErrorMessage(ERROR_MESSAGE_THREE_D_SECURE_AUTHENTICATION_FAILED);
     } catch (e) {
       if (e instanceof VersionMismatch) {
@@ -156,9 +151,9 @@ export default function ProvidePaymentDetails({
     return (
       <div
         style={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column',
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <h2 className="heading heading--2">Completing transaction</h2>
@@ -172,12 +167,7 @@ export default function ProvidePaymentDetails({
       <h2 className="heading heading--2">Payment details</h2>
 
       <p>
-        Purchasing
-        {' '}
-        {selectedPackage.quantity}
-        {' '}
-        Fate for
-        {' '}
+        Purchasing {selectedPackage.quantity} Fate for{" "}
         {selectedPackage.currency.sign}
         {total.toFixed(2)}
       </p>
@@ -187,33 +177,29 @@ export default function ProvidePaymentDetails({
         onInstance={setInstance}
       />
       <Feature name={FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES}>
-        {(enabled: boolean) => enabled && (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginBottom: '.5rem',
-              width: '100%',
-            }}
-          >
-            <ReCAPTCHA
-              sitekey="6Ldu784UAAAAAI2pquK8B8q4lgT6vXY-Dpa8mu4S"
-              onChange={handleReCaptchaChange}
-            />
-          </div>
-        )}
+        {(enabled: boolean) =>
+          enabled && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: ".5rem",
+                width: "100%",
+              }}
+            >
+              <ReCAPTCHA
+                sitekey="6Ldu784UAAAAAI2pquK8B8q4lgT6vXY-Dpa8mu4S"
+                onChange={handleReCaptchaChange}
+              />
+            </div>
+          )
+        }
       </Feature>
-      {errorMessage && (
-        <p
-          className="form__error"
-        >
-          {errorMessage}
-        </p>
-      )}
+      {errorMessage && <p className="form__error">{errorMessage}</p>}
       <div
         className="buttons buttons--no-squash"
         style={{
-          marginTop: '.5rem',
+          marginTop: ".5rem",
         }}
       >
         <SubmitButton

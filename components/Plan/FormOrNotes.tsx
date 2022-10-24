@@ -1,7 +1,7 @@
-import React from 'react';
-import { ApiQualityRequirement } from 'types/storylet';
-import Form from './Form';
-import PlanStateContext from './PlanStateContext';
+import React from "react";
+import { ApiQualityRequirement } from "types/storylet";
+import Form from "./Form";
+import PlanStateContext from "./PlanStateContext";
 
 export default function FormOrNotes({
   data,
@@ -36,9 +36,9 @@ export default function FormOrNotes({
 }
 
 type Props = {
-  data: any,
-  editing: boolean,
-  onSubmit: (_?: unknown) => unknown,
-  onToggleEditMode: () => void,
-  qualityRequirements: ApiQualityRequirement[],
+  data: any;
+  editing: boolean;
+  onSubmit: (_?: unknown) => unknown;
+  onToggleEditMode: () => void;
+  qualityRequirements: ApiQualityRequirement[];
 };

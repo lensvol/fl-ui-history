@@ -1,10 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import Image from 'components/Image';
+import Image from "components/Image";
 
-export default function Avatar({ avatar, onClick }: {
-  avatar: string,
-  onClick: (avatar: string) => void,
+export default function Avatar({
+  avatar,
+  onClick,
+}: {
+  avatar: string;
+  onClick: (avatar: string) => void;
 }) {
   return (
     <Image

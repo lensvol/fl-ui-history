@@ -1,31 +1,24 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import React, {
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
-import { connect } from 'react-redux';
-import {
-  RouteComponentProps,
-  withRouter,
-} from 'react-router-dom';
+import { handleVersionMismatch } from "actions/versionSync";
+import React, { useCallback, useRef, useState } from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import { actionsUpdated } from 'actions/actions';
-import { fetch as fetchCards } from 'actions/cards';
-import { processMessages } from 'actions/app';
-import { fetchAvailableSuccess } from 'actions/storylet';
+import { actionsUpdated } from "actions/actions";
+import { fetch as fetchCards } from "actions/cards";
+import { processMessages } from "actions/app";
+import { fetchAvailableSuccess } from "actions/storylet";
 
-import useIsMounted from 'hooks/useIsMounted';
-import { ThunkDispatch } from 'redux-thunk';
-import { VersionMismatch } from 'services/BaseService';
-import StoryletService from 'services/StoryletService';
+import useIsMounted from "hooks/useIsMounted";
+import { ThunkDispatch } from "redux-thunk";
+import { VersionMismatch } from "services/BaseService";
+import StoryletService from "services/StoryletService";
 
-import * as phases from 'constants/phases';
+import * as phases from "constants/phases";
 
-import getSortedBranches from 'selectors/storylet/getSortedBranches';
-import { IAppState } from 'types/app';
+import getSortedBranches from "selectors/storylet/getSortedBranches";
+import { IAppState } from "types/app";
 
-import StoryletInComponent from './StoryletInComponent';
+import StoryletInComponent from "./StoryletInComponent";
 
 const mapStateToProps = (state: IAppState) => ({
   branches: getSortedBranches(state),
@@ -34,19 +27,11 @@ const mapStateToProps = (state: IAppState) => ({
   storylet: state.storylet.storylet,
 });
 
-type Props = ReturnType<typeof mapStateToProps>
-  & RouteComponentProps
-  & { dispatch: ThunkDispatch<any, any, any> }
+type Props = ReturnType<typeof mapStateToProps> &
+  RouteComponentProps & { dispatch: ThunkDispatch<any, any, any> };
 
 function StoryletInContainer(props: Props) {
-  const {
-    branches,
-    dispatch,
-    history,
-    isChoosing,
-    phase,
-    storylet,
-  } = props;
+  const { branches, dispatch, history, isChoosing, phase, storylet } = props;
 
   const [isGoingBack, setIsGoingBack] = useState(false);
   const isMounted = useIsMounted();
@@ -78,7 +63,7 @@ function StoryletInContainer(props: Props) {
       // If the situation is nominal and we are getting returned to the available storylets,
       // nothing much has changed, so we can take the player back to the Possessions tab
       if (phase === phases.IN_ITEM_USE && nextPhase === phases.AVAILABLE) {
-        history.push('/possessions');
+        history.push("/possessions");
       }
 
       // If we're still mounted in the 'In' phase, unset isGoingBack
@@ -92,12 +77,7 @@ function StoryletInContainer(props: Props) {
       }
       throw e;
     }
-  }, [
-    dispatch,
-    history,
-    isMounted,
-    phase,
-  ]);
+  }, [dispatch, history, isMounted, phase]);
 
   return (
     <StoryletInComponent
@@ -110,6 +90,6 @@ function StoryletInContainer(props: Props) {
   );
 }
 
-StoryletInContainer.displayName = 'StoryletInContainer';
+StoryletInContainer.displayName = "StoryletInContainer";
 
 export default withRouter(connect(mapStateToProps)(StoryletInContainer));

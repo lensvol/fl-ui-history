@@ -1,14 +1,14 @@
-import { processMessages } from 'actions/app';
+import { processMessages } from "actions/app";
 import {
   clearCache as clearCardCache,
   fetch as fetchCards,
-} from 'actions/cards';
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as phases from 'constants/phases';
+} from "actions/cards";
+import { handleVersionMismatch } from "actions/versionSync";
+import * as phases from "constants/phases";
 
-import fetchAvailable from 'actions/storylet/fetchAvailable';
-import { VersionMismatch } from 'services/BaseService';
-import { IAppState } from 'types/app';
+import fetchAvailable from "actions/storylet/fetchAvailable";
+import { VersionMismatch } from "services/BaseService";
+import { IAppState } from "types/app";
 
 export default goOnwards();
 
@@ -25,7 +25,9 @@ export function goOnwards() {
       }
 
       // Did opportunity card eligibility change while we were processing previous messages?
-      const { cards: { shouldFetch } } = getState();
+      const {
+        cards: { shouldFetch },
+      } = getState();
 
       // If we are moving into the Available phase, then fetch cards too.
       // We only want to fetch cards if we're moving into "Available" because

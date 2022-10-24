@@ -1,10 +1,10 @@
-import { FEATURE_SHOW_VAT_BREAKDOWN } from 'features/feature-flags';
-import React from 'react';
-import { Feature } from 'flagged';
+import { FEATURE_SHOW_VAT_BREAKDOWN } from "features/feature-flags";
+import React from "react";
+import { Feature } from "flagged";
 
 export default function VatToggle({ onToggle }: { onToggle: () => void }) {
   return (
-    <p style={{ fontStyle: 'italic', fontSize: 'small' }}>
+    <p style={{ fontStyle: "italic", fontSize: "small" }}>
       * Prices include VAT for EU countries.
       <Feature name={FEATURE_SHOW_VAT_BREAKDOWN}>
         {(enabled: boolean) => {
@@ -13,16 +13,14 @@ export default function VatToggle({ onToggle }: { onToggle: () => void }) {
           }
           return (
             <>
-              Click
-              {' '}
+              Click{" "}
               <button
                 type="button"
                 className="link--inverse"
                 onClick={onToggle}
               >
                 here
-              </button>
-              {' '}
+              </button>{" "}
               to display details.
             </>
           );
@@ -32,4 +30,4 @@ export default function VatToggle({ onToggle }: { onToggle: () => void }) {
   );
 }
 
-VatToggle.displayName = 'VatToggle';
+VatToggle.displayName = "VatToggle";

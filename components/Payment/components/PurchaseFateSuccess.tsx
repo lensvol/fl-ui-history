@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
-export default function PurchaseFateSuccess({ message }: { message: string | undefined }) {
+export default function PurchaseFateSuccess({
+  message,
+}: {
+  message: string | undefined;
+}) {
   return (
     <div>
       <h2 className="heading heading--3">Payment received</h2>
-      <p className="heading--3">
-        {message || 'Success!'}
-      </p>
+      <p className="heading--3">{message || "Success!"}</p>
       <p>
-        Thanks for supporting the game! Your Fate is now available in your account.
-        {' '}
-        If you have any problems or concerns, do please contact
-        {' '}
+        Thanks for supporting the game! Your Fate is now available in your
+        account. If you have any problems or concerns, do please contact{" "}
         <a
           href="mailto:purchases@failbettergames.com"
           target="_blank"
@@ -23,10 +23,7 @@ export default function PurchaseFateSuccess({ message }: { message: string | und
         .
       </p>
       <div className="buttons">
-        <button
-          className="button button--primary"
-          type="button"
-        >
+        <button className="button button--primary" type="button">
           Close
         </button>
       </div>
@@ -34,4 +31,4 @@ export default function PurchaseFateSuccess({ message }: { message: string | und
   );
 }
 
-PurchaseFateSuccess.displayName = 'PurchaseFateSuccess';
+PurchaseFateSuccess.displayName = "PurchaseFateSuccess";

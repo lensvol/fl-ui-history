@@ -1,8 +1,8 @@
-import * as PaymentActionTypes from 'actiontypes/payment';
+import * as PaymentActionTypes from "actiontypes/payment";
 
-import selectCurrencySuccess from 'reducers/payment/selectCurrencySuccess';
-import selectPackage from 'reducers/payment/selectPackage';
-import { IPaymentState } from 'types/payment';
+import selectCurrencySuccess from "reducers/payment/selectCurrencySuccess";
+import selectPackage from "reducers/payment/selectPackage";
+import { IPaymentState } from "types/payment";
 
 /**
  * Initial state
@@ -11,7 +11,7 @@ import { IPaymentState } from 'types/payment';
 const INITIAL_STATE: IPaymentState = {
   braintreeConfig: undefined,
   clientRequestToken: undefined,
-  currency: '',
+  currency: "",
   currencies: {},
   currencyCode: undefined,
   environmentPrefix: null,
@@ -32,7 +32,10 @@ const INITIAL_STATE: IPaymentState = {
  * @param {Object} state
  * @param {[Object]} action
  */
-export default function reducer(state = INITIAL_STATE, action: { type: string, payload: any }) {
+export default function reducer(
+  state = INITIAL_STATE,
+  action: { type: string; payload: any }
+) {
   const { payload = {} } = action;
 
   switch (action.type) {

@@ -1,9 +1,9 @@
-import { getMapDimensionsForSetting } from 'features/mapping/index';
-import { IMappableSetting } from 'types/map';
+import { getMapDimensionsForSetting } from "features/mapping/index";
+import { IMappableSetting } from "types/map";
 
 export default function getMinimumZoomThatFits(
   { innerWidth, innerHeight }: Window,
-  setting: undefined | IMappableSetting,
+  setting: undefined | IMappableSetting
 ) {
   const { mapRootArea } = setting ?? {};
 

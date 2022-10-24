@@ -1,5 +1,5 @@
-import { IArea } from 'types/map';
+import { IArea } from "types/map";
 
 export default function isDistrict(a?: IArea) {
-  return (a?.type ?? null) === 'District';
+  return (a?.type ?? null) === "District";
 }

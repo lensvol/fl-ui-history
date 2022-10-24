@@ -1,11 +1,11 @@
-import { IAppState } from 'types/app';
-import { ApiResultMessageQualityEffect } from 'types/app/messages';
-import { OutfitSlotName } from 'types/outfit';
+import { IAppState } from "types/app";
+import { ApiResultMessageQualityEffect } from "types/app/messages";
+import { OutfitSlotName } from "types/outfit";
 
 export default function findEquippedItemLosses(
   messages: ApiResultMessageQualityEffect[],
   state: IAppState,
-  ignoredMessageTypes: string[] = [],
+  ignoredMessageTypes: string[] = []
 ) {
   return messages
     .filter(({ type }) => ignoredMessageTypes.indexOf(type) < 0)
@@ -26,6 +26,6 @@ export default function findEquippedItemLosses(
 
     // Check whether any slot currently has this item in it; if so, then
     // we have lost an equipped item
-    return Object.keys(outfit).some(k => outfit[k as OutfitSlotName] === id);
+    return Object.keys(outfit).some((k) => outfit[k as OutfitSlotName] === id);
   }
 }

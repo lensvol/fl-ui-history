@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import GeneralContainer from 'components/GeneralContainer';
-import MyProfile from 'components/MyProfile';
+import GeneralContainer from "components/GeneralContainer";
+import MyProfile from "components/MyProfile";
 
 export default function MyProfileTabContainer() {
   return (
@@ -11,4 +11,4 @@ export default function MyProfileTabContainer() {
   );
 }
 
-MyProfileTabContainer.displayName = 'MyProfileTabContainer';
+MyProfileTabContainer.displayName = "MyProfileTabContainer";

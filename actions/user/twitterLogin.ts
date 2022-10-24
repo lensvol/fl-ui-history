@@ -1,32 +1,32 @@
-import {
-  TWITTER_LOGIN_FAILURE,
-  TWITTER_LOGIN_SUCCESS,
-} from 'actiontypes/user';
-import { bootstrap } from 'actions/app';
-import {
-  ActionCreator,
-} from 'redux';
+import { TWITTER_LOGIN_FAILURE, TWITTER_LOGIN_SUCCESS } from "actiontypes/user";
+import { bootstrap } from "actions/app";
+import { ActionCreator } from "redux";
 
-import { ThunkDispatch } from 'redux-thunk';
+import { ThunkDispatch } from "redux-thunk";
 
-import handleAccessCodeResult from './handleAccessCodeResult';
-import setJwt from './setJwt';
-import createBootstrapOptions from './createBootstrapOptions';
+import handleAccessCodeResult from "./handleAccessCodeResult";
+import setJwt from "./setJwt";
+import createBootstrapOptions from "./createBootstrapOptions";
 
 export type TwitterLoginSuccess = {
-  type: typeof TWITTER_LOGIN_SUCCESS,
-  payload: any,
+  type: typeof TWITTER_LOGIN_SUCCESS;
+  payload: any;
 };
 export type TwitterLoginFailure = { type: typeof TWITTER_LOGIN_FAILURE };
 
 export type TwitterLoginActions = TwitterLoginSuccess | TwitterLoginFailure;
 
-const twitterLoginSuccess: ActionCreator<TwitterLoginSuccess> = ({ accessCodeResult, user }) => ({
+const twitterLoginSuccess: ActionCreator<TwitterLoginSuccess> = ({
+  accessCodeResult,
+  user,
+}) => ({
   type: TWITTER_LOGIN_SUCCESS,
   payload: { accessCodeResult, user, loggedIn: true },
 });
 
-export const twitterLoginFailure: ActionCreator<TwitterLoginFailure> = error => ({
+export const twitterLoginFailure: ActionCreator<TwitterLoginFailure> = (
+  error
+) => ({
   type: TWITTER_LOGIN_FAILURE,
   loggedIn: false,
   loginError: true,

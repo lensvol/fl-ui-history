@@ -1,7 +1,11 @@
-import excludeById from './excludeById';
-import { IMessagesState } from 'types/messages';
+import excludeById from "./excludeById";
+import { IMessagesState } from "types/messages";
 
-export default function updateAndExclude(state: IMessagesState, id: number, progress: any) {
+export default function updateAndExclude(
+  state: IMessagesState,
+  id: number,
+  progress: any
+) {
   return {
     ...state,
     ...progress,

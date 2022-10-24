@@ -1,7 +1,7 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import Control from 'react-leaflet-control';
-import Modal from 'react-modal';
-import { Link, withRouter } from 'react-router-dom';
+import React, { Fragment, useCallback, useEffect, useState } from "react";
+import Control from "react-leaflet-control";
+import Modal from "react-modal";
+import { Link, withRouter } from "react-router-dom";
 
 export function FunnellingIndicator() {
   const [didUserWantThis, setDidUserWantThis] = useState(true);
@@ -9,15 +9,19 @@ export function FunnellingIndicator() {
   const [isBumfModalOpen, setIsBumfModalOpen] = useState(false);
 
   useEffect(() => {
-    setDidUserWantThis(window.localStorage.getItem('use-fallback-map') === 'true');
-    setDidUserHideThis(window.localStorage.getItem('hide-funnelling-indicator') === 'true');
+    setDidUserWantThis(
+      window.localStorage.getItem("use-fallback-map") === "true"
+    );
+    setDidUserHideThis(
+      window.localStorage.getItem("hide-funnelling-indicator") === "true"
+    );
   }, []);
 
   const handleHide = useCallback((hideForever) => {
     setDidUserHideThis(hideForever);
     setIsBumfModalOpen(false);
     if (hideForever) {
-      window.localStorage.setItem('hide-funnelling-indicator', 'true');
+      window.localStorage.setItem("hide-funnelling-indicator", "true");
     }
   }, []);
 
@@ -27,14 +31,12 @@ export function FunnellingIndicator() {
 
   return (
     <Fragment>
-      <Control
-        position="topleft"
-      >
+      <Control position="topleft">
         <img
           alt="Funnelling indicator"
           className="fallback-map__funnelling-indicator"
           role="button"
-          src={'/map/exclamation-icon.png'}
+          src={"/map/exclamation-icon.png"}
           onClick={() => setIsBumfModalOpen(true)}
         />
       </Control>
@@ -48,28 +50,27 @@ export function FunnellingIndicator() {
             zIndex: 9999,
           },
           content: {
-            backgroundImage: 'none',
+            backgroundImage: "none",
           },
         }}
       >
         <div>
           <p>
-            Based on your browser, you are viewing the compatibility version of the Fallen London map.
+            Based on your browser, you are viewing the compatibility version of
+            the Fallen London map.
           </p>
           <p>
-            You can change this in
-            {' '}
-            <Link to="/account#map-settings">Account Settings</Link>
-            .
+            You can change this in{" "}
+            <Link to="/account#map-settings">Account Settings</Link>.
           </p>
           <div className="buttons">
             <button
               className="button button--primary button--sm"
               onClick={() => handleHide(false)}
               style={{
-                borderColor: '#92d1d5',
-                color: '#92d1d5',
-                textTransform: 'none',
+                borderColor: "#92d1d5",
+                color: "#92d1d5",
+                textTransform: "none",
               }}
             >
               OK
@@ -78,9 +79,9 @@ export function FunnellingIndicator() {
               className="button button--tertiary button--sm"
               onClick={() => handleHide(true)}
               style={{
-                borderColor: '#92d1d5',
-                color: '#92d1d5',
-                textTransform: 'none',
+                borderColor: "#92d1d5",
+                color: "#92d1d5",
+                textTransform: "none",
               }}
             >
               Don't show this again

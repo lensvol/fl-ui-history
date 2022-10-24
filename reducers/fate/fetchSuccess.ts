@@ -1,9 +1,12 @@
-import { FetchFateSuccess } from 'actions/fate/fetch';
-import { IFateState } from 'reducers/fate';
-import calculateEffectiveFate from './calculateEffectiveFate';
-import makeFateRefreshCard from './makeFateRefreshCard';
+import { FetchFateSuccess } from "actions/fate/fetch";
+import { IFateState } from "reducers/fate";
+import calculateEffectiveFate from "./calculateEffectiveFate";
+import makeFateRefreshCard from "./makeFateRefreshCard";
 
-export default function fetchSuccess(state: IFateState, action: FetchFateSuccess): IFateState {
+export default function fetchSuccess(
+  state: IFateState,
+  action: FetchFateSuccess
+): IFateState {
   const { payload } = action;
   const {
     currentFate,

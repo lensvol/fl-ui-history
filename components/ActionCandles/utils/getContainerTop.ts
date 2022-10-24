@@ -1,9 +1,12 @@
 import getHeight, {
   FULL_CANDLE_HEIGHT,
   SNUFFED_CANDLE_HEIGHT,
-} from 'components/ActionCandles/utils/getHeight';
+} from "components/ActionCandles/utils/getHeight";
 
-export default function getContainerTop(actions: number, isExceptional: boolean) {
+export default function getContainerTop(
+  actions: number,
+  isExceptional: boolean
+) {
   // If we have more than 20 actions, we have a full candle
   if (actions > 20) {
     return -FULL_CANDLE_HEIGHT;
@@ -18,10 +21,7 @@ export default function getContainerTop(actions: number, isExceptional: boolean)
   // the remaining candle, or the height of the snuffed candle, whichever
   // is taller
   if (isExceptional) {
-    return -Math.max(
-      getHeight({ actions }),
-      SNUFFED_CANDLE_HEIGHT,
-    );
+    return -Math.max(getHeight({ actions }), SNUFFED_CANDLE_HEIGHT);
   }
   return -getHeight({ actions });
 }

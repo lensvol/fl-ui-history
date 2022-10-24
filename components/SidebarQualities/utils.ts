@@ -1,6 +1,6 @@
-import { IQuality } from 'types/qualities';
+import { IQuality } from "types/qualities";
 
-type QualityData = IQuality & { levelDescription?: string, useCap?: boolean };
+type QualityData = IQuality & { levelDescription?: string; useCap?: boolean };
 
 export function buildTooltipData(data: QualityData) {
   const {
@@ -35,12 +35,15 @@ export function buildLevelDescription({
   level,
   levelDescription,
   useCap,
-}: Pick<QualityData, 'name' | 'level' | 'levelDescription' | 'cap' | 'useCap'>) {
+}: Pick<
+  QualityData,
+  "name" | "level" | "levelDescription" | "cap" | "useCap"
+>) {
   const bits = [
     name,
     level,
-    `${(useCap ?? false) && cap !== undefined ? ` / ${cap}` : ''}`,
-    levelDescription ? `— ${levelDescription}` : '',
+    `${(useCap ?? false) && cap !== undefined ? ` / ${cap}` : ""}`,
+    levelDescription ? `— ${levelDescription}` : "",
   ];
-  return bits.join(' ');
+  return bits.join(" ");
 }

@@ -1,12 +1,9 @@
-import React, {
-  CSSProperties,
-  useMemo,
-} from 'react';
+import React, { CSSProperties, useMemo } from "react";
 
-import Modal from 'components/Modal';
-import PurchaseFace from 'components/PurchaseFaceModal/PurchaseFace';
-import PurchaseDefault from './PurchaseDefault';
-import PurchaseName from './PurchaseName';
+import Modal from "components/Modal";
+import PurchaseFace from "components/PurchaseFaceModal/PurchaseFace";
+import PurchaseDefault from "./PurchaseDefault";
+import PurchaseName from "./PurchaseName";
 
 export default function PurchaseModalContainer(props: Props) {
   const {
@@ -21,9 +18,9 @@ export default function PurchaseModalContainer(props: Props) {
 
   const contents = useMemo(() => {
     switch (data?.action) {
-      case 'AskNameChange':
+      case "AskNameChange":
         return <PurchaseName {...props} />;
-      case 'FaceChange':
+      case "FaceChange":
         return <PurchaseFace {...props} />;
       default:
         return <PurchaseDefault {...props} />;
@@ -45,15 +42,15 @@ export default function PurchaseModalContainer(props: Props) {
 }
 
 interface Props {
-  className?: string,
-  data: any | undefined,
-  disableTouchEvents?: boolean,
-  isFree?: boolean,
-  isOpen: boolean,
-  onRequestClose: (...args: any) => any,
-  overlayClassName?: string,
+  className?: string;
+  data: any | undefined;
+  disableTouchEvents?: boolean;
+  isFree?: boolean;
+  isOpen: boolean;
+  onRequestClose: (...args: any) => any;
+  overlayClassName?: string;
   style?: {
-    overlay?: CSSProperties,
-    content?: CSSProperties,
-  },
+    overlay?: CSSProperties;
+    content?: CSSProperties;
+  };
 }

@@ -8,7 +8,7 @@ let supported: boolean | undefined;
  * @return {boolean} Is WebGL supported.
  */
 export default function isWebGLSupported(): boolean {
-  if (typeof supported === 'undefined') {
+  if (typeof supported === "undefined") {
     supported = (function supported(): boolean {
       const contextOptions = {
         stencil: true,
@@ -20,16 +20,20 @@ export default function isWebGLSupported(): boolean {
           return false;
         }
 
-        const canvas = document.createElement('canvas');
-        let gl: WebGLRenderingContext | null = (
-          canvas.getContext('webgl', contextOptions)
-          || canvas.getContext('experimental-webgl', contextOptions)
-        ) as WebGLRenderingContext;
+        const canvas = document.createElement("canvas");
+        let gl: WebGLRenderingContext | null = (canvas.getContext(
+          "webgl",
+          contextOptions
+        ) ||
+          canvas.getContext(
+            "experimental-webgl",
+            contextOptions
+          )) as WebGLRenderingContext;
 
-        const success = !!(gl?.getContextAttributes()?.stencil);
+        const success = !!gl?.getContextAttributes()?.stencil;
 
         if (gl) {
-          const loseContext = gl.getExtension('WEBGL_lose_context');
+          const loseContext = gl.getExtension("WEBGL_lose_context");
 
           if (loseContext) {
             loseContext.loseContext();

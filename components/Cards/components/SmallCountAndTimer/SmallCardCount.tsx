@@ -1,10 +1,7 @@
-import React, {
-  Fragment,
-  useMemo,
-} from 'react'; // eslint-disable-line no-unused-vars
-import { connect } from 'react-redux';
-import { IAppState } from 'types/app';
-import CardTimer from '../CardTimer';
+import React, { Fragment, useMemo } from "react"; // eslint-disable-line no-unused-vars
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
+import CardTimer from "../CardTimer";
 
 export function SmallCardCount({
   cardsCount,
@@ -14,29 +11,25 @@ export function SmallCardCount({
 }: Props) {
   const isHandFull = displayCards.length === handSize;
 
-  const handFullFragment = useMemo(() => (
-    <p>
-      Your hand is full; you must play or discard a card before you can draw another.
-    </p>
-  ), []);
+  const handFullFragment = useMemo(
+    () => (
+      <p>
+        Your hand is full; you must play or discard a card before you can draw
+        another.
+      </p>
+    ),
+    []
+  );
 
   if (cardsCount > deckSize) {
-    return (
-      <>
-        No draw limit.
-        {' '}
-        {isHandFull && handFullFragment}
-      </>
-    );
+    return <>No draw limit. {isHandFull && handFullFragment}</>;
   }
 
   if (cardsCount === 0) {
     return (
       <Fragment>
         <p>
-          No cards waiting.
-          {' '}
-          <CardTimer formatter={str => `(${str}.)`} />
+          No cards waiting. <CardTimer formatter={(str) => `(${str}.)`} />
         </p>
       </Fragment>
     );
@@ -45,9 +38,8 @@ export function SmallCardCount({
     return (
       <Fragment>
         <p>
-          There is 1 card in your Opportunity Deck.
-          {' '}
-          <CardTimer formatter={str => `(${str}.)`} />
+          There is 1 card in your Opportunity Deck.{" "}
+          <CardTimer formatter={(str) => `(${str}.)`} />
         </p>
       </Fragment>
     );
@@ -55,25 +47,18 @@ export function SmallCardCount({
   return (
     <>
       <p>
-        {`There are ${cardsCount} cards in your Opportunity Deck.`}
-        {' '}
-        <CardTimer formatter={str => `(${str}.)`} />
-      </p>
-      {' '}
+        {`There are ${cardsCount} cards in your Opportunity Deck.`}{" "}
+        <CardTimer formatter={(str) => `(${str}.)`} />
+      </p>{" "}
       {isHandFull && handFullFragment}
     </>
   );
 }
 
-SmallCardCount.displayName = 'SmallCardCount';
+SmallCardCount.displayName = "SmallCardCount";
 
 const mapStateToProps = ({
-  cards: {
-    cardsCount,
-    displayCards,
-    deckSize,
-    handSize,
-  },
+  cards: { cardsCount, displayCards, deckSize, handSize },
 }: IAppState) => ({
   cardsCount,
   deckSize,

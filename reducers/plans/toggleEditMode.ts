@@ -1,14 +1,17 @@
-import { ToggleEditMode } from 'actions/plans';
-import { IPlansState } from 'types/plans';
+import { ToggleEditMode } from "actions/plans";
+import { IPlansState } from "types/plans";
 
-export default function toggleEditMode(state: IPlansState, action: ToggleEditMode) {
+export default function toggleEditMode(
+  state: IPlansState,
+  action: ToggleEditMode
+) {
   const { payload } = action;
-  const activePlansEdit = state.activePlans.map(plan => ({
+  const activePlansEdit = state.activePlans.map((plan) => ({
     ...plan,
     editMode: plan.id === payload.planId ? !plan.editMode : plan.editMode,
   }));
 
-  const completePlansEdit = state.completePlans.map(plan => ({
+  const completePlansEdit = state.completePlans.map((plan) => ({
     ...plan,
     editMode: plan.id === payload.planId ? !plan.editMode : plan.editMode,
   }));

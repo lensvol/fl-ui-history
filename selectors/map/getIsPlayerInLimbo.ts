@@ -1,14 +1,7 @@
-import {
-  isLodgings,
-  isSubLodgings,
-  shouldAppearOnMap,
-} from 'features/mapping';
-import { createSelector } from 'reselect';
-import { IAppState } from 'types/app';
-import {
-  IStateAwareArea,
-  ISetting,
-} from 'types/map';
+import { isLodgings, isSubLodgings, shouldAppearOnMap } from "features/mapping";
+import { createSelector } from "reselect";
+import { IAppState } from "types/app";
+import { IStateAwareArea, ISetting } from "types/map";
 
 function getCurrentArea(state: IAppState): IStateAwareArea | undefined {
   return state.map.currentArea;
@@ -25,7 +18,7 @@ function getSetting(state: IAppState): ISetting | undefined {
 function isPlayerInLimbo(
   currentArea: IStateAwareArea | undefined,
   areas: IStateAwareArea[] | undefined,
-  _setting: ISetting | undefined,
+  _setting: ISetting | undefined
 ): boolean {
   if (!(currentArea && areas)) {
     return false;
@@ -38,7 +31,10 @@ function isPlayerInLimbo(
   return !shouldAppearOnMapRecursive(currentArea, areas);
 }
 
-function shouldAppearOnMapRecursive(area: IStateAwareArea | undefined, areas: IStateAwareArea[]): boolean {
+function shouldAppearOnMapRecursive(
+  area: IStateAwareArea | undefined,
+  areas: IStateAwareArea[]
+): boolean {
   if (!area) {
     return false;
   }
@@ -51,7 +47,13 @@ function shouldAppearOnMapRecursive(area: IStateAwareArea | undefined, areas: IS
     return false;
   }
 
-  return shouldAppearOnMapRecursive(areas.find(b => b.areaKey === area.parentArea?.areaKey), areas);
+  return shouldAppearOnMapRecursive(
+    areas.find((b) => b.areaKey === area.parentArea?.areaKey),
+    areas
+  );
 }
 
-export default createSelector([getCurrentArea, getAreas, getSetting], isPlayerInLimbo);
+export default createSelector(
+  [getCurrentArea, getAreas, getSetting],
+  isPlayerInLimbo
+);

@@ -1,24 +1,29 @@
-import { handleVersionMismatch } from 'actions/versionSync';
-import * as PlansActionTypes from 'actiontypes/plans';
-import {
-  clearCache,
-} from 'actions/storylet';
-import { VersionMismatch } from 'services/BaseService';
-import PlansService from 'services/PlansService';
-import { IEditPlanRequestData, IPlan, IPlansService } from 'types/plans';
-import { ActionCreator } from 'redux';
+import { handleVersionMismatch } from "actions/versionSync";
+import * as PlansActionTypes from "actiontypes/plans";
+import { clearCache } from "actions/storylet";
+import { VersionMismatch } from "services/BaseService";
+import PlansService from "services/PlansService";
+import { IEditPlanRequestData, IPlan, IPlansService } from "types/plans";
+import { ActionCreator } from "redux";
 
-export type SaveEditRequested = { type: typeof PlansActionTypes.SAVE_EDIT_REQUESTED };
-export type SaveEditFailure = { type: typeof PlansActionTypes.SAVE_EDIT_FAILURE };
+export type SaveEditRequested = {
+  type: typeof PlansActionTypes.SAVE_EDIT_REQUESTED;
+};
+export type SaveEditFailure = {
+  type: typeof PlansActionTypes.SAVE_EDIT_FAILURE;
+};
 export type SaveEditSuccess = {
-  type: typeof PlansActionTypes.SAVE_EDIT_SUCCESS,
+  type: typeof PlansActionTypes.SAVE_EDIT_SUCCESS;
   payload: {
-    activePlans: IPlan[],
-    completePlans: IPlan[],
-  },
+    activePlans: IPlan[];
+    completePlans: IPlan[];
+  };
 };
 
-export type SaveEditActions = SaveEditRequested | SaveEditSuccess | SaveEditFailure;
+export type SaveEditActions =
+  | SaveEditRequested
+  | SaveEditSuccess
+  | SaveEditFailure;
 
 /** ----------------------------------------------------------------------------
  * SAVE EDIT PLAN
@@ -48,7 +53,10 @@ export const editPlanRequest: ActionCreator<SaveEditRequested> = () => ({
   type: PlansActionTypes.SAVE_EDIT_REQUESTED,
 });
 
-export const editPlanSuccess: ActionCreator<SaveEditSuccess> = (data: { active: IPlan[], complete: IPlan[] }) => ({
+export const editPlanSuccess: ActionCreator<SaveEditSuccess> = (data: {
+  active: IPlan[];
+  complete: IPlan[];
+}) => ({
   type: PlansActionTypes.SAVE_EDIT_SUCCESS,
   payload: {
     activePlans: data.active,
@@ -56,4 +64,6 @@ export const editPlanSuccess: ActionCreator<SaveEditSuccess> = (data: { active: 
   },
 });
 
-export const editPlanFailure: ActionCreator<SaveEditFailure> = () => ({ type: PlansActionTypes.SAVE_EDIT_FAILURE });
+export const editPlanFailure: ActionCreator<SaveEditFailure> = () => ({
+  type: PlansActionTypes.SAVE_EDIT_FAILURE,
+});

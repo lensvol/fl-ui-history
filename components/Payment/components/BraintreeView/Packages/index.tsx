@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import Loading from 'components/Loading';
-import { NexQuantity } from 'types/payment';
-import FateOption from '../../FateOption';
+import Loading from "components/Loading";
+import { NexQuantity } from "types/payment";
+import FateOption from "../../FateOption";
 
 export default function Packages({
   isBreakdownVisible,
@@ -13,7 +13,9 @@ export default function Packages({
 }: Props) {
   if (isFetching) {
     return (
-      <div style={{ paddingTop: 24, display: 'flex', justifyContent: 'center' }}>
+      <div
+        style={{ paddingTop: 24, display: "flex", justifyContent: "center" }}
+      >
         <Loading spinner />
       </div>
     );
@@ -22,7 +24,8 @@ export default function Packages({
   return (
     <>
       {packages.map((item, i) => {
-        const isSelected = !!selectedPackage && selectedPackage.currency === item.currency;
+        const isSelected =
+          !!selectedPackage && selectedPackage.currency === item.currency;
         return (
           <FateOption
             key={item.quantity}
@@ -38,12 +41,12 @@ export default function Packages({
   );
 }
 
-Packages.displayName = 'Packages';
+Packages.displayName = "Packages";
 
 type Props = {
-  isBreakdownVisible: boolean,
-  isFetching: boolean,
-  onSelect: (_args?: any) => void,
-  packages: NexQuantity[],
-  selectedPackage: any,
+  isBreakdownVisible: boolean;
+  isFetching: boolean;
+  onSelect: (_args?: any) => void;
+  packages: NexQuantity[];
+  selectedPackage: any;
 };

@@ -1,24 +1,21 @@
-import React from 'react';
+import React from "react";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
-import ShareFormContent from './components/ShareFormContent';
-import ShareResponse from './components/ShareResponse';
+import ShareFormContent from "./components/ShareFormContent";
+import ShareResponse from "./components/ShareResponse";
 
-import {
-  LOADING,
-  SHARE_COMPLETE,
-} from './constants';
+import { LOADING, SHARE_COMPLETE } from "./constants";
 
 interface Props {
-  borderColour?: string,
-  data: any,
-  isSharing: boolean,
-  onChange: (...args: any) => void,
-  onSubmit: (...args: any) => void,
-  shareMessageResponse?: string,
-  step: string,
-  title?: string,
+  borderColour?: string;
+  data: any;
+  isSharing: boolean;
+  onChange: (...args: any) => void;
+  onSubmit: (...args: any) => void;
+  shareMessageResponse?: string;
+  step: string;
+  title?: string;
 }
 
 export default function ShareDialogContent(props: Props) {

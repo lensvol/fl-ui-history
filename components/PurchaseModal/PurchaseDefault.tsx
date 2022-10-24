@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import classnames from 'classnames';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import classnames from "classnames";
+import { connect } from "react-redux";
 
-import { purchaseItem } from 'actions/fate';
-import Image from 'components/Image';
-import Loading from 'components/Loading';
-import { Success } from 'services/BaseMonadicService';
-import { IFateCard } from 'types/fate';
+import { purchaseItem } from "actions/fate";
+import Image from "components/Image";
+import Loading from "components/Loading";
+import { Success } from "services/BaseMonadicService";
+import { IFateCard } from "types/fate";
 
-import PurchaseResult from './PurchaseResult';
+import PurchaseResult from "./PurchaseResult";
 
 type Props = {
-  dispatch: Function, // eslint-disable-line
-  onRequestClose: () => void,
-  data: IFateCard & { buttons?: any[] },
+  dispatch: Function; // eslint-disable-line
+  onRequestClose: () => void;
+  data: IFateCard & { buttons?: any[] };
 };
 
 type State = {
-  isSuccess?: boolean,
-  isSubmitting: boolean,
-  message?: string,
-  purchaseComplete: boolean,
+  isSuccess?: boolean;
+  isSubmitting: boolean;
+  message?: string;
+  purchaseComplete: boolean;
 };
 
 export class PurchaseDefault extends Component<Props, State> {
@@ -29,10 +29,11 @@ export class PurchaseDefault extends Component<Props, State> {
     purchaseComplete: false,
   };
 
-  handlePurchase = async (
-    correspondingActivePurchase: any,
-  ) => {
-    const { dispatch, data: { id } } = this.props;
+  handlePurchase = async (correspondingActivePurchase: any) => {
+    const {
+      dispatch,
+      data: { id },
+    } = this.props;
     const { isSubmitting } = this.state;
     if (isSubmitting) {
       return;
@@ -66,35 +67,34 @@ export class PurchaseDefault extends Component<Props, State> {
       return (
         <button
           className={classnames(
-            'button button--secondary',
-            isSubmitting && 'button--disabled',
+            "button button--secondary",
+            isSubmitting && "button--disabled"
           )}
           onClick={this.handlePurchase}
           type="button"
         >
-          {isSubmitting ? (
-            <Loading
-              spinner
-              small
-            />
-          ) : <span>Purchase</span>}
+          {isSubmitting ? <Loading spinner small /> : <span>Purchase</span>}
         </button>
       );
     }
 
-    return activePurchase.buttons.map((button: {
-      correspondingActivePurchase: { id: number },
-      description: string,
-    }) => (
-      <button
-        key={button.correspondingActivePurchase.id}
-        className="button button--primary"
-        onClick={() => this.handlePurchase(button.correspondingActivePurchase)}
-        type="button"
-      >
-        {button.description}
-      </button>
-    ));
+    return activePurchase.buttons.map(
+      (button: {
+        correspondingActivePurchase: { id: number };
+        description: string;
+      }) => (
+        <button
+          key={button.correspondingActivePurchase.id}
+          className="button button--primary"
+          onClick={() =>
+            this.handlePurchase(button.correspondingActivePurchase)
+          }
+          type="button"
+        >
+          {button.description}
+        </button>
+      )
+    );
   };
 
   render = () => {
@@ -108,22 +108,19 @@ export class PurchaseDefault extends Component<Props, State> {
           image={image}
           name={name}
           isSuccess={isSuccess}
-          message={message ?? ''}
+          message={message ?? ""}
           onClick={onRequestClose}
         />
       );
     }
 
-    const price = (Array.isArray(activePurchase.price))
-      ? activePurchase.price.toString().replace(/,/g, ' or ')
+    const price = Array.isArray(activePurchase.price)
+      ? activePurchase.price.toString().replace(/,/g, " or ")
       : activePurchase.price;
 
     return (
       <div>
-        <h3
-          className="heading heading--2"
-          style={{ color: '#000' }}
-        >
+        <h3 className="heading heading--2" style={{ color: "#000" }}>
           Confirm Purchase
         </h3>
         <hr />
@@ -143,18 +140,18 @@ export class PurchaseDefault extends Component<Props, State> {
             </div>
             <div className="media__body">
               <h3 className="heading heading--3">{activePurchase.name}</h3>
-              <p dangerouslySetInnerHTML={{ __html: activePurchase.description }} />
+              <p
+                dangerouslySetInnerHTML={{ __html: activePurchase.description }}
+              />
               <p>{`You need ${price} Fate for this.`}</p>
             </div>
             <hr />
           </div>
-          <div className="dialog__actions">
-            {this.renderButtons()}
-          </div>
+          <div className="dialog__actions">{this.renderButtons()}</div>
         </div>
       </div>
     );
-  }
+  };
 }
 
 export default connect()(PurchaseDefault);

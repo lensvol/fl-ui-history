@@ -1,2 +1,2 @@
-export const START_SCROLLING = 'scrollToComponent/startScrolling';
-export const STOP_SCROLLING = 'scrollToComponent/stopScrolling';
+export const START_SCROLLING = "scrollToComponent/startScrolling";
+export const STOP_SCROLLING = "scrollToComponent/stopScrolling";

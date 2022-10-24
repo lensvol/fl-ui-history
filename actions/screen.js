@@ -1,18 +1,17 @@
-import {
-  ENTER_FULL_SCREEN,
-  EXIT_FULL_SCREEN,
-} from 'actiontypes/screen';
+import { ENTER_FULL_SCREEN, EXIT_FULL_SCREEN } from "actiontypes/screen";
 
 // Trigger warning: Browser Wars flashback
-const rfs = el => el.requestFullscreen
-  || el.webkitRequestFullscreen
-  || el.mozRequestFullScreen
-  || el.msRequestFullscreen;
+const rfs = (el) =>
+  el.requestFullscreen ||
+  el.webkitRequestFullscreen ||
+  el.mozRequestFullScreen ||
+  el.msRequestFullscreen;
 
-const efs = document.exitFullscreen
-  || document.webkitExitFullscreen
-  || document.mozCancelFullScreen
-  || document.msExitFullscreen;
+const efs =
+  document.exitFullscreen ||
+  document.webkitExitFullscreen ||
+  document.mozCancelFullScreen ||
+  document.msExitFullscreen;
 
 export const enterFullScreen = () => (dispatch) => {
   const el = document.documentElement;

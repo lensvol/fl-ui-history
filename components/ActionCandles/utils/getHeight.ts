@@ -9,5 +9,5 @@ export default function getHeight({ actions }: { actions: number }) {
   // Otherwise, we're showing a candle whose height is proportional to the number
   // of actions remaining on this candle
   // TODO: This is the best I can come up with for emulating the legacy site heights
-  return Math.round(20 + actions * (FULL_CANDLE_HEIGHT - 28) / 19.0);
+  return Math.round(20 + (actions * (FULL_CANDLE_HEIGHT - 28)) / 19.0);
 }

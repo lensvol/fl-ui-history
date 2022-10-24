@@ -1,31 +1,31 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Login from 'components/Registration/components/Login';
-import Signup from './components/Signup';
-import Tab from './components/Tab';
+import Login from "components/Registration/components/Login";
+import Signup from "./components/Signup";
+import Tab from "./components/Tab";
 
 interface State {
-  activeTab: string,
+  activeTab: string;
 }
 
 class Registration extends Component<never, State> {
   state: State = {
-    activeTab: 'login',
-  }
+    activeTab: "login",
+  };
 
-  static displayName = 'Registration';
+  static displayName = "Registration";
 
   renderActiveTab = () => {
     const { activeTab } = this.state;
-    if (activeTab === 'signup') {
+    if (activeTab === "signup") {
       return <Signup />;
     }
     return <Login />;
-  }
+  };
 
   handleTabClick = (e: { target: { name: string } }) => {
     this.setState({ activeTab: e.target.name });
-  }
+  };
 
   /**
    * Render

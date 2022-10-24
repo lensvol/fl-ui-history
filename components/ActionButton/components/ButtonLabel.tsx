@@ -1,22 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
 
 type Props = {
-  actions: number,
-  data: any,
-  isWorking: boolean | undefined,
+  actions: number;
+  data: any;
+  isWorking: boolean | undefined;
 };
 
 class ButtonLabel extends React.Component<Props> {
-  static displayName = 'ButtonLabel';
+  static displayName = "ButtonLabel";
   render = () => {
-    const {
-      actions,
-      children,
-      data,
-      isWorking,
-    } = this.props;
+    const { actions, children, data, isWorking } = this.props;
     if (isWorking) {
       return <Loading spinner small />;
     }
@@ -42,6 +37,6 @@ class ButtonLabel extends React.Component<Props> {
   };
 }
 
-ButtonLabel.displayName = 'ButtonLabel';
+ButtonLabel.displayName = "ButtonLabel";
 
 export default ButtonLabel;

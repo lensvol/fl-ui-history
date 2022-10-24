@@ -1,21 +1,13 @@
-import React, {
-  useCallback,
-} from 'react';
-import { connect } from 'react-redux';
-import Waypoint from 'react-waypoint';
+import React, { useCallback } from "react";
+import { connect } from "react-redux";
+import Waypoint from "react-waypoint";
 
-import getVisibleQualities from 'selectors/myself/getVisibleQualities';
-import { IAppState } from 'types/app';
-import QualityItem from './QualityItem';
+import getVisibleQualities from "selectors/myself/getVisibleQualities";
+import { IAppState } from "types/app";
+import QualityItem from "./QualityItem";
 
 export function QualityGroup(props: Props) {
-  const {
-    filterString,
-    id,
-    name,
-    onEnterWaypoint,
-    qualities,
-  } = props;
+  const { filterString, id, name, onEnterWaypoint, qualities } = props;
 
   const handleEnterWaypoint = useCallback(() => {
     onEnterWaypoint(id);
@@ -26,10 +18,7 @@ export function QualityGroup(props: Props) {
   }
 
   return (
-    <div
-      className="quality-group"
-      data-group-name={name}
-    >
+    <div className="quality-group" data-group-name={name}>
       <Waypoint onEnter={handleEnterWaypoint}>
         <h2 className="heading heading--2 quality-group__name">{name}</h2>
       </Waypoint>
@@ -37,21 +26,21 @@ export function QualityGroup(props: Props) {
         id="filter-list-1"
         className="js-filter-list items items--list quality-group__items"
       >
-        {qualities.map((q: any) => <QualityItem
-          filterString={filterString}
-          key={q.id} {...q} />)}
+        {qualities.map((q: any) => (
+          <QualityItem filterString={filterString} key={q.id} {...q} />
+        ))}
       </ul>
     </div>
   );
 }
 
-QualityGroup.displayName = 'QualityGroup';
+QualityGroup.displayName = "QualityGroup";
 
 type OwnProps = {
-  filterString: string,
-  id: number,
-  name: string,
-  onEnterWaypoint: (id: any) => void,
+  filterString: string;
+  id: number;
+  name: string;
+  onEnterWaypoint: (id: any) => void;
 };
 
 const mapStateToProps = (state: IAppState, props: OwnProps) => ({

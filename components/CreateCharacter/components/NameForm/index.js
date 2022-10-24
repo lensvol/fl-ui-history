@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import CharacterNameContext from 'components/CreateCharacter/CharacterNameContext';
+import CharacterNameContext from "components/CreateCharacter/CharacterNameContext";
 
 export default function NameForm() {
   return (
@@ -28,19 +28,13 @@ export default function NameForm() {
             required
           />
           {isAvailable && value.length > 0 && (
-            <span>
-              {`${value} is available!`}
-            </span>
+            <span>{`${value} is available!`}</span>
           )}
-          {error && (
-            <span className="form__error">
-              {error}
-            </span>
-          )}
+          {error && <span className="form__error">{error}</span>}
         </p>
       )}
     </CharacterNameContext.Consumer>
   );
 }
 
-NameForm.displayName = 'NameForm';
+NameForm.displayName = "NameForm";

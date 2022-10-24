@@ -1,42 +1,33 @@
-import ZoomControl from 'components/Map/PixiMap/ZoomControl';
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import L from 'leaflet';
-import {
-  ImageOverlay,
-  Map as LeafletMap,
-  Pane,
-} from 'react-leaflet';
-import { connect } from 'react-redux';
+import ZoomControl from "components/Map/PixiMap/ZoomControl";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import L from "leaflet";
+import { ImageOverlay, Map as LeafletMap, Pane } from "react-leaflet";
+import { connect } from "react-redux";
 
-import DistrictLabelLayer from 'components/Map/DistrictLabelLayer';
-import useHandleAreaClick from 'components/Map/PixiMap/useHandleAreaClick';
-import useHandleHitboxTap from 'components/Map/PixiMap/useHandleHitboxTap';
-import useZoomToDistrict from 'components/Map/PixiMap/useZoomToDistrict';
-import ReactLeafletPixiOverlay from 'components/Map/ReactLeafletPixiOverlay';
+import DistrictLabelLayer from "components/Map/DistrictLabelLayer";
+import useHandleAreaClick from "components/Map/PixiMap/useHandleAreaClick";
+import useHandleHitboxTap from "components/Map/PixiMap/useHandleHitboxTap";
+import useZoomToDistrict from "components/Map/PixiMap/useZoomToDistrict";
+import ReactLeafletPixiOverlay from "components/Map/ReactLeafletPixiOverlay";
 import {
   getMapDimensionsForSetting,
   getMinimumZoomThatFits,
   xy,
-} from 'features/mapping';
-import { ModalTooltip } from 'components/ModalTooltip/ModalTooltipContainer';
-import { ITooltipData } from 'components/ModalTooltip/types';
-import { MAP_BASE_URL } from 'features/mapping/constants';
-import getCRSForSetting from 'features/mapping/getCRSForSetting';
-import getIdealMinimumZoomForSetting from 'features/mapping/getIdealMinimumZoomForSetting';
-import getMapZoomLimitsForSetting from 'features/mapping/getMapZoomLimitsForSetting';
-import getMinimumZoomLevelForDestinations from 'features/mapping/getMinimumZoomLevelForDestinations';
-import getLabelledStateAwareAreas from 'selectors/map/getLabelledStateAwareAreas';
-import { IAppState } from 'types/app';
-import { IMappableSetting } from 'types/map';
-import { BaseProps } from './props';
+} from "features/mapping";
+import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
+import { ITooltipData } from "components/ModalTooltip/types";
+import { MAP_BASE_URL } from "features/mapping/constants";
+import getCRSForSetting from "features/mapping/getCRSForSetting";
+import getIdealMinimumZoomForSetting from "features/mapping/getIdealMinimumZoomForSetting";
+import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting";
+import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
+import getLabelledStateAwareAreas from "selectors/map/getLabelledStateAwareAreas";
+import { IAppState } from "types/app";
+import { IMappableSetting } from "types/map";
+import { BaseProps } from "./props";
 
-import useHandleZoomEnd from './useHandleZoomEnd';
-import PlayerMarkers from '../PlayerMarkers';
+import useHandleZoomEnd from "./useHandleZoomEnd";
+import PlayerMarkers from "../PlayerMarkers";
 
 const SAFE_AREA_PADDING = 0;
 
@@ -81,26 +72,28 @@ export function UnterzeePixiMap({
     return getMapZoomLimitsForSetting(setting as IMappableSetting)?.max;
   }, [setting]);
 
-  const minZoom: undefined | number = useMemo(
-    () => {
-      if (!setting?.mapRootArea?.areaKey) {
-        return 0;
-      }
+  const minZoom: undefined | number = useMemo(() => {
+    if (!setting?.mapRootArea?.areaKey) {
+      return 0;
+    }
 
-      const idealMinimumZoomForSetting = getIdealMinimumZoomForSetting(setting as IMappableSetting);
-      const minimumZoomThatFits = getMinimumZoomThatFits(window, setting as IMappableSetting);
+    const idealMinimumZoomForSetting = getIdealMinimumZoomForSetting(
+      setting as IMappableSetting
+    );
+    const minimumZoomThatFits = getMinimumZoomThatFits(
+      window,
+      setting as IMappableSetting
+    );
 
-      if (idealMinimumZoomForSetting === undefined || minimumZoomThatFits === undefined) {
-        return undefined;
-      }
+    if (
+      idealMinimumZoomForSetting === undefined ||
+      minimumZoomThatFits === undefined
+    ) {
+      return undefined;
+    }
 
-      return Math.max(
-        idealMinimumZoomForSetting,
-        minimumZoomThatFits,
-      );
-    },
-    [setting],
-  );
+    return Math.max(idealMinimumZoomForSetting, minimumZoomThatFits);
+  }, [setting]);
 
   const handleRequestCloseModalTooltip = useCallback(() => {
     setIsModalTooltipOpen(false);
@@ -112,7 +105,7 @@ export function UnterzeePixiMap({
     onAreaSelect,
     onZoomEnd,
     selectedArea,
-    setZoomLevel,
+    setZoomLevel
   );
 
   const zoomToDistrict = useZoomToDistrict(mapRef);
@@ -121,7 +114,7 @@ export function UnterzeePixiMap({
     minimumZoomLevelForDestinations,
     onAreaClick,
     zoomLevel,
-    zoomToDistrict,
+    zoomToDistrict
   );
 
   const handleHitboxTap = useHandleHitboxTap(
@@ -133,20 +126,30 @@ export function UnterzeePixiMap({
     setIsModalTooltipOpen,
     setTooltipData,
     zoomLevel,
-    zoomToDistrict,
+    zoomToDistrict
   );
 
-  const center = useMemo(() => xy(initialCenter[0], initialCenter[1]), [initialCenter]);
-  const crs = useMemo(() => getCRSForSetting(setting as IMappableSetting), [setting]);
-  const bounds = useMemo(() => L.latLngBounds(
-    xy(0, 0),
-    xy(mapWidth, -mapHeight),
-  ), [mapWidth, mapHeight]);
+  const center = useMemo(
+    () => xy(initialCenter[0], initialCenter[1]),
+    [initialCenter]
+  );
+  const crs = useMemo(
+    () => getCRSForSetting(setting as IMappableSetting),
+    [setting]
+  );
+  const bounds = useMemo(
+    () => L.latLngBounds(xy(0, 0), xy(mapWidth, -mapHeight)),
+    [mapWidth, mapHeight]
+  );
 
-  const maxBounds = useMemo(() => L.latLngBounds(
-    [-SAFE_AREA_PADDING, SAFE_AREA_PADDING],
-    [-mapHeight + SAFE_AREA_PADDING, mapWidth - SAFE_AREA_PADDING],
-  ), [mapHeight, mapWidth]);
+  const maxBounds = useMemo(
+    () =>
+      L.latLngBounds(
+        [-SAFE_AREA_PADDING, SAFE_AREA_PADDING],
+        [-mapHeight + SAFE_AREA_PADDING, mapWidth - SAFE_AREA_PADDING]
+      ),
+    [mapHeight, mapWidth]
+  );
 
   if (!setting?.mapRootArea?.areaKey) {
     return null;
@@ -225,12 +228,12 @@ const mapStateToProps = (state: IAppState) => ({
   setting: state.map.setting,
 });
 
-type Props = BaseProps & ReturnType<typeof mapStateToProps> & {
-  isModalTooltipOpen: boolean,
-  setIsModalTooltipOpen: (isOpen: boolean) => void,
-  setTooltipData: (tooltipData: ITooltipData) => void,
-  tooltipData: ITooltipData,
-};
-
+type Props = BaseProps &
+  ReturnType<typeof mapStateToProps> & {
+    isModalTooltipOpen: boolean;
+    setIsModalTooltipOpen: (isOpen: boolean) => void;
+    setTooltipData: (tooltipData: ITooltipData) => void;
+    tooltipData: ITooltipData;
+  };
 
 export default connect(mapStateToProps)(UnterzeePixiMap);

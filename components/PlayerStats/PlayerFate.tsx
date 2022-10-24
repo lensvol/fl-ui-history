@@ -1,30 +1,20 @@
-import TippyWrapper from 'components/TippyWrapper';
-import React, { useCallback } from 'react';
-import {
-  withRouter,
-  Link,
-  RouteComponentProps,
-} from 'react-router-dom';
-import {
-  connect,
-  useDispatch,
-} from 'react-redux';
+import TippyWrapper from "components/TippyWrapper";
+import React, { useCallback } from "react";
+import { withRouter, Link, RouteComponentProps } from "react-router-dom";
+import { connect, useDispatch } from "react-redux";
 
-import { openPurchaseDialog } from 'actions/fate';
-import { closeSidebar } from 'actions/sidebar';
-import Image from 'components/Image';
-import getPremiumDaysRemaining from 'selectors/fate/getPremiumDaysRemaining';
-import { IAppState } from 'types/app';
+import { openPurchaseDialog } from "actions/fate";
+import { closeSidebar } from "actions/sidebar";
+import Image from "components/Image";
+import getPremiumDaysRemaining from "selectors/fate/getPremiumDaysRemaining";
+import { IAppState } from "types/app";
 
 const mapStateToProps = (state: IAppState) => {
   const {
     actions: { actions },
     fate: {
       isExceptionalFriend,
-      data: {
-        currentFate,
-        fateCards,
-      },
+      data: { currentFate, fateCards },
     },
   } = state;
   return {
@@ -50,25 +40,24 @@ function PlayerFate({
 
   const handleClick = useCallback(() => {
     const actionsRemaining = actions;
-    const actionItem = fateCards.find(({ action }) => action === 'RefillActions');
+    const actionItem = fateCards.find(
+      ({ action }) => action === "RefillActions"
+    );
 
     if (actionsRemaining <= 6) {
       dispatch(openPurchaseDialog(actionItem));
     } else {
-      history.push('/fate');
+      history.push("/fate");
     }
-  }, [
-    actions,
-    dispatch,
-    fateCards,
-    history,
-  ]);
+  }, [actions, dispatch, fateCards, history]);
 
   const renderSubscriptionInformation = useCallback(() => {
     if (isExceptionalFriend) {
       return (
         <div>
-          {`${premiumDaysRemaining} day${premiumDaysRemaining !== 1 ? 's' : ''} left of Exceptional Friendship`}
+          {`${premiumDaysRemaining} day${
+            premiumDaysRemaining !== 1 ? "s" : ""
+          } left of Exceptional Friendship`}
         </div>
       );
     }
@@ -76,25 +65,17 @@ function PlayerFate({
       <div>
         <h3>BE EXCEPTIONAL!</h3>
         <p>
-          <Link
-            onClick={closeSidebar}
-            to="/fate"
-          >
+          <Link onClick={closeSidebar} to="/fate">
             Subscribe for a second candle and brand new stories every month.
           </Link>
         </p>
       </div>
     );
-  }, [
-    isExceptionalFriend,
-    premiumDaysRemaining,
-  ]);
+  }, [isExceptionalFriend, premiumDaysRemaining]);
 
   return (
     <li className="item">
-      <TippyWrapper
-        tooltipData={{ description: 'Open the Fate tab' }}
-      >
+      <TippyWrapper tooltipData={{ description: "Open the Fate tab" }}>
         <button
           className="icon--currency sidebar__fate-button sidebar__button--has-focus-outline"
           onClick={handleClick}
@@ -109,7 +90,7 @@ function PlayerFate({
             type="currencies"
             width={60}
             height={78}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           />
           <span className="u-visually-hidden">Open the Fate tab</span>
         </button>
@@ -124,6 +105,6 @@ function PlayerFate({
   );
 }
 
-PlayerFate.displayName = 'PlayerFate';
+PlayerFate.displayName = "PlayerFate";
 
 export default withRouter(connect(mapStateToProps)(PlayerFate));

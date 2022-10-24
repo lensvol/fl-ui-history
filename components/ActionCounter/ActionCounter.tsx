@@ -1,32 +1,19 @@
-import React, {
-  PureComponent,
-  Fragment,
-} from 'react';
-import { connect } from 'react-redux';
+import React, { PureComponent, Fragment } from "react";
+import { connect } from "react-redux";
 
-import ReactCSSTransitionReplace from 'react-css-transition-replace';
+import ReactCSSTransitionReplace from "react-css-transition-replace";
 
-import Loading from 'components/Loading';
-import { IAppState } from 'types/app';
+import Loading from "components/Loading";
+import { IAppState } from "types/app";
 
 class ActionCounter extends PureComponent<Props> {
-  static displayName = 'ActionCounter';
+  static displayName = "ActionCounter";
 
   renderTimer() {
-    const {
-      actions,
-      actionBankSize,
-      message,
-      onClick,
-    } = this.props;
+    const { actions, actionBankSize, message, onClick } = this.props;
 
     if (actions === undefined) {
-      return (
-        <Loading
-          spinner
-          small
-        />
-      );
+      return <Loading spinner small />;
     }
 
     // If we have more than 0 actions available, just render the time until
@@ -34,10 +21,8 @@ class ActionCounter extends PureComponent<Props> {
     if (actions > 0) {
       return (
         <Fragment>
-          <div className="item__value">
-            {`${actions}/${actionBankSize}`}
-          </div>
-          <div style={{ fontWeight: 'bold' }}>
+          <div className="item__value">{`${actions}/${actionBankSize}`}</div>
+          <div style={{ fontWeight: "bold" }}>
             {actions < actionBankSize && message}
           </div>
         </Fragment>
@@ -47,16 +32,12 @@ class ActionCounter extends PureComponent<Props> {
     // If we have no more actions, render a link to purchase actions
     return (
       <Fragment>
-        <div className="item__value">
-          {`${actions}/${actionBankSize}`}
-        </div>
-        <div style={{ fontWeight: 'bold' }}>
-          {message}
-        </div>
+        <div className="item__value">{`${actions}/${actionBankSize}`}</div>
+        <div style={{ fontWeight: "bold" }}>{message}</div>
         <button
           className="button button--secondary"
           onClick={onClick}
-          style={{ marginTop: '.5rem' }}
+          style={{ marginTop: ".5rem" }}
           type="button"
         >
           Refresh
@@ -88,8 +69,8 @@ const mapStateToProps = ({
 });
 
 type Props = ReturnType<typeof mapStateToProps> & {
-  message: string,
-  onClick: () => void,
+  message: string;
+  onClick: () => void;
 };
 
 export default connect(mapStateToProps)(ActionCounter);

@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import { addContact } from 'actions/contacts';
-import { IAppState } from 'types/app';
+import { addContact } from "actions/contacts";
+import { IAppState } from "types/app";
 
 type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: Function,
+  dispatch: Function;
 };
 
 export class AddToContacts extends Component<Props> {
-  static displayName = 'AddToContacts';
+  static displayName = "AddToContacts";
 
   addContact = () => {
     // Add this character to contacts
@@ -20,12 +20,8 @@ export class AddToContacts extends Component<Props> {
   };
 
   canBeAdded = () => {
-    const {
-      contacts,
-      loggedIn,
-      isLoggedInUsersProfile,
-      profileCharacter,
-    } = this.props;
+    const { contacts, loggedIn, isLoggedInUsersProfile, profileCharacter } =
+      this.props;
     // If we're not logged in, we can't add contacts
     if (!loggedIn) {
       return false;
@@ -55,15 +51,12 @@ export class AddToContacts extends Component<Props> {
         Add to Contacts
       </button>
     );
-  }
+  };
 }
 
 const mapStateToProps = ({
   contacts: { contacts },
-  profile: {
-    isLoggedInUsersProfile,
-    profileCharacter,
-  },
+  profile: { isLoggedInUsersProfile, profileCharacter },
   user: { loggedIn },
 }: IAppState) => ({
   contacts,

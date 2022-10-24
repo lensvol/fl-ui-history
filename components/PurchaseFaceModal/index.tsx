@@ -1,18 +1,13 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import {
-  Props as ReactModalProps,
-} from 'react-modal';
-import Modal from 'components/Modal';
-import getCanChangeFaceForFree from 'selectors/myself/getCanChangeFaceForFree';
-import { IAppState } from 'types/app';
-import PurchaseFace from './PurchaseFace';
+import React from "react";
+import { connect } from "react-redux";
+import { Props as ReactModalProps } from "react-modal";
+import Modal from "components/Modal";
+import getCanChangeFaceForFree from "selectors/myself/getCanChangeFaceForFree";
+import { IAppState } from "types/app";
+import PurchaseFace from "./PurchaseFace";
 
 export function PurchaseFaceModal(props: Props) {
-  const {
-    isOpen,
-    onRequestClose,
-  } = props;
+  const { isOpen, onRequestClose } = props;
 
   return (
     <Modal
@@ -20,15 +15,13 @@ export function PurchaseFaceModal(props: Props) {
       onRequestClose={onRequestClose}
       className="modal--avatar-list"
     >
-      <PurchaseFace
-        onRequestClose={() => onRequestClose()}
-      />
+      <PurchaseFace onRequestClose={() => onRequestClose()} />
     </Modal>
   );
 }
 
-type OwnProps = Pick<ReactModalProps, 'isOpen'> & {
-  onRequestClose: (_args?: any) => void,
+type OwnProps = Pick<ReactModalProps, "isOpen"> & {
+  onRequestClose: (_args?: any) => void;
 };
 
 const mapStateToProps = (state: IAppState) => ({

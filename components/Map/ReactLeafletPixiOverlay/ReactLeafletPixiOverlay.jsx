@@ -1,15 +1,22 @@
 /* eslint-disable no-underscore-dangle */
-import * as PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { MapLayer, withLeaflet } from 'react-leaflet';
-import { EVENT_TYPE_AREAS, EVENT_TYPE_SELECTED_AREA } from 'components/Map/ReactLeafletPixiOverlay/event-types';
-import { isDrawable, isLodgings, sortByLayerWithDestinationsLast } from 'features/mapping';
-import getStateAwareAreas from 'selectors/map/getStateAwareAreas';
-import redrawCallback from './redrawCallback';
-import LeafletPixiOverlay from './LeafletPixiOverlay';
+import * as PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { MapLayer, withLeaflet } from "react-leaflet";
+import {
+  EVENT_TYPE_AREAS,
+  EVENT_TYPE_SELECTED_AREA,
+} from "components/Map/ReactLeafletPixiOverlay/event-types";
+import {
+  isDrawable,
+  isLodgings,
+  sortByLayerWithDestinationsLast,
+} from "features/mapping";
+import getStateAwareAreas from "selectors/map/getStateAwareAreas";
+import redrawCallback from "./redrawCallback";
+import LeafletPixiOverlay from "./LeafletPixiOverlay";
 
 export class ReactLeafletPixiOverlay extends MapLayer {
-  static displayName = 'ReactLeafletPixiOverlay';
+  static displayName = "ReactLeafletPixiOverlay";
 
   static propTypes = {
     selectedArea: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -19,9 +26,12 @@ export class ReactLeafletPixiOverlay extends MapLayer {
     const { areas } = this.props;
     const filteredAreas = [...areas]
       .sort(sortByLayerWithDestinationsLast)
-      .filter(a => isDrawable(a) && !isLodgings(a));
+      .filter((a) => isDrawable(a) && !isLodgings(a));
     this.layerContainer.addLayer(this.leafletElement);
-    this.leafletElement.redraw({ type: EVENT_TYPE_AREAS, payload: { areas: filteredAreas } });
+    this.leafletElement.redraw({
+      type: EVENT_TYPE_AREAS,
+      payload: { areas: filteredAreas },
+    });
   }
 
   componentWillUnmount() {
@@ -47,7 +57,7 @@ export class ReactLeafletPixiOverlay extends MapLayer {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   areas: getStateAwareAreas(state),
   setting: state.map.setting,
 });

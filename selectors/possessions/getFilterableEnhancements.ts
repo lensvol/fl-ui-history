@@ -3,10 +3,10 @@ import {
   EXPLICITLY_FILTERABLE_QUALITY_IDS,
   FILTERABLE_CATEGORY_NAMES,
   UNFILTERABLE_ENHANCEMENT_QUALITY_IDS,
-} from 'constants/possessions';
-import { createSelector } from 'reselect';
-import { IAppState } from 'types/app';
-import { IEnhancement, IQuality } from 'types/qualities';
+} from "constants/possessions";
+import { createSelector } from "reselect";
+import { IAppState } from "types/app";
+import { IEnhancement, IQuality } from "types/qualities";
 
 const getQualities = (state: IAppState) => state.myself.qualities;
 
@@ -52,7 +52,10 @@ const outputFn = (qualities: IQuality[]) => {
 
       // Only allow members of the categories we want, or qualities from other categories
       // that we're explicitly allowing
-      if (FILTERABLE_CATEGORY_NAMES.indexOf(category) < 0 && EXPLICITLY_FILTERABLE_QUALITY_IDS.indexOf(qualityId) < 0) {
+      if (
+        FILTERABLE_CATEGORY_NAMES.indexOf(category) < 0 &&
+        EXPLICITLY_FILTERABLE_QUALITY_IDS.indexOf(qualityId) < 0
+      ) {
         continue;
       }
 
@@ -62,7 +65,9 @@ const outputFn = (qualities: IQuality[]) => {
       }
 
       // Don't add duplicates
-      if (enhancementKeyValuePairs.find(item => item.qualityId === qualityId)) {
+      if (
+        enhancementKeyValuePairs.find((item) => item.qualityId === qualityId)
+      ) {
         continue;
       }
 
@@ -70,13 +75,15 @@ const outputFn = (qualities: IQuality[]) => {
     }
   }
 
-  return [...enhancementKeyValuePairs]
-    .sort((a, b) => {
-      if (a.category === b.category) {
-        return a.qualityId - b.qualityId;
-      }
-      return getSortingIndexForCategory(a.category) - getSortingIndexForCategory(b.category);
-    });
+  return [...enhancementKeyValuePairs].sort((a, b) => {
+    if (a.category === b.category) {
+      return a.qualityId - b.qualityId;
+    }
+    return (
+      getSortingIndexForCategory(a.category) -
+      getSortingIndexForCategory(b.category)
+    );
+  });
 };
 
 export default createSelector([getQualities], outputFn);

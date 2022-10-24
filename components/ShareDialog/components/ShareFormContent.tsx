@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import Image from 'components/Image';
-import ShareForm from './ShareForm';
+import Image from "components/Image";
+import ShareForm from "./ShareForm";
 
 export default function ShareFormContent({
   borderColour,
@@ -15,7 +15,6 @@ export default function ShareFormContent({
         Record This Snippet In Your Journal
       </h1>
       <div className="media">
-
         <div className="media__left">
           <div className="card card--sm">
             <Image
@@ -33,7 +32,6 @@ export default function ShareFormContent({
         <div className="media__body">
           <p>Use this header — or write your own:</p>
           <ShareForm data={data} title={title} onSubmit={onSubmit} />
-
         </div>
       </div>
     </div>
@@ -41,14 +39,14 @@ export default function ShareFormContent({
 }
 
 interface Props {
-  borderColour?: string,
+  borderColour?: string;
   data: {
-    description: string,
-    image: string,
-    name: string,
-  },
-  isSharing: boolean,
-  onChange: (...args: any) => void,
-  onSubmit: (...args: any) => void,
-  title?: string,
+    description: string;
+    image: string;
+    name: string;
+  };
+  isSharing: boolean;
+  onChange: (...args: any) => void;
+  onSubmit: (...args: any) => void;
+  title?: string;
 }
