@@ -1,4 +1,3 @@
-import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
 import React, { useEffect, useRef } from "react";
 import DomManipulationContext, {
   DomManipulationContextValue,
@@ -34,7 +33,6 @@ function StoryletDescriptionInner({
   onOpenSubscriptionModal,
 }: Props & DomManipulationContextValue) {
   const ref = useRef<HTMLParagraphElement>(null);
-
   useEffect(() => {
     const smo = ref.current?.querySelector(
       '[data-purpose="open-subscription-modal"]'
@@ -53,9 +51,7 @@ function StoryletDescriptionInner({
     <p
       className={containerClassName}
       ref={ref}
-      dangerouslySetInnerHTML={{
-        __html: text.replace(UI_INTEGRATION_REGEX, "").trim(),
-      }}
+      dangerouslySetInnerHTML={{ __html: text }}
     />
   );
 }

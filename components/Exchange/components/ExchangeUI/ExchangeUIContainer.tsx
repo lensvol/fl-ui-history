@@ -150,14 +150,8 @@ class ExchangeUIContainer extends Component<Props, State> {
 
     const { forSale: buying } = activeItem;
 
-    if (Number.isNaN(parseInt(`${sellAmount}`, 10))) {
-      this.setState({ disabled: true });
-      return;
-    }
-
     if (sellAmount === 0) {
-      this.setState({ disabled: true });
-      return;
+      return this.setState({ disabled: true });
     }
 
     // ... but if we *can* parse it as a value, then set an error message if
@@ -165,8 +159,9 @@ class ExchangeUIContainer extends Component<Props, State> {
 
     // if (parseInt(sellAmount, 10) > MAX_SELL_AMOUNT) {
     if (sellAmount > MAX_SELL_AMOUNT) {
-      this.setState({ disabled: true });
-      return;
+      return this.setState({
+        disabled: true,
+      });
     }
 
     // If the player can't afford this (buying or selling), then disable
@@ -178,11 +173,13 @@ class ExchangeUIContainer extends Component<Props, State> {
         buying,
       })
     ) {
-      this.setState({ disabled: true, errorMessage: null });
-      return;
+      return this.setState({
+        disabled: true,
+        errorMessage: null,
+      });
     }
 
-    this.setState({
+    return this.setState({
       errorMessage: null,
       disabled: Number.isNaN(+sellAmount),
     });

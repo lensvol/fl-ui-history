@@ -19,12 +19,11 @@ import { IAppState } from "types/app";
 import { ApiAvailableStorylet } from "types/storylet";
 import getBorderColour from "utils/getBorderColour";
 
-import { withRouter, RouteComponentProps } from "react-router-dom";
 import StoryletBodySmUp from "./components/StoryletBodySmUp";
 import StoryletBodyXsDown from "./components/StoryletBodyXsDown";
 
 function StoryletContainer(props: Props) {
-  const { dispatch, data, history, isChoosing } = props;
+  const { dispatch, data, isChoosing } = props;
 
   const { id, image, name, teaser } = data;
 
@@ -49,13 +48,13 @@ function StoryletContainer(props: Props) {
 
   const handleChoose = useCallback(() => {
     if (commandAction) {
-      dispatch(commandAction(history));
+      dispatch(commandAction());
       return;
     }
 
     setIsWorking(true);
     dispatch(begin(id));
-  }, [commandAction, dispatch, history, id]);
+  }, [commandAction, dispatch, id]);
 
   const borderColour = getBorderColour(data);
 
@@ -140,8 +139,6 @@ const mapStateToProps = ({ storylet: { isChoosing } }: IAppState) => ({
   isChoosing,
 });
 
-export type Props = RouteComponentProps &
-  OwnProps &
-  ReturnType<typeof mapStateToProps>;
+export type Props = OwnProps & ReturnType<typeof mapStateToProps>;
 
-export default withRouter(connect(mapStateToProps)(StoryletContainer));
+export default connect(mapStateToProps)(StoryletContainer);

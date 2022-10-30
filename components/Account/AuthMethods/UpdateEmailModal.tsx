@@ -1,13 +1,12 @@
 import { updateEmailAddress } from "actions/settings";
-import Loading from "components/Loading";
-import Modal from "components/Modal";
-import { Field, Form, Formik, FormikHelpers } from "formik";
 import React, { useCallback, useMemo, useState } from "react";
+import { Field, Form, Formik } from "formik";
 
 import { connect, useDispatch } from "react-redux";
 import { Success } from "services/BaseMonadicService";
-import { VersionMismatch } from "services/BaseService";
 import { IAppState } from "types/app";
+import Modal from "components/Modal";
+import Loading from "components/Loading";
 import wait from "utils/wait";
 
 enum UpdateEmailModalStep {
@@ -34,27 +33,16 @@ function UpdateEmailModal(props: Props) {
   }, []);
 
   const handleSubmit = useCallback(
-    async (
-      values,
-      { setSubmitting, setErrors }: FormikHelpers<{ emailAddress: string }>
-    ) => {
+    async (values, { setSubmitting }) => {
       const { emailAddress: newEmailAddress } = values;
       setSubmitting(true);
       await wait(500);
-      const result = await updateEmailAddress(newEmailAddress)(dispatch);
+      const result = await dispatch(updateEmailAddress(newEmailAddress));
       setSubmitting(false);
-      // Return silently if the user needs to refresh the page anyway
-      if (result instanceof VersionMismatch) {
-        return;
-      }
       if (result instanceof Success) {
         setCurrentStep(UpdateEmailModalStep.Success);
         setMessage(`Your email address is now ${newEmailAddress}`);
-        return;
       }
-
-      setErrors({ emailAddress: result.message });
-      setMessage(result.message);
     },
     [dispatch]
   );
@@ -137,6 +125,7 @@ type OwnProps = {
 };
 
 const mapStateToProps = (state: IAppState) => ({
+  isUpdatingEmail: state.settings.isUpdatingEmail,
   data: state.settings.data,
 });
 
