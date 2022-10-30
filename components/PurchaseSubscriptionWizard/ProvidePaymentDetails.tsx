@@ -1,215 +1,229 @@
-import { FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES } from "features/feature-flags";
-import useIsMounted from "hooks/useIsMounted";
 import React, { useCallback, useMemo, useState } from "react";
-import BraintreeDropIn from "braintree-web-drop-in-react";
-import { Options, Dropin } from "braintree-web-drop-in";
-import ReCAPTCHA from "react-google-recaptcha";
+import { Dropin, PaymentMethodRequestablePayload } from "braintree-web-drop-in";
+import { Formik, Form } from "formik";
+
+import {
+  formValuesToBillingAddress,
+  GENERIC_THREE_D_SECURE_FAILURE_MESSAGE,
+  INITIAL_VALUES,
+  PaymentStuffProps,
+  PersonalDetails,
+} from "components/Payment/PaymentStuff";
+import BraintreeDropIn, {
+  BraintreeWebDropInOptions,
+} from "components/Payment/BraintreeWebDropIn";
 import {
   IBraintreePlanWithClientRequestToken,
-  ICreateBraintreeSubscriptionRequest,
+  PaymentMethodType,
 } from "types/payment";
-import Loading from "components/Loading";
-import { Feature, useFeature } from "flagged";
 import Header from "./Header";
 
 interface Props {
   braintreePlan: IBraintreePlanWithClientRequestToken;
-  on3dSecureSuccess: (
-    purchaseRequest: ICreateBraintreeSubscriptionRequest
-  ) => void;
   onGoBack: () => void;
+  onThreeDSecureComplete: PaymentStuffProps<{
+    nonce: string;
+    recaptchaResponse: string | null;
+  }>["onThreeDSComplete"];
 }
-
-const ERROR_MESSAGE_THREE_D_SECURE_AUTHENTICATION_FAILED =
-  "3D Secure authentication failed." +
-  " Please try a different payment method.";
 
 export default function ProvidePaymentDetails({
   braintreePlan,
-  on3dSecureSuccess,
   onGoBack,
+  onThreeDSecureComplete,
 }: Props) {
-  const { clientRequestToken } = braintreePlan;
+  const { clientRequestToken, currencyIsoCode, price } = braintreePlan;
 
-  const requireReCaptcha = useFeature(FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES);
-
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
+  const formattedPrice = useMemo(
+    () =>
+      new Intl.NumberFormat("en-GB", {
+        currency: currencyIsoCode,
+        style: "currency",
+      }).format(price),
+    [currencyIsoCode, price]
   );
-  const [instance, setInstance] = useState<Dropin | undefined>(undefined);
-  const [reCaptchaValue, setReCaptchaValue] = useState<any | undefined>(
-    undefined
-  );
-  const [submitting, setSubmitting] = useState(false);
 
-  const isMounted = useIsMounted();
-
-  const options: Omit<Options, "container"> = useMemo(
+  const authorization = useMemo(() => clientRequestToken, [clientRequestToken]);
+  const options: BraintreeWebDropInOptions = useMemo(
     () => ({
-      authorization: clientRequestToken,
+      authorization,
       threeDSecure: true,
       version: 2,
-      paypal: {
-        flow: "vault",
-      },
+      paypal: { flow: "vault" },
     }),
-    [clientRequestToken]
+    [authorization]
   );
 
-  const loading = useMemo(
-    () => !instance || submitting,
-    [instance, submitting]
+  const [currentPaymentMethod, setCurrentPaymentMethod] = useState<
+    PaymentMethodType | undefined
+  >(undefined);
+  const [dropInInstance, setDropInInstance] = useState<Dropin | undefined>(
+    undefined
   );
+  const [isPaymentMethodRequestable, setIsPaymentMethodRequestable] =
+    useState(false);
 
-  const handleReCaptchaChange = useCallback((value) => {
-    setReCaptchaValue(value);
+  const handleInstance = useCallback((instance: Dropin | undefined) => {
+    setDropInInstance(instance);
   }, []);
 
-  const handleClick = useCallback(
-    async (_evt: React.MouseEvent<HTMLButtonElement>) => {
-      const { price: planAmount, id: planId } = braintreePlan;
+  const handleNoPaymentMethodRequestable = useCallback(() => {
+    setIsPaymentMethodRequestable(false);
+    setCurrentPaymentMethod(undefined);
+  }, []);
 
-      if (!instance) {
-        console.error("no instance available to request a payment method.");
-        return;
-      }
-
-      setErrorMessage(undefined);
-      setSubmitting(true);
-
-      // @ts-ignore
-      const payload = (await instance.requestPaymentMethod({
-        threeDSecure: {
-          amount: planAmount.toString(),
-        },
-      })) as any; // We need to cast to any because the type definitions don't know about 3DS
-
-      const { liabilityShifted, liabilityShiftPossible } = payload;
-
-      // We should continue if
-      // - liability was shifted (3DS succeeded)
-      // - liability shift isn't possible (3DS not available on this card)
-      const shouldWeProceed = liabilityShifted || !liabilityShiftPossible;
-
-      // Liability shifted; we can go ahead and make the subscription request
-      if (shouldWeProceed) {
-        const { nonce } = payload;
-
-        // Construct the request
-        const purchaseRequest: ICreateBraintreeSubscriptionRequest = {
-          nonce,
-          planId,
-          recaptchaResponse: reCaptchaValue,
-        };
-
-        // Pass back up to the wizard; change state to show that we're working
-        on3dSecureSuccess(purchaseRequest);
-
-        if (isMounted.current) {
-          setSubmitting(false);
-        }
-
-        return;
-      }
-
-      // Liability was not shifted; we have a problem. Let's log the payload
-      console.error("Liability not shifted (but was possible).");
-      console.error(payload);
-
-      if (isMounted.current) {
-        setErrorMessage(ERROR_MESSAGE_THREE_D_SECURE_AUTHENTICATION_FAILED);
-        setSubmitting(false);
-      }
+  const handlePaymentMethodRequestable = useCallback(
+    (payload: PaymentMethodRequestablePayload) => {
+      setIsPaymentMethodRequestable(true);
+      setCurrentPaymentMethod(payload.type);
     },
-    [braintreePlan, instance, isMounted, on3dSecureSuccess, reCaptchaValue]
+    []
+  );
+
+  const handleSubmit = useCallback(
+    async (values, _helpers) => {
+      if (dropInInstance === undefined) {
+        console.error("Trying to submit without a Braintree instance");
+        return;
+      }
+
+      const payload = await dropInInstance.requestPaymentMethod({
+        threeDSecure: {
+          amount: price.toFixed(2),
+          billingAddress: formValuesToBillingAddress(values),
+        },
+      });
+
+      if (payload.type === "CreditCard") {
+        if (!payload.threeDSecureInfo?.liabilityShifted) {
+          console.error(
+            "Liability did not shift as a result of 3DS authentication"
+          );
+          onThreeDSecureComplete({
+            isSuccess: false,
+            message: GENERIC_THREE_D_SECURE_FAILURE_MESSAGE,
+          });
+          return;
+        }
+      }
+
+      const { nonce } = payload;
+      onThreeDSecureComplete({
+        isSuccess: true,
+        payload: {
+          nonce,
+          recaptchaResponse: null,
+        },
+      });
+    },
+    [dropInInstance, onThreeDSecureComplete, price]
+  );
+
+  return (
+    <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
+      {({ values }) => (
+        <Form>
+          <Header amountString={formattedPrice} />
+          <BraintreeDropIn
+            onInstance={handleInstance}
+            onNoPaymentMethodRequestable={handleNoPaymentMethodRequestable}
+            onPaymentMethodRequestable={handlePaymentMethodRequestable}
+            options={options}
+          />
+          {currentPaymentMethod === "CreditCard" && (
+            <PersonalDetails values={values} />
+          )}
+          <div
+            className="buttons buttons--left buttons--no-squash buttons--space-between"
+            style={{
+              paddingTop: "2rem",
+              paddingBottom:
+                currentPaymentMethod === "CreditCard" ? ".5rem" : 0,
+            }}
+          >
+            <button
+              type="button"
+              className="button button--primary"
+              onClick={onGoBack}
+            >
+              Go back
+            </button>
+            <button
+              className="button button--primary"
+              disabled={!isPaymentMethodRequestable}
+              type="submit"
+            >
+              Subscribe
+            </button>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
+}
+
+/*
+interface Props {
+  braintreePlan: IBraintreePlanWithClientRequestToken,
+  onPaymentComplete: ({ message, isSuccess }: { message: string | undefined, isSuccess: boolean }) => Promise<void>,
+  onThreeDSecureSuccess: ({
+    nonce,
+    reCaptcha,
+  }: { nonce: string, reCaptcha: string | null }) => Promise<Either<{ message: string }>>,
+
+  onGoBack: () => void,
+}
+
+export default function ProvidePaymentDetails({
+  braintreePlan,
+  onPaymentComplete,
+  onGoBack,
+  onThreeDSecureSuccess,
+}: Props) {
+  const { clientRequestToken } = braintreePlan;
+  const {
+    currencyIsoCode,
+    price,
+  } = braintreePlan;
+
+  const options: Omit<Options, 'container'> = useMemo(() => ({
+    authorization: clientRequestToken,
+    threeDSecure: true,
+    version: 2,
+    paypal: {
+      flow: 'vault',
+    },
+  }), [clientRequestToken]);
+
+  const handlePaymentComplete = useCallback(async (result: Either<{ message: string | undefined }>) => {
+    if (result instanceof Success) {
+      const { message } = result.data;
+      await onPaymentComplete({ message, isSuccess: true });
+    } else {
+      await onPaymentComplete({ message: result.message, isSuccess: false });
+    }
+  }, [onPaymentComplete]);
+
+  const formattedPrice = useMemo(
+    () => new Intl.NumberFormat('en-GB', { currency: currencyIsoCode, style: 'currency' }).format(price),
+    [currencyIsoCode, price],
   );
 
   return (
     <div>
       <Header
-        amountString={
-          braintreePlan &&
-          `${braintreePlan.currencyIsoCode} ${braintreePlan.price}`
-        }
+        amountString={formattedPrice}
       />
-      <BraintreeDropIn
-        onInstance={(i: Dropin) => setInstance(i)}
-        options={options}
+      <PaymentForm
+        amount={braintreePlan.price.toFixed(2)}
+        dropInOptions={options}
+        labelText="Subscribe"
+        onGoBack={onGoBack}
+        onPaymentComplete={handlePaymentComplete}
+        onThreeDSecureSuccess={onThreeDSecureSuccess}
       />
-      <Feature name={FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES}>
-        {(enabled: boolean) =>
-          enabled && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: ".5rem",
-                marginTop: ".5rem",
-              }}
-            >
-              <ReCAPTCHA
-                sitekey="6Ldu784UAAAAAI2pquK8B8q4lgT6vXY-Dpa8mu4S"
-                onChange={handleReCaptchaChange}
-              />
-            </div>
-          )
-        }
-      </Feature>
-      {errorMessage && <p className="form__error">{errorMessage}</p>}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row-reverse",
-          justifyContent: "space-between",
-          marginTop: ".5rem",
-        }}
-      >
-        <SubmitButton
-          isReCaptchaComplete={
-            !requireReCaptcha || reCaptchaValue !== undefined
-          }
-          loading={loading}
-          onClick={handleClick}
-        />
-        <button
-          className="button button--primary"
-          type="button"
-          onClick={onGoBack}
-          disabled={loading || submitting}
-        >
-          Go back
-        </button>
-      </div>
     </div>
   );
 }
 
-interface SubmitButtonProps {
-  isReCaptchaComplete: boolean;
-  loading: boolean;
-  onClick: (evt: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
-function SubmitButton({
-  isReCaptchaComplete,
-  loading,
-  onClick,
-}: SubmitButtonProps) {
-  const label = useMemo(() => {
-    if (loading) {
-      return <Loading spinner small />;
-    }
-    return <span>Submit</span>;
-  }, [loading]);
-
-  return (
-    <button
-      disabled={loading || !isReCaptchaComplete}
-      onClick={onClick}
-      className="button button--secondary"
-      type="button"
-    >
-      {label}
-    </button>
-  );
-}
+ */

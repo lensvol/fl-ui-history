@@ -1,9 +1,13 @@
 import { handleVersionMismatch } from "actions/versionSync";
 import * as SettingsActionTypes from "actiontypes/settings";
 import { ActionCreator } from "redux";
-import { Success } from "services/BaseMonadicService";
+import { ThunkDispatch } from "redux-thunk";
+import { Either, Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
-import SettingsService, { ISettingsService } from "services/SettingsService";
+import SettingsService, {
+  ISettingsService,
+  UpdateEmailResponse,
+} from "services/SettingsService";
 
 export type UpdateEmailAddressFailure = {
   type: typeof SettingsActionTypes.UPDATE_EMAIL_FAILURE;
@@ -40,13 +44,18 @@ export const updateEmailAddressFailure: ActionCreator<
 });
 
 export const updateEmailAddress =
-  (emailAddress: string) => async (dispatch: Function) => {
+  (emailAddress: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
     dispatch(updateEmailAddressRequested());
 
     const service: ISettingsService = new SettingsService();
 
-    const result = await service.updateEmailAddress(emailAddress);
+    const result: Either<UpdateEmailResponse> =
+      await service.updateEmailAddress(emailAddress);
     try {
+      if (result instanceof VersionMismatch) {
+        dispatch(handleVersionMismatch(result));
+        return result;
+      }
       if (result instanceof Success) {
         dispatch(updateEmailAddressSuccess(emailAddress));
       } else {
@@ -54,10 +63,6 @@ export const updateEmailAddress =
       }
       return result;
     } catch (e) {
-      if (e instanceof VersionMismatch) {
-        dispatch(handleVersionMismatch(e));
-        return e;
-      }
       dispatch(updateEmailAddressFailure());
       throw e;
     }

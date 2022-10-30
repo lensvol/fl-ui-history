@@ -1,9 +1,9 @@
-import { createContext } from "react";
+import { ChangeEvent, createContext } from "react";
 import { IneligibleContact } from "types/storylet";
 
-type ActContextValue = {
+export type ActContextValue = {
   ineligibleContacts: IneligibleContact[];
-  onSelectContact: (args?: any) => void;
+  onSelectContact: (args: ChangeEvent<HTMLSelectElement>) => void;
   onAddContact: unknown;
   selectedContactId: number | undefined;
 };

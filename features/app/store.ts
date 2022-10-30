@@ -1,7 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { SET_TIMER_REMAINING } from "actiontypes/timer";
 import authInterceptor from "middleware/authInterceptor";
 import rootReducer from "reducers/index";
+import { IAppState } from "types/app";
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -18,3 +20,6 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<IAppState> = useSelector;

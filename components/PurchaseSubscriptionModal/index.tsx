@@ -18,6 +18,7 @@ export default function PurchaseSubscriptionModal({
       onRequestClose={onRequestClose}
       shouldCloseOnEsc={false}
       shouldCloseOnOverlayClick={false}
+      className="modal-dialog--purchase-fate"
     >
       <PurchaseSubscriptionWizard onClickToClose={onRequestClose} />
     </Modal>

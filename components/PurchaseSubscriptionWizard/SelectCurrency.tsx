@@ -1,4 +1,4 @@
-import { CURRENCY_CODE_GBP } from "components/Payment/components/BraintreeView/currencyCodes";
+import { CURRENCY_CODE_GBP } from "constants/payment";
 import useIsMounted from "hooks/useIsMounted";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import PaymentService from "services/PaymentService";

@@ -27,7 +27,7 @@ export const HUMAN_READABLE_OUTFIT_NAMES: { [key in OutfitType]: string } = {
 };
 
 export const CHANGEABLE_CATEGORIES: OutfitSlotName[] = [
-  "TestSlot3",
+  "Treasure",
   "Hat",
   "Clothing",
   "Gloves",
@@ -38,6 +38,7 @@ export const CHANGEABLE_CATEGORIES: OutfitSlotName[] = [
   "Transportation",
   // 'Home Comfort',
   "HomeComfort",
+  "ToolOfTheTrade",
 ];
 
 const STANDARD_CATEGORIES: OutfitSlotName[] = [
@@ -49,12 +50,12 @@ const STANDARD_CATEGORIES: OutfitSlotName[] = [
   "Weapon",
   "Boots",
   "Companion",
-  "TestSlot3",
+  "Treasure",
   "Destiny",
-  "TestSlot4",
 ];
 
 const EXPANDED_CATEGORIES: OutfitSlotName[] = [
+  "ToolOfTheTrade",
   "Affiliation",
   "Transportation",
   "HomeComfort",

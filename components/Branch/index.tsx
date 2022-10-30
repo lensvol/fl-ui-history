@@ -1,3 +1,5 @@
+import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
+import { COMMAND_MAP } from "features/content-behaviour-integration/integration";
 import React, {
   useCallback,
   useEffect,
@@ -37,6 +39,7 @@ export function Branch({
   branch,
   defaultCursor,
   dispatch,
+  history,
   isChoosing,
   isGoingBack,
   onChooseBranch,
@@ -77,6 +80,19 @@ export function Branch({
   }, [onResize]);
 
   const handleChooseBranch = useCallback(async () => {
+    // Check whether we should be making some UI changes instead
+    const uiTriggerMatches = description.match(UI_INTEGRATION_REGEX);
+    if ((uiTriggerMatches?.length ?? 0) > 0) {
+      const commandAction =
+        uiTriggerMatches?.[1] === undefined
+          ? undefined
+          : COMMAND_MAP[uiTriggerMatches?.[1]];
+      if (commandAction) {
+        dispatch(commandAction(history));
+        return;
+      }
+    }
+
     const { id: branchId } = branch;
     if (storyletFrequency === "Sometimes") {
       dispatch(shouldUpdateOpportunities());
@@ -97,7 +113,9 @@ export function Branch({
     }
   }, [
     branch,
+    description,
     dispatch,
+    history,
     isMounted,
     onChooseBranch,
     qualityRequirements,

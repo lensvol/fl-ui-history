@@ -53,7 +53,8 @@ export default function QualityRequirement(props: Props) {
     ...data,
     description: tooltip,
     // If the player doesn't meet the qreq, then add the AvailableAt as a secondary description
-    secondaryDescription: status === "Locked" ? availableAtMessage : undefined,
+    secondaryDescription:
+      status === "Locked" && !isWorldQuality ? availableAtMessage : undefined,
     needsWorldQualityDescription: isWorldQuality,
   };
 

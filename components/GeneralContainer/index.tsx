@@ -1,3 +1,4 @@
+import CurrentAreaBanner from "components/GeneralContainer/CurrentAreaBanner";
 import PurchaseFateModal from "components/PurchaseFateModal";
 import React, { useCallback, useState } from "react";
 import { connect } from "react-redux";
@@ -27,7 +28,6 @@ import ResponsiveMenu from "components/ResponsiveMenu";
 import ReactCSSTransitionReplace from "react-css-transition-replace";
 
 import { IAppState } from "types/app";
-import getImagePath from "utils/getImagePath";
 import { NAV_ITEMS } from "./constants";
 import RefreshActionsModal from "./RefreshActionsModal";
 import RefillOpportunityDeckModal from "./RefillOpportunityDeckModal";
@@ -73,17 +73,6 @@ export function GeneralContainer({
     []
   );
 
-  const renderBanner = useCallback(() => {
-    const bgImage = getImagePath({ icon: currentArea?.image, type: "header" });
-    return (
-      <div
-        key={bgImage}
-        className="banner banner--lg-up"
-        style={{ backgroundImage: `url(${bgImage})` }}
-      />
-    );
-  }, [currentArea]);
-
   // This is an arbitrary "have we loaded" canary
   if (!fateData.fateCards.length) {
     return <LoadingScreen />;
@@ -114,7 +103,7 @@ export function GeneralContainer({
               transitionEnterTimeout={1000}
               transitionLeaveTimeout={1000}
             >
-              {currentArea && renderBanner()}
+              <CurrentAreaBanner currentArea={currentArea} />
             </ReactCSSTransitionReplace>
 
             <div>

@@ -13,7 +13,7 @@ import NewsService, { INewsService, NewsResponse } from "services/NewsService";
 export type FetchNewsRequested = { type: typeof FETCH_NEWS_REQUESTED };
 export type FetchNewsSuccess = {
   type: typeof FETCH_NEWS_SUCCESS;
-  payload: NewsResponse;
+  payload: NewsResponse | undefined;
 };
 export type FetchNewsFailure = { type: typeof FETCH_NEWS_FAILURE };
 
@@ -24,6 +24,21 @@ export type NewsActions =
   | FetchNewsFailure
   | FetchNewsSuccess
   | DismissNewsItem;
+
+export const fetchRequested = () => ({
+  type: FETCH_NEWS_REQUESTED,
+});
+
+export const fetchSuccess = (data: NewsResponse) => ({
+  type: FETCH_NEWS_SUCCESS,
+  payload: data,
+});
+
+export const fetchFailure = (error?: any) => ({
+  type: FETCH_NEWS_FAILURE,
+  error: true,
+  status: error?.response?.status,
+});
 
 /** ----------------------------------------------------------------------------
  * FETCH NEWS ITEM
@@ -48,21 +63,6 @@ export const fetch = () => async (dispatch: Function) => {
     throw error;
   }
 };
-
-export const fetchRequested = () => ({
-  type: FETCH_NEWS_REQUESTED,
-});
-
-export const fetchSuccess = (data: NewsResponse) => ({
-  type: FETCH_NEWS_SUCCESS,
-  payload: data,
-});
-
-export const fetchFailure = (error?: any) => ({
-  type: FETCH_NEWS_FAILURE,
-  error: true,
-  status: error?.response?.status,
-});
 
 export const dismissNewsItem = (id: number) => {
   store.set("dismissed_news_item", id);

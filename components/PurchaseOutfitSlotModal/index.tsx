@@ -3,7 +3,6 @@ import { purchaseItem } from "actions/fate";
 import { fetchMyself } from "actions/myself";
 import Loading from "components/Loading";
 import Modal from "components/Modal";
-import Payment from "components/Payment";
 import { OUTFIT_PURCHASE } from "constants/fate";
 import React, { useCallback, useMemo, useState } from "react";
 import { connect } from "react-redux";
@@ -113,17 +112,14 @@ export function PurchaseOutfitSlotModal({
   ]);
 
   return (
-    <>
-      <Payment />
-      <Modal
-        className="purchase-outfit-slot-modal__content"
-        isOpen={isOpen}
-        onAfterClose={onAfterClose}
-        onRequestClose={onRequestClose}
-      >
-        {contents}
-      </Modal>
-    </>
+    <Modal
+      className="purchase-outfit-slot-modal__content"
+      isOpen={isOpen}
+      onAfterClose={onAfterClose}
+      onRequestClose={onRequestClose}
+    >
+      {contents}
+    </Modal>
   );
 }
 

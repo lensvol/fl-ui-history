@@ -20,7 +20,7 @@ export default function getImagePath({
 }: {
   icon: string | undefined;
   type: ImageType;
-}) {
+}): string {
   // Intentionally use falsy comparison here — we want to catch empty strings too
   const imageIcon = icon || DEFAULT_ICON;
 

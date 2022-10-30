@@ -7,6 +7,7 @@ import {
   IBraintreePlanWithClientRequestToken,
   ICreateBraintreeSubscriptionRequest,
   IPaymentService,
+  ThreeDSecureCompleteResult,
 } from "types/payment";
 import { fetchMyself } from "actions/myself";
 import { fetch as fetchSubscription } from "actions/subscription";
@@ -71,47 +72,15 @@ export default function PurchaseSubscriptionWizard({ onClickToClose }: Props) {
     onClickToClose(true); // we completed the subscription process
   }, [onClickToClose]);
 
+  const onGoBackFromFailure = useCallback(() => {
+    setCurrentStep(PurchaseSubscriptionWizardStep.ProvidePaymentDetails);
+  }, []);
+
   const onGoBackFromPaymentDetails = useCallback(() => {
     // Reset everything we set in the SelectCurrency step
     setBraintreePlan(undefined);
     setCurrentStep(PurchaseSubscriptionWizardStep.SelectCurrency);
   }, []);
-
-  // Runs when we have got a payment method nonce from Braintree
-  const on3dSecureSuccess = useCallback(
-    async (purchaseRequest: ICreateBraintreeSubscriptionRequest) => {
-      setCurrentStep(PurchaseSubscriptionWizardStep.CompletingTransaction);
-      let isSuccess = false;
-      let message: string | undefined;
-      try {
-        const response = await new PaymentService().purchasePlan(
-          purchaseRequest
-        );
-        ({ isSuccess, message } = response.data);
-      } catch (e) {
-        message = e.response?.message ?? UNKNOWN_ERROR_MESSAGE;
-      } finally {
-        setPaymentResponseMessage(message);
-
-        if (isSuccess) {
-          // Retrieve updates for the Redux store
-          await Promise.all([
-            dispatch(fetchSubscription()), // Update hassubscription state
-            dispatch(fetchMyself()), // Update action count
-            dispatch(fetchActions()), // Update action bank
-            dispatch(fetchFate()), // Update isExceptional state
-            dispatch(fetchMap()), // Update map area availability
-          ]);
-
-          // Update our internal state
-          setCurrentStep(PurchaseSubscriptionWizardStep.PaymentSuccess);
-        } else {
-          setCurrentStep(PurchaseSubscriptionWizardStep.PaymentFailure);
-        }
-      }
-    },
-    [dispatch]
-  );
 
   const onPlanChosen = useCallback(async (selectedPlan: IBraintreePlan) => {
     // Fetch the client request token for this plan
@@ -128,6 +97,68 @@ export default function PurchaseSubscriptionWizard({ onClickToClose }: Props) {
     setServerErrorMessage(message);
     setCurrentStep(PurchaseSubscriptionWizardStep.ServerError);
   }, []);
+
+  const onThreeDSecureComplete = useCallback(
+    async (
+      result: ThreeDSecureCompleteResult<{
+        nonce: string;
+        recaptchaResponse: string | null;
+      }>
+    ) => {
+      // no-op
+      if (!braintreePlan) {
+        return;
+      }
+
+      // 3ds authentication failed
+      if (!result.isSuccess) {
+        setPaymentResponseMessage(result.message);
+        setCurrentStep(PurchaseSubscriptionWizardStep.PaymentFailure);
+        return;
+      }
+
+      setCurrentStep(PurchaseSubscriptionWizardStep.CompletingTransaction);
+
+      const { nonce, recaptchaResponse } = result.payload;
+
+      const purchaseRequest: ICreateBraintreeSubscriptionRequest = {
+        nonce,
+        recaptchaResponse,
+        planId: braintreePlan?.id,
+      };
+
+      let isSuccess = false;
+      let message: string = UNKNOWN_ERROR_MESSAGE;
+      try {
+        const response = await new PaymentService().purchasePlan(
+          purchaseRequest
+        );
+
+        ({ isSuccess, message } = response.data);
+      } catch (e) {
+        if (e.response?.message) {
+          ({ message } = e.response);
+        }
+      }
+
+      setPaymentResponseMessage(message);
+
+      if (isSuccess) {
+        // Fire these, but we don't need to await them
+        dispatch(fetchSubscription()); // Update hassubscription state
+        dispatch(fetchMyself()); // Update action count
+        dispatch(fetchActions()); // Update action bank
+        dispatch(fetchFate()); // Update isExceptional state
+        dispatch(fetchMap()); // Update map area availability
+
+        setCurrentStep(PurchaseSubscriptionWizardStep.PaymentSuccess);
+        return;
+      }
+
+      setCurrentStep(PurchaseSubscriptionWizardStep.PaymentFailure);
+    },
+    [braintreePlan, dispatch]
+  );
 
   // noinspection UnnecessaryLocalVariableJS
   const content = useMemo(() => {
@@ -168,6 +199,7 @@ export default function PurchaseSubscriptionWizard({ onClickToClose }: Props) {
             <PaymentFailure
               message={paymentResponseMessage}
               onClick={onCloseAfterFailure}
+              onGoBack={onGoBackFromFailure}
             />
           );
         }
@@ -180,7 +212,7 @@ export default function PurchaseSubscriptionWizard({ onClickToClose }: Props) {
           return (
             <ProvidePaymentDetails
               braintreePlan={braintreePlan}
-              on3dSecureSuccess={on3dSecureSuccess}
+              onThreeDSecureComplete={onThreeDSecureComplete}
               onGoBack={onGoBackFromPaymentDetails}
             />
           );
@@ -203,13 +235,14 @@ export default function PurchaseSubscriptionWizard({ onClickToClose }: Props) {
     braintreePlan,
     currentStep,
     onCancel,
-    on3dSecureSuccess,
     onClickToClose,
     onCloseAfterFailure,
     onCloseAfterSuccess,
+    onGoBackFromFailure,
     onGoBackFromPaymentDetails,
     onPlanChosen,
     onServerError,
+    onThreeDSecureComplete,
     paymentResponseMessage,
     serverErrorMessage,
   ]);

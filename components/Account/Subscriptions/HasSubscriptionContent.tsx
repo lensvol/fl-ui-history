@@ -1,35 +1,8 @@
-import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
+import React, { useMemo } from "react";
 import { Feature } from "flagged";
-import React from "react";
+
 import { ISubscriptionData } from "types/subscription";
-
-const SYMBOLS: { [key: string]: string } = {
-  USD: "$",
-  EUR: "€",
-  AUD: "$",
-  CAD: "$",
-  GBP: "£",
-  RUB: "₽",
-  SEK: "kr",
-};
-
-function formatCurrency(isoCode: string, price: number | string) {
-  switch (isoCode) {
-    case "USD":
-    case "CAD":
-    case "AUD":
-    case "GBP":
-      return `${SYMBOLS[isoCode]}${price} [${isoCode}]`;
-    case "EUR":
-      return `${SYMBOLS[isoCode]}${price}`;
-    case "SEK":
-      return `${price} ${SYMBOLS[isoCode]} [${isoCode}]`;
-    case "RUB":
-      return `${price}${SYMBOLS[isoCode]} [${isoCode}]`;
-    default:
-      return `${isoCode} ${price}`;
-  }
-}
+import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
 
 export default function HasSubscriptionContent({
   data,
@@ -39,6 +12,15 @@ export default function HasSubscriptionContent({
   const { currencyIsoCode, price, renewDate } = data;
 
   const renewDateAsDate = new Date(renewDate);
+
+  const formattedPrice = useMemo(
+    () =>
+      new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: currencyIsoCode,
+      }).format(price),
+    [currencyIsoCode, price]
+  );
 
   return (
     <Feature name={NEW_OUTFIT_BEHAVIOUR}>
@@ -64,7 +46,8 @@ export default function HasSubscriptionContent({
                 Monthly payment amount:
               </div>
               <div style={{ fontSize: "125%" }}>
-                {formatCurrency(currencyIsoCode, price.toFixed(2))}
+                {formattedPrice}
+                {/* formatCurrency(currencyIsoCode, price.toFixed(2)) */}
               </div>
             </div>
 

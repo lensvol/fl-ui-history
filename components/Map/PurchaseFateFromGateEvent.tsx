@@ -1,13 +1,11 @@
 import React, { CSSProperties } from "react";
 import { connect } from "react-redux";
-import Dialog from "components/Dialog";
-import PurchaseFate from "components/Payment/components/PurchaseFate";
+import PurchaseFateModal from "components/PurchaseFateModal";
 import { IAppState } from "types/app";
 
 interface Props {
   disableTouchEvents?: boolean;
   isModalOpen: boolean;
-  isSuccess: boolean;
   onRequestClose: () => void;
   style?: {
     overlay?: CSSProperties;
@@ -15,17 +13,19 @@ interface Props {
   };
 }
 
-export function PurchaseFateFromGateEvent(props: Props) {
+export function PurchaseFateFromGateEvent({
+  disableTouchEvents,
+  isModalOpen,
+  onRequestClose,
+  style,
+}: Props) {
   return (
-    <Dialog
-      disableTouchEvents={props.disableTouchEvents}
-      large={!props.isSuccess}
-      isOpen={props.isModalOpen}
-      onRequestClose={props.onRequestClose}
-      style={props.style}
-    >
-      <PurchaseFate />
-    </Dialog>
+    <PurchaseFateModal
+      isOpen={isModalOpen}
+      onRequestClose={onRequestClose}
+      disableTouchEvents={disableTouchEvents}
+      style={style}
+    />
   );
 }
 

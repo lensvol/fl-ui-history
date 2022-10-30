@@ -1,5 +1,4 @@
 import React from "react";
-import Payment from "components/Payment";
 
 import MediaSmUp from "components/Responsive/MediaSmUp";
 import MediaXsDown from "components/Responsive/MediaXsDown";
@@ -40,7 +39,6 @@ export default function Header({
       <div className="fate-header__subscription-container">
         <Subscription onClick={onClick} />
       </div>
-      <Payment />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import React from "react";
 import ReactModal, { Props as ReactModalProps } from "react-modal";
 import classnames from "classnames";
 
-interface Props extends ReactModalProps {
+export interface Props extends ReactModalProps {
   children?: React.ReactNode;
   disableTouchEvents?: boolean;
   hasExplicitCloseButton?: boolean;
