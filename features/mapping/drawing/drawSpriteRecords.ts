@@ -3,7 +3,7 @@ import { isSpriteInCache } from "components/Map/ReactLeafletPixiOverlay/sprite-c
 import * as SpriteCaching from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
 import { IArea, SpriteRecord } from "types/map";
 
-export default function drawSpriteRecords(
+export default async function drawSpriteRecords(
   spriteRecords: SpriteRecord[],
   areas: IArea[]
 ) {

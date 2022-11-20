@@ -7,7 +7,7 @@ import { IAppState } from "types/app";
 import LondonFallbackMap from "./LondonFallbackMap";
 import UnterzeeFallbackMap from "./UnterzeeFallbackMap";
 import MapModalTooltipContext from "../MapModalTooltipContext";
-import { OwnProps } from "./props";
+import { FallbackMapProps } from "./types";
 
 function FallbackMap({ setting, ...restProps }: Props) {
   const { onAreaSelect } = restProps;
@@ -68,6 +68,6 @@ function FallbackMap({ setting, ...restProps }: Props) {
 
 const mapStateToProps = (state: IAppState) => ({ setting: state.map.setting });
 
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
+type Props = FallbackMapProps & ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(FallbackMap);

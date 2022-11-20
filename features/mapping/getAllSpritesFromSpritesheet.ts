@@ -1,14 +1,21 @@
 import * as PIXI from "pixi.js";
-import { SpriteType } from "types/map";
-import getFilteredSpriteFromSpritesheet from "features/mapping/getFilteredSpriteFromSpritesheet";
-import parseImageName from "features/mapping/parseImageName";
+import { SpriteRecord } from "types/map";
+import getFilteredSpriteFromSpritesheet from "./getFilteredSpriteFromSpritesheet";
+import parseImageName from "./parseImageName";
 
 export default function getAllSpritesFromSpritesheet(
   sheet: PIXI.LoaderResource
-): [string, SpriteType, PIXI.Sprite][] {
-  return Object.keys(sheet.textures!).map((imageName: string) => [
-    parseImageName(imageName).areaKey,
-    parseImageName(imageName).spriteType,
-    getFilteredSpriteFromSpritesheet(sheet, imageName),
-  ]);
+): SpriteRecord[] {
+  const { name, textures } = sheet;
+
+  if (textures === undefined) {
+    console.error(`Spritesheet '${name}' has no textures`);
+    return [];
+  }
+
+  return Object.keys(textures).map((imageName: string) => {
+    const { areaKey, spriteType } = parseImageName(imageName);
+    const sprite = getFilteredSpriteFromSpritesheet(textures, imageName);
+    return [areaKey, spriteType, sprite];
+  });
 }

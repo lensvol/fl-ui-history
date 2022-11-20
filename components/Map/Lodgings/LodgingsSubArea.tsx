@@ -167,7 +167,7 @@ export class LodgingsSubArea extends Component<Props> {
             <TippyWrapper tooltipData={tooltipData}>
               <img
                 alt={area.name}
-                src={`${MAP_BASE_URL}/lodgings/${area.areaKey}.png`}
+                src={`${MAP_BASE_URL}/london/lodgings/${area.areaKey}.png`}
                 className={classnames(
                   "map__lodgings-button__image",
                   areLodgingsLocked && "map__lodgings-button__image--locked"

@@ -1,13 +1,13 @@
-import createFiltersForSprite from "features/mapping/createFiltersForSprite";
-import parseImageName from "features/mapping/parseImageName";
 import * as PIXI from "pixi.js";
+import createFiltersForSprite from "./createFiltersForSprite";
+import parseImageName from "./parseImageName";
 
 export default function getFilteredSpriteFromSpritesheet(
-  sheet: PIXI.LoaderResource,
+  textures: PIXI.ITextureDictionary,
   imageName: string
 ): PIXI.Sprite {
   const { spriteType } = parseImageName(imageName);
-  const sprite = new PIXI.Sprite(sheet.textures![imageName]);
+  const sprite = new PIXI.Sprite(textures[imageName]);
   sprite.filters = createFiltersForSprite(spriteType);
   return sprite;
 }

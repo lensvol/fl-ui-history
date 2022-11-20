@@ -7,9 +7,13 @@ import productionConfig from "./production.json";
 import { version } from "../../package.json";
 import betaConfig from "./beta.json";
 
-const nodeEnv = process.env.REACT_APP_ENV;
+const DEFAULT_NODE_ENV = "staging";
+
+const nodeEnv = process.env.REACT_APP_ENV ?? DEFAULT_NODE_ENV;
 
 let Config: IConfig;
+
+console.info(`config: version ${version} for environment '${nodeEnv}'`);
 
 switch (nodeEnv) {
   case "staging":
@@ -30,8 +34,8 @@ switch (nodeEnv) {
     break;
 
   default:
-    // Config = { ...productionConfig, version };
-    Config = { ...stagingConfig, version };
+    Config = { ...productionConfig, version };
+  // Config = { ...stagingConfig, version };
 }
 
 export default Config;

@@ -1,7 +1,6 @@
 import DistrictLabelLayer from "components/Map/DistrictLabelLayer";
 import CompatibilityWarning from "components/Map/FallbackMap/CompatibilityWarning";
 import FunnellingIndicator from "components/Map/FallbackMap/FunnellingIndicator";
-import { OwnProps } from "components/Map/FallbackMap/props";
 import Limbo from "components/Map/Limbo";
 import Lodgings from "components/Map/Lodgings/Lodgings";
 import PlayerMarkers from "components/Map/PlayerMarkers";
@@ -25,8 +24,9 @@ import { IAppState } from "types/app";
 import { ILabelledStateAwareArea, IMappableSetting } from "types/map";
 import MapModalTooltipContext from "../MapModalTooltipContext";
 import { ZoomControl } from "../PixiMap/ZoomControl";
+import { FallbackMapProps } from "./types";
 
-type Props = OwnProps &
+type Props = FallbackMapProps &
   ReturnType<typeof mapStateToProps> & {
     isModalTooltipOpen: boolean;
     tooltipData: ITooltipData;

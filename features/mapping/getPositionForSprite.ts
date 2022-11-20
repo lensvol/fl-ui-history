@@ -1,8 +1,8 @@
-import { DUMMY_XY_COORDINATES } from "components/Map/constants";
 import { IArea, SpriteType } from "types/map";
 import * as PIXI from "pixi.js";
-import getSelectionSpriteCoordinates from "features/mapping/getSelectionSpriteCoordinates";
-import getMainDestinationSelectionCoordinates from "features/mapping/getMainDestinationSelectionCoordinates";
+import getSelectionSpriteCoordinates from "./getSelectionSpriteCoordinates";
+import getMainDestinationSelectionCoordinates from "./getMainDestinationSelectionCoordinates";
+import { DUMMY_XY_COORDINATES } from "./constants";
 
 function pointFromXY({ x, y }: { x: number; y: number }) {
   return new PIXI.Point(x / 2, -y / 2);

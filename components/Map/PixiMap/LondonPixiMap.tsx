@@ -272,6 +272,7 @@ export function LondonPixiMap(props: Props) {
     [initialCenter]
   );
 
+  // noinspection PointlessArithmeticExpressionJS
   const maxBounds: LatLngBounds = useMemo(
     () =>
       new L.LatLngBounds(
@@ -311,7 +312,7 @@ export function LondonPixiMap(props: Props) {
         style={{ zIndex: 99 }} // Hide this pane if we can show basically anything else
       >
         <ImageOverlay
-          url={`${MAP_BASE_URL}/fallback/fallback-dark.jpg`}
+          url={`${MAP_BASE_URL}/london/fallback/london-fallback-dark.jpg`}
           bounds={imageOverlayBounds}
         />
       </Pane>

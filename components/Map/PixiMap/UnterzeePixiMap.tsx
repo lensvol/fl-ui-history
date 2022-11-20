@@ -1,4 +1,5 @@
 import ZoomControl from "components/Map/PixiMap/ZoomControl";
+import getFallbackMapImageURL from "features/mapping/getFallbackMapImageURL";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { ImageOverlay, Map as LeafletMap, Pane } from "react-leaflet";
@@ -16,7 +17,6 @@ import {
 } from "features/mapping";
 import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
 import { ITooltipData } from "components/ModalTooltip/types";
-import { MAP_BASE_URL } from "features/mapping/constants";
 import getCRSForSetting from "features/mapping/getCRSForSetting";
 import getIdealMinimumZoomForSetting from "features/mapping/getIdealMinimumZoomForSetting";
 import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting";
@@ -155,6 +155,8 @@ export function UnterzeePixiMap({
     return null;
   }
 
+  const mappableSetting = setting as IMappableSetting;
+
   // noinspection PointlessArithmeticExpressionJS
   return (
     <LeafletMap
@@ -181,7 +183,7 @@ export function UnterzeePixiMap({
         style={{ zIndex: 99 }} // Hide this pane if we can show basically anything else
       >
         <ImageOverlay
-          url={`${MAP_BASE_URL}/fallback/unterzee-background.png`}
+          url={getFallbackMapImageURL(mappableSetting)}
           bounds={bounds}
         />
       </Pane>

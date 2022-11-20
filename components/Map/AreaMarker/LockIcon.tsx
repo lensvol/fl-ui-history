@@ -11,7 +11,7 @@ export default function LockIcon({ selected = false }: Props) {
   return (
     <img
       alt=""
-      src={"/img/lock-icon.png"}
+      src="/img/lock-icon.png"
       className={classnames(
         "interactive-marker__lock-icon",
         selected && "interactive-marker__lock-icon--selected"

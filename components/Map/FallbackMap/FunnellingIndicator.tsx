@@ -35,8 +35,7 @@ export function FunnellingIndicator() {
         <img
           alt="Funnelling indicator"
           className="fallback-map__funnelling-indicator"
-          role="button"
-          src={"/map/exclamation-icon.png"}
+          src="/map/exclamation-icon.png"
           onClick={() => setIsBumfModalOpen(true)}
         />
       </Control>
@@ -65,6 +64,7 @@ export function FunnellingIndicator() {
           </p>
           <div className="buttons">
             <button
+              type="button"
               className="button button--primary button--sm"
               onClick={() => handleHide(false)}
               style={{
@@ -76,6 +76,7 @@ export function FunnellingIndicator() {
               OK
             </button>
             <button
+              type="button"
               className="button button--tertiary button--sm"
               onClick={() => handleHide(true)}
               style={{

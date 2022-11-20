@@ -7,7 +7,7 @@ import { IMappableSetting } from "types/map";
 
 export default function getSpriteSheetFilenamesForSetting({
   mapRootArea,
-}: Pick<IMappableSetting, "id" | "mapRootArea">) {
+}: Pick<IMappableSetting, "mapRootArea">) {
   const baseURL = getSpritesheetBaseURL({ mapRootArea });
   const numberOfSpritesheets =
     NUMBER_OF_SPRITESHEETS_BY_MAP_ROOT_AREA_ID[mapRootArea.areaKey];

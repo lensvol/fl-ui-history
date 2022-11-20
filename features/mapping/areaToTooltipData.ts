@@ -1,7 +1,7 @@
-import createAreaTooltipButtons from "features/mapping/createAreaTooltipButtons";
-import { SmallButton } from "features/mapping/types";
 import { IArea, IStateAwareArea } from "types/map";
 import getImagePath from "utils/getImagePath";
+import createAreaTooltipButtons from "./createAreaTooltipButtons";
+import { SmallButton } from "./types";
 
 export default function areaToTooltipData(
   area: IStateAwareArea,

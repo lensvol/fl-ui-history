@@ -1,6 +1,6 @@
-import { DUMMY_XY_COORDINATES } from "components/Map/constants";
 import { IArea } from "types/map";
-import { isDistrict } from "features/mapping/index";
+import { DUMMY_XY_COORDINATES } from "./constants";
+import { isDistrict } from "./index";
 
 export default function getDestinationSelectionSpriteCoordinates(area: IArea): {
   x: number;

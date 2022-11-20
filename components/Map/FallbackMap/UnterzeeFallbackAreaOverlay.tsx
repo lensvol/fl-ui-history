@@ -23,7 +23,7 @@ export default function UnterzeeFallbackAreaOverlay({ area, setting }: Props) {
 
   const imageUrl = useMemo(() => {
     if (mapRootArea?.areaKey === MAP_ROOT_AREA_THE_UNTERZEE) {
-      return `${MAP_BASE_URL}/fallback/unterzee/${areaKey}-available.png`;
+      return `${MAP_BASE_URL}/unterzee/${areaKey}-available.png`;
     }
     return `${MAP_BASE_URL}/fallback/unterzeev2/${areaKey}-available.png`;
   }, [areaKey, mapRootArea]);
