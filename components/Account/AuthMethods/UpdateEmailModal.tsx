@@ -1,13 +1,13 @@
 import { updateEmailAddress } from "actions/settings";
 import Loading from "components/Loading";
 import Modal from "components/Modal";
+import { useAppSelector } from "features/app/store";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import React, { useCallback, useMemo, useState } from "react";
 
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
-import { IAppState } from "types/app";
 import wait from "utils/wait";
 
 enum UpdateEmailModalStep {
@@ -15,12 +15,17 @@ enum UpdateEmailModalStep {
   Success, // eslint-disable-line no-shadow
 }
 
-function UpdateEmailModal(props: Props) {
-  const {
-    isOpen,
-    data: { emailAddress },
-    onRequestClose,
-  } = props;
+type OwnProps = {
+  isOpen: boolean;
+  onRequestClose: () => void;
+};
+
+export default function UpdateEmailModal(props: OwnProps) {
+  const { isOpen, onRequestClose } = props;
+
+  const emailAddress = useAppSelector(
+    (state) => state.settings.data.emailAddress
+  );
 
   const dispatch = useDispatch();
 
@@ -131,15 +136,4 @@ function UpdateEmailModal(props: Props) {
   );
 }
 
-type OwnProps = {
-  isOpen: boolean;
-  onRequestClose: () => void;
-};
-
-const mapStateToProps = (state: IAppState) => ({
-  data: state.settings.data,
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(UpdateEmailModal);
+// export default UpdateEmailModal;

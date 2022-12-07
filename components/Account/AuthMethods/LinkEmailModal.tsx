@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Formik, Field, Form, FormikHelpers as FormikActions } from "formik";
 
 import Loading from "components/Loading";
 import { Either, Success } from "services/BaseMonadicService";
 import { LinkEmailResponse } from "services/SettingsService";
-import { IAppState } from "types/app";
 import Modal from "components/Modal";
 import { linkEmailToAccount } from "actions/settings";
+import { useAppSelector } from "features/app/store";
 
 type LinkEmailValues = { emailAddress: string; password: string };
 
@@ -17,7 +17,15 @@ enum LinkEmailModalStep {
   LinkSuccess,
 }
 
-function LinkEmailModal({ isLinkingEmail, isOpen, onRequestClose }: Props) {
+type Props = {
+  isOpen: boolean;
+  onRequestClose: () => void;
+};
+
+export default function LinkEmailModal({ isOpen, onRequestClose }: Props) {
+  const isLinkingEmail = useAppSelector(
+    (state) => state.settings.isLinkingEmail
+  );
   const dispatch = useDispatch();
 
   const [currentStep, setCurrentStep] = useState(LinkEmailModalStep.Ready);
@@ -41,7 +49,10 @@ function LinkEmailModal({ isLinkingEmail, isOpen, onRequestClose }: Props) {
       if (result instanceof Success) {
         setCurrentStep(LinkEmailModalStep.LinkSuccess);
         setMessage(result.data.message);
+        return;
       }
+
+      actions.setErrors({ emailAddress: result.message });
     },
     [dispatch]
   );
@@ -58,7 +69,8 @@ function LinkEmailModal({ isLinkingEmail, isOpen, onRequestClose }: Props) {
             <Formik
               initialValues={{ emailAddress: "", password: "" }}
               onSubmit={handleSubmit}
-              render={({ values, dirty }) => (
+            >
+              {({ values, dirty, errors }) => (
                 <Form>
                   <p>
                     <label htmlFor="emailAddress">Email</label>
@@ -67,6 +79,9 @@ function LinkEmailModal({ isLinkingEmail, isOpen, onRequestClose }: Props) {
                       name="emailAddress"
                       value={values.emailAddress}
                     />
+                    {errors.emailAddress !== undefined && (
+                      <span className="form__error">{errors.emailAddress}</span>
+                    )}
                   </p>
 
                   <p>
@@ -101,22 +116,9 @@ function LinkEmailModal({ isLinkingEmail, isOpen, onRequestClose }: Props) {
                   </div>
                 </Form>
               )}
-            />
+            </Formik>
           </div>
         </Modal>
       );
   }
 }
-
-type OwnProps = {
-  isOpen: boolean;
-  onRequestClose: () => void;
-};
-
-const mapStateToProps = ({ settings }: IAppState) => ({
-  isLinkingEmail: settings.isLinkingEmail,
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(LinkEmailModal);

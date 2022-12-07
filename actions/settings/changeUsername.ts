@@ -5,10 +5,14 @@ import {
   CHANGE_USERNAME_SUCCESS,
 } from "actiontypes/settings";
 import * as SettingsActionTypes from "actiontypes/settings";
-import { ActionCreator } from "redux";
-import { Success } from "services/BaseMonadicService";
+import { ActionCreator, AnyAction } from "redux";
+import { Success, Either } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
-import SettingsService, { ISettingsService } from "services/SettingsService";
+import SettingsService, {
+  ChangeUsernameResponse,
+  ISettingsService,
+} from "services/SettingsService";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 export type ChangeUsernameRequested = {
   type: typeof CHANGE_USERNAME_REQUESTED;
@@ -46,24 +50,31 @@ export const changeUsernameFailure: ActionCreator<ChangeUsernameFailure> = (
 export default changeUsername(new SettingsService());
 
 export function changeUsername(service: ISettingsService) {
-  return (username: string) => async (dispatch: Function) => {
-    dispatch(changeUsernameRequested());
+  return (username: string) =>
+    async (
+      dispatch: ThunkDispatch<
+        Either<ChangeUsernameResponse>,
+        unknown,
+        AnyAction
+      >
+    ) => {
+      dispatch(changeUsernameRequested());
 
-    try {
-      const result = await service.changeUsername(username);
-      if (result instanceof Success) {
-        dispatch(changeUsernameSuccess(username));
-      } else {
-        dispatch(changeUsernameFailure());
-      }
-      return result;
-    } catch (error) {
-      if (error instanceof VersionMismatch) {
-        dispatch(handleVersionMismatch(error));
+      try {
+        const result = await service.changeUsername(username);
+        if (result instanceof Success) {
+          dispatch(changeUsernameSuccess(username));
+        } else {
+          dispatch(changeUsernameFailure());
+        }
+        return result;
+      } catch (error) {
+        if (error instanceof VersionMismatch) {
+          dispatch(handleVersionMismatch(error));
+          return error;
+        }
+        dispatch(changeUsernameFailure(error));
         return error;
       }
-      dispatch(changeUsernameFailure(error));
-      return error;
-    }
-  };
+    };
 }

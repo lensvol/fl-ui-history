@@ -8,14 +8,8 @@ import {
   MessageVia,
 } from "services/SettingsService";
 import { IQuality } from "types/qualities";
+import { MessagePreferences } from "types/settings";
 import * as SettingsActionTypes from "../actiontypes/settings";
-
-export type MessagePreferences = {
-  messageAboutAnnouncements: boolean;
-  messageAboutNastiness: boolean;
-  messageAboutNiceness: boolean;
-  messageAboutStorylets: boolean;
-};
 
 export type ISettingsState = {
   authMethods: AuthMethod[] | undefined;

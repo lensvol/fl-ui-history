@@ -51,9 +51,9 @@ export interface IUserState {
   privilegeLevel: PrivilegeLevel | undefined;
   user:
     | {
-        createdAt: string;
-        name: string;
-        id: number;
+        createdAt: string | undefined;
+        name: string | undefined;
+        id: number | undefined;
       }
     | undefined;
 }

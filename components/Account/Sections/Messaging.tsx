@@ -1,11 +1,11 @@
 import React from "react";
 import MessageMethod from "../MessageMethod";
-import MessagePreferences from "../MessagePreferences";
+import MessagePreferencesForm from "../MessagePreferencesForm";
 
 export default function Messaging() {
   return (
     <>
-      <MessagePreferences />
+      <MessagePreferencesForm />
       <MessageMethod />
     </>
   );

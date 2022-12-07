@@ -1,68 +1,60 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useCallback, useState } from "react";
 import Modal from "components/Modal";
-
-import { changeUsername } from "actions/settings";
+import { changeUsernameSuccess } from "actions/settings/changeUsername";
+import { useAppDispatch } from "features/app/store";
 import { FormikHelpers as FormikActions } from "formik";
-import { ThunkDispatch } from "redux-thunk";
+import { Success } from "services/BaseMonadicService";
+import SettingsService from "services/SettingsService";
 import CompleteMessage from "./CompleteMessage";
 import ChangeUsernameForm from "./ChangeUsernameForm";
 
-type State = {
-  isComplete: boolean;
-  successMessage?: string;
-};
-
 type Props = {
-  dispatch: ThunkDispatch<any, any, any>;
   isOpen: boolean;
   onRequestClose: () => void;
 };
 
-const INITIAL_STATE: State = {
-  isComplete: false,
+type FormValues = {
+  username: string;
 };
 
-export class ChangeUsernameModalContainer extends Component<Props, State> {
-  state = { ...INITIAL_STATE };
+export default function ChangeUsernameModal({ isOpen, onRequestClose }: Props) {
+  const dispatch = useAppDispatch();
+  const [isComplete, setIsComplete] = useState(false);
 
-  handleRequestClose = () => {
-    const { onRequestClose } = this.props;
-    // Clean up before we close
-    this.setState({ ...INITIAL_STATE });
-    onRequestClose();
-  };
+  const handleAfterClose = useCallback(() => {
+    setIsComplete(false);
+  }, []);
 
-  handleSubmit = async (
-    { username }: { username: string },
-    { setSubmitting, setErrors }: FormikActions<{ username: string }>
-  ) => {
-    const { dispatch } = this.props;
-    const { isSuccess, message } = await changeUsername(username)(dispatch);
-    setSubmitting(false);
-    if (isSuccess) {
-      this.setState({ isComplete: true });
-      return;
-    }
-    // Uh-oh, we have an error
-    setErrors({ username: message });
-  };
+  const handleSubmit = useCallback(
+    async (
+      { username }: FormValues,
+      { setSubmitting, setErrors }: FormikActions<FormValues>
+    ) => {
+      setSubmitting(true);
+      const response = await new SettingsService().changeUsername(username);
+      setSubmitting(false);
+      if (response instanceof Success) {
+        dispatch(changeUsernameSuccess(username));
+        setIsComplete(true);
+        return;
+      }
 
-  render = () => {
-    const { isOpen } = this.props;
-    const { isComplete } = this.state;
-    const onRequestClose = this.handleRequestClose;
-    const onSubmit = this.handleSubmit;
-    return (
-      <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
-        {isComplete ? (
-          <CompleteMessage />
-        ) : (
-          <ChangeUsernameForm onSubmit={onSubmit} />
-        )}
-      </Modal>
-    );
-  };
+      setErrors({ username: response.message });
+    },
+    [dispatch]
+  );
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onAfterClose={handleAfterClose}
+      onRequestClose={onRequestClose}
+    >
+      {isComplete ? (
+        <CompleteMessage onRequestClose={onRequestClose} />
+      ) : (
+        <ChangeUsernameForm onSubmit={handleSubmit} />
+      )}
+    </Modal>
+  );
 }
-
-export default connect()(ChangeUsernameModalContainer);

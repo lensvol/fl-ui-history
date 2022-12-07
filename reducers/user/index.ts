@@ -3,6 +3,8 @@ import { UserActions } from "actions/user";
 import { SIGNUP_SUCCESS } from "actiontypes/registration";
 import * as UserActionTypes from "actiontypes/user";
 import { IUserState } from "services/UserService";
+import { CHANGE_USERNAME_SUCCESS } from "actiontypes/settings";
+import { SettingsActions } from "actions/settings";
 
 import signupSuccess from "./signupSuccess";
 
@@ -26,7 +28,7 @@ const initialState: IUserState = {
  */
 const User = (
   state = initialState,
-  action: UserActions | SignUpActions
+  action: UserActions | SignUpActions | SettingsActions
 ): IUserState => {
   // const { payload = {} } = action;
 
@@ -126,6 +128,18 @@ const User = (
         ...state,
         loggedIn: true,
       };
+
+    case CHANGE_USERNAME_SUCCESS: {
+      return {
+        ...state,
+        user: {
+          name: action.payload.username,
+          createdAt: state.user?.createdAt,
+          id: state.user?.id,
+        },
+      };
+    }
+
     default:
       return state;
   }
