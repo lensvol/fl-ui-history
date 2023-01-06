@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, ReactNode } from "react";
 import * as SettingsActionCreators from "actions/settings";
 import { useAppDispatch, useAppSelector } from "features/app/store";
 import { Formik, Form, FormikHelpers, Field } from "formik";
@@ -7,13 +7,15 @@ import Loading from "components/Loading";
 
 type MessagePreferenceKeys =
   | "messageAboutNiceness"
-  | "messageAboutNastiness"
   | "messageAboutAnnouncements"
   | "messageAboutStorylets";
 
 type MessagePreferencesValues = { [k in MessagePreferenceKeys]: boolean };
 
 export default function MessagePreferencesForm() {
+  const emailAddress = useAppSelector(
+    (state) => state.settings.data.emailAddress
+  );
   const messagePreferences = useAppSelector(
     (state) => state.settings.messagePreferences
   );
@@ -40,10 +42,13 @@ export default function MessagePreferencesForm() {
   ): MessagePreferences {
     return {
       messageAboutNiceness: values.messageAboutNiceness,
-      messageAboutNastiness: values.messageAboutNastiness,
       messageAboutStorylets: values.messageAboutStorylets,
       messageAboutAnnouncements: values.messageAboutAnnouncements,
     };
+  }
+
+  if (!emailAddress) {
+    return null;
   }
 
   return (
@@ -54,7 +59,6 @@ export default function MessagePreferencesForm() {
       <Formik
         initialValues={{
           messageAboutNiceness: messagePreferences.messageAboutNiceness,
-          messageAboutNastiness: messagePreferences.messageAboutNastiness,
           messageAboutAnnouncements:
             messagePreferences.messageAboutAnnouncements,
           messageAboutStorylets: messagePreferences.messageAboutStorylets,
@@ -68,34 +72,50 @@ export default function MessagePreferencesForm() {
                 <MessagePreferenceFormItem
                   name="messageAboutNiceness"
                   label="A player invites me to something"
-                />
-              </li>
-              <li className="checkbox">
-                <MessagePreferenceFormItem
-                  name="messageAboutNastiness"
-                  label="A player wants to engage me in combat"
-                />
+                >
+                  <>
+                    <p>
+                      You'll get an email when a player invites you to
+                      participate in a social activity in Fallen London.
+                    </p>
+                  </>
+                </MessagePreferenceFormItem>
               </li>
               <li className="checkbox">
                 <MessagePreferenceFormItem
                   name="messageAboutAnnouncements"
-                  label="There is an announcement about the game"
-                />
+                  label="When there is an announcement about the game"
+                >
+                  <p>
+                    You'll receive an email when there is an announcement
+                    regarding the game — including new stories, festivals and
+                    time-sensitive content. This also includes our monthly
+                    newsletter — a roundup of bits and bobs about our games,{" "}
+                    weird historical things, other games we like, and so on.
+                  </p>
+                </MessagePreferenceFormItem>
               </li>
               <li className="checkbox">
                 <MessagePreferenceFormItem
                   name="messageAboutStorylets"
                   label="A story develops"
-                />
+                >
+                  <p>
+                    When a Living Story timer advances, unlocking a repeatable
+                    action or a story development in Fallen London.
+                  </p>
+                </MessagePreferenceFormItem>
               </li>
             </ul>
-            <button
-              type="submit"
-              className="button button--primary"
-              disabled={!dirty || isSubmitting}
-            >
-              {isSubmitting ? <Loading spinner small /> : <span>Update</span>}
-            </button>
+            <div className="buttons">
+              <button
+                type="submit"
+                className="button button--primary"
+                disabled={!dirty || isSubmitting}
+              >
+                {isSubmitting ? <Loading spinner small /> : <span>Update</span>}
+              </button>
+            </div>
           </Form>
         )}
       </Formik>
@@ -106,13 +126,24 @@ export default function MessagePreferencesForm() {
 function MessagePreferenceFormItem({
   name,
   label,
+  children,
 }: {
   name: string;
   label: string;
+  children?: ReactNode;
 }) {
   return (
-    <label>
-      <Field type="checkbox" name={name} /> {label}
+    <label
+      style={{
+        display: "flex",
+        borderBottom: "2px solid #91856e",
+      }}
+    >
+      <Field type="checkbox" name={name} />
+      <div>
+        <div>{label}</div>
+        {children}
+      </div>
     </label>
   );
 }

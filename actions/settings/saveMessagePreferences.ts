@@ -7,6 +7,7 @@ import SettingsService, {
   SaveMessagePreferencesResponse,
 } from "services/SettingsService";
 import { MessagePreferences } from "types/settings";
+// import { MessagePreferences } from 'types/settings';
 
 export type SaveMessagePreferencesRequested = {
   type: typeof SettingsActionTypes.SAVE_MESSAGE_PREFERENCES_REQUESTED;

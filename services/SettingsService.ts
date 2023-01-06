@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { ReactFacebookLoginInfo } from "react-facebook-login";
 import { IQuality } from "types/qualities";
+import { MessagePreferences } from "types/settings";
 import BaseService, { Either } from "./BaseMonadicService";
 
 export type MessageVia =
@@ -33,7 +34,7 @@ export interface ISettingsService {
   fetchAuthMethods: () => Promise<Either<FetchAuthMethodsResponse>>;
   fetchTimeTheHealer: () => Promise<Either<FetchTimeTheHealerResponse>>;
   saveMessagePreferences: (
-    req: SaveMessagePreferencesRequest
+    req: MessagePreferences
   ) => Promise<Either<SaveMessagePreferencesResponse>>;
   requestPasswordReset: (
     emailAddress: string
@@ -82,7 +83,6 @@ export type FetchSettingsResponse = {
   hasBraintreeSubscription: boolean;
   storyEventMessage: boolean;
   messageAboutAnnouncements: boolean;
-  messageAboutNastiness: boolean;
   messageAboutNiceness: boolean;
   messageAboutStorylets: boolean;
   messageViaNetwork: MessageVia;
@@ -134,13 +134,6 @@ export type ResetPasswordRequest = {
 
 export type ResetPasswordResponse = {
   message: string;
-};
-
-export type SaveMessagePreferencesRequest = {
-  messageAboutNiceness: boolean;
-  messageAboutNastiness: boolean;
-  messageAboutAnnouncements: boolean;
-  messageAboutStorylets: boolean;
 };
 
 export type SaveMessagePreferencesResponse = {
@@ -198,9 +191,7 @@ export default class SettingsService
     return this.doRequest<FetchTimeTheHealerResponse>(config);
   };
 
-  saveMessagePreferences = (
-    messagePreferences: SaveMessagePreferencesRequest
-  ) => {
+  saveMessagePreferences = (messagePreferences: MessagePreferences) => {
     const config = {
       method: "post",
       url: "/settings/messagesettings",

@@ -70,7 +70,7 @@ export default function LinkEmailModal({ isOpen, onRequestClose }: Props) {
               initialValues={{ emailAddress: "", password: "" }}
               onSubmit={handleSubmit}
             >
-              {({ values, dirty, errors }) => (
+              {({ values, dirty, errors, touched }) => (
                 <Form>
                   <p>
                     <label htmlFor="emailAddress">Email</label>
@@ -78,8 +78,9 @@ export default function LinkEmailModal({ isOpen, onRequestClose }: Props) {
                       className="form__control"
                       name="emailAddress"
                       value={values.emailAddress}
+                      validate={validateRequired}
                     />
-                    {errors.emailAddress !== undefined && (
+                    {errors.emailAddress && touched.emailAddress && (
                       <span className="form__error">{errors.emailAddress}</span>
                     )}
                   </p>
@@ -91,7 +92,11 @@ export default function LinkEmailModal({ isOpen, onRequestClose }: Props) {
                       type="password"
                       name="password"
                       value={values.password}
+                      validate={validateRequired}
                     />
+                    {errors.password && touched.password && (
+                      <span className="form_error">{errors.password}</span>
+                    )}
                   </p>
 
                   <div className="dialog__actions" style={{ marginTop: 24 }}>
@@ -121,4 +126,11 @@ export default function LinkEmailModal({ isOpen, onRequestClose }: Props) {
         </Modal>
       );
   }
+}
+
+function validateRequired(value: string) {
+  if (!value) {
+    return "Required";
+  }
+  return undefined;
 }

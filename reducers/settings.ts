@@ -66,7 +66,6 @@ export const INITIAL_STATE: ISettingsState = {
   isDeactivating: false,
   messagePreferences: {
     messageAboutAnnouncements: false,
-    messageAboutNastiness: false,
     messageAboutNiceness: false,
     messageAboutStorylets: false,
   },
@@ -112,7 +111,6 @@ export default function reducer(
         hasBraintreeSubscription,
         messageAboutAnnouncements,
         messageAboutNiceness,
-        messageAboutNastiness,
         messageAboutStorylets,
       }: FetchSettingsResponse = (action as FetchSettingsSuccess).payload;
       return {
@@ -122,7 +120,6 @@ export default function reducer(
         messagePreferences: {
           ...state.messagePreferences,
           messageAboutAnnouncements,
-          messageAboutNastiness,
           messageAboutNiceness,
           messageAboutStorylets,
         },

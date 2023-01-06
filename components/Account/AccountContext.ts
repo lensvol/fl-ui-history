@@ -11,7 +11,7 @@ export type TabType =
 
 export const TAB_TYPE_USER: TabType = "Profile";
 export const TAB_TYPE_AUTH: TabType = "Authentication";
-export const TAB_TYPE_MESSAGING: TabType = "Notifications";
+export const TAB_TYPE_NOTIFICATIONS: TabType = "Notifications";
 export const TAB_TYPE_SUBSCRIPTION: TabType = "Subscription";
 export const TAB_TYPE_PREFERENCES: TabType = "Preferences";
 export const TAB_TYPE_CONTACTS: TabType = "Contacts";
