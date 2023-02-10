@@ -4,11 +4,10 @@ import { connect, useDispatch } from "react-redux";
 import { IAppState } from "types/app";
 import Loading from "components/Loading";
 import { Success } from "services/BaseMonadicService";
-import GoogleLogin from "react-google-login";
+import { useGoogleLogin } from "@react-oauth/google";
 import { unlinkSocialAccount } from "actions/settings";
 import fetchAuthMethods from "actions/settings/fetchAuthMethods";
 import { linkGoogle } from "actions/settings/linkSocialAccount";
-import Config from "configuration";
 
 export function GoogleAuthComponent({
   authMethods,
@@ -37,8 +36,7 @@ export function GoogleAuthComponent({
   }, [dispatch, onUnlinkFailure]);
 
   const onLoginSuccess = useCallback(
-    async (res) => {
-      const authResponse = res.getAuthResponse?.();
+    async (authResponse) => {
       if (authResponse) {
         setIsLinking(true);
         const request = { token: authResponse.access_token };
@@ -58,6 +56,11 @@ export function GoogleAuthComponent({
     // TODO: handle Google auth failure gracefully. This is called when the
     //   user does not authenticate with Google (not if linking fails)
   }, []);
+
+  const doGoogleAuth = useGoogleLogin({
+    onSuccess: onLoginSuccess,
+    onError: onLoginFailure,
+  });
 
   if (isLinking || isUnlinking) {
     return (
@@ -93,28 +96,16 @@ export function GoogleAuthComponent({
   return (
     <>
       <i className="fa fa-fw fa-google" />{" "}
-      <GoogleLogin
-        onSuccess={onLoginSuccess}
-        onFailure={onLoginFailure}
-        clientId={Config.googleId}
+      <button
         className={classnames(
           "button--link",
           inverse && "button--link-inverse"
         )}
-        render={({ onClick, disabled }) => (
-          <button
-            className={classnames(
-              "button--link",
-              inverse && "button--link-inverse"
-            )}
-            onClick={onClick}
-            disabled={disabled}
-            type="button"
-          >
-            Link Google to this account
-          </button>
-        )}
-      />
+        onClick={() => doGoogleAuth()}
+        type="button"
+      >
+        Link Google to this account
+      </button>
     </>
   );
 }

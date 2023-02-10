@@ -98,7 +98,7 @@ class Contacts extends React.Component {
    */
   render() {
     const { isFetching, contacts, data, isAdding, message } = this.props;
-    const { facebookAuth, twitterAuth } = data;
+    const { facebookAuth } = data;
     const { filterString, userInput } = this.state;
 
     if (isFetching) {
@@ -136,15 +136,6 @@ class Contacts extends React.Component {
             type="button"
           >
             {isAdding ? "fetching..." : "Add from Facebook"}
-          </button>
-        )}
-        {twitterAuth && (
-          <button
-            className="button button--primary"
-            onClick={this.addFromTwitter}
-            type="button"
-          >
-            {isAdding ? "fetching..." : "Add from Twitter"}
           </button>
         )}
       </div>

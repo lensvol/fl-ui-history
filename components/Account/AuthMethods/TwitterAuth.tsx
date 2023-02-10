@@ -1,4 +1,3 @@
-import LinkTwitterAccount from "components/Account/AuthMethods/LinkTwitterAccount";
 import TippyWrapper from "components/TippyWrapper";
 import React, { useCallback, useMemo } from "react";
 import classnames from "classnames";
@@ -18,55 +17,43 @@ function TwitterAuth(props: Props) {
     dispatch(unlinkSocialAccount("twitter"));
   }, [dispatch]);
 
-  const onFailure = useCallback((reason: string | Error) => {
-    console.error("Failed to link Twitter account; original reason follows:");
-    console.error(reason);
-  }, []);
-
   const linkedComponent = useMemo(() => {
     const canUnlink = emailAuth || facebookAuth;
     if (canUnlink) {
       return (
-        <button
-          type="button"
-          className={classnames("button--link", buttonClassName)}
-          onClick={onClickToUnlink}
-        >
-          Unlink Twitter from this account
-        </button>
+        <>
+          <i className="fa fa-fw fa-twitter" />{" "}
+          <button
+            type="button"
+            className={classnames("button--link", buttonClassName)}
+            onClick={onClickToUnlink}
+          >
+            Unlink Twitter from this account
+          </button>
+        </>
       );
     }
     return (
-      <TippyWrapper
-        tooltipData={{
-          description:
-            "Your account must be either linked to Facebook or to an email address" +
-            " before you can unlink Twitter.",
-        }}
-      >
-        <span style={{ cursor: "default" }}>
-          Unlink Twitter from this account
-        </span>
-      </TippyWrapper>
+      <>
+        <i className="fa fa-fw fa-twitter" />{" "}
+        <TippyWrapper
+          tooltipData={{
+            description:
+              "Your account must be either linked to Facebook or to an email address" +
+              " before you can unlink Twitter.",
+          }}
+        >
+          <span style={{ cursor: "default" }}>
+            Unlink Twitter from this account
+          </span>
+        </TippyWrapper>
+      </>
     );
   }, [buttonClassName, emailAuth, facebookAuth, onClickToUnlink]);
 
-  const unlinkedComponent = useMemo(
-    () => (
-      <LinkTwitterAccount
-        buttonClassName={buttonClassName}
-        onFailure={onFailure}
-      />
-    ),
-    [buttonClassName, onFailure]
-  );
+  const unlinkedComponent = useMemo(() => <></>, []);
 
-  return (
-    <>
-      <i className="fa fa-fw fa-twitter" />{" "}
-      {twitterAuth ? linkedComponent : unlinkedComponent}
-    </>
-  );
+  return <>{twitterAuth ? linkedComponent : unlinkedComponent}</>;
 }
 
 type OwnProps = {

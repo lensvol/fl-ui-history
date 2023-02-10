@@ -115,7 +115,10 @@ class UserService extends BaseService implements IUserService {
     const config = {
       method: "post",
       url: "/google/callback",
-      data: token,
+      data: {
+        accessCodeName: token?.accessCodeName,
+        token: token?.token?.access_token,
+      },
     };
     return this.doRequest<LoginResponse>(config);
   };

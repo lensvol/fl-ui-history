@@ -1,4 +1,3 @@
-import TwitterAuth from "components/Account/AuthMethods/TwitterAuth";
 import React, { useMemo } from "react";
 import { connect } from "react-redux";
 import { IAppState } from "types/app";
@@ -11,24 +10,16 @@ export function TwitterAuthStatus({ authMethods }: Props) {
   if (twitterAuthMethod) {
     return (
       <>
-        <i className="fa fa-check" /> Linked to{" "}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          className="link--inverse"
-          href={twitterAuthMethod.profileUrl}
-        >
-          @{twitterAuthMethod.displayName}
-        </a>
-        .
+        <h3 className="heading heading--3">Twitter</h3>
+        <p>
+          Due to recent changes at Twitter, we urge you to strongly consider
+          adding an email login option.
+        </p>
+        <i className="fa fa-check" /> Linked to Twitter.
       </>
     );
   }
-  return (
-    <>
-      <TwitterAuth buttonClassName="button--link-inverse" />
-    </>
-  );
+  return <></>;
 }
 
 const mapStateToProps = ({ settings: { authMethods } }: IAppState) => ({

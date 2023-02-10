@@ -37,6 +37,10 @@ import shouldUserBeFunnelledToCompatibilityMap from "features/startup/shouldUser
 import { FEATURE_FLAGS } from "features/feature-flags";
 import { unregister as unregisterServiceWorker } from "./registerServiceWorker";
 
+// Google OAuth application wrapper
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import Config from "configuration";
+
 // Get our feature flags
 
 // This import is how we set up moment to support formatting durations. Yes, it's weird!
@@ -155,7 +159,9 @@ function runApp() {
     ReactDOM.render(
       <Provider store={store}>
         <FlagsProvider features={FEATURE_FLAGS}>
-          <App />
+          <GoogleOAuthProvider clientId={Config.googleId}>
+            <App />
+          </GoogleOAuthProvider>
         </FlagsProvider>
       </Provider>,
       document.querySelector(APP_ROOT_SELECTOR)
