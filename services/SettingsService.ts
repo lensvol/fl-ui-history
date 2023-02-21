@@ -58,11 +58,6 @@ export interface ISettingsService {
     payload: FacebookPayload
   ) => Promise<Either<LinkFacebookResponse>>;
   linkGoogle: (req: LinkGoogleRequest) => Promise<Either<LinkGoogleResponse>>;
-  linkTwitter: (req: LinkTwitterRequest) => Promise<
-    Either<{
-      /* empty response object */
-    }>
-  >;
 }
 
 export type ChangeUsernameResponse = { message: string };
@@ -108,11 +103,6 @@ export type LinkGoogleRequest = { token: string };
 
 export type LinkGoogleResponse = {
   /* empty response on success */
-};
-
-export type LinkTwitterRequest = {
-  oauth_token: string;
-  oauth_verifier: string;
 };
 
 export type MessagesViaResponse = {
@@ -302,16 +292,5 @@ export default class SettingsService
       method: "post",
     };
     return this.doRequest<LinkGoogleResponse>(config);
-  };
-
-  linkTwitter = (data: LinkTwitterRequest) => {
-    const config = {
-      data,
-      url: "/twitter/linkaccount",
-      method: "post",
-    };
-    return this.doRequest<{
-      /* empty */
-    }>(config);
   };
 }

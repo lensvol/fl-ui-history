@@ -93,6 +93,13 @@ const User = (
       };
 
     case UserActionTypes.TWITTER_LOGIN_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+        loggedIn: false,
+        isTwitterNagScreenOpen: true,
+      };
+
     case UserActionTypes.FACEBOOK_LOGIN_ERROR:
       return {
         ...state,

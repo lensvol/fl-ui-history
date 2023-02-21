@@ -7,12 +7,7 @@ import { withRouter } from "react-router-dom";
 import Loading from "components/Loading";
 import SearchField from "components/SearchField";
 
-import {
-  addContact,
-  addFromFacebook,
-  addFromTwitter,
-  deleteContact,
-} from "actions/contacts";
+import { addContact, addFromFacebook, deleteContact } from "actions/contacts";
 import AddContactForm from "./components/AddContactForm";
 import ContactsHeader from "./components/ContactsHeader";
 import ContactList from "./components/ContactList";
@@ -78,14 +73,6 @@ class Contacts extends React.Component {
   addFromFacebook = () => {
     const { dispatch } = this.props;
     dispatch(addFromFacebook());
-  };
-
-  /**
-   * Add from Twitter
-   */
-  addFromTwitter = () => {
-    const { dispatch } = this.props;
-    dispatch(addFromTwitter());
   };
 
   handleSearchFieldChange = (e) => {

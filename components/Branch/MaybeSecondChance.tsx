@@ -1,6 +1,7 @@
 import React from "react";
 import SecondChance from "components/Branch/SecondChance";
 import { IChallenge } from "types/storylet";
+import classnames from "classnames";
 
 interface Props {
   data: IChallenge;
@@ -25,7 +26,18 @@ export default function MaybeSecondChance({
     );
   }
   // Otherwise, return a 'You need...' message (or nothing, if there's no secondChangeDescription)
-  return <em dangerouslySetInnerHTML={{ __html: secondChanceDescription }} />;
+  return (
+    <>
+      <div
+        className={classnames(
+          "second-chance",
+          locked && "second-chance--locked"
+        )}
+      >
+        <em dangerouslySetInnerHTML={{ __html: secondChanceDescription }} />
+      </div>
+    </>
+  );
 }
 
 MaybeSecondChance.displayName = "MaybeSecondChance";

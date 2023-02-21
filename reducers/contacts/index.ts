@@ -12,9 +12,6 @@ import {
   ADD_FROM_FACEBOOK_REQUESTED,
   ADD_FROM_FACEBOOK_FAILURE,
   ADD_FROM_FACEBOOK_SUCCESS,
-  ADD_FROM_TWITTER_FAILURE,
-  ADD_FROM_TWITTER_REQUESTED,
-  ADD_FROM_TWITTER_SUCCESS,
 } from "actiontypes/contacts";
 
 import addNewContactAndSort from "./addNewContactAndSort";
@@ -91,15 +88,12 @@ export default function reducer(
     /* Adding from social networks is the same, regardless of which network */
 
     case ADD_FROM_FACEBOOK_REQUESTED:
-    case ADD_FROM_TWITTER_REQUESTED:
       return { ...state, isAdding: true };
 
     case ADD_FROM_FACEBOOK_SUCCESS:
-    case ADD_FROM_TWITTER_SUCCESS:
       return { ...state, isAdding: false };
 
     case ADD_FROM_FACEBOOK_FAILURE:
-    case ADD_FROM_TWITTER_FAILURE:
       return { ...state, isAdding: false };
 
     default:
