@@ -53,7 +53,7 @@ export function Subscription({
       >
         Subscribe
       </button>
-      <strong>Subscribe for just $7 a month</strong>
+      <strong>Subscribe for just $9 a month</strong>
     </p>
   );
 }
