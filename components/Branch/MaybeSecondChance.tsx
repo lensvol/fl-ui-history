@@ -25,19 +25,25 @@ export default function MaybeSecondChance({
       />
     );
   }
-  // Otherwise, return a 'You need...' message (or nothing, if there's no secondChangeDescription)
-  return (
-    <>
-      <div
-        className={classnames(
-          "second-chance",
-          locked && "second-chance--locked"
-        )}
-      >
-        <em dangerouslySetInnerHTML={{ __html: secondChanceDescription }} />
-      </div>
-    </>
-  );
+
+  // Return a 'You need...' message, when we have one
+  if (secondChanceDescription) {
+    return (
+      <>
+        <div
+          className={classnames(
+            "second-chance",
+            locked && "second-chance--locked"
+          )}
+        >
+          <em dangerouslySetInnerHTML={{ __html: secondChanceDescription }} />
+        </div>
+      </>
+    );
+  }
+
+  // Otherwise, return nothing, as there's no secondChanceDescription
+  return <></>;
 }
 
 MaybeSecondChance.displayName = "MaybeSecondChance";

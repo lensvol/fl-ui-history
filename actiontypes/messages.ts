@@ -20,6 +20,10 @@ export const DELETE_REQUESTED = "messages/DELETE_REQUESTED";
 export const DELETE_SUCCESS = "messages/DELETE_SUCCESS";
 export const DELETE_FAILURE = "messages/DELETE_FAILURE";
 
+export const EMAIL_REQUESTED = "messages/EMAIL_REQUESTED";
+export const EMAIL_SUCCESS = "messages/EMAIL_SUCCESS";
+export const EMAIL_FAILURE = "messages/EMAIL_FAILURE";
+
 export const ACCEPT_REQUESTED = "messages/ACCEPT_REQUESTED";
 export const ACCEPT_SUCCESS = "messages/ACCEPT_SUCCESS";
 export const ACCEPT_FAILURE = "messages/ACCEPT_FAILURE";

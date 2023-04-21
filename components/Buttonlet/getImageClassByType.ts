@@ -38,6 +38,8 @@ export default function getImageClassByType(type: string): string | null {
       return "fa-plus";
     case "minus":
       return "fa-minus";
+    case "envelope":
+      return "fa-envelope";
     default:
       return null;
   }

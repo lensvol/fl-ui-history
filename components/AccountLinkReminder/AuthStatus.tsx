@@ -10,22 +10,28 @@ export default function AuthStatus({ method }: { method: MessageVia }) {
     case "Email":
       return (
         <>
-          <h3 className="heading heading--3">{method}</h3>
-          <EmailAuthStatus />;
+          <li key={method}>
+            <h3 className="heading heading--3">{method}</h3>
+            <EmailAuthStatus />
+          </li>
         </>
       );
     case "Facebook":
       return (
         <>
-          <h3 className="heading heading--3">{method}</h3>
-          <FacebookAuthStatus />;
+          <li key={method}>
+            <h3 className="heading heading--3">{method}</h3>
+            <FacebookAuthStatus />
+          </li>
         </>
       );
     case "Google":
       return (
         <>
-          <h3 className="heading heading--3">{method}</h3>
-          <GoogleAuthStatus />;
+          <li key={method}>
+            <h3 className="heading heading--3">{method}</h3>
+            <GoogleAuthStatus />
+          </li>
         </>
       );
     case "Twitter":

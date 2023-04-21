@@ -17,10 +17,11 @@ type Props = RouteComponentProps & {
   data: FeedMessage;
   disabled?: boolean;
   dispatch: ThunkDispatch<any, any, any>;
+  onEmail?: (hasMessagingEmail: boolean) => Promise<void>;
 };
 
 export function SocialMessage(props: Props) {
-  const { data, disabled, dispatch, history } = props;
+  const { data, disabled, dispatch, history, onEmail } = props;
 
   const { relatedId: invitationId } = data;
 
@@ -53,7 +54,7 @@ export function SocialMessage(props: Props) {
   }, [dispatch, history, invitationId, mounted]);
 
   return (
-    <MessageComponent data={data}>
+    <MessageComponent data={data} emailable onEmail={onEmail}>
       <PrimaryButton disabled={!!disabled} onClick={handleClick}>
         {isWorking ? <Loading spinner small /> : <span>Respond</span>}
       </PrimaryButton>

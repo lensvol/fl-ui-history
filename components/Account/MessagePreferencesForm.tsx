@@ -13,8 +13,8 @@ type MessagePreferenceKeys =
 type MessagePreferencesValues = { [k in MessagePreferenceKeys]: boolean };
 
 export default function MessagePreferencesForm() {
-  const emailAddress = useAppSelector(
-    (state) => state.settings.data.emailAddress
+  const hasEmailAddress = useAppSelector(
+    (state) => state.user.user?.hasMessagingEmail ?? false
   );
   const messagePreferences = useAppSelector(
     (state) => state.settings.messagePreferences
@@ -47,7 +47,7 @@ export default function MessagePreferencesForm() {
     };
   }
 
-  if (!emailAddress) {
+  if (!hasEmailAddress) {
     return null;
   }
 

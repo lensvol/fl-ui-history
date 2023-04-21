@@ -37,6 +37,7 @@ export type ISettingsState = {
     messageViaNetwork: MessageVia | undefined;
     qualitiesPossessedList: IQuality[];
     twitterAuth: boolean;
+    googleAuth: boolean;
   };
   messagePreferences: MessagePreferences;
   subscriptions: {
@@ -82,6 +83,7 @@ export const INITIAL_STATE: ISettingsState = {
     name: undefined,
     qualitiesPossessedList: [],
     twitterAuth: false,
+    googleAuth: false,
   },
 };
 
@@ -262,6 +264,10 @@ export default function reducer(
             action.payload.accountType === "facebook"
               ? false
               : state.data.facebookAuth,
+          googleAuth:
+            action.payload.accountType === "google"
+              ? false
+              : state.data.googleAuth,
         },
       };
 
@@ -278,6 +284,10 @@ export default function reducer(
             action.payload.accountType === "facebook"
               ? true
               : state.data.facebookAuth,
+          googleAuth:
+            action.payload.accountType === "google"
+              ? false
+              : state.data.googleAuth,
         },
       };
 

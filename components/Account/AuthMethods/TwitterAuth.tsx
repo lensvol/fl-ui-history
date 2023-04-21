@@ -8,7 +8,7 @@ import { unlinkSocialAccount } from "actions/settings";
 function TwitterAuth(props: Props) {
   const {
     buttonClassName,
-    data: { emailAuth, facebookAuth, twitterAuth },
+    data: { emailAuth, facebookAuth, twitterAuth, googleAuth },
   } = props;
 
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ function TwitterAuth(props: Props) {
   }, [dispatch]);
 
   const linkedComponent = useMemo(() => {
-    const canUnlink = emailAuth || facebookAuth;
+    const canUnlink = emailAuth || facebookAuth || googleAuth;
     if (canUnlink) {
       return (
         <>
@@ -39,7 +39,7 @@ function TwitterAuth(props: Props) {
         <TippyWrapper
           tooltipData={{
             description:
-              "Your account must be either linked to Facebook or to an email address" +
+              "Your account must be linked to Facebook, Google, or to an email address" +
               " before you can unlink Twitter.",
           }}
         >
@@ -49,7 +49,7 @@ function TwitterAuth(props: Props) {
         </TippyWrapper>
       </>
     );
-  }, [buttonClassName, emailAuth, facebookAuth, onClickToUnlink]);
+  }, [buttonClassName, emailAuth, facebookAuth, googleAuth, onClickToUnlink]);
 
   const unlinkedComponent = useMemo(() => <></>, []);
 

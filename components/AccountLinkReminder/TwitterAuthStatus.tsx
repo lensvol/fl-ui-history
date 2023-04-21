@@ -10,12 +10,14 @@ export function TwitterAuthStatus({ authMethods }: Props) {
   if (twitterAuthMethod) {
     return (
       <>
-        <h3 className="heading heading--3">Twitter</h3>
-        <p>
-          Due to recent changes at Twitter, we urge you to strongly consider
-          adding an email login option.
-        </p>
-        <i className="fa fa-check" /> Linked to Twitter.
+        <li key="Twitter">
+          <h3 className="heading heading--3">Twitter</h3>
+          <p>
+            Due to recent changes at Twitter, we urge you to strongly consider
+            adding an email login option.
+          </p>
+          <i className="fa fa-check" /> Linked to Twitter.
+        </li>
       </>
     );
   }

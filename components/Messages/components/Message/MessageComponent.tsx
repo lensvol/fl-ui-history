@@ -11,22 +11,45 @@ export function MessageComponent({
   data,
   deletable,
   onDelete,
+  emailable,
+  onEmail,
+  hasMessagingEmail,
+  isRequesting,
 }: Props) {
   const { ago, description, image, title } = data;
 
   const isMounted = useIsMounted();
 
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isWorking, setIsWorking] = useState(false);
 
-  const handleClick = useCallback(async () => {
-    setIsDeleting(true);
+  const handleClickDelete = useCallback(async () => {
+    setIsWorking(true);
     if (onDelete) {
       await onDelete();
     }
     if (isMounted.current) {
-      setIsDeleting(false);
+      setIsWorking(false);
     }
   }, [onDelete, isMounted]);
+
+  const handleClickEmail = useCallback(async () => {
+    setIsWorking(true);
+
+    if (onEmail) {
+      await onEmail(hasMessagingEmail);
+    }
+
+    if (isMounted.current) {
+      setIsWorking(false);
+    }
+  }, [onEmail, hasMessagingEmail, isMounted]);
+
+  const emailToolTip = hasMessagingEmail
+    ? "Email a copy of this message to yourself."
+    : "Your account must have an email address associated with it to send this message to yourself.";
+  const emailClassNames = hasMessagingEmail
+    ? undefined
+    : { buttonletClassName: "buttonlet-disabled" };
 
   return (
     <div className="media--message">
@@ -49,8 +72,25 @@ export function MessageComponent({
             {deletable && (
               <Buttonlet
                 type="close"
-                onClick={handleClick}
-                disabled={isDeleting}
+                onClick={handleClickDelete}
+                disabled={isWorking || isRequesting}
+                tooltipData={{
+                  description: "Permanently delete this message.",
+                }}
+              />
+            )}
+          </div>
+        )}
+        {emailable && (
+          <div className="message__email-button-container">
+            {emailable && (
+              <Buttonlet
+                type="envelope"
+                onClick={handleClickEmail}
+                disabled={isWorking || isRequesting}
+                tooltipData={{ description: emailToolTip }}
+                classNames={emailClassNames}
+                showModalTooltipOnTouch={true}
               />
             )}
           </div>
@@ -80,9 +120,14 @@ interface OwnProps {
   };
   deletable?: boolean;
   onDelete?: () => Promise<void>;
+  emailable?: boolean;
+  onEmail?: (hasMessagingEmail: boolean) => Promise<void>;
 }
 
-const mapStateToProps = (_: IAppState) => ({});
+const mapStateToProps = (state: IAppState) => ({
+  hasMessagingEmail: state.user.user?.hasMessagingEmail ?? false,
+  isRequesting: state.messages.isRequesting,
+});
 
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;
 

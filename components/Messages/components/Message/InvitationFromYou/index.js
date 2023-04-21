@@ -41,10 +41,10 @@ export class InvitationFromYou extends Component {
   };
 
   render = () => {
-    const { data, disabled } = this.props;
+    const { data, disabled, onEmail } = this.props;
     const { isCancelling } = this.state;
     return (
-      <MessageComponent data={data}>
+      <MessageComponent data={data} emailable onEmail={onEmail}>
         <TertiaryButton disabled={disabled} onClick={this.handleClick}>
           {isCancelling ? <Loading spinner small /> : "Cancel"}
         </TertiaryButton>
@@ -59,6 +59,7 @@ InvitationFromYou.propTypes = {
   }).isRequired,
   disabled: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,
+  onEmail: PropTypes.func.isRequired,
 };
 
 export default connect()(InvitationFromYou);

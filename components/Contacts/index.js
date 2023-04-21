@@ -135,6 +135,7 @@ Contacts.propTypes = {
   data: PropTypes.shape({
     facebookAuth: PropTypes.bool.isRequired,
     twitterAuth: PropTypes.bool.isRequired,
+    googleAuth: PropTypes.bool.isRequired,
   }).isRequired,
   dispatch: PropTypes.func.isRequired,
   isAdding: PropTypes.bool.isRequired,

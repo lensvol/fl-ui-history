@@ -20,6 +20,7 @@ type BaseInvitationResponse = {
 export type AcceptInvitationResponse = BaseInvitationResponse;
 export type CancelInvitationResponse = BaseInvitationResponse;
 export type DeleteMessageResponse = {};
+export type EmailMessageResponse = {};
 export type FetchAllMessagesResponse = {
   feedMessages: Message[];
   interactions: Message[];
@@ -35,6 +36,7 @@ export interface IMessagesService {
     invitationId: number
   ) => Promise<Either<CancelInvitationResponse>>;
   deleteMessage: (messageId: number) => Promise<Either<DeleteMessageResponse>>;
+  emailMessage: (messageId: number) => Promise<Either<EmailMessageResponse>>;
   fetch: (
     what: "feed" | "interactions"
   ) => Promise<Either<FetchMessagesResponse>>;
@@ -59,6 +61,15 @@ class MessagesService extends BaseService implements IMessagesService {
       method: "post",
     };
     return this.doRequest<DeleteMessageResponse>(config);
+  };
+
+  emailMessage = (messageId: number) => {
+    const config = {
+      url: `/messages/emailmessage/${messageId}`,
+      method: "post",
+    };
+
+    return this.doRequest<EmailMessageResponse>(config);
   };
 
   fetchAll = () => {

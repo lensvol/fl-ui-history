@@ -7,6 +7,7 @@ import {
   useCircleClassName,
   useIconClassName,
 } from "./hooks";
+import TouchModalTooltip from "components/Tooltip/TouchModalTooltip";
 
 type Props = {
   classNames?: {
@@ -25,6 +26,7 @@ type Props = {
   title?: string;
   tooltipData?: ITooltipData;
   tooltipTimeout?: number;
+  showModalTooltipOnTouch?: boolean;
   type: string;
 };
 
@@ -40,6 +42,7 @@ export default function Buttonlet({
   style,
   title,
   tooltipData,
+  showModalTooltipOnTouch,
 }: Props) {
   const buttonletClassName = useButtonletClassName(
     classNames?.buttonletClassName,
@@ -98,6 +101,18 @@ export default function Buttonlet({
   );
 
   if (tooltipData) {
+    if (showModalTooltipOnTouch) {
+      return (
+        <TouchModalTooltip
+          tooltipData={tooltipData}
+          onClick={onClick}
+          disabled={disabled}
+        >
+          {component}
+        </TouchModalTooltip>
+      );
+    }
+
     return <TippyWrapper tooltipData={tooltipData}>{component}</TippyWrapper>;
   }
 

@@ -74,6 +74,7 @@ export type FetchSettingsResponse = {
   qualitiesPossessedList: IQuality[];
   twitterAuth: boolean;
   facebookAuth: boolean;
+  googleAuth: boolean;
   emailAuth: boolean;
   hasBraintreeSubscription: boolean;
   storyEventMessage: boolean;

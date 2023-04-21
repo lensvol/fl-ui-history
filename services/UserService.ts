@@ -54,6 +54,7 @@ export interface IUserState {
         createdAt: string | undefined;
         name: string | undefined;
         id: number | undefined;
+        hasMessagingEmail: boolean;
       }
     | undefined;
 }

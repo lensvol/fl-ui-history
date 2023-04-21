@@ -40,9 +40,7 @@ export function AccountLinkReminderReady({
       <div>
         <ul>
           {methods.map((method) => (
-            <li key={method}>
-              <AuthStatus method={method} />
-            </li>
+            <AuthStatus method={method} />
           ))}
         </ul>
       </div>
