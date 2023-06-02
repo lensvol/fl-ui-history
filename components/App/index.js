@@ -51,12 +51,13 @@ import AccountLinkReminder from "components/AccountLinkReminder";
 // 404 Route
 import NotFound from "components/NotFound";
 
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
+
+import { UIRestriction } from "types/myself";
 
 export default function App() {
   console.log("current version: ", Config.version); // eslint-disable-line no-console
-  ReactGA.initialize("UA-124589521-1");
-  ReactGA.pageview(window.location.pathname + window.location.search);
+  ReactGA.initialize("G-7ZBF3LYSFQ");
   // const maintenance = function (){ return (<h1>Fallen London is in Maintenance Mode</h1>)};
 
   return (
@@ -102,22 +103,30 @@ export default function App() {
                 />
 
                 {/* Routes that only logged-in users with a character can visit */}
-                <RequireCharacter path="/fate" exact component={FateTab} />
+                <RequireCharacter
+                  path="/fate"
+                  exact
+                  component={FateTab}
+                  uiRestriction={UIRestriction.Fate}
+                />
                 <RequireCharacter
                   path="/bazaar"
                   exact
                   component={ExchangeTab}
+                  uiRestriction={UIRestriction.EchoBazaar}
                 />
                 <RequireCharacter
                   path="/possessions"
                   exact
                   component={PossessionsTab}
+                  uiRestriction={UIRestriction.Possessions}
                 />
                 <RequireCharacter path="/myself" exact component={MyselfTab} />
                 <RequireCharacter
                   path="/messages"
                   exact
                   component={MessagesTab}
+                  uiRestriction={UIRestriction.Messages}
                 />
                 <RequireCharacter path="/plans" exact component={PlansTab} />
                 <RequireCharacter path="/me" exact component={MyProfileTab} />

@@ -5,6 +5,7 @@ import ReactModal from "react-modal";
 import { connect } from "react-redux";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { IAppState } from "types/app";
+import { UIRestriction } from "types/myself";
 
 export function ActionCountModal(props: Props) {
   const {
@@ -17,6 +18,7 @@ export function ActionCountModal(props: Props) {
     remainingTime,
     currentFate,
     setting,
+    showFateUI,
   } = props;
 
   // @ts-ignore
@@ -77,9 +79,11 @@ export function ActionCountModal(props: Props) {
               <div className="action-count-modal__next-action-time">
                 {duration}
               </div>
-              <Link className="button button--secondary" to="/fate">
-                Buy actions and cards
-              </Link>
+              {showFateUI && (
+                <Link className="button button--secondary" to="/fate">
+                  Buy actions and cards
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -103,6 +107,7 @@ const mapStateToProps = ({
   map: { setting },
   timer: { remainingTime },
   fate,
+  myself: { uiRestrictions },
 }: IAppState) => ({
   actions,
   actionBankSize,
@@ -111,6 +116,9 @@ const mapStateToProps = ({
   remainingTime,
   setting,
   currentFate: fate.data.currentFate,
+  showFateUI: !uiRestrictions?.find(
+    (restriction) => restriction === UIRestriction.Fate
+  ),
 });
 
 type Props = ReturnType<typeof mapStateToProps> &

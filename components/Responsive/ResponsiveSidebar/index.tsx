@@ -16,9 +16,10 @@ import { IAppState } from "types/app";
 
 import NavItem from "./NavItem";
 import AdventLinkItem from "./AdventLinkItem";
+import { UIRestriction } from "types/myself";
 
 function ResponsiveSidebar(props: Props) {
-  const { history, isOpen, name, screen } = props;
+  const { history, isOpen, name, screen, showFateUI } = props;
 
   const dispatch = useDispatch();
 
@@ -74,9 +75,11 @@ function ResponsiveSidebar(props: Props) {
             <NavItem icon="user" onClick={makeHandler("account")}>
               Account
             </NavItem>
-            <NavItem fl icon="deck" onClick={makeHandler("fate")}>
-              Fate
-            </NavItem>
+            {showFateUI && (
+              <NavItem fl icon="deck" onClick={makeHandler("fate")}>
+                Fate
+              </NavItem>
+            )}
             <NavItem icon="star" onClick={makeHandler("plans")}>
               Plans
             </NavItem>
@@ -105,11 +108,15 @@ const mapStateToProps = ({
   sidebar,
   myself: {
     character: { name },
+    uiRestrictions,
   },
 }: IAppState) => ({
   ...sidebar,
   screen,
   name,
+  showFateUI: !uiRestrictions?.find(
+    (restriction) => restriction === UIRestriction.Fate
+  ),
 });
 
 type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;

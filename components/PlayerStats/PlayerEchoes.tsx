@@ -7,24 +7,27 @@ import Loading from "components/Loading";
 import Image from "components/Image";
 import QualityValue from "components/QualityValue";
 import { IAppState } from "types/app";
+import { UIRestriction } from "types/myself";
 
-const mapStateToProps = ({ myself: { isFetching, qualities } }: IAppState) => {
-  if (isFetching) {
-    return { isFetching, pennies: 0 };
-  }
-
-  const pennyQuality = qualities.find(({ name }) => name === "Penny");
-
-  if (!pennyQuality) {
-    return { isFetching: isFetching as boolean, pennies: 0 };
-  }
-
-  return { isFetching: isFetching as boolean, pennies: pennyQuality.level };
-};
+const mapStateToProps = ({
+  myself: { isFetching, qualities, uiRestrictions },
+}: IAppState) => ({
+  isFetching,
+  pennies: isFetching
+    ? 0
+    : qualities.find(({ name }) => name === "Penny")?.level ?? 0,
+  showBazaarUI: !uiRestrictions?.find(
+    (restriction) => restriction === UIRestriction.EchoBazaar
+  ),
+});
 
 type Props = ReturnType<typeof mapStateToProps>;
 
 function PlayerEchoes(props: Props) {
+  if (!props.showBazaarUI) {
+    return null;
+  }
+
   return (
     <li className="item">
       <TippyWrapper tooltipData={{ description: "Open the Bazaar tab" }}>

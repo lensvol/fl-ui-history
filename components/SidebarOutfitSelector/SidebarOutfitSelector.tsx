@@ -16,6 +16,7 @@ import { IAppState } from "types/app";
 
 import SidebarOutfitSelectorDisabled from "./SidebarOutfitSelectorDisabled";
 import Title from "./Title";
+import { UIRestriction } from "types/myself";
 
 function SidebarOutfitSelector({
   canUserChangeOutfit,
@@ -23,6 +24,7 @@ function SidebarOutfitSelector({
   // isChanging,
   isExceptionalFriend,
   outfits,
+  showPossessionsUI,
 }: Props) {
   const [isChanging, setIsChanging] = useState(false);
 
@@ -77,6 +79,10 @@ function SidebarOutfitSelector({
     [choices, isExceptionalFriend, selectedOutfitId]
   );
 
+  if (!showPossessionsUI) {
+    return null;
+  }
+
   if (!hasNewOutfitBehaviour) {
     return null;
   }
@@ -127,6 +133,9 @@ const mapStateToProps = (state: IAppState, props: OwnProps) => ({
   isChanging: state.outfit.isChanging,
   isExceptionalFriend: state.fate.isExceptionalFriend,
   outfits: getOrderedOutfits(state),
+  showPossessionsUI: !state.myself.uiRestrictions?.find(
+    (restriction) => restriction === UIRestriction.Possessions
+  ),
 });
 
 type Props = ReturnType<typeof mapStateToProps> &

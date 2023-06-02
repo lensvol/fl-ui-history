@@ -8,6 +8,7 @@ import { closeSidebar } from "actions/sidebar";
 import Image from "components/Image";
 import getPremiumDaysRemaining from "selectors/fate/getPremiumDaysRemaining";
 import { IAppState } from "types/app";
+import { UIRestriction } from "types/myself";
 
 const mapStateToProps = (state: IAppState) => {
   const {
@@ -16,6 +17,7 @@ const mapStateToProps = (state: IAppState) => {
       isExceptionalFriend,
       data: { currentFate, fateCards },
     },
+    myself: { uiRestrictions },
   } = state;
   return {
     actions,
@@ -23,6 +25,9 @@ const mapStateToProps = (state: IAppState) => {
     fateCards,
     isExceptionalFriend,
     premiumDaysRemaining: getPremiumDaysRemaining(state),
+    showFateUI: !uiRestrictions?.find(
+      (restriction) => restriction === UIRestriction.Fate
+    ),
   };
 };
 
@@ -35,6 +40,7 @@ function PlayerFate({
   history,
   isExceptionalFriend,
   premiumDaysRemaining,
+  showFateUI,
 }: Props) {
   const dispatch = useDispatch();
 
@@ -72,6 +78,10 @@ function PlayerFate({
       </div>
     );
   }, [isExceptionalFriend, premiumDaysRemaining]);
+
+  if (!showFateUI) {
+    return null;
+  }
 
   return (
     <li className="item">

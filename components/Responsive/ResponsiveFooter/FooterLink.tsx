@@ -5,6 +5,7 @@ import React, { useCallback, useMemo } from "react";
 import { connect, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { IAppState } from "types/app";
+import { UIRestriction } from "types/myself";
 
 function FooterLink({
   className,
@@ -14,6 +15,8 @@ function FooterLink({
   role,
   title,
   to,
+  uiRestrictions,
+  uiRestriction,
 }: Props) {
   const dispatch = useDispatch();
 
@@ -37,18 +40,28 @@ function FooterLink({
     [current, highlightAlso, messagesChanged, to]
   );
 
+  const shouldShowUI =
+    !uiRestriction ||
+    !uiRestrictions?.find((restriction) => restriction === uiRestriction);
+
   return (
     <li className={liClass} data-name={title.toLowerCase()} role={role}>
-      <Link onClick={onClick} to={to} title={title}>
-        <i className={classes} />
-        <span className="u-visually-hidden">{title}</span>
-      </Link>
+      {shouldShowUI && (
+        <Link onClick={onClick} to={to} title={title}>
+          <i className={classes} />
+          <span className="u-visually-hidden">{title}</span>
+        </Link>
+      )}
     </li>
   );
 }
 
-const mapStateToProps = ({ messages: { isChanged } }: IAppState) => ({
+const mapStateToProps = ({
+  messages: { isChanged },
+  myself: { uiRestrictions },
+}: IAppState) => ({
   messagesChanged: isChanged,
+  uiRestrictions,
 });
 
 interface OwnProps {
@@ -58,6 +71,7 @@ interface OwnProps {
   role: string;
   title: string;
   to: string;
+  uiRestriction?: UIRestriction;
 }
 
 type Props = ReturnType<typeof mapStateToProps> & OwnProps;

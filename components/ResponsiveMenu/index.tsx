@@ -10,6 +10,7 @@ import { openSidebar } from "actions/sidebar";
 
 import { IAppState } from "types/app";
 import getImagePath from "utils/getImagePath";
+import { UIRestriction } from "types/myself";
 
 function ResponsiveMenuContainer(props: Props) {
   const {
@@ -18,6 +19,7 @@ function ResponsiveMenuContainer(props: Props) {
     setting,
     shouldMapUpdate,
     location: { pathname },
+    enableTravelUI,
   } = props;
 
   const dispatch = useDispatch();
@@ -31,16 +33,17 @@ function ResponsiveMenuContainer(props: Props) {
     () =>
       (setting?.canOpenMap ?? false) &&
       phase === "Available" &&
-      pathname === "/",
-    [pathname, phase, setting]
+      pathname === "/" &&
+      enableTravelUI,
+    [pathname, phase, setting, enableTravelUI]
   );
 
   const mapTitle = useMemo(() => {
-    if (setting?.canOpenMap && phase === "Available") {
+    if (setting?.canOpenMap && phase === "Available" && enableTravelUI) {
       return "Map";
     }
     return "Map - you cannot move right now";
-  }, [phase, setting]);
+  }, [phase, setting, enableTravelUI]);
 
   const onOpenSidebar = useCallback(() => dispatch(openSidebar()), [dispatch]);
 
@@ -108,11 +111,15 @@ function ResponsiveMenuContainer(props: Props) {
 const mapStateToProps = ({
   storylet: { phase },
   map: { currentArea, setting, shouldUpdate: shouldMapUpdate },
+  myself: { uiRestrictions },
 }: IAppState) => ({
   shouldMapUpdate,
   currentArea,
   phase,
   setting,
+  enableTravelUI: !uiRestrictions?.find(
+    (restriction) => restriction === UIRestriction.Travel
+  ),
 });
 
 type Props = ReturnType<typeof mapStateToProps> & RouteComponentProps;

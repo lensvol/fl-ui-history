@@ -10,8 +10,10 @@ import PlayerStats from "components/PlayerStats";
 import SidebarOutfitSelector from "components/SidebarOutfitSelector";
 import SidebarQualities from "components/SidebarQualities";
 import ActionCandles from "components/ActionCandles";
+import { IAppState } from "types/app";
+import { UIRestriction } from "types/myself";
 
-const Sidebar = () => {
+const Sidebar = ({ showPossessionsUI }: Props) => {
   const dispatch = useDispatch();
   return (
     <div className="col-secondary sidebar">
@@ -30,7 +32,7 @@ const Sidebar = () => {
       )}
       <ActionCandles />
       <PlayerStats />
-      <SidebarOutfitSelector />
+      {showPossessionsUI && <SidebarOutfitSelector />}
 
       <SidebarQualities />
     </div>
@@ -39,4 +41,12 @@ const Sidebar = () => {
 
 Sidebar.displayName = "Sidebar";
 
-export default connect()(Sidebar);
+const mapStateToProps = ({ myself: { uiRestrictions } }: IAppState) => ({
+  showPossessionsUI: !uiRestrictions?.find(
+    (restriction) => restriction === UIRestriction.Possessions
+  ),
+});
+
+type Props = ReturnType<typeof mapStateToProps>;
+
+export default connect(mapStateToProps)(Sidebar);

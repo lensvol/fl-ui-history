@@ -42,6 +42,7 @@ export function GeneralContainer({
   currentArea,
   fateData,
   sectionName,
+  uiRestrictions,
 }: Props) {
   const [isActionRefreshModalOpen, setIsActionRefreshModalOpen] =
     useState(false);
@@ -116,7 +117,10 @@ export function GeneralContainer({
                   <div className="col-primary">
                     <MediaMdUp>
                       <nav className="nav nav--tabs nav--tabs--main">
-                        <Tabs items={NAV_ITEMS} />
+                        <Tabs
+                          items={NAV_ITEMS}
+                          uiRestrictions={uiRestrictions}
+                        />
                       </nav>
                     </MediaMdUp>
                     <div
@@ -176,10 +180,12 @@ const mapStateToProps = ({
   actions: { actionBankSize },
   fate: { data: fateData },
   map: { currentArea },
+  myself: { uiRestrictions },
 }: IAppState) => ({
   actionBankSize, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
   fateData, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
   currentArea, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
+  uiRestrictions,
 });
 
 type OwnProps = {

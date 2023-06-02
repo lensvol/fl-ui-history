@@ -5,6 +5,7 @@ import { IAppState } from "types/app";
 
 import ActionCountModal from "./ActionCountModal";
 import FooterLink from "./FooterLink";
+import { UIRestriction } from "types/myself";
 
 interface State {
   actionCountModalIsOpen: boolean;
@@ -24,14 +25,16 @@ class ResponsiveFooter extends Component<Props, State> {
   };
 
   render = () => {
-    const { actions, actionBankSize, history, subtabs } = this.props;
+    const { actions, actionBankSize, history, subtabs, showPossessionsUI } =
+      this.props;
     const { actionCountModalIsOpen } = this.state;
 
     const current = history.location.pathname;
 
-    const myselfPath = `/${subtabs.myself}`;
+    const myselfSubTab = showPossessionsUI ? subtabs.myself : "myself";
+    const myselfPath = `/${myselfSubTab}`;
     const myselfHighlightAlso =
-      subtabs.myself === "myself" ? "/possessions" : "/myself";
+      myselfSubTab === "myself" ? "/possessions" : "/myself";
 
     return (
       <>
@@ -79,6 +82,7 @@ class ResponsiveFooter extends Component<Props, State> {
               className="fl-ico-bazaar"
               current={current}
               role="tab"
+              uiRestriction={UIRestriction.EchoBazaar}
             />
             <FooterLink
               to="/messages"
@@ -86,6 +90,7 @@ class ResponsiveFooter extends Component<Props, State> {
               className="fl-ico-message"
               current={current}
               role="tab"
+              uiRestriction={UIRestriction.Messages}
             />
           </ul>
         </nav>
@@ -98,10 +103,17 @@ class ResponsiveFooter extends Component<Props, State> {
   };
 }
 
-const mapStateToProps = ({ actions, subtabs }: IAppState) => ({
+const mapStateToProps = ({
+  actions,
+  subtabs,
+  myself: { uiRestrictions },
+}: IAppState) => ({
   subtabs,
   actions: actions.actions,
   actionBankSize: actions.actionBankSize,
+  showPossessionsUI: !uiRestrictions?.find(
+    (restriction) => restriction === UIRestriction.Possessions
+  ),
 });
 
 type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;
