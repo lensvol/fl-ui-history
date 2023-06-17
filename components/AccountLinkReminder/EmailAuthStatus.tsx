@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import { connect } from "react-redux";
 import { IAppState } from "types/app";
 
-export function EmailAuthStatus({ authMethods }: Props) {
+export function EmailAuthStatus({ authMethods, onLinkSuccess }: Props) {
   const emailAuthMethod = useMemo(
     () => authMethods?.find((method) => method.type === "Email"),
     [authMethods]
@@ -18,13 +18,22 @@ export function EmailAuthStatus({ authMethods }: Props) {
     );
   }
 
-  return <EmailAuth buttonClassName="button--link-inverse" />;
+  return (
+    <EmailAuth
+      buttonClassName="button--link-inverse"
+      onLinkSuccess={onLinkSuccess}
+    />
+  );
 }
+
+type OwnProps = {
+  onLinkSuccess: () => void;
+};
 
 const mapStateToProps = ({ settings: { authMethods } }: IAppState) => ({
   authMethods,
 });
 
-type Props = ReturnType<typeof mapStateToProps>;
+type Props = OwnProps & ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(EmailAuthStatus);

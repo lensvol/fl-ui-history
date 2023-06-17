@@ -20,9 +20,14 @@ enum LinkEmailModalStep {
 type Props = {
   isOpen: boolean;
   onRequestClose: () => void;
+  onLinkSuccess?: () => void;
 };
 
-export default function LinkEmailModal({ isOpen, onRequestClose }: Props) {
+export default function LinkEmailModal({
+  isOpen,
+  onRequestClose,
+  onLinkSuccess,
+}: Props) {
   const isLinkingEmail = useAppSelector(
     (state) => state.settings.isLinkingEmail
   );
@@ -49,12 +54,14 @@ export default function LinkEmailModal({ isOpen, onRequestClose }: Props) {
       if (result instanceof Success) {
         setCurrentStep(LinkEmailModalStep.LinkSuccess);
         setMessage(result.data.message);
+        onLinkSuccess?.();
+
         return;
       }
 
       actions.setErrors({ emailAddress: result.message });
     },
-    [dispatch]
+    [dispatch, onLinkSuccess]
   );
 
   switch (currentStep) {

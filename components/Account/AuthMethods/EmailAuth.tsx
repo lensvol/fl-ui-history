@@ -9,6 +9,7 @@ export function EmailAuth(props: Props) {
   const {
     buttonClassName,
     data: { emailAuth, emailAddress },
+    onLinkSuccess,
   } = props;
 
   const [isLinkEmailModalOpen, setIsLinkEmailModalOpen] = useState(false);
@@ -43,6 +44,7 @@ export function EmailAuth(props: Props) {
       <LinkEmailModal
         isOpen={isLinkEmailModalOpen}
         onRequestClose={handleCloseLinkEmailModal}
+        onLinkSuccess={onLinkSuccess}
       />
       <UpdateEmailModal
         isOpen={isUpdateEmailModalOpen}
@@ -56,6 +58,7 @@ const mapStateToProps = (state: IAppState) => ({ data: state.settings.data });
 
 type OwnProps = {
   buttonClassName?: string;
+  onLinkSuccess?: () => void;
 };
 
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;

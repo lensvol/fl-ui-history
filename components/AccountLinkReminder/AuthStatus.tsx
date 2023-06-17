@@ -5,14 +5,20 @@ import FacebookAuthStatus from "./FacebookAuthStatus";
 import TwitterAuthStatus from "./TwitterAuthStatus";
 import GoogleAuthStatus from "./GoogleAuthStatus";
 
-export default function AuthStatus({ method }: { method: MessageVia }) {
+export default function AuthStatus({
+  method,
+  onLinkSuccess,
+}: {
+  method: MessageVia;
+  onLinkSuccess: () => void;
+}) {
   switch (method) {
     case "Email":
       return (
         <>
           <li key={method}>
             <h3 className="heading heading--3">{method}</h3>
-            <EmailAuthStatus />
+            <EmailAuthStatus onLinkSuccess={onLinkSuccess} />
           </li>
         </>
       );
@@ -21,7 +27,7 @@ export default function AuthStatus({ method }: { method: MessageVia }) {
         <>
           <li key={method}>
             <h3 className="heading heading--3">{method}</h3>
-            <FacebookAuthStatus />
+            <FacebookAuthStatus onLinkSuccess={onLinkSuccess} />
           </li>
         </>
       );
@@ -30,7 +36,7 @@ export default function AuthStatus({ method }: { method: MessageVia }) {
         <>
           <li key={method}>
             <h3 className="heading heading--3">{method}</h3>
-            <GoogleAuthStatus />
+            <GoogleAuthStatus onLinkSuccess={onLinkSuccess} />
           </li>
         </>
       );

@@ -14,6 +14,7 @@ export function GoogleAuthComponent({
   inverse,
   onLinkFailure,
   onUnlinkFailure,
+  onLinkSuccess,
 }: Props) {
   const dispatch = useDispatch();
 
@@ -42,6 +43,8 @@ export function GoogleAuthComponent({
         const request = { token: authResponse.access_token };
         const result = await linkGoogle(request)(dispatch);
         if (result instanceof Success) {
+          onLinkSuccess?.();
+
           await fetchAuthMethods()(dispatch);
         } else {
           onLinkFailure?.(result.message);
@@ -49,7 +52,7 @@ export function GoogleAuthComponent({
         setIsLinking(false);
       }
     },
-    [dispatch, onLinkFailure]
+    [dispatch, onLinkFailure, onLinkSuccess]
   );
 
   const onLoginFailure = useCallback((..._args) => {
@@ -114,6 +117,7 @@ type OwnProps = {
   inverse?: boolean;
   onLinkFailure?: (message: string) => void;
   onUnlinkFailure?: (message: string) => void;
+  onLinkSuccess?: () => void;
 };
 
 const mapStateToProps = (state: IAppState) => ({

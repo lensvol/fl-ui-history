@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { IAppState } from "types/app";
 import FacebookAuth from "components/Account/AuthMethods/FacebookAuth";
 
-export function FacebookAuthStatus({ authMethods }: Props) {
+export function FacebookAuthStatus({ authMethods, onLinkSuccess }: Props) {
   const method = useMemo(
     () => authMethods?.find((m) => m.type === "Facebook"),
     [authMethods]
@@ -20,15 +20,22 @@ export function FacebookAuthStatus({ authMethods }: Props) {
   }
   return (
     <>
-      <FacebookAuth buttonClassName="button--link button--link-inverse" />
+      <FacebookAuth
+        buttonClassName="button--link button--link-inverse"
+        onLinkSuccess={onLinkSuccess}
+      />
     </>
   );
 }
+
+type OwnProps = {
+  onLinkSuccess: () => void;
+};
 
 const mapStateToProps = ({ settings: { authMethods } }: IAppState) => ({
   authMethods,
 });
 
-type Props = ReturnType<typeof mapStateToProps>;
+type Props = OwnProps & ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(FacebookAuthStatus);
