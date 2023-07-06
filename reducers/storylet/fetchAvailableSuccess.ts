@@ -13,6 +13,5 @@ export default function fetchAvailableSuccess(
     phase: payload.phase,
     storylet: payload.storylet,
     messages: payload.messages,
-    // rootEventId: payload.id,
   };
 }

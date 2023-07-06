@@ -34,6 +34,7 @@ StoryletStagger.displayName = "StoryletStagger";
 
 const mapStateToProps = (state: IAppState) => {
   const { storylet } = state;
+
   return {
     needsProminentTravelButton: getNeedsProminentTravelButton(state),
     storylets: storylet.storylets,
