@@ -29,7 +29,7 @@ function menaceEnhancementScale(level: number): string {
 }
 
 export function formatEnhancement(e: IEnhancement): string {
-  if (e.category === "Menace") {
+  if (e.category === "Menace" && e.affectsPyramid) {
     return `${menaceEnhancementScale(e.level)} ${e.qualityName} build up`;
   }
 
@@ -44,10 +44,17 @@ export function formatEnhancementList(
   }
 
   const nonMenaces = enhancements
-    .filter((enhancement) => enhancement.category !== "Menace")
+    .filter(
+      (enhancement) =>
+        enhancement.category !== "Menace" || !enhancement.affectsPyramid
+    )
     .map(formatEnhancement);
+
   const menaces = enhancements
-    .filter((enhancement) => enhancement.category === "Menace")
+    .filter(
+      (enhancement) =>
+        enhancement.category === "Menace" && enhancement.affectsPyramid
+    )
     .map(formatEnhancement);
 
   return [...nonMenaces, ...menaces].join("; ");
