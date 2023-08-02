@@ -212,8 +212,9 @@ export default class SettingsService
 
   changeUsername = (username: string) => {
     const config = {
+      data: username,
       method: "post",
-      url: `/settings/username/${username}`,
+      url: `/settings/username`,
     };
     return this.doRequest<ChangeUsernameResponse>(config);
   };

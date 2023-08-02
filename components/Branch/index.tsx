@@ -82,18 +82,22 @@ export function Branch({
   const handleChooseBranch = useCallback(async () => {
     // Check whether we should be making some UI changes instead
     const uiTriggerMatches = description.match(UI_INTEGRATION_REGEX);
+
     if ((uiTriggerMatches?.length ?? 0) > 0) {
       const commandAction =
         uiTriggerMatches?.[1] === undefined
           ? undefined
           : COMMAND_MAP[uiTriggerMatches?.[1]];
+
       if (commandAction) {
         dispatch(commandAction(history));
+
         return;
       }
     }
 
     const { id: branchId } = branch;
+
     if (storyletFrequency === "Sometimes") {
       dispatch(shouldUpdateOpportunities());
     }
@@ -101,10 +105,18 @@ export function Branch({
     setIsWorking(true);
 
     if (onChooseBranch) {
-      await onChooseBranch({ branchId, qualityRequirements, secondChanceIds });
+      await onChooseBranch({
+        branchId,
+        qualityRequirements,
+        secondChanceIds,
+      });
     } else {
       await dispatch(
-        chooseBranch({ branchId, qualityRequirements, secondChanceIds })
+        chooseBranch({
+          branchId,
+          qualityRequirements,
+          secondChanceIds,
+        })
       );
     }
 

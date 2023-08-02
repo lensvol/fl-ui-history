@@ -47,8 +47,6 @@ export default class PaymentService
       data,
       method: "post",
       url: "/nex/purchasenexbraintreepaymentmethod",
-      // Force a 500 error by directing the request to purchasenexbraintreepaymentmethoderror
-      // url: '/nex/purchasenexbraintreepaymentmethoderror',
     };
     return this.doRequest<{ isSuccess: boolean; message?: string | undefined }>(
       config
@@ -65,7 +63,6 @@ export default class PaymentService
       data,
       method: "post",
       url: "/nex/createbraintreesubscription",
-      // url: '/nex/createbraintreesubscriptionerror',
     };
     return this.doRequest(config);
   };
