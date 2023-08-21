@@ -91,8 +91,8 @@ function ConfirmationModalReady({ onClick }: { onClick: () => Promise<void> }) {
             By confirming your cancellation, you will cease to receive the
             benefits of Exceptional Friendship: you will no longer have a second
             candle, expanded opportunity deck,{" "}
-            {enabled ? "two additional outfits," : ""} or access to the House of
-            Chimes. You will no longer receive a new Exceptional Story every
+            {enabled ? "three additional outfits," : ""} or access to the House
+            of Chimes. You will no longer receive a new Exceptional Story every
             month. You will still be able to spend Memories of a Tale in Mr
             Chimes' Lost &amp; Found.
           </p>

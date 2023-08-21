@@ -12,6 +12,7 @@ export type ImageType =
   | "icon"
   | "location"
   | "lodgings"
+  | "asset"
   | "small-icon";
 
 export default function getImagePath({
@@ -43,6 +44,8 @@ export default function getImagePath({
       return `${Config.bucketUrl}map/${imageIcon}.png`;
     case "small-icon":
       return `${Config.imageUrl}icons/${imageIcon}small.png`;
+    case "asset":
+      return imageIcon;
     case "icon":
     default:
       return `${Config.imageUrl}icons/${imageIcon}.png`;

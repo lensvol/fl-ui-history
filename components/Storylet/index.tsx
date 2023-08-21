@@ -22,11 +22,16 @@ import getBorderColour from "utils/getBorderColour";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import StoryletBodySmUp from "./components/StoryletBodySmUp";
 import StoryletBodyXsDown from "./components/StoryletBodyXsDown";
+import { useFeature } from "flagged";
+import { FEATURE_PERSISTENT_DECK } from "features/feature-flags";
+import Image from "components/Image";
+import { ImageProps } from "components/Image/props";
 
 function StoryletContainer(props: Props) {
-  const { dispatch, data, history, isChoosing } = props;
+  const { dispatch, data, history, isChoosing, badge, beforeHandleClick } =
+    props;
 
-  const { id, image, name, teaser } = data;
+  const { id, image, name, teaser, deckType } = data;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -48,14 +53,17 @@ function StoryletContainer(props: Props) {
   }, [teaser]);
 
   const handleChoose = useCallback(() => {
+    beforeHandleClick?.(id);
+
     if (commandAction) {
       dispatch(commandAction(history));
+
       return;
     }
 
     setIsWorking(true);
     dispatch(begin(id));
-  }, [commandAction, dispatch, history, id]);
+  }, [beforeHandleClick, commandAction, dispatch, history, id]);
 
   const borderColour = getBorderColour(data);
 
@@ -85,11 +93,17 @@ function StoryletContainer(props: Props) {
 
   const onCardClick = handleChoose;
   const forceClearQreqs = shouldClearQReqs;
+  const isPersistentDeckEnabled = useFeature(FEATURE_PERSISTENT_DECK);
+  const storyletStyle =
+    isPersistentDeckEnabled && deckType === "Persistent"
+      ? "persistent"
+      : "storylet";
 
   return (
     <div
       className={classnames(
-        "media storylet",
+        "media",
+        storyletStyle,
         isChoosing && !isWorking && "storylet--semi-transparent"
       )}
       data-branch-id={data.id}
@@ -125,6 +139,7 @@ function StoryletContainer(props: Props) {
           teaser={teaser ?? ""}
         />
       </MediaSmUp>
+      {badge && <Image {...badge} />}
     </div>
   );
 }
@@ -134,6 +149,8 @@ StoryletContainer.displayName = "StoryletContainer";
 interface OwnProps {
   dispatch: Function; // eslint-disable-line
   data: ApiAvailableStorylet;
+  badge?: ImageProps;
+  beforeHandleClick?: (storyletId: number) => void;
 }
 
 const mapStateToProps = ({ storylet: { isChoosing } }: IAppState) => ({

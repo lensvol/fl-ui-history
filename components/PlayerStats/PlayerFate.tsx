@@ -24,7 +24,7 @@ const mapStateToProps = (state: IAppState) => {
     currentFate,
     fateCards,
     isExceptionalFriend,
-    premiumDaysRemaining: getPremiumDaysRemaining(state),
+    premiumDaysRemaining: Math.max(getPremiumDaysRemaining(state), 0),
     showFateUI: !uiRestrictions?.find(
       (restriction) => restriction === UIRestriction.Fate
     ),

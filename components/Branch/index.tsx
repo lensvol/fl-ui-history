@@ -20,7 +20,7 @@ import {
   StoryletDescription as Description,
   StoryletTitle as Title,
 } from "components/common";
-import { Frequency, IBranch } from "types/storylet";
+import { DeckType, IBranch } from "types/storylet";
 import { IAppState } from "types/app";
 import BranchButtons from "./BranchButtons";
 import Challenges from "./Challenges";
@@ -43,7 +43,7 @@ export function Branch({
   isChoosing,
   isGoingBack,
   onChooseBranch,
-  storyletFrequency,
+  storyletDeckType,
 }: Props) {
   const {
     actionCost,
@@ -98,7 +98,7 @@ export function Branch({
 
     const { id: branchId } = branch;
 
-    if (storyletFrequency === "Sometimes") {
+    if (storyletDeckType === "Sometimes") {
       dispatch(shouldUpdateOpportunities());
     }
 
@@ -132,7 +132,7 @@ export function Branch({
     onChooseBranch,
     qualityRequirements,
     secondChanceIds,
-    storyletFrequency,
+    storyletDeckType,
   ]);
 
   const handleToggleSecondChance = useCallback(
@@ -246,7 +246,7 @@ type OwnProps = {
   dispatch: Function; // eslint-disable-line
   isGoingBack?: boolean;
   onChooseBranch?: (_: any) => Promise<void>;
-  storyletFrequency?: Frequency;
+  storyletDeckType?: DeckType;
 };
 
 const mapStateToProps = ({

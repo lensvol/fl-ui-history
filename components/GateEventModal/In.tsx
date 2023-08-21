@@ -35,7 +35,7 @@ export function In(props: Props) {
                 isGoingBack={false}
                 key={branch.id}
                 onChooseBranch={onChooseBranch}
-                storyletFrequency={storylet.frequency}
+                storyletDeckType={storylet.deckType}
                 defaultCursor
               />
             ))}
