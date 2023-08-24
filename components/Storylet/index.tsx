@@ -27,10 +27,14 @@ import { FEATURE_PERSISTENT_DECK } from "features/feature-flags";
 import Image from "components/Image";
 import { ImageProps } from "components/Image/props";
 
-function StoryletContainer(props: Props) {
-  const { dispatch, data, history, isChoosing, badge, beforeHandleClick } =
-    props;
-
+function StoryletContainer({
+  dispatch,
+  data,
+  history,
+  isChoosing,
+  badge,
+  beforeHandleClick,
+}: Props) {
   const { id, image, name, teaser, deckType } = data;
 
   const ref = useRef<HTMLDivElement>(null);
@@ -153,8 +157,8 @@ interface OwnProps {
   beforeHandleClick?: (storyletId: number) => void;
 }
 
-const mapStateToProps = ({ storylet: { isChoosing } }: IAppState) => ({
-  isChoosing,
+const mapStateToProps = (state: IAppState) => ({
+  isChoosing: state.storylet.isChoosing,
 });
 
 export type Props = RouteComponentProps &

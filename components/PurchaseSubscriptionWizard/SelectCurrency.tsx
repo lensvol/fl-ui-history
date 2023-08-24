@@ -21,18 +21,18 @@ export default function SelectCurrency({
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState<IBraintreePlan[]>([]);
   const [submitting, setSubmitting] = useState(false);
-
-  const isMounted = useIsMounted();
-
   const [selectedPlan, setSelectedPlan] = useState<IBraintreePlan | undefined>(
     undefined
   );
+
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     fetchPlans();
 
     async function fetchPlans() {
       setLoading(true);
+
       const paymentService: IPaymentService = new PaymentService();
       const { data } = await paymentService.fetchPlans();
 
@@ -41,6 +41,7 @@ export default function SelectCurrency({
       const gbpPlan = data.plans.find(
         (plan) => plan.currencyIsoCode === CURRENCY_CODE_GBP
       );
+
       if (gbpPlan) {
         setSelectedPlan(gbpPlan);
       } else if (data.plans.length > 0) {
@@ -55,12 +56,14 @@ export default function SelectCurrency({
     (evt: ChangeEvent<HTMLSelectElement>) => {
       const planId = evt.target.value;
       const plan = plans.find((p) => p.id === planId);
-      if (plan) {
-        setSelectedPlan(plan);
+
+      if (!plan) {
+        onServerError(`Couldn't find a plan with ID '${planId}'`);
+
         return;
       }
 
-      onServerError(`Couldn't find a plan with ID '${planId}'`);
+      setSelectedPlan(plan);
     },
     [plans, onServerError]
   );
@@ -68,11 +71,14 @@ export default function SelectCurrency({
   const onSubmit = useCallback(async () => {
     if (!selectedPlan) {
       onServerError("Couldn't find the selected plan.");
+
       return;
     }
 
     setSubmitting(true);
+
     await onPlanChosen(selectedPlan);
+
     if (isMounted.current) {
       setSubmitting(false);
     }
@@ -109,7 +115,7 @@ export default function SelectCurrency({
                 name="planId"
                 id="planId"
                 style={{
-                  border: "2px solid #666666",
+                  border: "2px solid #666",
                   borderRadius: 2,
                   marginLeft: 8,
                 }}

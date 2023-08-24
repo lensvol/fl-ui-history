@@ -25,6 +25,7 @@ export default class SubscriptionService
       url: "/nex/cancelbraintreesubscription",
       method: "post",
     };
+
     return this.doRequest(config);
   };
 }

@@ -1,7 +1,10 @@
 import React from "react";
+
 import ToolTip from "components/Tooltip";
 
-export type OwnProps = { hasEnoughFate: boolean };
+export type OwnProps = {
+  hasEnoughFate: boolean;
+};
 
 export default function FateRefreshTooltip({ hasEnoughFate }: OwnProps) {
   const data = {
@@ -10,6 +13,7 @@ export default function FateRefreshTooltip({ hasEnoughFate }: OwnProps) {
       ? "Refresh your Actions with Fate..."
       : "Not enough Fate! Purchase more...",
   };
+
   return <ToolTip data={data} />;
 }
 

@@ -1,4 +1,3 @@
-import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
 import React, { useCallback, useMemo, useState } from "react";
 import { connect } from "react-redux";
 
@@ -10,7 +9,6 @@ import {
 import LoadingIndicator from "components/Loading";
 import Modal from "components/Modal";
 import useIsMounted from "hooks/useIsMounted";
-import { Feature } from "flagged";
 
 type Props = {
   dispatch: Function;
@@ -35,10 +33,20 @@ export function ConfirmationModal({ dispatch, isOpen, onRequestClose }: Props) {
 
   const onConfirm = useCallback(async () => {
     setCurrentStep(ConfirmationModalStep.Loading);
+
     try {
       // Quietly cancel
-      await dispatch(cancelBraintreeSubscription({ cancelInBackground: true }));
-      await dispatch(fetchSubscriptions({ fetchInBackground: true }));
+      await dispatch(
+        cancelBraintreeSubscription({
+          cancelInBackground: true,
+        })
+      );
+
+      await dispatch(
+        fetchSubscriptions({
+          fetchInBackground: true,
+        })
+      );
 
       if (isMounted.current) {
         setCurrentStep(ConfirmationModalStep.Success);
@@ -83,31 +91,31 @@ export default connect()(ConfirmationModal);
 
 function ConfirmationModalReady({ onClick }: { onClick: () => Promise<void> }) {
   return (
-    <Feature name={NEW_OUTFIT_BEHAVIOUR}>
-      {(enabled: boolean) => (
-        <>
-          <h3 className="heading heading--2">Confirm cancellation</h3>
-          <p>
-            By confirming your cancellation, you will cease to receive the
-            benefits of Exceptional Friendship: you will no longer have a second
-            candle, expanded opportunity deck,{" "}
-            {enabled ? "three additional outfits," : ""} or access to the House
-            of Chimes. You will no longer receive a new Exceptional Story every
-            month. You will still be able to spend Memories of a Tale in Mr
-            Chimes' Lost &amp; Found.
-          </p>
-          <div className="buttons" style={{ width: "100%" }}>
-            <button
-              type="button"
-              className="button button--primary"
-              onClick={onClick}
-            >
-              Cancel subscription
-            </button>
-          </div>
-        </>
-      )}
-    </Feature>
+    <>
+      <h3 className="heading heading--2">Confirm cancellation</h3>
+      <p>
+        By confirming your cancellation, you will cease to receive the benefits
+        of Exceptional Friendship: you will no longer have a second candle,
+        expanded opportunity deck, three additional outfits, or access to the
+        House of Chimes. You will no longer receive a new Exceptional Story
+        every month. You will still be able to spend Memories of a Tale in Mr
+        Chimes' Lost &amp; Found.
+      </p>
+      <div
+        className="buttons"
+        style={{
+          width: "100%",
+        }}
+      >
+        <button
+          type="button"
+          className="button button--primary"
+          onClick={onClick}
+        >
+          Cancel subscription
+        </button>
+      </div>
+    </>
   );
 }
 

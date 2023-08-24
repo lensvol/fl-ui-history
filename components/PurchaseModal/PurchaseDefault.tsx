@@ -42,7 +42,7 @@ export class PurchaseDefault extends Component<Props, State> {
     // If we were passed an object with an 'id' value, then it's an activePurchase thing
     // (otherwise it's the onClick event)
     const storeItemId = correspondingActivePurchase.id ?? id;
-    // const { isSuccess, message } = await dispatch(purchaseItem({ storeItemId }));
+
     const result = await dispatch(purchaseItem({ storeItemId }));
     const isSuccess = result instanceof Success;
     let message;

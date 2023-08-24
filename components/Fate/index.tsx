@@ -22,7 +22,6 @@ import ResetStoriesTab from "./ResetStoriesTab";
 import Header from "./Header";
 
 function Fate({ activeSubtab, data, dispatch }: Props) {
-  // const [activeTab, setActiveTab] = useState<FateSubtab>(SUBTAB_GAMEPLAY);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isPurchaseContentModalOpen, setIsPurchaseContentModalOpen] =
     useState(false);
@@ -73,7 +72,9 @@ function Fate({ activeSubtab, data, dispatch }: Props) {
                 Buy fate
               </button>
             </div>
+
             <Header data={data} />
+
             <hr style={{ marginBottom: ".5rem" }} />
           </div>
 
@@ -150,12 +151,10 @@ function Fate({ activeSubtab, data, dispatch }: Props) {
 
 Fate.displayName = "Fate";
 
-const mapStateToProps = (state: IAppState) => {
-  const {
-    fate: { activeSubtab, data },
-  } = state;
-  return { activeSubtab, data };
-};
+const mapStateToProps = (state: IAppState) => ({
+  activeSubtab: state.fate.activeSubtab,
+  data: state.fate.data,
+});
 
 type Props = ReturnType<typeof mapStateToProps> & {
   dispatch: Function; // eslint-disable-line

@@ -16,9 +16,11 @@ class ActionCounterContainer extends Component<Props> {
 
   handleClick = () => {
     const { actions, history, onOpenActionRefreshModal } = this.props;
+
     if (actions <= 6) {
       return onOpenActionRefreshModal();
     }
+
     return history.push("/fate");
   };
 
@@ -52,14 +54,10 @@ class ActionCounterContainer extends Component<Props> {
   };
 }
 
-const mapStateToProps = ({
-  actions: { actions },
-  fate: { data: fateData },
-  timer: { remainingTime },
-}: IAppState) => ({
-  actions,
-  fateData,
-  remainingTime,
+const mapStateToProps = (state: IAppState) => ({
+  actions: state.actions.actions,
+  fateData: state.fate.data,
+  remainingTime: state.timer.remainingTime,
 });
 
 type Props = ReturnType<typeof mapStateToProps> &

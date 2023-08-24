@@ -50,6 +50,7 @@ export type FateCardAction =
   | "ContentPurchase"
   | "RefillCards"
   | "RefillThreeActions"
+  | "EnhancedRefresh"
   | "RefillActions";
 
 export type FateCardType =

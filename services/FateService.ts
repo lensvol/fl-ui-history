@@ -46,6 +46,7 @@ class FateService extends BaseService implements IFateService {
    */
   purchaseItem = (data: PurchaseFateItemRequest) => {
     const { storeItemId, newName = null, avatarImage = null } = data;
+
     const config = {
       method: "post",
       url: "/fate/purchase",

@@ -39,7 +39,12 @@ export function PurchaseContent({
 
     setIsWorking(true);
 
-    const result = await dispatch(purchaseItem({ storeItemId: id }));
+    const result = await dispatch(
+      purchaseItem({
+        storeItemId: id,
+      })
+    );
+
     let message;
     if (result instanceof Success) {
       ({ message } = result.data);

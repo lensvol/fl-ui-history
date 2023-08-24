@@ -15,7 +15,7 @@ function FateContainer({ hasFetched }: Props) {
         transitionEnterTimeout={100}
         transitionLeaveTimeout={100}
       >
-        {!hasFetched ? <Loading key="loading" /> : <Fate key="fate" />}
+        {hasFetched ? <Fate key="fate" /> : <Loading key="loading" />}
       </ReactCSSTransitionReplace>
     </GeneralContainer>
   );

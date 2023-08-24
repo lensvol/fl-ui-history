@@ -22,6 +22,7 @@ function FateRefreshButton({
     if (hasEnoughFate) {
       return onOpenActionRefreshModal();
     }
+
     return onOpenPurchaseFateModal();
   }, [hasEnoughFate, onOpenActionRefreshModal, onOpenPurchaseFateModal]);
 
@@ -42,6 +43,7 @@ function FateRefreshButton({
     </TippyWrapper>
   );
 }
+
 FateRefreshButton.displayName = "FateRefreshButton";
 
 export default connect()(FateRefreshButton);

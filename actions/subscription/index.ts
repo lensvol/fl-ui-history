@@ -90,14 +90,17 @@ export const cancelBraintreeSubscription =
 
     try {
       const { data } = await service.cancelBraintreeSubscription();
+
       dispatch(cancelBraintreeSubscriptionSuccess(data));
       dispatch(fetchSettings());
+
       // We also need to update the map --- the House of Chimes is now off limits
       dispatch(fetchMap());
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
       }
+
       dispatch(cancelBraintreeSubscriptionFailure(error));
     }
   };

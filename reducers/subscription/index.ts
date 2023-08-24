@@ -1,6 +1,6 @@
 import * as SubscriptionActionTypes from "actiontypes/subscription";
 
-import cancelBraintreeSubscriptionSuccess from "./cancelBraintreeSubscriptionSuccess";
+import cancelBraintreeSubscriptionSuccess from "reducers/subscription/cancelBraintreeSubscriptionSuccess";
 import { ISubscriptionState } from "types/subscription";
 
 /**
@@ -46,6 +46,7 @@ export default function reducer(
         isCancelling: true,
         isSuccess: false,
       };
+
     case SubscriptionActionTypes.CANCEL_BRAINTREE_SUBSCRIPTION_FAILURE:
       return {
         ...state,

@@ -19,6 +19,7 @@ const mapStateToProps = (state: IAppState) => {
     },
     myself: { uiRestrictions },
   } = state;
+
   return {
     actions,
     currentFate,

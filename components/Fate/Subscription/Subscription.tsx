@@ -17,8 +17,10 @@ export function Subscription({
   const onClick = useCallback(() => {
     if (onParentClick) {
       onParentClick();
+
       return;
     }
+
     dispatch(openDialog("subscribe"));
   }, [dispatch, onParentClick]);
 
@@ -67,6 +69,8 @@ interface Props extends RouteComponentProps {
   onClick?: () => void;
 }
 
-const mapStateToProps = ({ subscription: { data } }: IAppState) => ({ data });
+const mapStateToProps = (state: IAppState) => ({
+  data: state.subscription.data,
+});
 
 export default withRouter(connect(mapStateToProps)(Subscription));

@@ -46,7 +46,11 @@ function Subscriptions({ data, isCancelling, subscriptions }: Props) {
 const mapStateToProps = ({
   settings: { subscriptions },
   subscription: { data, isCancelling },
-}: IAppState) => ({ data, isCancelling, subscriptions });
+}: IAppState) => ({
+  data,
+  isCancelling,
+  subscriptions,
+});
 
 type Props = ReturnType<typeof mapStateToProps>;
 

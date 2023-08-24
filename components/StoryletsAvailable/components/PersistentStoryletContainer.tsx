@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { connect } from "react-redux";
 
@@ -45,6 +45,56 @@ function PersistentStoryletContainer({ settingId, storylets }: Props) {
     store.set(storyletMapStorageKey, storedStoryletMap);
   }, [oldStorylets, settingId, storedStoryletMap]);
 
+  const storiesRef = useRef<HTMLDivElement>(null);
+
+  // adapted from https://css-tricks.com/using-css-transitions-auto-dimensions/
+  const collapsePersistentDeck = useCallback(async () => {
+    if (!storiesRef.current) {
+      return;
+    }
+
+    // get the height of the element's inner content, regardless of its actual size
+    var sectionHeight = storiesRef.current.scrollHeight;
+
+    // temporarily disable all css transitions
+    var elementTransition = storiesRef.current.style.transition;
+    storiesRef.current.style.transition = "";
+
+    // on the next frame (as soon as the previous style change has taken effect),
+    // explicitly set the element's height to its current pixel height, so we
+    // aren't transitioning out of 'auto'
+    requestAnimationFrame(function () {
+      if (!storiesRef.current) {
+        return;
+      }
+
+      storiesRef.current.style.height = sectionHeight + "px";
+      storiesRef.current.style.transition = elementTransition;
+
+      // on the next frame (as soon as the previous style change has taken effect),
+      // have the element transition to height: 0
+      requestAnimationFrame(function () {
+        if (!storiesRef.current) {
+          return;
+        }
+
+        storiesRef.current.style.height = 0 + "px";
+      });
+    });
+  }, [storiesRef]);
+
+  const expandPersistentDeck = useCallback(async () => {
+    if (!storiesRef.current) {
+      return;
+    }
+
+    // get the height of the element's inner content, regardless of its actual size
+    var sectionHeight = storiesRef.current.scrollHeight;
+
+    // have the element transition to the height of its inner content
+    storiesRef.current.style.height = sectionHeight + "px";
+  }, [storiesRef]);
+
   const onTogglePersistentDeck = useCallback(async () => {
     storedStoryletMap[settingId] = storylets?.map((slet) => slet.id);
 
@@ -52,8 +102,28 @@ function PersistentStoryletContainer({ settingId, storylets }: Props) {
     store.set(showStoryletsStorageKey, !isOpen);
     store.set(disclosureUsedAtStorageKey, new Date().getTime());
 
+    if (isOpen) {
+      collapsePersistentDeck();
+    } else {
+      expandPersistentDeck();
+    }
+
     setIsOpen(!isOpen);
-  }, [isOpen, setIsOpen, settingId, storedStoryletMap, storylets]);
+  }, [
+    collapsePersistentDeck,
+    expandPersistentDeck,
+    isOpen,
+    setIsOpen,
+    settingId,
+    storedStoryletMap,
+    storylets,
+  ]);
+
+  const onTransitionEnd = useCallback(async () => {
+    if (storiesRef.current && isOpen) {
+      storiesRef.current.style.height = "auto";
+    }
+  }, [isOpen, storiesRef]);
 
   const beforeHandleClick = useCallback(
     async (storyletId: number) => {
@@ -77,12 +147,22 @@ function PersistentStoryletContainer({ settingId, storylets }: Props) {
       return;
     }
 
+    if (storiesRef.current && isOpen) {
+      storiesRef.current.style.height = "auto";
+    }
+
     store.set(showStoryletsStorageKey, isOpen);
 
     updateStoredStoryletMap();
 
     setPageDidLoad(true);
-  }, [isOpen, pageDidLoad, setPageDidLoad, updateStoredStoryletMap]);
+  }, [
+    isOpen,
+    pageDidLoad,
+    setPageDidLoad,
+    storiesRef,
+    updateStoredStoryletMap,
+  ]);
 
   if (!(storylets && storylets.length)) {
     return null;
@@ -110,8 +190,12 @@ function PersistentStoryletContainer({ settingId, storylets }: Props) {
           ></span>
         </button>
       </div>
-      {isOpen &&
-        newStorylets.map((storylet) => (
+      <div
+        className="persistent--disclosure-stories"
+        ref={storiesRef}
+        onTransitionEnd={onTransitionEnd}
+      >
+        {newStorylets.map((storylet) => (
           <Storylet
             key={storylet.id}
             data={storylet}
@@ -127,10 +211,10 @@ function PersistentStoryletContainer({ settingId, storylets }: Props) {
             beforeHandleClick={beforeHandleClick}
           />
         ))}
-      {isOpen &&
-        oldStorylets.map((storylet) => (
+        {oldStorylets.map((storylet) => (
           <Storylet key={storylet.id} data={storylet} />
         ))}
+      </div>
     </div>
   );
 }

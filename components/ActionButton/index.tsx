@@ -101,14 +101,9 @@ export type Props = ReturnType<typeof mapStateToProps> & {
   suppressUnlockButton?: boolean | undefined;
 };
 
-const mapStateToProps = ({
-  actions: { actions },
-  fate: {
-    data: { currentFate },
-  },
-}: IAppState) => ({
-  actions,
-  currentFate,
+const mapStateToProps = (state: IAppState) => ({
+  actions: state.actions.actions,
+  currentFate: state.fate.data.currentFate,
 });
 
 export default withRouter(connect(mapStateToProps)(ActionButton));

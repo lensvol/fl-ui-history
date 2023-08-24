@@ -20,7 +20,6 @@ const DEFAULT_VALUES: IActionRefreshContextValues = {
 
 const ActionRefreshContext =
   React.createContext<IActionRefreshContextValues>(DEFAULT_VALUES);
-ActionRefreshContext.displayName = "ActionRefreshContext";
 
 ActionRefreshContext.displayName = "ActionRefreshContext";
 

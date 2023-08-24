@@ -20,8 +20,10 @@ export default function PurchaseModalContainer(props: Props) {
     switch (data?.action) {
       case "AskNameChange":
         return <PurchaseName {...props} />;
+
       case "FaceChange":
         return <PurchaseFace {...props} />;
+
       default:
         return <PurchaseDefault {...props} />;
     }
