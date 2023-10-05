@@ -18,29 +18,39 @@ import {
 } from "types/payment";
 import Header from "./Header";
 
+import { PremiumSubscriptionType } from "types/subscription";
+
 interface Props {
   braintreePlan: IBraintreePlanWithClientRequestToken;
+  hasSubscription: boolean;
   onGoBack: () => void;
   onThreeDSecureComplete: PaymentStuffProps<{
     nonce: string;
     recaptchaResponse: string | null;
   }>["onThreeDSComplete"];
+  renewDate?: string;
+  subscriptionType?: PremiumSubscriptionType;
 }
 
 export default function ProvidePaymentDetails({
   braintreePlan,
+  hasSubscription,
   onGoBack,
   onThreeDSecureComplete,
+  renewDate,
+  subscriptionType,
 }: Props) {
-  const { clientRequestToken, currencyIsoCode, price } = braintreePlan;
+  const { clientRequestToken, currencyIsoCode, price, addOns } = braintreePlan;
+
+  const addOnPrice = addOns?.[0]?.amount ?? 0;
 
   const formattedPrice = useMemo(
     () =>
       new Intl.NumberFormat("en-GB", {
         currency: currencyIsoCode,
         style: "currency",
-      }).format(price),
-    [currencyIsoCode, price]
+      }).format(price + addOnPrice),
+    [addOnPrice, currencyIsoCode, price]
   );
 
   const authorization = useMemo(() => clientRequestToken, [clientRequestToken]);
@@ -89,7 +99,7 @@ export default function ProvidePaymentDetails({
 
       const payload = await dropInInstance.requestPaymentMethod({
         threeDSecure: {
-          amount: price.toFixed(2),
+          amount: (price + addOnPrice).toFixed(2),
           billingAddress: formValuesToBillingAddress(values),
         },
       });
@@ -116,14 +126,20 @@ export default function ProvidePaymentDetails({
         },
       });
     },
-    [dropInInstance, onThreeDSecureComplete, price]
+    [addOnPrice, dropInInstance, onThreeDSecureComplete, price]
   );
 
   return (
     <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
       {({ values }) => (
         <Form>
-          <Header amountString={formattedPrice} />
+          <Header
+            amountString={formattedPrice}
+            hasSubscription={hasSubscription}
+            isEnhanced={addOnPrice !== 0}
+            renewDate={renewDate}
+            subscriptionType={subscriptionType}
+          />
           <BraintreeDropIn
             onInstance={handleInstance}
             onNoPaymentMethodRequestable={handleNoPaymentMethodRequestable}

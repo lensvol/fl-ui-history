@@ -20,8 +20,16 @@ import PurchaseStoriesTab from "./PurchaseStoriesTab";
 import GameplayTab from "./GameplayTab";
 import ResetStoriesTab from "./ResetStoriesTab";
 import Header from "./Header";
+import StoryletMenu from "./Subscription/StoryletMenu";
 
-function Fate({ activeSubtab, data, dispatch }: Props) {
+function Fate({
+  activeSubtab,
+  data,
+  dispatch,
+  hasSubscription,
+  renewDate,
+  subscriptionType,
+}: Props) {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isPurchaseContentModalOpen, setIsPurchaseContentModalOpen] =
     useState(false);
@@ -73,7 +81,14 @@ function Fate({ activeSubtab, data, dispatch }: Props) {
               </button>
             </div>
 
-            <Header data={data} />
+            <StoryletMenu enhancedPlacement={true} />
+
+            <Header
+              data={data}
+              hasSubscription={hasSubscription}
+              renewDate={renewDate}
+              subscriptionType={subscriptionType}
+            />
 
             <hr style={{ marginBottom: ".5rem" }} />
           </div>
@@ -154,6 +169,9 @@ Fate.displayName = "Fate";
 const mapStateToProps = (state: IAppState) => ({
   activeSubtab: state.fate.activeSubtab,
   data: state.fate.data,
+  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
+  renewDate: state.subscription.data?.renewDate,
+  subscriptionType: state.settings.subscriptions.subscriptionType,
 });
 
 type Props = ReturnType<typeof mapStateToProps> & {

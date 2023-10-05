@@ -3,6 +3,7 @@ import { ReactFacebookLoginInfo } from "react-facebook-login";
 import { IQuality } from "types/qualities";
 import { MessagePreferences } from "types/settings";
 import BaseService, { Either } from "./BaseMonadicService";
+import { PremiumSubscriptionType } from "types/subscription";
 
 export type MessageVia =
   | "None"
@@ -77,7 +78,9 @@ export type FetchSettingsResponse = {
   googleAuth: boolean;
   emailAuth: boolean;
   hasBraintreeSubscription: boolean;
-  storyEventMessage: boolean;
+  remainingActionRefreshes?: number;
+  remainingStoryUnlocks?: number;
+  subscriptionType?: PremiumSubscriptionType;
   messageAboutAnnouncements: boolean;
   messageAboutNiceness: boolean;
   messageAboutStorylets: boolean;

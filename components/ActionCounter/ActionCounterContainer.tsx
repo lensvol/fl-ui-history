@@ -15,7 +15,18 @@ class ActionCounterContainer extends Component<Props> {
   static displayName = "ActionCounterContainer";
 
   handleClick = () => {
-    const { actions, history, onOpenActionRefreshModal } = this.props;
+    const {
+      actions,
+      history,
+      onOpenActionRefreshModal,
+      onOpenEnhancedRefreshModal,
+      remainingActionRefreshes,
+      supportsEnhancedEF,
+    } = this.props;
+
+    if (supportsEnhancedEF && remainingActionRefreshes > 0) {
+      return onOpenEnhancedRefreshModal();
+    }
 
     if (actions <= 6) {
       return onOpenActionRefreshModal();
@@ -25,7 +36,8 @@ class ActionCounterContainer extends Component<Props> {
   };
 
   render = () => {
-    const { remainingTime } = this.props;
+    const { remainingTime, remainingActionRefreshes, supportsEnhancedEF } =
+      this.props;
 
     const duration = moment.duration(remainingTime);
     // TS complains that duration.format is not a function, which it isn't in vanilla moment.js,
@@ -47,7 +59,13 @@ class ActionCounterContainer extends Component<Props> {
         </div>
         <div className="item__desc">
           <span className="js-item-name item__name">Actions</span>
-          <ActionCounter message={message} onClick={this.handleClick} />
+          <ActionCounter
+            message={message}
+            onClick={this.handleClick}
+            remainingActionRefreshes={
+              supportsEnhancedEF ? remainingActionRefreshes : 0
+            }
+          />
         </div>
       </Fragment>
     );
@@ -58,12 +76,19 @@ const mapStateToProps = (state: IAppState) => ({
   actions: state.actions.actions,
   fateData: state.fate.data,
   remainingTime: state.timer.remainingTime,
+  remainingActionRefreshes:
+    state.settings.subscriptions.remainingActionRefreshes ?? 0,
 });
+
+interface OwnProps {
+  supportsEnhancedEF: boolean;
+}
 
 type Props = ReturnType<typeof mapStateToProps> &
   RouteComponentProps &
-  IActionRefreshContextValues;
+  IActionRefreshContextValues &
+  OwnProps;
 
-export default withRouter(
-  connect(mapStateToProps)(withActionRefreshContext(ActionCounterContainer))
+export default connect(mapStateToProps)(
+  withActionRefreshContext(withRouter(ActionCounterContainer))
 );

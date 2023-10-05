@@ -46,6 +46,7 @@ export function chooseBranch(service: IStoryletService) {
 
         // Fetch Fate, too, in case we've spent it
         // dispatch(fetchFate());
+        // dispatch(fetchActions());
 
         // fetch outfit + possessions
         dispatch(fetchMyself());

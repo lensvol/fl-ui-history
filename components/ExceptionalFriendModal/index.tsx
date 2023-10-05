@@ -10,16 +10,26 @@ import Blurb from "components/ExceptionalFriendModal/Blurb";
 import { fetch as fetchMap } from "actions/map";
 import { fetchAvailable } from "actions/storylet";
 import PurchaseSubscriptionWizard from "components/PurchaseSubscriptionWizard";
+import { PremiumSubscriptionType } from "types/subscription";
 
 export interface Props extends ReactModalProps {
   disableTouchEvents?: boolean;
   dispatch: ThunkDispatch<any, any, any>;
+  hasSubscription: boolean;
   onRequestClose: (_?: any) => void;
+  renewDate?: string;
+  subscriptionType?: PremiumSubscriptionType;
 }
 
-export function ExceptionalFriendModal(props: Props) {
-  const { disableTouchEvents, dispatch, isOpen, onRequestClose } = props;
-
+export function ExceptionalFriendModal({
+  disableTouchEvents,
+  dispatch,
+  hasSubscription,
+  isOpen,
+  onRequestClose,
+  renewDate,
+  subscriptionType,
+}: Props) {
   const [wizardStep, setWizardStep] = useState(
     ExceptionalFriendWizardStep.Blurb
   );
@@ -72,14 +82,33 @@ export function ExceptionalFriendModal(props: Props) {
     switch (wizardStep) {
       case ExceptionalFriendWizardStep.Payment:
         return (
-          <PurchaseSubscriptionWizard onClickToClose={handleWizardClose} />
+          <PurchaseSubscriptionWizard
+            hasSubscription={hasSubscription}
+            onClickToClose={handleWizardClose}
+            renewDate={renewDate}
+            subscriptionType={subscriptionType}
+          />
         );
 
       case ExceptionalFriendWizardStep.Blurb:
       default:
-        return <Blurb onNext={onNext} />;
+        return (
+          <Blurb
+            hasSubscription={hasSubscription}
+            onNext={onNext}
+            renewDate={renewDate}
+            subscriptionType={subscriptionType}
+          />
+        );
     }
-  }, [handleWizardClose, onNext, wizardStep]);
+  }, [
+    handleWizardClose,
+    hasSubscription,
+    onNext,
+    renewDate,
+    subscriptionType,
+    wizardStep,
+  ]);
 
   return (
     <Modal
@@ -97,6 +126,11 @@ export function ExceptionalFriendModal(props: Props) {
 
 ExceptionalFriendModal.displayName = "ExceptionalFriendModal";
 
-const mapStateToProps = ({ fate }: IAppState) => ({ data: fate.data });
+const mapStateToProps = (state: IAppState) => ({
+  data: state.fate.data,
+  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
+  renewDate: state.subscription.data?.renewDate,
+  subscriptionType: state.settings.subscriptions.subscriptionType,
+});
 
 export default connect(mapStateToProps)(ExceptionalFriendModal);

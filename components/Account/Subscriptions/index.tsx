@@ -1,55 +1,66 @@
 import HasSubscriptionContent from "components/Account/Subscriptions/HasSubscriptionContent";
-import React, { useCallback, useMemo, useState } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+
+import { fetch as fetchSettings } from "actions/settings";
+
+import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
 
 import { IAppState } from "types/app";
 import ConfirmationModal from "./ConfirmationModal";
 
-function Subscriptions({ data, isCancelling, subscriptions }: Props) {
-  const { hasBraintreeSubscription } = subscriptions;
-
+function Subscriptions({
+  data,
+  hasBraintreeSubscription,
+  renewDate,
+  subscriptionType,
+}: Props) {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
-  const onRequestCloseConfirmationModal = useCallback(
-    () => setIsConfirmationModalOpen(false),
-    []
-  );
+  const dispatch = useDispatch();
 
-  const content = useMemo(() => {
-    if (hasBraintreeSubscription && data !== undefined) {
-      return (
-        <HasSubscriptionContent
-          data={data}
-          isCancelling={isCancelling}
-          onClick={() => setIsConfirmationModalOpen(true)}
-        />
-      );
+  useEffect(() => {
+    if (!data) {
+      dispatch(fetchSettings());
     }
-
-    return <p>You have no subscriptions.</p>;
-  }, [data, hasBraintreeSubscription, isCancelling]);
+  }, [data, dispatch]);
 
   return (
     <>
       <div>
         <h2 className="heading heading--2">Subscriptions</h2>
-        {content}
+        <HasSubscriptionContent
+          onClick={() => setIsSubscriptionModalOpen(true)}
+          onClickLegacy={() => setIsConfirmationModalOpen(true)}
+        />
       </div>
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
-        onRequestClose={onRequestCloseConfirmationModal}
+        onRequestClose={() => setIsConfirmationModalOpen(false)}
+      />
+      <PurchaseSubscriptionModal
+        hasSubscription={hasBraintreeSubscription}
+        isOpen={isSubscriptionModalOpen}
+        onRequestClose={() => setIsSubscriptionModalOpen(false)}
+        renewDate={renewDate}
+        subscriptionType={subscriptionType}
       />
     </>
   );
 }
 
 const mapStateToProps = ({
-  settings: { subscriptions },
-  subscription: { data, isCancelling },
+  settings: {
+    data,
+    subscriptions: { hasBraintreeSubscription, subscriptionType },
+  },
+  subscription: { data: subscriptionData },
 }: IAppState) => ({
   data,
-  isCancelling,
-  subscriptions,
+  hasBraintreeSubscription,
+  renewDate: subscriptionData?.renewDate,
+  subscriptionType,
 });
 
 type Props = ReturnType<typeof mapStateToProps>;

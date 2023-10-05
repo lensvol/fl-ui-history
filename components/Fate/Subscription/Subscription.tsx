@@ -6,10 +6,15 @@ import { openDialog } from "actions/payment";
 
 import Loading from "components/Loading";
 import { IAppState } from "types/app";
-import { ISubscriptionData } from "types/subscription";
+import { PremiumSubscriptionType } from "types/subscription";
+import { useFeature } from "flagged";
+import { FEATURE_ENHANCED_EF } from "features/feature-flags";
+import { isDowngradedSubscription } from "actions/fate/subscriptions";
 
 export function Subscription({
-  data,
+  hasSubscription,
+  showButtonOnly,
+  subscriptionType,
   dispatch,
   history,
   onClick: onParentClick,
@@ -24,53 +29,148 @@ export function Subscription({
     dispatch(openDialog("subscribe"));
   }, [dispatch, onParentClick]);
 
+  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
+
   // Show spinner while we're loading
-  if (!data) {
+  if (!subscriptionType) {
     return <Loading spinner small />;
   }
 
-  if (data.hasSubscription) {
+  const handleOnClick = hasSubscription
+    ? () => history.push("/account")
+    : onClick;
+
+  if (!supportsEnhancedEF) {
     return (
       <p className="buttons">
         <button
           type="button"
           className="button button--secondary"
-          onClick={() => history.push("/account")}
+          onClick={handleOnClick}
         >
-          Manage Your Subscriptions
+          {hasSubscription ? <>Manage Your Subscriptions</> : <>Subscribe</>}
         </button>
         <strong>
-          You are already an Exceptional Friend. Thanks for your support.
+          {hasSubscription ? (
+            <>You are already an Exceptional Friend. Thanks for your support.</>
+          ) : (
+            <>Subscribe for just $9 a month</>
+          )}
         </strong>
       </p>
     );
   }
 
-  return (
-    <p className="buttons">
-      <button
-        type="button"
-        className="button button--secondary"
-        onClick={onClick}
-      >
-        Subscribe
-      </button>
-      <strong>Subscribe for just $9 a month</strong>
-    </p>
+  const userDidDowngrade = isDowngradedSubscription(
+    hasSubscription,
+    subscriptionType
   );
+  const subType: PremiumSubscriptionType = userDidDowngrade
+    ? "ExceptionalFriendship"
+    : hasSubscription
+    ? subscriptionType
+    : "None";
+
+  switch (subType) {
+    case "EnhancedExceptionalFriendship":
+      return (
+        <>
+          <div className="ef-buttons">
+            <strong>
+              You already have an{" "}
+              <span className="enhanced-text">Enhanced</span> Exceptional
+              Friendship subscription. Thanks for your support.
+            </strong>
+            <button
+              type="button"
+              className="button button--secondary"
+              onClick={onClick}
+            >
+              Manage Your Subscriptions
+            </button>
+          </div>
+        </>
+      );
+
+    case "ExceptionalFriendship":
+      return showButtonOnly ? (
+        <>
+          <button
+            type="button"
+            className="button button--secondary"
+            onClick={onClick}
+          >
+            Manage &amp; Enhance Your Subscriptions
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="ef-buttons">
+            <strong>
+              You already have an Exceptional Friendship subscription, but may{" "}
+              <span className="enhanced-text">Enhance</span> it if you desire.
+              Thanks for your support.
+            </strong>
+            <button
+              type="button"
+              className="button button--secondary"
+              onClick={onClick}
+            >
+              Manage &amp; Enhance Your Subscriptions
+            </button>
+          </div>
+        </>
+      );
+
+    default:
+      return showButtonOnly ? (
+        <>
+          <button
+            type="button"
+            className="button button--secondary"
+            onClick={onClick}
+          >
+            Subscribe
+          </button>
+        </>
+      ) : (
+        <>
+          <div
+            className="ef-buttons"
+            style={{
+              textAlign: "right",
+            }}
+          >
+            <strong>Subscribe from just $9 a month</strong>
+            <button
+              type="button"
+              className="button button--secondary"
+              onClick={onClick}
+            >
+              Subscribe
+            </button>
+          </div>
+        </>
+      );
+  }
 }
 
 Subscription.displayName = "Subscription";
 
 interface Props extends RouteComponentProps {
-  data?: ISubscriptionData;
+  hasSubscription: boolean;
+  showButtonOnly?: boolean;
+  subscriptionType?: PremiumSubscriptionType;
   dispatch: Function; // eslint-disable-line
   history: any;
   onClick?: () => void;
 }
 
 const mapStateToProps = (state: IAppState) => ({
-  data: state.subscription.data,
+  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
+  subscriptionType: state.subscription.data
+    ? state.settings.subscriptions.subscriptionType
+    : undefined,
 });
 
 export default withRouter(connect(mapStateToProps)(Subscription));

@@ -1,13 +1,10 @@
-import { fetchTimeTheHealer } from "features/timeTheHealer/timeTheHealerSlice";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import { IAppState } from "types/app";
-import { fetch as fetchSubscription } from "actions/subscription";
 
-import Loading from "components/Loading";
 import RequestPasswordResetModal from "components/RequestPasswordResetModal";
 import AccountComponent from "./AccountComponent";
 import ForgottenPasswordResetModal from "./ForgottenPasswordResetModal";
@@ -38,16 +35,10 @@ class AccountContainer extends Component<Props, State> {
    */
   componentDidMount = () => {
     const {
-      dispatch,
       history,
       location: { hash },
       user: { loggedIn },
     } = this.props;
-
-    if (loggedIn) {
-      dispatch(fetchSubscription());
-      dispatch(fetchTimeTheHealer());
-    }
 
     const token = this.getQueryVariable("token");
 
@@ -102,9 +93,6 @@ class AccountContainer extends Component<Props, State> {
    */
   render() {
     const {
-      data,
-      isFetching,
-      isFetchingSubscription,
       user: { loggedIn },
     } = this.props;
 
@@ -116,17 +104,9 @@ class AccountContainer extends Component<Props, State> {
       token,
     } = this.state;
 
-    if (isFetching || isFetchingSubscription) {
-      return (
-        <div style={{ padding: 24 }}>
-          <Loading spinner />
-        </div>
-      );
-    }
-
     return (
       <Fragment>
-        {data && loggedIn && <AccountComponent hash={hash} />}
+        {loggedIn && <AccountComponent hash={hash} />}
 
         {/* Don't mount the forgotten password modal if we don't have a token */}
         {token && (
@@ -152,13 +132,7 @@ class AccountContainer extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({
-  settings,
-  user,
-  subscription: { isFetching: isFetchingSubscription },
-}: IAppState) => ({
-  ...settings,
-  isFetchingSubscription,
+const mapStateToProps = ({ user }: IAppState) => ({
   user,
 });
 

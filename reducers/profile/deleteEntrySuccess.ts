@@ -1,5 +1,5 @@
 import { DeleteEntrySuccess } from "actions/profile/deleteEntry";
-import { IProfileState } from "types/profile";
+import { IProfileState } from "features/profile";
 
 export default function deleteEntrySuccess(
   state: IProfileState,

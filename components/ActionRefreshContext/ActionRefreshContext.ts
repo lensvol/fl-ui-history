@@ -3,6 +3,7 @@ import React from "react";
 export interface IActionRefreshContextValues {
   onOpenActionRefreshModal: () => void;
   onOpenPurchaseFateModal: () => void;
+  onOpenEnhancedRefreshModal: () => void;
 }
 
 const DEFAULT_VALUES: IActionRefreshContextValues = {
@@ -14,6 +15,11 @@ const DEFAULT_VALUES: IActionRefreshContextValues = {
   onOpenPurchaseFateModal: () => {
     console.warn(
       "ActionRefreshContext.onOpenPurchaseFateModal is falling back to default"
+    );
+  },
+  onOpenEnhancedRefreshModal: () => {
+    console.warn(
+      "ActionRefreshContext.onOpenEnhancedRefreshModal is falling back to default"
     );
   },
 };

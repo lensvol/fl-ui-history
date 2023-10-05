@@ -32,6 +32,7 @@ import { NAV_ITEMS } from "./constants";
 import RefreshActionsModal from "./RefreshActionsModal";
 import RefillOpportunityDeckModal from "./RefillOpportunityDeckModal";
 import PurchaseFateContext from "./PurchaseFateContext";
+import EnhancedRefreshModal from "./EnhancedRefreshModal";
 
 /**
  * This is a wrapper that contains the general app layout
@@ -48,6 +49,8 @@ export function GeneralContainer({
     useState(false);
   const [isDeckRefreshModalOpen, setIsDeckRefreshModalOpen] = useState(false);
   const [isPurchaseFateModalOpen, setIsPurchaseFateModalOpen] = useState(false);
+  const [isEnhancedRefreshModalOpen, setIsEnhancedRefreshModalOpen] =
+    useState(false);
 
   const handleCloseActionRefreshModal = useCallback(
     () => setIsActionRefreshModalOpen(false),
@@ -73,6 +76,14 @@ export function GeneralContainer({
     () => setIsPurchaseFateModalOpen(true),
     []
   );
+  const handleOpenEnhancedRefreshModal = useCallback(
+    () => setIsEnhancedRefreshModalOpen(true),
+    []
+  );
+  const handleCloseEnhancedRefreshModal = useCallback(
+    () => setIsEnhancedRefreshModalOpen(false),
+    []
+  );
 
   // This is an arbitrary "have we loaded" canary
   if (!fateData.fateCards.length) {
@@ -84,6 +95,7 @@ export function GeneralContainer({
       value={{
         onOpenActionRefreshModal: handleOpenActionRefreshModal,
         onOpenPurchaseFateModal: handleOpenPurchaseFateModal,
+        onOpenEnhancedRefreshModal: handleOpenEnhancedRefreshModal,
       }}
     >
       <PurchaseFateContext.Provider
@@ -167,6 +179,10 @@ export function GeneralContainer({
           <PurchaseFateModal
             isOpen={isPurchaseFateModalOpen}
             onRequestClose={handleClosePurchaseFateModal}
+          />
+          <EnhancedRefreshModal
+            isOpen={isEnhancedRefreshModalOpen}
+            onRequestClose={handleCloseEnhancedRefreshModal}
           />
         </DeckRefreshContext.Provider>
       </PurchaseFateContext.Provider>

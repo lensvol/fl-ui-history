@@ -1,6 +1,6 @@
 import BaseService, { Either } from "./BaseMonadicService";
 
-export type PageName = "help" | "termsandconditions" | "privacy";
+export type PageName = "help" | "termsandconditions" | "privacy" | "credits";
 
 export interface FetchPageResponse {
   name: string;

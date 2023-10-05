@@ -28,3 +28,5 @@ export const PROCESS_FATE_CHANGE = "fate/PROCESS_FATE_CHANGE";
 
 // Set active subtab on the Fate tab
 export const SET_ACTIVE_SUBTAB = "fate/SET_ACTIVE_SUBTAB";
+
+export const TOGGLE_ENHANCED_STORE = "fate/TOGGLE_ENHANCED_STORE";

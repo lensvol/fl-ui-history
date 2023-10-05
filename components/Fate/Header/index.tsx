@@ -1,25 +1,67 @@
 import React from "react";
 
+import Disclosure from "components/Disclosure";
 import MediaSmUp from "components/Responsive/MediaSmUp";
 import MediaXsDown from "components/Responsive/MediaXsDown";
 import Subscription from "../Subscription";
 import ExceptionalStoryTrailerSmUp from "./ExceptionalStoryTrailerSmUp";
 import ExceptionalStoryTrailerXsDown from "./ExceptionalStoryTrailerXsDown";
-import { Props } from "./props";
+import { Props as TrailerProps } from "./props";
 import SubscriptionBenefits from "components/PurchaseSubscriptionWizard/SubscriptionBenefits";
+import { useFeature } from "flagged";
+import { FEATURE_ENHANCED_EF } from "features/feature-flags";
+import StoryletMenu from "../Subscription/StoryletMenu";
+import { isDowngradedSubscription } from "actions/fate/subscriptions";
+
+type Props = TrailerProps & {
+  hasSubscription: boolean;
+  renewDate?: string;
+};
 
 export default function Header({
-  onClick,
-  data,
   concealStoryTrailerOnSmallDevices,
+  data,
+  hasSubscription,
+  onClick,
+  renewDate,
+  subscriptionType,
 }: Props) {
+  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
+  const userDidDowngrade = isDowngradedSubscription(
+    hasSubscription,
+    subscriptionType
+  );
+
+  const heading =
+    supportsEnhancedEF && subscriptionType === "EnhancedExceptionalFriendship"
+      ? ""
+      : supportsEnhancedEF &&
+        (userDidDowngrade || subscriptionType === "ExceptionalFriendship")
+      ? "Become an Enhanced Exceptional Friend"
+      : "Become an Exceptional Friend of the Bazaar";
+
   return (
     <div key="content fate-header">
-      <h1 className="media__heading heading heading--2">
-        Become an Exceptional Friend of the Bazaar
-      </h1>
+      <MediaSmUp>
+        {subscriptionType !== "EnhancedExceptionalFriendship" && (
+          <>
+            <h1 className="media__heading heading heading--2">{heading}</h1>
+          </>
+        )}
 
-      <SubscriptionBenefits />
+        <SubscriptionBenefits orientation="horizontal" />
+      </MediaSmUp>
+      <MediaXsDown>
+        <Disclosure getDisclosureText={() => "Exceptional Friendship"}>
+          {subscriptionType !== "EnhancedExceptionalFriendship" && (
+            <>
+              <h1 className="media__heading heading heading--2">{heading}</h1>
+            </>
+          )}
+
+          <SubscriptionBenefits orientation="horizontal" />
+        </Disclosure>
+      </MediaXsDown>
 
       {data.premiumSubPurchaseCard && (
         <>
@@ -34,8 +76,15 @@ export default function Header({
         </>
       )}
 
+      <StoryletMenu enhancedPlacement={false} />
+
       <div className="fate-header__subscription-container">
-        <Subscription onClick={onClick} />
+        <Subscription
+          hasSubscription={hasSubscription}
+          onClick={onClick}
+          renewDate={renewDate}
+          subscriptionType={subscriptionType}
+        />
       </div>
     </div>
   );

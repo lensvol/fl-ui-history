@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -8,9 +8,14 @@ import { IAppState } from "types/app";
 import ChangeUsernameModal from "../ChangeUsernameModal";
 import MetaQualities from "../MetaQualities";
 
-export function UserProfile(props: Props) {
-  const { dispatch, user, timeTheHealer } = props;
+import { fetchTimeTheHealer } from "features/timeTheHealer/timeTheHealerSlice";
 
+export function UserProfile({
+  dispatch,
+  loggedIn,
+  timeTheHealer,
+  user,
+}: Props) {
   const { dateTimeToExecute } = timeTheHealer;
   const createdAt = user.user?.createdAt;
 
@@ -56,6 +61,12 @@ export function UserProfile(props: Props) {
   const onSummonPasswordResetRequestModal = useCallback(() => {
     setIsPasswordResetRequestModalOpen(true);
   }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      dispatch(fetchTimeTheHealer());
+    }
+  }, [dispatch, loggedIn]);
 
   return (
     <>
@@ -120,9 +131,10 @@ export function UserProfile(props: Props) {
   );
 }
 
-const mapStateToProps = ({ user, timeTheHealer }: IAppState) => ({
-  user,
+const mapStateToProps = ({ timeTheHealer, user }: IAppState) => ({
+  loggedIn: user.loggedIn,
   timeTheHealer,
+  user,
 });
 
 type Props = ReturnType<typeof mapStateToProps> & {

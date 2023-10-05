@@ -12,6 +12,7 @@ export function ActionCountModal(props: Props) {
     actions,
     actionBankSize,
     cardsCount,
+    deckSize,
     handSize,
     isOpen,
     onRequestClose,
@@ -30,14 +31,14 @@ export function ActionCountModal(props: Props) {
     actions < actionBankSize || cardsCount < handSize;
 
   const cardsAvailableString = useMemo(() => {
-    if (setting?.isInfiniteDraw) {
+    if (setting?.isInfiniteDraw || cardsCount > deckSize) {
       return "No draw limit.";
     }
 
     return `${cardsCount} opportunity card${
       cardsCount === 1 ? "" : "s"
     } available`;
-  }, [cardsCount, setting]);
+  }, [cardsCount, deckSize, setting]);
 
   return (
     <ReactModal
@@ -103,7 +104,7 @@ export function ActionCountModal(props: Props) {
 
 const mapStateToProps = ({
   actions: { actions, actionBankSize },
-  cards: { cardsCount, handSize },
+  cards: { cardsCount, deckSize, handSize },
   map: { setting },
   timer: { remainingTime },
   fate,
@@ -112,6 +113,7 @@ const mapStateToProps = ({
   actions,
   actionBankSize,
   cardsCount,
+  deckSize,
   handSize,
   remainingTime,
   setting,

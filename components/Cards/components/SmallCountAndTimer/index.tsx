@@ -17,10 +17,7 @@ export function SmallCountAndTimer(props: ReturnType<typeof mapStateToProps>) {
   }
   return (
     <div>
-      <SmallCardCount />{" "}
-      {/*
-      <CardTimer formatter={str => `(${str}.)`} />
-      */}
+      <SmallCardCount />
     </div>
   );
 }

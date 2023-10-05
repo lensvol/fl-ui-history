@@ -12,6 +12,7 @@ interface Props {
   isWorking?: boolean;
   go?: boolean;
   onClick: () => void;
+  classNames?: string;
 }
 
 export default function MainButton({
@@ -21,6 +22,7 @@ export default function MainButton({
   isWorking,
   go,
   onClick,
+  classNames,
 }: Props) {
   const hasActionCost = useMemo(
     () => actionCost !== undefined && actionCost !== 1,
@@ -32,6 +34,7 @@ export default function MainButton({
       <button
         className={classnames(
           "js-tt button button--primary button--margin",
+          classNames,
           go && "button--go",
           (isWorking || disabled) && "button--disabled"
         )}
@@ -43,7 +46,16 @@ export default function MainButton({
         {!isWorking && hasActionCost && <ActionCost cost={actionCost!} />}
       </button>
     ),
-    [actionCost, children, disabled, hasActionCost, go, isWorking, onClick]
+    [
+      actionCost,
+      children,
+      disabled,
+      hasActionCost,
+      go,
+      isWorking,
+      onClick,
+      classNames,
+    ]
   );
 
   if (!hasActionCost) {

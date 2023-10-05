@@ -48,7 +48,7 @@ export function DisplayItem(props: Props) {
 
   return (
     <ProfileContext.Consumer>
-      {({ editable }: { editable: boolean }) => (
+      {({ editable }) => (
         <Fragment>
           <DisplayItemComponent
             data={data}

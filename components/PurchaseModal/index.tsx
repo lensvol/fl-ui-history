@@ -4,6 +4,8 @@ import Modal from "components/Modal";
 import PurchaseFace from "components/PurchaseFaceModal/PurchaseFace";
 import PurchaseDefault from "./PurchaseDefault";
 import PurchaseName from "./PurchaseName";
+import EnhancedRefresh from "./EnhancedRefresh";
+import { ENHANCED_REFRESH_ACTIONS } from "constants/fate/fateActions";
 
 export default function PurchaseModalContainer(props: Props) {
   const {
@@ -23,6 +25,9 @@ export default function PurchaseModalContainer(props: Props) {
 
       case "FaceChange":
         return <PurchaseFace {...props} />;
+
+      case ENHANCED_REFRESH_ACTIONS:
+        return <EnhancedRefresh {...props} />;
 
       default:
         return <PurchaseDefault {...props} />;

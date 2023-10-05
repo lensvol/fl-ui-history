@@ -2,6 +2,9 @@ import React from "react";
 
 import { Route, Router, Switch } from "react-router-dom";
 
+import { useFeature } from "flagged";
+import { FEATURE_CREDITS } from "features/feature-flags";
+
 import Config from "configuration";
 // This is a component wrapper to ensure a user can only access it when logged in.
 // import PrivateRoute from 'components/PrivateRoute';
@@ -37,6 +40,7 @@ import AccountPage from "components/AccountPage";
 import HelpPage from "components/HelpPage";
 import PrivacyPage from "components/PrivacyPage";
 import TermsPage from "components/TermsPage";
+import CreditsPage from "components/Credits";
 import MyProfileTab from "components/MyProfileTab";
 
 import ErrorThrower from "components/ErrorThrower";
@@ -59,6 +63,8 @@ export default function App() {
   console.log("current version: ", Config.version); // eslint-disable-line no-console
   ReactGA.initialize("G-7ZBF3LYSFQ");
   // const maintenance = function (){ return (<h1>Fallen London is in Maintenance Mode</h1>)};
+
+  const hasCredits = useFeature(FEATURE_CREDITS);
 
   return (
     <ErrorBoundary>
@@ -86,6 +92,9 @@ export default function App() {
                 <Route path="/privacy" exact component={PrivacyPage} />
                 <Route path="/terms" exact component={TermsPage} />
                 <Route path="/account" exact component={AccountPage} />
+                {!!hasCredits && (
+                  <Route path="/credits" exact component={CreditsPage} />
+                )}
                 <Route path="/500" exact component={ErrorThrower} />
 
                 {/* Routes that only logged-out users can visit */}

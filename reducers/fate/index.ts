@@ -19,6 +19,8 @@ export interface IFateState {
   premiumSubExpiryDateTime: string;
   purchaseComplete: boolean;
   data: FateData;
+  showEnhancedStore: boolean;
+  remainingStoryUnlocks?: number;
 }
 
 export const INITIAL_STATE: IFateState = {
@@ -32,6 +34,7 @@ export const INITIAL_STATE: IFateState = {
   purchaseComplete: false,
   data: {
     actionRefillFateCard: undefined,
+    enhancedActionRefreshCard: undefined,
     currentFate: 0,
     fateCards: [],
     premiumSubPurchaseCard: undefined,
@@ -39,6 +42,7 @@ export const INITIAL_STATE: IFateState = {
   isDialogOpen: false,
   message: null,
   avatarSelected: null,
+  showEnhancedStore: false,
 };
 
 export default function fateReducer(
@@ -99,6 +103,12 @@ export default function fateReducer(
       return {
         ...state,
         activeSubtab: action.payload.subtab,
+      };
+
+    case FateActionTypes.TOGGLE_ENHANCED_STORE:
+      return {
+        ...state,
+        showEnhancedStore: !state.showEnhancedStore,
       };
 
     default:

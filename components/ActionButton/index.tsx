@@ -53,10 +53,12 @@ class ActionButton extends Component<Props & RouteComponentProps> {
       go,
       isWorking,
       suppressUnlockButton,
+      remainingActionRefreshes,
     } = this.props;
 
     const disabled = this.isDisabled();
     const hasEnoughFate = (currentFate || 0) >= 4;
+    const hasActionRefreshes = (remainingActionRefreshes || 0) !== 0;
 
     return (
       <Fragment>
@@ -66,6 +68,7 @@ class ActionButton extends Component<Props & RouteComponentProps> {
           isWorking={isWorking}
           go={go}
           onClick={this.handleClick}
+          classNames={data.buttonClassNames}
         >
           <ButtonLabel actions={actions} data={data} isWorking={isWorking}>
             {children}
@@ -76,11 +79,14 @@ class ActionButton extends Component<Props & RouteComponentProps> {
             {({
               onOpenActionRefreshModal,
               onOpenPurchaseFateModal,
+              onOpenEnhancedRefreshModal,
             }: IActionRefreshContextValues) => (
               <FateRefreshButton
                 hasEnoughFate={hasEnoughFate}
+                hasActionRefreshes={hasActionRefreshes}
                 onOpenActionRefreshModal={onOpenActionRefreshModal}
                 onOpenPurchaseFateModal={onOpenPurchaseFateModal}
+                onOpenEnhancedRefreshModal={onOpenEnhancedRefreshModal}
                 go={go}
               />
             )}
@@ -104,6 +110,8 @@ export type Props = ReturnType<typeof mapStateToProps> & {
 const mapStateToProps = (state: IAppState) => ({
   actions: state.actions.actions,
   currentFate: state.fate.data.currentFate,
+  remainingActionRefreshes:
+    state.settings.subscriptions.remainingActionRefreshes,
 });
 
 export default withRouter(connect(mapStateToProps)(ActionButton));

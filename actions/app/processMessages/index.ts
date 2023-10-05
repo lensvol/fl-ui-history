@@ -2,6 +2,7 @@ import processFateChange from "actions/app/processFateChange";
 import findEquipmentChangeMessage from "actions/app/processMessages/findEquipmentChangeMessage";
 import { AREA_CHANGE_MESSAGE } from "constants/message-types";
 
+import { fetchActions } from "actions/actions";
 import { fetch as fetchFate } from "actions/fate";
 import { fetchMyself } from "actions/myself";
 import { fetch as fetchMap } from "actions/map";
@@ -203,6 +204,7 @@ function processMessagesObject(
       // If we need to refresh Fate, then do so now
       if (isFateRefreshNeeded) {
         dispatch(fetchFate());
+        dispatch(fetchActions());
       }
     } catch (error) {
       console.error(error);

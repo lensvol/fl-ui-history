@@ -2,7 +2,11 @@ import { setNextAvailable } from "actions/timer";
 import { handleVersionMismatch } from "actions/versionSync";
 import { ActionCreator } from "redux";
 import { VersionMismatch } from "services/BaseService";
-import { FetchActionsResponse, IActionsService } from "types/actions";
+import {
+  FetchActionsResponse,
+  FetchEnhancedActionsResponse,
+  IActionsService,
+} from "types/actions";
 import computeNextActionsAt from "utils/computeNextActionsAt";
 import ActionsService from "services/ActionsService";
 
@@ -10,6 +14,7 @@ import {
   FETCH_ACTIONS_ERROR,
   FETCH_ACTIONS_REQUESTED,
   FETCH_ACTIONS_SUCCESS,
+  FETCH_ENHANCED_ACTIONS_SUCCESS,
 } from "actiontypes/actions";
 import { logoutUser } from "actions/user";
 import { Failure, Success } from "services/BaseMonadicService";
@@ -22,6 +27,11 @@ export type FetchActionsError = {
 export type FetchActionsSuccess = {
   type: typeof FETCH_ACTIONS_SUCCESS;
   payload: FetchActionsResponse;
+};
+
+export type FetchEnhancedActionsSuccess = {
+  type: typeof FETCH_ENHANCED_ACTIONS_SUCCESS;
+  payload: FetchEnhancedActionsResponse;
 };
 
 export type FetchActionsActions =
@@ -47,6 +57,13 @@ export const fetchActionsSuccess: ActionCreator<FetchActionsSuccess> = (
   payload: data,
 });
 
+const fetchEnhancedActionsSuccess: ActionCreator<
+  FetchEnhancedActionsSuccess
+> = (data: FetchEnhancedActionsResponse) => ({
+  type: FETCH_ENHANCED_ACTIONS_SUCCESS,
+  payload: data,
+});
+
 export default fetchActions(new ActionsService());
 
 export function fetchActions(service: IActionsService) {
@@ -60,6 +77,8 @@ export function fetchActions(service: IActionsService) {
       if (result instanceof Success) {
         const { data } = result;
         dispatch(fetchActionsSuccess(data)); // update actions state slice
+        dispatch(fetchEnhancedActionsSuccess(data)); // update actions state slice
+
         const nextActionsAt = computeNextActionsAt(data);
         dispatch(setNextAvailable(nextActionsAt)); // update timer's awareness
       }

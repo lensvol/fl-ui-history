@@ -1,24 +1,34 @@
 import * as MessageActions from "actions/messages";
 import classnames from "classnames";
 import MessageNotificationConstants from "constants/messageNotificationConstants";
+import { useAppSelector } from "features/app/store";
 import React, { useCallback, useMemo } from "react";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { IAppState } from "types/app";
 import { UIRestriction } from "types/myself";
 
-function FooterLink({
+interface OwnProps {
+  className?: string;
+  current: string;
+  highlightAlso?: string;
+  role: string;
+  title: string;
+  to: string;
+  uiRestriction?: UIRestriction;
+}
+
+export default function FooterLink({
   className,
   current,
   highlightAlso,
-  messagesChanged,
   role,
   title,
   to,
-  uiRestrictions,
   uiRestriction,
-}: Props) {
+}: OwnProps) {
   const dispatch = useDispatch();
+  const messagesChanged = useAppSelector((s) => s.messages.isChanged);
+  const uiRestrictions = useAppSelector((s) => s.myself.uiRestrictions);
 
   const classes = classnames("fl-ico fl-ico-2x", className);
 
@@ -55,25 +65,3 @@ function FooterLink({
     </li>
   );
 }
-
-const mapStateToProps = ({
-  messages: { isChanged },
-  myself: { uiRestrictions },
-}: IAppState) => ({
-  messagesChanged: isChanged,
-  uiRestrictions,
-});
-
-interface OwnProps {
-  className?: string;
-  current: string;
-  highlightAlso?: string;
-  role: string;
-  title: string;
-  to: string;
-  uiRestriction?: UIRestriction;
-}
-
-type Props = ReturnType<typeof mapStateToProps> & OwnProps;
-
-export default connect(mapStateToProps)(FooterLink);

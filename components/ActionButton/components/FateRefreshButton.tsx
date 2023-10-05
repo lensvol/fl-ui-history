@@ -8,37 +8,57 @@ export interface Props {
   dispatch: Function;
   go: boolean | undefined;
   hasEnoughFate?: boolean | undefined;
+  hasActionRefreshes: boolean;
   onOpenActionRefreshModal: Function;
   onOpenPurchaseFateModal: Function;
+  onOpenEnhancedRefreshModal: Function;
 }
 
 function FateRefreshButton({
   go,
   hasEnoughFate,
+  hasActionRefreshes,
   onOpenActionRefreshModal,
   onOpenPurchaseFateModal,
+  onOpenEnhancedRefreshModal,
 }: Props) {
   const handleClick = useCallback(() => {
+    if (hasActionRefreshes) {
+      return onOpenEnhancedRefreshModal();
+    }
+
     if (hasEnoughFate) {
       return onOpenActionRefreshModal();
     }
 
     return onOpenPurchaseFateModal();
-  }, [hasEnoughFate, onOpenActionRefreshModal, onOpenPurchaseFateModal]);
+  }, [
+    hasEnoughFate,
+    hasActionRefreshes,
+    onOpenActionRefreshModal,
+    onOpenPurchaseFateModal,
+    onOpenEnhancedRefreshModal,
+  ]);
 
   return (
     <TippyWrapper
-      content={<FateRefreshTooltip hasEnoughFate={!!hasEnoughFate} />}
+      content={
+        <FateRefreshTooltip
+          hasEnoughFate={!!hasEnoughFate}
+          hasActionRefreshes={hasActionRefreshes}
+        />
+      }
     >
       <button
         className={classnames(
-          "js-tt button button--secondary button--margin",
+          "js-tt button button--margin",
+          hasActionRefreshes ? "button--ef" : "button--secondary",
           go && "button--go"
         )}
         onClick={handleClick}
         type="button"
       >
-        {hasEnoughFate ? "Refresh" : "Unlock"}
+        {hasEnoughFate || hasActionRefreshes ? "Refresh" : "Unlock"}
       </button>
     </TippyWrapper>
   );

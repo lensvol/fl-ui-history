@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { connect } from "react-redux";
 
+import { fetch as fetchMap } from "actions/map";
 import {
-  cancelBraintreeSubscription,
   fetch as fetchSubscriptions,
+  modifyBraintreeSubscription,
 } from "actions/subscription";
 
 import LoadingIndicator from "components/Loading";
@@ -37,8 +38,9 @@ export function ConfirmationModal({ dispatch, isOpen, onRequestClose }: Props) {
     try {
       // Quietly cancel
       await dispatch(
-        cancelBraintreeSubscription({
-          cancelInBackground: true,
+        modifyBraintreeSubscription({
+          modifyInBackground: true,
+          subscriptionType: "None",
         })
       );
 
@@ -47,6 +49,8 @@ export function ConfirmationModal({ dispatch, isOpen, onRequestClose }: Props) {
           fetchInBackground: true,
         })
       );
+
+      dispatch(fetchMap()); // Update map area availability
 
       if (isMounted.current) {
         setCurrentStep(ConfirmationModalStep.Success);

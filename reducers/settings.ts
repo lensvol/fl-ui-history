@@ -10,6 +10,9 @@ import {
 import { IQuality } from "types/qualities";
 import { MessagePreferences } from "types/settings";
 import * as SettingsActionTypes from "../actiontypes/settings";
+import { PremiumSubscriptionType } from "types/subscription";
+import { FETCH_ENHANCED_ACTIONS_SUCCESS } from "actiontypes/actions";
+import { FetchEnhancedActionsSuccess } from "actions/actions/fetchActions";
 
 export type ISettingsState = {
   authMethods: AuthMethod[] | undefined;
@@ -44,6 +47,9 @@ export type ISettingsState = {
     hasAndroidSubscription: boolean;
     hasAppleSubscrption: boolean;
     hasBraintreeSubscription: boolean;
+    subscriptionType?: PremiumSubscriptionType;
+    remainingActionRefreshes?: number;
+    remainingStoryUnlocks?: number;
   };
 };
 
@@ -74,6 +80,9 @@ export const INITIAL_STATE: ISettingsState = {
     hasAndroidSubscription: false,
     hasAppleSubscrption: false,
     hasBraintreeSubscription: false,
+    subscriptionType: undefined,
+    remainingActionRefreshes: undefined,
+    remainingStoryUnlocks: undefined,
   },
   data: {
     emailAddress: undefined,
@@ -89,7 +98,10 @@ export const INITIAL_STATE: ISettingsState = {
 
 export default function reducer(
   state: ISettingsState = INITIAL_STATE,
-  action: SettingsActions | FetchSubscriptionSuccess
+  action:
+    | SettingsActions
+    | FetchSubscriptionSuccess
+    | FetchEnhancedActionsSuccess
 ): ISettingsState {
   switch (action.type) {
     case SettingsActionTypes.FETCH_SETTINGS_REQUESTED:
@@ -105,8 +117,23 @@ export default function reducer(
         subscriptions: {
           ...state.subscriptions,
           hasBraintreeSubscription: action.payload.hasSubscription,
+          subscriptionType: action.payload.subscriptionType,
         },
       };
+
+    case FETCH_ENHANCED_ACTIONS_SUCCESS: {
+      const { remainingActionRefreshes } = (
+        action as FetchEnhancedActionsSuccess
+      ).payload;
+
+      return {
+        ...state,
+        subscriptions: {
+          ...state.subscriptions,
+          remainingActionRefreshes,
+        },
+      };
+    }
 
     case SettingsActionTypes.FETCH_SETTINGS_SUCCESS: {
       const {
@@ -114,6 +141,9 @@ export default function reducer(
         messageAboutAnnouncements,
         messageAboutNiceness,
         messageAboutStorylets,
+        subscriptionType,
+        remainingActionRefreshes,
+        remainingStoryUnlocks,
       }: FetchSettingsResponse = (action as FetchSettingsSuccess).payload;
       return {
         ...state,
@@ -128,6 +158,9 @@ export default function reducer(
         subscriptions: {
           ...state.subscriptions,
           hasBraintreeSubscription,
+          subscriptionType,
+          remainingActionRefreshes,
+          remainingStoryUnlocks,
         },
       };
     }

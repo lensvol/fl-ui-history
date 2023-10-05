@@ -11,7 +11,7 @@ import categoryNameToHumanReadableCategoryName from "utils/categoryNameToHumanRe
 import getQualityPickerQualities from "selectors/profile/getQualityPickerQualitiesByCategory";
 import { IAppState } from "types/app";
 import { IQuality } from "types/qualities";
-import { IProfileCharacter } from "types/profile";
+import { IProfileCharacter } from "features/profile";
 import { ThunkDispatch } from "redux-thunk";
 
 export function ProfileInventoryItemComponent(props: Props) {

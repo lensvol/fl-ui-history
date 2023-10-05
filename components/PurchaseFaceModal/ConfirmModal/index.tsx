@@ -15,6 +15,7 @@ import { purchaseItem, fetch as fetchFate } from "actions/fate";
 import getFaceChangeFateCard from "selectors/fate/getFaceChangeFateCard";
 import { newAvatarImage } from "actions/myself/setAvatarImage";
 import ConfirmModalReady from "./ConfirmModalReady";
+import { fetchActions } from "actions/actions";
 
 export enum AvatarConfirmModalStep {
   Ready,
@@ -85,6 +86,7 @@ export function ConfirmModal(props: Props) {
 
     // Fetch up-to-date Fate info so that we can change cameo again without refreshing the page
     dispatch(fetchFate());
+    dispatch(fetchActions());
 
     setIsSubmitting(false);
     setIsSuccess(true);

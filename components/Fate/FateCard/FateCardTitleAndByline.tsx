@@ -8,15 +8,18 @@ export default function FateCardTitleAndByline(
     story: boolean | undefined;
     forceBreaks?: boolean;
     noReleaseDate?: boolean;
+    enhancedStore?: boolean;
   }
 ) {
-  const { author, forceBreaks, name, noReleaseDate, story } = props;
+  const { author, forceBreaks, name, noReleaseDate, story, enhancedStore } =
+    props;
 
   return (
     <div
       className={classnames(
         "fate-card__title-and-byline",
-        story && "fate-card__title-and-byline--story"
+        story && "fate-card__title-and-byline--story",
+        enhancedStore && !forceBreaks && "enhanced-store--ribbon-spacer"
       )}
     >
       <h3
