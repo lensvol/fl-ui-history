@@ -1,3 +1,4 @@
+name: Track UI changes
 on:
   schedule:
     - cron: '7 * * * *'
@@ -13,7 +14,7 @@ jobs:
         branch: [www, staging, beta]
 
     runs-on: ubuntu-latest
-    name: Retrieve UI changes
+    name: Commit any changes to FL UI code
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
