@@ -2,7 +2,6 @@ name: Track UI changes
 on:
   schedule:
     - cron: '7 * * * *'
-  workflow_dispatch:
 
 env:
   UI_BRANCH: staging
