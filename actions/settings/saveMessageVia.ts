@@ -44,9 +44,8 @@ export default function saveMessageVia(type: MessageVia) {
     dispatch(saveMessageViaRequested());
 
     try {
-      const result: Either<MessagesViaResponse> = await service.messagesVia(
-        type
-      );
+      const result: Either<MessagesViaResponse> =
+        await service.messagesVia(type);
       if (result instanceof Success) {
         dispatch(saveMessageViaSuccess(result.data));
       } else {

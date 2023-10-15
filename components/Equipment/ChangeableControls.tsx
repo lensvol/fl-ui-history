@@ -11,12 +11,14 @@ import { Success } from "services/BaseMonadicService";
 import { IOutfit } from "types/outfit";
 import { IAppState } from "types/app";
 import renameOutfit from "actions/outfit/renameOutfit";
+import toggleFavouriteOutfit from "actions/outfit/toggleFavouriteOutfit";
 import OutfitDropdown from "./OutfitDropdown";
 import OutfitEditButtons from "./OutfitEditButtons";
 import OutfitRenameForm from "./OutfitRenameForm";
 
 export function ChangeableControls({
   dirty,
+  isFavourite,
   outfits,
   onSaveOutfitSuccess,
   onSelectOutfit,
@@ -53,6 +55,16 @@ export function ChangeableControls({
     onSaveOutfitSuccess();
   }, [dirty, dispatch, onSaveOutfitSuccess]);
 
+  const onToggleFavouriteOutfit = useCallback(async () => {
+    const result = await dispatch(toggleFavouriteOutfit());
+
+    if (!(result instanceof Success)) {
+      return;
+    }
+
+    onSaveOutfitSuccess();
+  }, [dispatch, onSaveOutfitSuccess]);
+
   const onStartEditing = useCallback(() => setIsEditing(true), []);
 
   return (
@@ -79,8 +91,10 @@ export function ChangeableControls({
           {isEditing ? null : (
             <OutfitEditButtons
               dirty={dirty}
+              isFavourite={isFavourite}
               onStartEditing={onStartEditing}
               onSaveOutfit={onSaveOutfit}
+              onToggleFavouriteOutfit={onToggleFavouriteOutfit}
             />
           )}
         </>
@@ -91,6 +105,7 @@ export function ChangeableControls({
 
 const mapStateToProps = (state: IAppState) => ({
   dirty: state.outfit.dirty,
+  isFavourite: state.outfit.isFavourite,
   outfits: state.myself.character.outfits,
 });
 

@@ -30,7 +30,7 @@ export default function BillingField({
         value={value}
         name={name}
         required={required}
-        maxlength={maxlength}
+        maxLength={maxlength}
       />
     </p>
   );

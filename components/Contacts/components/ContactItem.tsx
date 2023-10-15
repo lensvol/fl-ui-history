@@ -1,5 +1,11 @@
 import React from "react";
 import Buttonlet from "components/Buttonlet";
+import { IContact } from "features/contacts";
+
+type Props = {
+  data: IContact;
+  deleteContact: () => void;
+};
 
 export default function ContactItem({ data, deleteContact }: Props) {
   return (
@@ -11,8 +17,3 @@ export default function ContactItem({ data, deleteContact }: Props) {
 }
 
 ContactItem.displayName = "ContactItem";
-
-type Props = {
-  data: any;
-  deleteContact: () => void;
-};

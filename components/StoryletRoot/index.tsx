@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 
 import Config from "configuration";
 
-import { shareContent, shareContentComplete } from "actions/profile";
-import { Success } from "services/BaseMonadicService";
+import { shareContent } from "features/profile";
 import getBorderColour from "utils/getBorderColour";
 import { stripHtml } from "utils/stringFunctions";
 
@@ -55,9 +54,7 @@ export function StoryletRoot(props: Props) {
         })
       );
 
-      if (result instanceof Success) {
-        setShareMessageResponse(result.data.message);
-      }
+      setShareMessageResponse(result.data.message);
 
       setIsSharing(false);
 
@@ -71,9 +68,8 @@ export function StoryletRoot(props: Props) {
   }, []);
 
   const openShareDialog = useCallback(() => {
-    dispatch(shareContentComplete());
     setShareDialogOpen(true);
-  }, [dispatch]);
+  }, []);
 
   return (
     <div

@@ -55,31 +55,32 @@ export const sendSocialInviteFailure = (error: any) => ({
 export default sendSocialInvite(new StoryletService());
 
 export function sendSocialInvite(service: IStoryletService) {
-  return (invitation: any) => async (dispatch: ThunkDispatch<any, any, any>) => {
-    dispatch(sendSocialInviteRequested());
-    try {
-      const { data } = await service.sendSocialInvite(invitation);
-      dispatch(sendSocialInviteSuccess(data));
+  return (invitation: any) =>
+    async (dispatch: ThunkDispatch<any, any, any>) => {
+      dispatch(sendSocialInviteRequested());
+      try {
+        const { data } = await service.sendSocialInvite(invitation);
+        dispatch(sendSocialInviteSuccess(data));
 
-      // Update actions
-      dispatch(actionsUpdated(data));
+        // Update actions
+        dispatch(actionsUpdated(data));
 
-      // We also need to set card state to dirty so that we'll update later
-      dispatch(shouldFetchOpportunityCards());
+        // We also need to set card state to dirty so that we'll update later
+        dispatch(shouldFetchOpportunityCards());
 
-      // If we have some result messages with quality changes, then
-      // process them
-      const { messages } = data;
-      if (messages) {
-        dispatch(processMessages(messages));
+        // If we have some result messages with quality changes, then
+        // process them
+        const { messages } = data;
+        if (messages) {
+          dispatch(processMessages(messages));
+        }
+        return data;
+      } catch (error) {
+        if (error instanceof VersionMismatch) {
+          dispatch(handleVersionMismatch(error));
+        }
+        dispatch(sendSocialInviteFailure(error));
+        return error;
       }
-      return data;
-    } catch (error) {
-      if (error instanceof VersionMismatch) {
-        dispatch(handleVersionMismatch(error));
-      }
-      dispatch(sendSocialInviteFailure(error));
-      return error;
-    }
-  };
+    };
 }

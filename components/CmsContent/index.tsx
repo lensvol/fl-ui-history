@@ -29,12 +29,15 @@ export function CmsContent({ dispatch, pageName }: Props) {
       setIsLoading(true);
       const response = await dispatch(fetchPage(pageName));
       const duration = new Date().valueOf() - startTime.valueOf();
-      timeout = setTimeout(() => {
-        setIsLoading(false);
-        if (response instanceof Success) {
-          setContentHtml(response.data.text);
-        }
-      }, Math.max(0, minimumLoadingTime - duration));
+      timeout = setTimeout(
+        () => {
+          setIsLoading(false);
+          if (response instanceof Success) {
+            setContentHtml(response.data.text);
+          }
+        },
+        Math.max(0, minimumLoadingTime - duration)
+      );
     }
 
     return () => {

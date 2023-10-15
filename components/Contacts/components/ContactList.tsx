@@ -1,12 +1,13 @@
 import React, { useCallback } from "react";
 
+import { IContact } from "features/contacts";
 import ContactItem from "./ContactItem";
 
 interface Props {
   children?: React.ReactNode;
-  contacts?: any[];
+  contacts?: IContact[];
   filterString: string;
-  onDelete: (arg: any) => void;
+  onDelete: (arg: IContact) => unknown;
 }
 
 export default function ContactList({

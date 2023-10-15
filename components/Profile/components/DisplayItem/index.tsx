@@ -16,7 +16,7 @@ const labelToQualityPickerHeader = (label: "Mantelpiece" | "Scrapbook") =>
   ({
     Mantelpiece: "Mantelpiece item",
     Scrapbook: "Scrapbook status",
-  }[label]);
+  })[label];
 
 export function DisplayItem(props: Props) {
   const { data, dispatch, label, profileCharacter, qualityPickerQualities } =

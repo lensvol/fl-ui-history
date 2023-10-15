@@ -54,7 +54,7 @@ export const GENERIC_THREE_D_SECURE_FAILURE_MESSAGE =
 export type FormValues = typeof INITIAL_VALUES;
 
 export interface PaymentStuffProps<
-  TPayload extends { nonce: string; recaptchaResponse: string | null }
+  TPayload extends { nonce: string; recaptchaResponse: string | null },
 > {
   onCancel: () => void;
   onThreeDSComplete: (result: ThreeDSecureCompleteResult<TPayload>) => void;

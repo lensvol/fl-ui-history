@@ -12,9 +12,8 @@ const service: IPageService = new PageService();
 
 export function fetchPage(name: PageName) {
   return async (_dispatch: ThunkDispatch<any, any, any>) => {
-    const response: Success<FetchPageResponse> | Failure = await service.fetch(
-      name
-    );
+    const response: Success<FetchPageResponse> | Failure =
+      await service.fetch(name);
     return response;
   };
 }

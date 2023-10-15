@@ -7,9 +7,7 @@ export default function TheySayStatic({
 }) {
   return (
     <p>
-      <span className="they-say__quote">“</span>
-      <span>{description}</span>
-      <span className="they-say__quote">”</span>
+      <span className="they-say__content">{description}</span>
     </p>
   );
 }

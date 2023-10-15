@@ -42,6 +42,10 @@ export default function getImageClassByType(type: string): string | null {
       return "fa-envelope";
     case "chevron-down":
       return "fa-chevron-down";
+    case "star":
+      return "fa-star";
+    case "star-o":
+      return "fa-star-o";
     default:
       return null;
   }

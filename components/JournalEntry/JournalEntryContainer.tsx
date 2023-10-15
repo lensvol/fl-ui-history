@@ -1,4 +1,8 @@
-import { deleteEntry, fetchSharedContent } from "actions/profile";
+import {
+  deleteEntry,
+  fetchSharedContent,
+  toggleFavouriteJournalEntry,
+} from "features/profile";
 import classnames from "classnames";
 
 import Buttonlet from "components/Buttonlet";
@@ -11,13 +15,17 @@ import { IAppState } from "types/app";
 import DeleteDialog from "./DeleteDialog";
 
 type State = {
+  isStarring: boolean;
   modalIsOpen: boolean;
 };
 
 class JournalEntry extends Component<Props, State> {
   mounted = false;
 
-  state = { modalIsOpen: false };
+  state = {
+    isStarring: false,
+    modalIsOpen: false,
+  };
 
   static displayName = "JournalEntry";
 
@@ -62,20 +70,49 @@ class JournalEntry extends Component<Props, State> {
     this.setState({ modalIsOpen: true });
   };
 
+  handleToggleFavourite = async () => {
+    this.setState({ isStarring: true });
+
+    const {
+      dispatch,
+      data: { id },
+      profileCharacter,
+    } = this.props;
+
+    await dispatch(
+      toggleFavouriteJournalEntry({
+        id: id,
+      })
+    );
+
+    const characterName = profileCharacter?.name;
+
+    if (characterName) {
+      await dispatch(
+        fetchSharedContent({
+          characterName,
+        })
+      );
+    }
+
+    this.setState({ isStarring: false });
+  };
+
   /**
    * Render
    * @return {Object}
    */
   render() {
     const { data, canEdit, isFetching, profileCharacter } = this.props;
-    const { modalIsOpen } = this.state;
+
+    const { isStarring, modalIsOpen } = this.state;
 
     if (!profileCharacter) {
       return null;
     }
 
     const { name } = profileCharacter;
-    const { areaName, fallenLondonDateTime, id } = data;
+    const { areaName, fallenLondonDateTime, id, isFavourite } = data;
 
     return (
       <Fragment>
@@ -88,6 +125,29 @@ class JournalEntry extends Component<Props, State> {
         >
           <div className="media__body">
             <div className="journal-entry__buttonlet">
+              <Link
+                className="link--inverse journal-entry__permalink"
+                to={`/profile/${name}/${id}`}
+                onClick={this.handleFetchFromId}
+              >
+                <i className="fa fa-link heading--1" />
+              </Link>{" "}
+              <Buttonlet
+                type={isStarring ? "refresh" : isFavourite ? "star" : "star-o"}
+                title={
+                  canEdit
+                    ? isFavourite
+                      ? "Unmark as favourite"
+                      : "Mark as favourite"
+                    : undefined
+                }
+                onClick={canEdit ? this.handleToggleFavourite : () => {}}
+                classNames={{
+                  containerClassName: "journal-entry--star-button",
+                  iconClassName: "journal-entry--star-icon",
+                }}
+                spin={canEdit && isStarring}
+              />{" "}
               {canEdit && (
                 <Buttonlet
                   type="delete"
@@ -106,13 +166,6 @@ class JournalEntry extends Component<Props, State> {
               </span>
               <span className="journal-entry__location">
                 {areaName && `(${areaName})`}
-                <Link
-                  className="link--inverse journal-entry__permalink"
-                  to={`/profile/${name}/${id}`}
-                  onClick={this.handleFetchFromId}
-                >
-                  <i className="fa fa-link" />
-                </Link>
               </span>
             </h2>
             <div
@@ -131,22 +184,6 @@ class JournalEntry extends Component<Props, State> {
     );
   }
 }
-
-/*
-JournalEntry.displayName = 'JournalEntry';
-
-JournalEntry.propTypes = {
-  canEdit: PropTypes.bool.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  data: PropTypes.shape({}).isRequired,
-  isFetching: PropTypes.bool.isRequired,
-  profileCharacter: PropTypes.shape({}),
-};
-
-JournalEntry.defaultProps = {
-  profileCharacter: undefined,
-};
-*/
 
 const mapStateToProps = ({ profile }: IAppState) => ({
   canEdit: profile.isLoggedInUsersProfile,

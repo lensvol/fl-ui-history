@@ -37,26 +37,27 @@ export const signUpFailure = (error?: any) => ({
 export default signUp(new RegisterService());
 
 export function signUp(service: IRegisterService) {
-  return (signupData: any) => async (dispatch: ThunkDispatch<any, any, any>) => {
-    dispatch(signUpRequested());
+  return (signupData: any) =>
+    async (dispatch: ThunkDispatch<any, any, any>) => {
+      dispatch(signUpRequested());
 
-    try {
-      const { data } = await service.emailRegister(signupData);
-      // Dispatch an action to let the Redux store know what's up
-      dispatch(signUpSuccess(data));
-      if (data.isSuccess && data.hasCharacter) {
-        // Cool, we should now be logged in, so bootstrap the app state
-        dispatch(bootstrap());
+      try {
+        const { data } = await service.emailRegister(signupData);
+        // Dispatch an action to let the Redux store know what's up
+        dispatch(signUpSuccess(data));
+        if (data.isSuccess && data.hasCharacter) {
+          // Cool, we should now be logged in, so bootstrap the app state
+          dispatch(bootstrap());
+        }
+        // Return the data (for callers that need to inspect it)
+        return data;
+      } catch (error) {
+        if (error instanceof VersionMismatch) {
+          dispatch(handleVersionMismatch(error));
+          return error;
+        }
+        dispatch(signUpFailure(error));
+        throw error;
       }
-      // Return the data (for callers that need to inspect it)
-      return data;
-    } catch (error) {
-      if (error instanceof VersionMismatch) {
-        dispatch(handleVersionMismatch(error));
-        return error;
-      }
-      dispatch(signUpFailure(error));
-      throw error;
-    }
-  };
+    };
 }

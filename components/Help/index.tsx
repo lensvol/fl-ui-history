@@ -40,24 +40,27 @@ function Help(
       if (response instanceof Success) {
         const duration = new Date().valueOf() - startTime.valueOf();
 
-        timeout = setTimeout(() => {
-          const {
-            data: { text },
-          } = response;
-          const el = document.createElement("div");
-          el.innerHTML = text;
+        timeout = setTimeout(
+          () => {
+            const {
+              data: { text },
+            } = response;
+            const el = document.createElement("div");
+            el.innerHTML = text;
 
-          // Parse the HTML for headers and create sticky nav items
-          el.querySelectorAll("h1").forEach((node, i) => {
-            node.setAttribute("data-section-name", node.innerHTML.trim());
-            setNavItems((prevState) => [
-              ...prevState,
-              { id: i, name: node.innerText },
-            ]);
-          });
+            // Parse the HTML for headers and create sticky nav items
+            el.querySelectorAll("h1").forEach((node, i) => {
+              node.setAttribute("data-section-name", node.innerHTML.trim());
+              setNavItems((prevState) => [
+                ...prevState,
+                { id: i, name: node.innerText },
+              ]);
+            });
 
-          setRetaggedContent(el.innerHTML);
-        }, Math.max(MINIMUM_LOAD_DURATION - duration, 0));
+            setRetaggedContent(el.innerHTML);
+          },
+          Math.max(MINIMUM_LOAD_DURATION - duration, 0)
+        );
       }
     }
   }, [dispatch]);

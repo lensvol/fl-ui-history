@@ -7,12 +7,14 @@ import fetchOutfitSuccess from "./fetchOutfitSuccess";
 export type IOutfitState = { [key in OutfitSlotName]?: number | undefined } & {
   dirty: boolean;
   isChanging: boolean;
+  isFavourite: boolean;
   maxOutfits: number;
 };
 
 export const INITIAL_STATE: IOutfitState = {
   dirty: false,
   isChanging: false,
+  isFavourite: false,
   maxOutfits: 0,
 };
 

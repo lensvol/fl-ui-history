@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from "react";
+import classnames from "classnames";
+import React, { useCallback, useMemo, useState } from "react";
 import DatePicker from "react-date-picker";
 
 interface Props {
@@ -20,8 +21,17 @@ export default function JournalDatePicker({ onChange }: Props) {
     [onChange]
   );
 
+  const calendarIcon = useMemo(() => {
+    return (
+      <>
+        <span className={classnames("fa", "fa-calendar-o", "link")}></span>
+      </>
+    );
+  }, []);
+
   return (
     <DatePicker
+      calendarIcon={calendarIcon}
       className="journal-date-picker"
       maxDate={new Date()}
       onChange={handleChange}
