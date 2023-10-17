@@ -22,6 +22,7 @@ export default function OutfitEditButtons({
   const hasNewOutfitBehaviour = useFeature(NEW_OUTFIT_BEHAVIOUR);
 
   const [isSaving, setIsSaving] = useState(false);
+  const [isFavouriting, setIsFavouriting] = useState(false);
 
   const onClickToSaveOutfit = useCallback(async () => {
     setIsSaving(true);
@@ -37,11 +38,11 @@ export default function OutfitEditButtons({
   }, [dirty]);
 
   const handleToggleFavourite = useCallback(async () => {
-    setIsSaving(true);
+    setIsFavouriting(true);
 
     await onToggleFavouriteOutfit();
 
-    setIsSaving(false);
+    setIsFavouriting(false);
   }, [onToggleFavouriteOutfit]);
 
   if (!hasNewOutfitBehaviour) {
@@ -51,11 +52,15 @@ export default function OutfitEditButtons({
   return (
     <>
       <Buttonlet
-        type={isSaving ? "refresh" : isFavourite ? "star" : "star-o"}
-        title={isFavourite ? "Unmark as favourite" : "Mark as favourite"}
+        type={isFavouriting ? "refresh" : isFavourite ? "star" : "star-o"}
         onClick={handleToggleFavourite}
-        disabled={isSaving}
-        spin={isSaving}
+        disabled={isFavouriting}
+        spin={isFavouriting}
+        tooltipData={{
+          description: isFavourite
+            ? "Unmark as favourite"
+            : "Mark as favourite",
+        }}
       />
       <Buttonlet
         type="edit"

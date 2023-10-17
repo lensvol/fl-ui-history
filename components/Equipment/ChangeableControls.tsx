@@ -62,8 +62,10 @@ export function ChangeableControls({
       return;
     }
 
-    onSaveOutfitSuccess();
-  }, [dispatch, onSaveOutfitSuccess]);
+    onSaveOutfitSuccess(
+      isFavourite ? "Outfit unmarked favourite!" : "Outfit marked favourite!"
+    );
+  }, [dispatch, isFavourite, onSaveOutfitSuccess]);
 
   const onStartEditing = useCallback(() => setIsEditing(true), []);
 
@@ -111,7 +113,7 @@ const mapStateToProps = (state: IAppState) => ({
 
 type OwnProps = {
   onSelectOutfit: (...args: any) => void;
-  onSaveOutfitSuccess: () => void;
+  onSaveOutfitSuccess: (message?: string) => void;
 };
 
 type Props = OwnProps & ReturnType<typeof mapStateToProps>;

@@ -3,8 +3,10 @@ import classnames from "classnames";
 
 export default function SaveOutfitSuccessMessage({
   isHiding,
+  message,
 }: {
   isHiding: boolean;
+  message?: string;
 }) {
   return (
     <div
@@ -14,7 +16,7 @@ export default function SaveOutfitSuccessMessage({
       )}
     >
       <i className="fa fa-check" />
-      <span style={{ marginLeft: "8px" }}>Outfit updated</span>
+      <span style={{ marginLeft: "8px" }}>{message ?? "Outfit updated"}</span>
     </div>
   );
 }
