@@ -7,7 +7,6 @@ export const PURCHASE_CONTENT: FateCardAction = "ContentPurchase";
 export const REFILL_OPPORTUNITY_DECK: FateCardAction = "RefillCards";
 export const REFILL_SIX_ACTIONS: FateCardAction = "RefillThreeActions"; // ¯\_(ツ)_/¯
 export const REFILL_TWENTY_ACTIONS: FateCardAction = "RefillActions";
-export const ENHANCED_REFRESH_ACTIONS: FateCardAction = "EnhancedRefresh";
 
 export const ALL_FATE_CARD_ACTIONS = [
   CHANGE_FACE,
@@ -17,10 +16,6 @@ export const ALL_FATE_CARD_ACTIONS = [
   REFILL_OPPORTUNITY_DECK,
   REFILL_TWENTY_ACTIONS,
   REFILL_SIX_ACTIONS,
-  ENHANCED_REFRESH_ACTIONS,
 ];
 
-export const EXCLUDED_FATE_ACTIONS: FateCardAction[] = [
-  OUTFIT_PURCHASE,
-  ENHANCED_REFRESH_ACTIONS,
-];
+export const EXCLUDED_FATE_ACTIONS: FateCardAction[] = [OUTFIT_PURCHASE];

@@ -5,9 +5,8 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import { setTab } from "actions/subtabs";
 import { IAppState } from "types/app";
-import { UIRestriction } from "types/myself";
 
-function InnerTabs({ dispatch, history, subtab, showPossessionsUI }: Props) {
+function InnerTabs({ dispatch, history, subtab }: Props) {
   const goToMyself = useCallback(() => {
     setTab({ tab: "myself", subtab: "myself" })(dispatch);
     history.push("/myself");
@@ -37,10 +36,6 @@ function InnerTabs({ dispatch, history, subtab, showPossessionsUI }: Props) {
     [subtab]
   );
 
-  if (!showPossessionsUI) {
-    return null;
-  }
-
   return (
     <div className="inner-tabs">
       <button
@@ -66,14 +61,8 @@ function InnerTabs({ dispatch, history, subtab, showPossessionsUI }: Props) {
   );
 }
 
-const mapStateToProps = ({
-  subtabs: { myself: subtab },
-  myself: { uiRestrictions },
-}: IAppState) => ({
+const mapStateToProps = ({ subtabs: { myself: subtab } }: IAppState) => ({
   subtab,
-  showPossessionsUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Possessions
-  ),
 });
 
 type Props = DispatchProp &
@@ -81,3 +70,75 @@ type Props = DispatchProp &
   ReturnType<typeof mapStateToProps>;
 
 export default withRouter(connect(mapStateToProps)(InnerTabs));
+
+/*
+class InnerTabs extends React.Component {
+  goToMyself = () => {
+    const { dispatch, history } = this.props;
+    dispatch(setTab({ tab: 'myself', subtab: 'myself' }));
+    history.push('/myself');
+  }
+
+  goToPossessions = () => {
+    const { dispatch, history } = this.props;
+    dispatch(setTab({ tab: 'myself', subtab: 'possessions' }));
+    history.push('/possessions');
+  }
+
+  render() {
+    const { subtab } = this.props;
+
+    const myselfClass = classnames({
+      'inner-tab': true,
+      'inner-tab--with-border': true,
+      'inner-tab--active': subtab === 'myself',
+    });
+
+    const possessionsClass = classnames({
+      'inner-tab': true,
+      'inner-tab--active': subtab === 'possessions',
+    });
+
+    return (
+      <div className="inner-tabs">
+        <div
+          className={myselfClass}
+          onClick={this.goToMyself}
+          onKeyUp={this.goToMyself}
+          role="tab"
+          tabIndex={-1}
+        >
+          <i className="fl-ico fl-ico-2x fl-ico-myself inner-tab__icon" />
+          <div className="inner-tab__label">
+            Myself
+          </div>
+        </div>
+        <div
+          className={possessionsClass}
+          onClick={this.goToPossessions}
+          onKeyUp={this.goToPossessions}
+          role="tab"
+          tabIndex={-1}
+        >
+          <i className="fl-ico fl-ico-2x fl-ico-inventory inner-tab__icon" />
+          <div className="inner-tab__label">
+            Possessions
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+
+InnerTabs.displayName = 'InnerTabs';
+
+InnerTabs.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  subtab: PropTypes.oneOf(['myself', 'possessions']).isRequired,
+};
+
+const mapStateToProps = ({ subtabs: { myself: subtab } }) => ({ subtab });
+
+export default withRouter(connect(mapStateToProps)(InnerTabs));
+ */

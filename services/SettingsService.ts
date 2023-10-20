@@ -1,9 +1,7 @@
 /* eslint-disable camelcase */
 import { ReactFacebookLoginInfo } from "react-facebook-login";
 import { IQuality } from "types/qualities";
-import { MessagePreferences } from "types/settings";
 import BaseService, { Either } from "./BaseMonadicService";
-import { PremiumSubscriptionType } from "types/subscription";
 
 export type MessageVia =
   | "None"
@@ -35,7 +33,7 @@ export interface ISettingsService {
   fetchAuthMethods: () => Promise<Either<FetchAuthMethodsResponse>>;
   fetchTimeTheHealer: () => Promise<Either<FetchTimeTheHealerResponse>>;
   saveMessagePreferences: (
-    req: MessagePreferences
+    req: SaveMessagePreferencesRequest
   ) => Promise<Either<SaveMessagePreferencesResponse>>;
   requestPasswordReset: (
     emailAddress: string
@@ -59,6 +57,11 @@ export interface ISettingsService {
     payload: FacebookPayload
   ) => Promise<Either<LinkFacebookResponse>>;
   linkGoogle: (req: LinkGoogleRequest) => Promise<Either<LinkGoogleResponse>>;
+  linkTwitter: (req: LinkTwitterRequest) => Promise<
+    Either<{
+      /* empty response object */
+    }>
+  >;
 }
 
 export type ChangeUsernameResponse = { message: string };
@@ -75,13 +78,11 @@ export type FetchSettingsResponse = {
   qualitiesPossessedList: IQuality[];
   twitterAuth: boolean;
   facebookAuth: boolean;
-  googleAuth: boolean;
   emailAuth: boolean;
   hasBraintreeSubscription: boolean;
-  remainingActionRefreshes?: number;
-  remainingStoryUnlocks?: number;
-  subscriptionType?: PremiumSubscriptionType;
+  storyEventMessage: boolean;
   messageAboutAnnouncements: boolean;
+  messageAboutNastiness: boolean;
   messageAboutNiceness: boolean;
   messageAboutStorylets: boolean;
   messageViaNetwork: MessageVia;
@@ -109,6 +110,11 @@ export type LinkGoogleResponse = {
   /* empty response on success */
 };
 
+export type LinkTwitterRequest = {
+  oauth_token: string;
+  oauth_verifier: string;
+};
+
 export type MessagesViaResponse = {
   message: string;
 };
@@ -128,6 +134,13 @@ export type ResetPasswordRequest = {
 
 export type ResetPasswordResponse = {
   message: string;
+};
+
+export type SaveMessagePreferencesRequest = {
+  messageAboutNiceness: boolean;
+  messageAboutNastiness: boolean;
+  messageAboutAnnouncements: boolean;
+  messageAboutStorylets: boolean;
 };
 
 export type SaveMessagePreferencesResponse = {
@@ -185,7 +198,9 @@ export default class SettingsService
     return this.doRequest<FetchTimeTheHealerResponse>(config);
   };
 
-  saveMessagePreferences = (messagePreferences: MessagePreferences) => {
+  saveMessagePreferences = (
+    messagePreferences: SaveMessagePreferencesRequest
+  ) => {
     const config = {
       method: "post",
       url: "/settings/messagesettings",
@@ -215,9 +230,8 @@ export default class SettingsService
 
   changeUsername = (username: string) => {
     const config = {
-      data: username,
       method: "post",
-      url: `/settings/username`,
+      url: `/settings/username/${username}`,
     };
     return this.doRequest<ChangeUsernameResponse>(config);
   };
@@ -297,5 +311,16 @@ export default class SettingsService
       method: "post",
     };
     return this.doRequest<LinkGoogleResponse>(config);
+  };
+
+  linkTwitter = (data: LinkTwitterRequest) => {
+    const config = {
+      data,
+      url: "/twitter/linkaccount",
+      method: "post",
+    };
+    return this.doRequest<{
+      /* empty */
+    }>(config);
   };
 }

@@ -74,7 +74,6 @@ const mapStateToProps = (state: IAppState) => {
     storylet: { phase, storylets },
     subtabs: { storylet: subtab },
   } = state;
-
   return {
     phase,
     showOps,

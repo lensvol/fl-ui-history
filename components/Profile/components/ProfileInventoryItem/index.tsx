@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useIsChangeable } from "components/Equipment/hooks";
+import { CHANGEABLE_CATEGORIES } from "constants/outfits";
 import ProfileContext from "components/Profile/ProfileContext";
 import { OutfitSlotName } from "types/outfit";
 import { IQuality } from "types/qualities";
@@ -12,7 +12,8 @@ export default function ProfileInventoryItemContainer({
   data: IQuality;
 }) {
   const { category } = data;
-  const isCategoryChangeable = useIsChangeable(category as OutfitSlotName);
+  const isCategoryChangeable =
+    CHANGEABLE_CATEGORIES.indexOf(category as OutfitSlotName) >= 0;
   return (
     <ProfileContext.Consumer>
       {({ editable, profileCharacter }) => (

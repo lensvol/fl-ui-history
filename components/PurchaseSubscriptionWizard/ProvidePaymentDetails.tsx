@@ -7,62 +7,42 @@ import {
   GENERIC_THREE_D_SECURE_FAILURE_MESSAGE,
   INITIAL_VALUES,
   PaymentStuffProps,
-  PersonalDetails,
+  PersonalDeets,
 } from "components/Payment/PaymentStuff";
-import BraintreeDropIn, {
-  BraintreeWebDropInOptions,
-} from "components/Payment/BraintreeWebDropIn";
+import BraintreeDropIn from "components/Payment/BraintreeWebDropIn";
 import {
+  FixedPaymentMethodPayload,
   IBraintreePlanWithClientRequestToken,
   PaymentMethodType,
 } from "types/payment";
 import Header from "./Header";
 
-import { PremiumSubscriptionType } from "types/subscription";
-
 interface Props {
   braintreePlan: IBraintreePlanWithClientRequestToken;
-  hasSubscription: boolean;
   onGoBack: () => void;
   onThreeDSecureComplete: PaymentStuffProps<{
     nonce: string;
     recaptchaResponse: string | null;
   }>["onThreeDSComplete"];
-  renewDate?: string;
-  subscriptionType?: PremiumSubscriptionType;
 }
 
 export default function ProvidePaymentDetails({
   braintreePlan,
-  hasSubscription,
   onGoBack,
   onThreeDSecureComplete,
-  renewDate,
-  subscriptionType,
 }: Props) {
-  const { clientRequestToken, currencyIsoCode, price, addOns } = braintreePlan;
-
-  const addOnPrice = addOns?.[0]?.amount ?? 0;
+  const { clientRequestToken, currencyIsoCode, price } = braintreePlan;
 
   const formattedPrice = useMemo(
     () =>
       new Intl.NumberFormat("en-GB", {
         currency: currencyIsoCode,
         style: "currency",
-      }).format(price + addOnPrice),
-    [addOnPrice, currencyIsoCode, price]
+      }).format(price),
+    [currencyIsoCode, price]
   );
 
   const authorization = useMemo(() => clientRequestToken, [clientRequestToken]);
-  const options: BraintreeWebDropInOptions = useMemo(
-    () => ({
-      authorization,
-      threeDSecure: true,
-      version: 2,
-      paypal: { flow: "vault" },
-    }),
-    [authorization]
-  );
 
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<
     PaymentMethodType | undefined
@@ -97,12 +77,12 @@ export default function ProvidePaymentDetails({
         return;
       }
 
-      const payload = await dropInInstance.requestPaymentMethod({
+      const payload = (await dropInInstance.requestPaymentMethod({
         threeDSecure: {
-          amount: (price + addOnPrice).toFixed(2),
+          amount: price.toFixed(2),
           billingAddress: formValuesToBillingAddress(values),
         },
-      });
+      })) as FixedPaymentMethodPayload;
 
       if (payload.type === "CreditCard") {
         if (!payload.threeDSecureInfo?.liabilityShifted) {
@@ -126,28 +106,22 @@ export default function ProvidePaymentDetails({
         },
       });
     },
-    [addOnPrice, dropInInstance, onThreeDSecureComplete, price]
+    [dropInInstance, onThreeDSecureComplete, price]
   );
 
   return (
     <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
       {({ values }) => (
         <Form>
-          <Header
-            amountString={formattedPrice}
-            hasSubscription={hasSubscription}
-            isEnhanced={addOnPrice !== 0}
-            renewDate={renewDate}
-            subscriptionType={subscriptionType}
-          />
+          <Header amountString={formattedPrice} />
           <BraintreeDropIn
+            authorization={authorization}
             onInstance={handleInstance}
             onNoPaymentMethodRequestable={handleNoPaymentMethodRequestable}
             onPaymentMethodRequestable={handlePaymentMethodRequestable}
-            options={options}
           />
           {currentPaymentMethod === "CreditCard" && (
-            <PersonalDetails values={values} />
+            <PersonalDeets values={values} />
           )}
           <div
             className="buttons buttons--left buttons--no-squash buttons--space-between"
@@ -177,3 +151,69 @@ export default function ProvidePaymentDetails({
     </Formik>
   );
 }
+
+/*
+interface Props {
+  braintreePlan: IBraintreePlanWithClientRequestToken,
+  onPaymentComplete: ({ message, isSuccess }: { message: string | undefined, isSuccess: boolean }) => Promise<void>,
+  onThreeDSecureSuccess: ({
+    nonce,
+    reCaptcha,
+  }: { nonce: string, reCaptcha: string | null }) => Promise<Either<{ message: string }>>,
+
+  onGoBack: () => void,
+}
+
+export default function ProvidePaymentDetails({
+  braintreePlan,
+  onPaymentComplete,
+  onGoBack,
+  onThreeDSecureSuccess,
+}: Props) {
+  const { clientRequestToken } = braintreePlan;
+  const {
+    currencyIsoCode,
+    price,
+  } = braintreePlan;
+
+  const options: Omit<Options, 'container'> = useMemo(() => ({
+    authorization: clientRequestToken,
+    threeDSecure: true,
+    version: 2,
+    paypal: {
+      flow: 'vault',
+    },
+  }), [clientRequestToken]);
+
+  const handlePaymentComplete = useCallback(async (result: Either<{ message: string | undefined }>) => {
+    if (result instanceof Success) {
+      const { message } = result.data;
+      await onPaymentComplete({ message, isSuccess: true });
+    } else {
+      await onPaymentComplete({ message: result.message, isSuccess: false });
+    }
+  }, [onPaymentComplete]);
+
+  const formattedPrice = useMemo(
+    () => new Intl.NumberFormat('en-GB', { currency: currencyIsoCode, style: 'currency' }).format(price),
+    [currencyIsoCode, price],
+  );
+
+  return (
+    <div>
+      <Header
+        amountString={formattedPrice}
+      />
+      <PaymentForm
+        amount={braintreePlan.price.toFixed(2)}
+        dropInOptions={options}
+        labelText="Subscribe"
+        onGoBack={onGoBack}
+        onPaymentComplete={handlePaymentComplete}
+        onThreeDSecureSuccess={onThreeDSecureSuccess}
+      />
+    </div>
+  );
+}
+
+ */

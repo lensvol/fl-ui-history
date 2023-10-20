@@ -6,8 +6,7 @@ import SettingsService, {
   ISettingsService,
   SaveMessagePreferencesResponse,
 } from "services/SettingsService";
-import { MessagePreferences } from "types/settings";
-// import { MessagePreferences } from 'types/settings';
+import { MessagePreferences } from "reducers/settings";
 
 export type SaveMessagePreferencesRequested = {
   type: typeof SettingsActionTypes.SAVE_MESSAGE_PREFERENCES_REQUESTED;

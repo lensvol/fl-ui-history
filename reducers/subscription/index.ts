@@ -1,6 +1,6 @@
 import * as SubscriptionActionTypes from "actiontypes/subscription";
 
-import modifyBraintreeSubscriptionSuccess from "reducers/subscription/modifyBraintreeSubscriptionSuccess";
+import cancelBraintreeSubscriptionSuccess from "./cancelBraintreeSubscriptionSuccess";
 import { ISubscriptionState } from "types/subscription";
 
 /**
@@ -10,7 +10,7 @@ import { ISubscriptionState } from "types/subscription";
 const INITIAL_STATE: ISubscriptionState = {
   data: undefined,
   isFetching: false,
-  isModifying: false,
+  isCancelling: false,
   isSuccess: false,
   message: null,
 };
@@ -40,22 +40,21 @@ export default function reducer(
         data: payload,
       };
 
-    case SubscriptionActionTypes.MODIFY_BRAINTREE_SUBSCRIPTION_REQUESTED:
+    case SubscriptionActionTypes.CANCEL_BRAINTREE_SUBSCRIPTION_REQUESTED:
       return {
         ...state,
-        isModifying: true,
+        isCancelling: true,
+        isSuccess: false,
+      };
+    case SubscriptionActionTypes.CANCEL_BRAINTREE_SUBSCRIPTION_FAILURE:
+      return {
+        ...state,
+        isCancelling: false,
         isSuccess: false,
       };
 
-    case SubscriptionActionTypes.MODIFY_BRAINTREE_SUBSCRIPTION_FAILURE:
-      return {
-        ...state,
-        isModifying: false,
-        isSuccess: false,
-      };
-
-    case SubscriptionActionTypes.MODIFY_BRAINTREE_SUBSCRIPTION_SUCCESS:
-      return modifyBraintreeSubscriptionSuccess(state, payload);
+    case SubscriptionActionTypes.CANCEL_BRAINTREE_SUBSCRIPTION_SUCCESS:
+      return cancelBraintreeSubscriptionSuccess(state, payload);
 
     default:
       return state;

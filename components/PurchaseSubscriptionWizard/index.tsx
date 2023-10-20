@@ -3,7 +3,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import PaymentService from "services/PaymentService";
 import {
-  IBraintreeAddOn,
   IBraintreePlan,
   IBraintreePlanWithClientRequestToken,
   ICreateBraintreeSubscriptionRequest,
@@ -14,20 +13,13 @@ import { fetchMyself } from "actions/myself";
 import { fetch as fetchSubscription } from "actions/subscription";
 import { fetch as fetchFate } from "actions/fate";
 import { fetch as fetchMap } from "actions/map";
-import { fetch as fetchSettings } from "actions/settings";
 
 import CompletingTransaction from "./CompletingTransaction";
-import ConfirmNewPlan from "./ConfirmNewPlan";
 import PaymentFailure from "./PaymentFailure";
 import PaymentSuccess from "./PaymentSuccess";
 import ProvidePaymentDetails from "./ProvidePaymentDetails";
 import SelectCurrency from "./SelectCurrency";
-import SelectNewPlan from "./SelectNewPlan";
 import ServerErrorMessage from "./ServerErrorMessage";
-
-import { PremiumSubscriptionType } from "types/subscription";
-import { useFeature } from "flagged";
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
 
 export enum PurchaseSubscriptionWizardStep {
   /* eslint-disable no-shadow */
@@ -37,38 +29,23 @@ export enum PurchaseSubscriptionWizardStep {
   PaymentSuccess,
   PaymentFailure,
   ServerError,
-  SelectNewPlan,
-  ConfirmNewPlan,
   /* eslint-enable no-shadow */
 }
 
 interface Props {
-  hasSubscription: boolean;
   onClickToClose: (didPlayerCompleteSubscription?: boolean) => void;
-  renewDate?: string;
-  subscriptionType?: PremiumSubscriptionType;
 }
 
 const UNKNOWN_ERROR_MESSAGE =
   "Something went wrong and we couldn't finish subscribing you." +
   " Please refresh the page and try again.";
 
-export default function PurchaseSubscriptionWizard({
-  hasSubscription,
-  onClickToClose,
-  renewDate,
-  subscriptionType,
-}: Props) {
+export default function PurchaseSubscriptionWizard({ onClickToClose }: Props) {
   const dispatch = useDispatch();
 
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
-  const isModifyingSubscription = supportsEnhancedEF && hasSubscription;
-
-  const firstStep = isModifyingSubscription
-    ? PurchaseSubscriptionWizardStep.SelectNewPlan
-    : PurchaseSubscriptionWizardStep.SelectCurrency;
-
-  const [currentStep, setCurrentStep] = useState(firstStep);
+  const [currentStep, setCurrentStep] = useState(
+    PurchaseSubscriptionWizardStep.SelectCurrency
+  );
   const [braintreePlan, setBraintreePlan] = useState<
     IBraintreePlanWithClientRequestToken | undefined
   >(undefined);
@@ -78,22 +55,13 @@ export default function PurchaseSubscriptionWizard({
   const [serverErrorMessage, setServerErrorMessage] = useState<
     string | undefined
   >(undefined);
-  const [newSubscriptionType, setNewSubscriptionType] =
-    useState<PremiumSubscriptionType>("None");
-  const [addOnPrice, setAddOnPrice] = useState<number | undefined>(undefined);
-  const [successTitle, setSuccessTitle] = useState("Success!");
 
   const onCancel = useCallback(() => {
     onClickToClose();
-
     setBraintreePlan(undefined);
-    setCurrentStep(firstStep);
+    setCurrentStep(PurchaseSubscriptionWizardStep.SelectCurrency);
     setPaymentResponseMessage(undefined);
-    setServerErrorMessage(undefined);
-    setNewSubscriptionType("None");
-    setAddOnPrice(undefined);
-    setSuccessTitle("Success!");
-  }, [firstStep, onClickToClose]);
+  }, [onClickToClose]);
 
   const onCloseAfterFailure = useCallback(
     () => onClickToClose(false),
@@ -111,49 +79,24 @@ export default function PurchaseSubscriptionWizard({
   const onGoBackFromPaymentDetails = useCallback(() => {
     // Reset everything we set in the SelectCurrency step
     setBraintreePlan(undefined);
-    setCurrentStep(firstStep);
-  }, [firstStep]);
+    setCurrentStep(PurchaseSubscriptionWizardStep.SelectCurrency);
+  }, []);
 
-  const onPlanChosen = useCallback(
-    async (selectedPlan: IBraintreePlan, selectedAddOn?: IBraintreeAddOn) => {
-      // Fetch the client request token for this plan
-      const paymentService: IPaymentService = new PaymentService();
-      const { data } = await paymentService.fetchPlan(
-        selectedPlan.currencyIsoCode
-      );
+  const onPlanChosen = useCallback(async (selectedPlan: IBraintreePlan) => {
+    // Fetch the client request token for this plan
+    const paymentService: IPaymentService = new PaymentService();
+    const { data } = await paymentService.fetchPlan(
+      selectedPlan.currencyIsoCode
+    );
 
-      const plan = data.plans[0];
-
-      if (selectedAddOn) {
-        plan.addOns = [selectedAddOn];
-      } else {
-        plan.addOns = [];
-      }
-
-      setBraintreePlan(plan);
-      setCurrentStep(PurchaseSubscriptionWizardStep.ProvidePaymentDetails);
-    },
-    []
-  );
+    setBraintreePlan(data.plans[0]);
+    setCurrentStep(PurchaseSubscriptionWizardStep.ProvidePaymentDetails);
+  }, []);
 
   const onServerError = useCallback((message: string) => {
     setServerErrorMessage(message);
     setCurrentStep(PurchaseSubscriptionWizardStep.ServerError);
   }, []);
-
-  const refreshPlayerData = useCallback(async () => {
-    // wait for this, so users can't dismiss the modal before the UI reflects the sub they just paid for
-    await dispatch(fetchSubscription()); // Update hassubscription state
-
-    // Fire these, but we don't need to await them
-    dispatch(fetchMyself()); // Update action count
-    dispatch(fetchActions()); // Update action bank
-    dispatch(fetchFate()); // Update isExceptional state
-    dispatch(fetchMap()); // Update map area availability
-
-    // wait for this one, so users can't dismiss the modal before the UI reflects the sub they just paid for
-    await dispatch(fetchSettings());
-  }, [dispatch]);
 
   const onThreeDSecureComplete = useCallback(
     async (
@@ -182,7 +125,6 @@ export default function PurchaseSubscriptionWizard({
         nonce,
         recaptchaResponse,
         planId: braintreePlan?.id,
-        addOnId: braintreePlan?.addOns?.[0]?.id,
       };
 
       let isSuccess = false;
@@ -202,8 +144,12 @@ export default function PurchaseSubscriptionWizard({
       setPaymentResponseMessage(message);
 
       if (isSuccess) {
-        // wait for this, so users can't dismiss the modal before the UI reflects the sub they just paid for
-        await refreshPlayerData();
+        // Fire these, but we don't need to await them
+        dispatch(fetchSubscription()); // Update hassubscription state
+        dispatch(fetchMyself()); // Update action count
+        dispatch(fetchActions()); // Update action bank
+        dispatch(fetchFate()); // Update isExceptional state
+        dispatch(fetchMap()); // Update map area availability
 
         setCurrentStep(PurchaseSubscriptionWizardStep.PaymentSuccess);
         return;
@@ -211,44 +157,7 @@ export default function PurchaseSubscriptionWizard({
 
       setCurrentStep(PurchaseSubscriptionWizardStep.PaymentFailure);
     },
-    [braintreePlan, refreshPlayerData]
-  );
-
-  const onDidSelectNewPlan = useCallback(() => {
-    setCurrentStep(PurchaseSubscriptionWizardStep.ConfirmNewPlan);
-  }, []);
-
-  const onGoBackFromConfirmNewPlan = useCallback(() => {
-    setCurrentStep(PurchaseSubscriptionWizardStep.SelectNewPlan);
-  }, []);
-
-  const onDidConfirmNewPlan = useCallback(
-    async (
-      _?: any,
-      nextStep?: PurchaseSubscriptionWizardStep,
-      message?: string
-    ) => {
-      if (nextStep === PurchaseSubscriptionWizardStep.PaymentSuccess) {
-        const verb =
-          newSubscriptionType === "EnhancedExceptionalFriendship" ||
-          newSubscriptionType === "ExceptionalFriendship"
-            ? "updated"
-            : "cancelled";
-
-        setSuccessTitle("Subscription " + verb);
-        setPaymentResponseMessage(
-          "Your subscription has been " + verb + "." + (message ?? "")
-        );
-
-        // wait for this, so users can't dismiss the modal before the UI reflects the sub they just paid for
-        await refreshPlayerData();
-      }
-
-      setCurrentStep(
-        nextStep ?? PurchaseSubscriptionWizardStep.CompletingTransaction
-      );
-    },
-    [newSubscriptionType, refreshPlayerData]
+    [braintreePlan, dispatch]
   );
 
   // noinspection UnnecessaryLocalVariableJS
@@ -276,7 +185,6 @@ export default function PurchaseSubscriptionWizard({
             <PaymentSuccess
               message={paymentResponseMessage}
               onClick={onCloseAfterSuccess}
-              title={successTitle}
             />
           );
         }
@@ -304,11 +212,8 @@ export default function PurchaseSubscriptionWizard({
           return (
             <ProvidePaymentDetails
               braintreePlan={braintreePlan}
-              hasSubscription={hasSubscription}
               onThreeDSecureComplete={onThreeDSecureComplete}
               onGoBack={onGoBackFromPaymentDetails}
-              renewDate={renewDate}
-              subscriptionType={subscriptionType}
             />
           );
         }
@@ -316,62 +221,30 @@ export default function PurchaseSubscriptionWizard({
         // Return null? Or an error page? We shouldn't be in this situation
         return null;
 
-      case PurchaseSubscriptionWizardStep.SelectNewPlan:
-        return (
-          <SelectNewPlan
-            onCancel={onCancel}
-            onSubscriptionTypeChanged={setNewSubscriptionType}
-            onSubmit={onDidSelectNewPlan}
-            setAddOnPrice={setAddOnPrice}
-          />
-        );
-
-      case PurchaseSubscriptionWizardStep.ConfirmNewPlan:
-        return (
-          <ConfirmNewPlan
-            addOnPrice={addOnPrice}
-            newSubscriptionType={newSubscriptionType}
-            onGoBack={onGoBackFromConfirmNewPlan}
-            onSubmit={onDidConfirmNewPlan}
-          />
-        );
-
       case PurchaseSubscriptionWizardStep.SelectCurrency:
       default:
         return (
           <SelectCurrency
-            hasSubscription={hasSubscription}
             onCancel={onCancel}
             onPlanChosen={onPlanChosen}
             onServerError={onServerError}
-            renewDate={renewDate}
-            subscriptionType={subscriptionType}
           />
         );
     }
   }, [
-    addOnPrice,
     braintreePlan,
     currentStep,
-    hasSubscription,
-    newSubscriptionType,
     onCancel,
     onClickToClose,
     onCloseAfterFailure,
     onCloseAfterSuccess,
-    onDidConfirmNewPlan,
-    onDidSelectNewPlan,
-    onGoBackFromConfirmNewPlan,
     onGoBackFromFailure,
     onGoBackFromPaymentDetails,
     onPlanChosen,
     onServerError,
     onThreeDSecureComplete,
     paymentResponseMessage,
-    renewDate,
     serverErrorMessage,
-    subscriptionType,
-    successTitle,
   ]);
 
   return <div className="purchase-panel">{content}</div>;

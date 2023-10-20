@@ -17,14 +17,12 @@ export type FetchFateResponse = {
   fateCards: IFateCard[];
   isExceptionalFriend: boolean;
   premiumSubExpiryDateTime: string;
-  remainingStoryUnlocks?: number;
 };
 
 export type PurchaseFateItemRequest = {
   storeItemId: number;
   avatarImage?: string | null;
   newName?: string | null;
-  action?: string;
 };
 
 export type PurchaseFateItemResponse = FetchFateResponse;
@@ -47,8 +45,7 @@ class FateService extends BaseService implements IFateService {
    * @return {Promise}
    */
   purchaseItem = (data: PurchaseFateItemRequest) => {
-    const { storeItemId, newName = null, avatarImage = null, action } = data;
-
+    const { storeItemId, newName = null, avatarImage = null } = data;
     const config = {
       method: "post",
       url: "/fate/purchase",
@@ -56,7 +53,6 @@ class FateService extends BaseService implements IFateService {
         storeItemId,
         newName,
         avatarImage,
-        action,
       },
     };
     return this.doRequest<PurchaseFateItemResponse>(config);

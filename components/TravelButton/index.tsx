@@ -11,7 +11,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { IAppState } from "types/app";
 import { ISetting } from "types/map";
 import { StoryletPhase } from "types/storylet";
-import { UIRestriction } from "types/myself";
 
 function TravelButton({
   canOpenMap,
@@ -23,7 +22,6 @@ function TravelButton({
   setting,
   shouldMapUpdate,
   shouldShowTravelButton,
-  enableTravelUI,
 }: Props) {
   const handleClick = useCallback(() => {
     if (shouldMapUpdate) {
@@ -36,9 +34,8 @@ function TravelButton({
     () =>
       !canOpenMap ||
       phase !== phases.AVAILABLE ||
-      history.location.pathname !== "/" ||
-      !enableTravelUI,
-    [canOpenMap, history.location.pathname, phase, enableTravelUI]
+      history.location.pathname !== "/",
+    [canOpenMap, history.location.pathname, phase]
   );
 
   if (!shouldShowTravelButton) {
@@ -76,7 +73,6 @@ const mapStateToProps = (state: IAppState) => {
   const {
     map: { setting, shouldUpdate },
     storylet: { phase },
-    myself: { uiRestrictions },
   } = state;
   return {
     phase,
@@ -85,9 +81,6 @@ const mapStateToProps = (state: IAppState) => {
     canOpenMap: setting?.canOpenMap ?? false,
     label: getTravelButtonLabel(state),
     shouldShowTravelButton: getShouldShowTravelButtonLabel(state),
-    enableTravelUI: !uiRestrictions?.find(
-      (restriction) => restriction === UIRestriction.Travel
-    ),
   };
 };
 

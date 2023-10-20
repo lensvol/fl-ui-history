@@ -7,19 +7,16 @@ import MediaXlUp from "components/Responsive/MediaXlUp";
 import Advert from "components/Infobar/Advert";
 import Welcome from "components/Infobar/Welcome";
 import { IAppState } from "types/app";
-import { UIRestriction } from "types/myself";
 
 class Infobar extends React.Component<Props> {
   static displayName = "Infobar";
 
   renderAdvert = () => {
-    const { advert, showExtrasUI } = this.props;
-
-    if (advert?.altText && advert?.url && advert?.image && showExtrasUI) {
-      return <Advert {...advert} />;
+    const { advert } = this.props;
+    if (!(advert?.altText && advert?.url && advert?.image)) {
+      return null;
     }
-
-    return null;
+    return <Advert {...advert} />;
   };
 
   renderWelcome = () => {
@@ -44,7 +41,7 @@ class Infobar extends React.Component<Props> {
               <br />
               <br />
               {this.renderAdvert()}
-              {this.props.showExtrasUI && <Snippet />}
+              <Snippet />
             </div>
           </div>
         </div>
@@ -56,7 +53,6 @@ class Infobar extends React.Component<Props> {
 const mapStateToProps = ({
   myself: {
     character: { name },
-    uiRestrictions,
   },
   infoBar: { advert, snippets },
   map: { currentArea },
@@ -65,9 +61,6 @@ const mapStateToProps = ({
   currentArea,
   snippets,
   name,
-  showExtrasUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Extras
-  ),
 });
 
 type Props = ReturnType<typeof mapStateToProps>;

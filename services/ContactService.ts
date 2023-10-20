@@ -52,6 +52,17 @@ class ContactService extends BaseService implements IContactService {
     };
     return this.doRequest(config);
   };
+
+  /**
+   * Add twitter contacts
+   */
+  addTwitterContacts = () => {
+    const config = {
+      method: "post",
+      url: "/contacts/addtwittercontacts",
+    };
+    return this.doRequest(config);
+  };
 }
 
 export default ContactService;

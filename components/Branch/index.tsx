@@ -20,7 +20,7 @@ import {
   StoryletDescription as Description,
   StoryletTitle as Title,
 } from "components/common";
-import { DeckType, IBranch } from "types/storylet";
+import { Frequency, IBranch } from "types/storylet";
 import { IAppState } from "types/app";
 import BranchButtons from "./BranchButtons";
 import Challenges from "./Challenges";
@@ -43,7 +43,7 @@ export function Branch({
   isChoosing,
   isGoingBack,
   onChooseBranch,
-  storyletDeckType,
+  storyletFrequency,
 }: Props) {
   const {
     actionCost,
@@ -82,41 +82,29 @@ export function Branch({
   const handleChooseBranch = useCallback(async () => {
     // Check whether we should be making some UI changes instead
     const uiTriggerMatches = description.match(UI_INTEGRATION_REGEX);
-
     if ((uiTriggerMatches?.length ?? 0) > 0) {
       const commandAction =
         uiTriggerMatches?.[1] === undefined
           ? undefined
           : COMMAND_MAP[uiTriggerMatches?.[1]];
-
       if (commandAction) {
         dispatch(commandAction(history));
-
         return;
       }
     }
 
     const { id: branchId } = branch;
-
-    if (storyletDeckType === "Sometimes") {
+    if (storyletFrequency === "Sometimes") {
       dispatch(shouldUpdateOpportunities());
     }
 
     setIsWorking(true);
 
     if (onChooseBranch) {
-      await onChooseBranch({
-        branchId,
-        qualityRequirements,
-        secondChanceIds,
-      });
+      await onChooseBranch({ branchId, qualityRequirements, secondChanceIds });
     } else {
       await dispatch(
-        chooseBranch({
-          branchId,
-          qualityRequirements,
-          secondChanceIds,
-        })
+        chooseBranch({ branchId, qualityRequirements, secondChanceIds })
       );
     }
 
@@ -132,7 +120,7 @@ export function Branch({
     onChooseBranch,
     qualityRequirements,
     secondChanceIds,
-    storyletDeckType,
+    storyletFrequency,
   ]);
 
   const handleToggleSecondChance = useCallback(
@@ -246,7 +234,7 @@ type OwnProps = {
   dispatch: Function; // eslint-disable-line
   isGoingBack?: boolean;
   onChooseBranch?: (_: any) => Promise<void>;
-  storyletDeckType?: DeckType;
+  storyletFrequency?: Frequency;
 };
 
 const mapStateToProps = ({

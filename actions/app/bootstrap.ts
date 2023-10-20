@@ -24,6 +24,7 @@ import { fetch as fetchSettings } from "actions/settings";
 import fetchAuthMethods from "actions/settings/fetchAuthMethods";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 import { fetchUser, loginSuccess } from "actions/user";
+import { STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG } from "constants/accountLinkReminder";
 import { Either, Failure, Success } from "services/BaseMonadicService";
 import { FetchUserResponse } from "services/UserService";
 import { IAppState } from "types/app";
@@ -44,6 +45,12 @@ export interface IBootstrapOptions {
   fetchSpritesNow?: boolean;
   hasMapRootAreaChanged?: boolean;
   onSpriteLoadProgress?: (_?: any) => any;
+}
+
+function doesUserPreferAuthNagSuppression(storage: Storage) {
+  return JSON.parse(
+    storage.getItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG) ?? "false"
+  );
 }
 
 export default function performInitialRequests(options = {}) {
@@ -119,8 +126,12 @@ export default function performInitialRequests(options = {}) {
 
         dispatch(loginSuccess(data));
 
-        // Show the user an auth nag if the response says we should
-        if (data.shouldDisplayAuthNag) {
+        // Show the user an auth nag if the response says we should and if the user hasn't suppressed them
+        // on this device
+        if (
+          data.shouldDisplayAuthNag &&
+          !doesUserPreferAuthNagSuppression(localStorage)
+        ) {
           dispatch(showAccountLinkReminder());
         }
       }

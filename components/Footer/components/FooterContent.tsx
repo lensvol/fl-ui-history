@@ -1,19 +1,20 @@
 import React from "react";
 import classnames from "classnames";
 import Config from "configuration";
-import { Link } from "react-router-dom";
+import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 
-interface Props {
+interface Props extends RouteComponentProps {
   className?: string;
 }
 
-export default function FooterContent({ className }: Props) {
+export function FooterContent({ className }: Props) {
+  // noinspection HtmlUnknownTarget
   return (
     <div className={classnames("footer-content", className)}>
       <div className="">
         <p>
-          © <a href="https://www.failbettergames.com/">Failbetter Games</a>{" "}
-          2010–2023{" "}
+          © <a href="http://www.failbettergames.com/">Failbetter Games</a>{" "}
+          2010–2021{" "}
           <span style={{ fontWeight: "bold", marginLeft: "1em" }}>
             Version {Config.version}
           </span>
@@ -31,7 +32,7 @@ export default function FooterContent({ className }: Props) {
             <Link to="/terms">Terms</Link>
           </li>
           <li className="list-item--separated">
-            <a href="https://www.failbettergames.com/news">Blog</a>
+            <a href="http://www.twitter.com/failbettergames">FBG on Twitter</a>
           </li>
         </ul>
       </div>
@@ -39,4 +40,4 @@ export default function FooterContent({ className }: Props) {
   );
 }
 
-FooterContent.displayName = "FooterContent";
+export default withRouter(FooterContent);

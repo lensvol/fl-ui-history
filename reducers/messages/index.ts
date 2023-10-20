@@ -23,7 +23,6 @@ const INITIAL_STATE: IMessagesState = {
   feedMessages: [],
   interactions: [],
   dialogOpen: false,
-  dialogHeader: null,
   dialogMessage: null,
   subtab: "blah",
 };
@@ -103,30 +102,6 @@ export default function reducer(
         isDeleting: true,
         isRequesting: false,
       });
-    }
-
-    case MessageActionTypes.EMAIL_REQUESTED: {
-      return { ...state, dialogOpen: false, isRequesting: true };
-    }
-
-    case MessageActionTypes.EMAIL_FAILURE: {
-      return {
-        ...state,
-        isRequesting: false,
-        dialogOpen: true,
-        dialogHeader: "An Error Occurred",
-        dialogMessage: "Unable to send message.",
-      };
-    }
-
-    case MessageActionTypes.EMAIL_SUCCESS: {
-      return {
-        ...state,
-        isRequesting: false,
-        dialogOpen: true,
-        dialogHeader: "Success!",
-        dialogMessage: "Message has been sent to your account email.",
-      };
     }
 
     case MessageActionTypes.CANCEL_REQUESTED:

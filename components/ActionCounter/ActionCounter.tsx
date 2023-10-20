@@ -5,19 +5,12 @@ import ReactCSSTransitionReplace from "react-css-transition-replace";
 
 import Loading from "components/Loading";
 import { IAppState } from "types/app";
-import classnames from "classnames";
 
 class ActionCounter extends PureComponent<Props> {
   static displayName = "ActionCounter";
 
   renderTimer() {
-    const {
-      actions,
-      actionBankSize,
-      message,
-      onClick,
-      remainingActionRefreshes,
-    } = this.props;
+    const { actions, actionBankSize, message, onClick } = this.props;
 
     if (actions === undefined) {
       return <Loading spinner small />;
@@ -41,19 +34,8 @@ class ActionCounter extends PureComponent<Props> {
       <Fragment>
         <div className="item__value">{`${actions}/${actionBankSize}`}</div>
         <div style={{ fontWeight: "bold" }}>{message}</div>
-        {remainingActionRefreshes > 0 && (
-          <div>
-            <span className="enhanced-text--inverse">
-              {remainingActionRefreshes}
-            </span>{" "}
-            Refresh{remainingActionRefreshes !== 1 && "es"} Available
-          </div>
-        )}
         <button
-          className={classnames(
-            "button",
-            remainingActionRefreshes > 0 ? "button--ef" : "button--secondary"
-          )}
+          className="button button--secondary"
           onClick={onClick}
           style={{ marginTop: ".5rem" }}
           type="button"
@@ -89,7 +71,6 @@ const mapStateToProps = ({
 type Props = ReturnType<typeof mapStateToProps> & {
   message: string;
   onClick: () => void;
-  remainingActionRefreshes: number;
 };
 
 export default connect(mapStateToProps)(ActionCounter);

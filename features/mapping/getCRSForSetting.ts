@@ -1,7 +1,7 @@
+import { getMapDimensionsForSetting } from "features/mapping/index";
 import { CRS, Transformation } from "leaflet";
+import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting";
 import { IMappableSetting } from "types/map";
-import { getMapDimensionsForSetting } from "./index";
-import getMapZoomLimitsForSetting from "./getMapZoomLimitsForSetting";
 
 export default function getCRSForSetting(setting: IMappableSetting) {
   const { width: mapWidth, height: mapHeight } =

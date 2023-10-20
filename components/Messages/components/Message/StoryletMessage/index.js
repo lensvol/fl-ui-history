@@ -32,10 +32,10 @@ export class StoryletMessage extends Component {
   };
 
   render = () => {
-    const { data, onEmail } = this.props;
+    const { data } = this.props;
     return (
-      <MessageComponent data={data} emailable onEmail={onEmail}>
-        <PrimaryButton onClick={this.handleClick}>Go</PrimaryButton>
+      <MessageComponent data={data}>
+        <PrimaryButton onClick={this.handleClick}>Go</PrimaryButton>;
       </MessageComponent>
     );
   };
@@ -44,7 +44,6 @@ export class StoryletMessage extends Component {
 StoryletMessage.propTypes = {
   data: PropTypes.shape({}).isRequired,
   dispatch: PropTypes.func.isRequired,
-  onEmail: PropTypes.func.isRequired,
 };
 
 export default connect()(StoryletMessage);

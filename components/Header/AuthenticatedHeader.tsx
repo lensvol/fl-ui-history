@@ -1,5 +1,3 @@
-import { FEATURE_CREDITS } from "features/feature-flags";
-import { useFeature } from "flagged";
 import React, { Fragment, useMemo } from "react";
 import classnames from "classnames";
 import { connect } from "react-redux";
@@ -13,7 +11,6 @@ export enum CurrentLocation {
   Help,
   Privacy,
   Terms,
-  Credits,
   SomewhereElse,
 }
 
@@ -25,8 +22,6 @@ export function AuthenticatedHeader(props: Props) {
     user,
     location: { pathname },
   } = props;
-
-  const hasCredits = useFeature(FEATURE_CREDITS);
 
   const currentLocation = useMemo(() => {
     if (pathname.startsWith("/account")) {
@@ -40,9 +35,6 @@ export function AuthenticatedHeader(props: Props) {
     }
     if (pathname.startsWith("/terms")) {
       return CurrentLocation.Terms;
-    }
-    if (pathname.startsWith("/credits")) {
-      return CurrentLocation.Credits;
     }
 
     return CurrentLocation.SomewhereElse;
@@ -82,12 +74,6 @@ export function AuthenticatedHeader(props: Props) {
         {currentLocation !== CurrentLocation.Account && (
           <li className="list-item--separated">
             <Link to="/account">Account</Link>
-          </li>
-        )}
-
-        {hasCredits && currentLocation !== CurrentLocation.Credits && (
-          <li className="list-item--separated">
-            <Link to="/credits">Credits</Link>
           </li>
         )}
 

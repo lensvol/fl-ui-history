@@ -11,7 +11,6 @@ const seaMap: { [key: string]: PIXI.Sprite } = {};
 const coastlineSeaMap: { [key: string]: PIXI.Sprite } = {};
 
 const mapsByType: { [key in SpriteType]: { [key: string]: PIXI.Sprite } } = {
-  /* eslint-disable quote-props */
   available: spriteMap,
   selection: selectionSpriteMap,
   "main-destination": mainDestinationMap,
@@ -20,7 +19,6 @@ const mapsByType: { [key in SpriteType]: { [key: string]: PIXI.Sprite } } = {
   fog: fogMap,
   sea: seaMap,
   coastlinesea: coastlineSeaMap,
-  /* eslint-enable quote-props */
 };
 
 const GlobalSpriteMap = {
@@ -39,8 +37,6 @@ const GlobalSpriteMap = {
     if (mapToUse[key]) {
       return mapToUse[key];
     }
-
-    return undefined;
   },
 };
 

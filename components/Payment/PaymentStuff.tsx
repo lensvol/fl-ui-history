@@ -1,15 +1,9 @@
-import {
-  Dropin,
-  PaymentMethodPayload,
-  PaymentMethodRequestablePayload,
-} from "braintree-web-drop-in";
-import getDefaultPayPalOptions from "components/Payment/getDefaultPayPalOptions";
+import { Dropin, PaymentMethodRequestablePayload } from "braintree-web-drop-in";
 import { CURRENCY_CODE_GBP } from "constants/payment";
 import Loading from "components/Loading";
 import BillingField from "components/Payment/BillingField";
 import BraintreeDropIn, {
   BraintreeDropInProps,
-  BraintreeWebDropInOptions,
 } from "components/Payment/BraintreeWebDropIn";
 import CountrySelect from "components/Payment/CountrySelect";
 import Packages from "components/Payment/Packages";
@@ -26,14 +20,13 @@ import React, {
 import PaymentService from "services/PaymentService";
 import {
   CurrencyCode,
-  ExtendedThreeDSecureInfo,
+  FixedPaymentMethodPayload,
   IBraintreeNexOptionsResponse,
   IBraintreePurchaseFateRequest,
   IPaymentService,
   NexQuantity,
   PaymentMethodType,
   ThreeDSecureCompleteResult,
-  ThreeDSecureParameters,
 } from "types/payment";
 
 export const INITIAL_VALUES = {
@@ -54,38 +47,13 @@ export const GENERIC_THREE_D_SECURE_FAILURE_MESSAGE =
 export type FormValues = typeof INITIAL_VALUES;
 
 export interface PaymentStuffProps<
-  TPayload extends { nonce: string; recaptchaResponse: string | null }
+  TPayload extends { nonce: string; recaptchaResponse: string | null },
 > {
   onCancel: () => void;
   onThreeDSComplete: (result: ThreeDSecureCompleteResult<TPayload>) => void;
 }
 
-export function getFailureMessageFromPayload(payload: PaymentMethodPayload) {
-  if (payload.type !== "CreditCard") {
-    // currently, we only have logic for credit card messages
-    return `${GENERIC_THREE_D_SECURE_FAILURE_MESSAGE} (${payload.type})`;
-  }
-
-  if (payload.threeDSecureInfo === undefined) {
-    return GENERIC_THREE_D_SECURE_FAILURE_MESSAGE;
-  }
-
-  if (payload.threeDSecureInfo.liabilityShifted ?? false) {
-    // this function should never have been called; reaching here is a coding error
-    return GENERIC_THREE_D_SECURE_FAILURE_MESSAGE;
-  }
-
-  const status = (payload.threeDSecureInfo as ExtendedThreeDSecureInfo)?.status;
-  if (status !== undefined) {
-    return `${GENERIC_THREE_D_SECURE_FAILURE_MESSAGE} (${status})`;
-  }
-
-  return GENERIC_THREE_D_SECURE_FAILURE_MESSAGE;
-}
-
-export function formValuesToBillingAddress(
-  values: FormValues
-): ThreeDSecureParameters["billingAddress"] {
+export function formValuesToBillingAddress(values: FormValues) {
   const { country, ...rest } = values;
   return {
     ...rest,
@@ -119,14 +87,6 @@ export default function PaymentStuff({
   const [selectedPackage, setSelectedPackage] = useState<
     NexQuantity | undefined
   >(undefined);
-
-  const options = useMemo(() => {
-    if (nexOptions?.clientRequestToken === undefined) {
-      return undefined;
-    }
-
-    return getDefaultPayPalOptions(nexOptions.clientRequestToken);
-  }, [nexOptions]);
 
   const fetchNexOptions = useCallback(
     async (code?: CurrencyCode) => {
@@ -215,21 +175,19 @@ export default function PaymentStuff({
 
       // console.info('INITIATING PAYMENT METHOD REQUEST');
 
-      const requestPaymentMethodPayload: {
-        threeDSecure: ThreeDSecureParameters;
-      } = {
+      const requestPaymentMethodPayload = {
         threeDSecure: {
-          email: values.email,
           amount,
           billingAddress: formValuesToBillingAddress(values),
         },
       };
 
-      const payload = await dropInInstance.requestPaymentMethod(
+      const untypedPayload = await dropInInstance.requestPaymentMethod(
         requestPaymentMethodPayload
       );
+      const payload = untypedPayload as FixedPaymentMethodPayload;
 
-      // Check whether we failed 3DS authentication on a card payment method request before we proceed
+      // Check we failed 3DS authentication on a card payment method request before we proceed
       if (payload.type === "CreditCard") {
         // OK, liability didn't shift, which means that we can't process this payment. Just yeet the user
         // to the failed state
@@ -239,7 +197,7 @@ export default function PaymentStuff({
           );
           onThreeDSComplete({
             isSuccess: false,
-            message: getFailureMessageFromPayload(payload),
+            message: GENERIC_THREE_D_SECURE_FAILURE_MESSAGE,
           });
           return;
         }
@@ -271,6 +229,11 @@ export default function PaymentStuff({
     fetchNexOptions();
   }, [fetchNexOptions]);
 
+  const authorization = useMemo(
+    () => nexOptions?.clientRequestToken,
+    [nexOptions]
+  );
+
   return (
     <Formik initialValues={INITIAL_VALUES} onSubmit={handleFormSubmit}>
       {({ values, isSubmitting, isValid }) => (
@@ -297,16 +260,16 @@ export default function PaymentStuff({
                 />
               </div>
               <DropInOrLoading
+                authorization={authorization}
                 isFetchingCurrencies={isFetchingCurrencyOptions}
                 isSelectingCurrency={isSelectingCurrency}
                 onNoPaymentMethodRequestable={handleNoPaymentRequestable}
                 onPaymentMethodRequestable={handlePaymentMethodRequestable}
                 onInstance={handleInstance}
                 onTeardown={handleInstanceTeardown}
-                options={options}
               />
               {currentPaymentMethod === "CreditCard" ? (
-                <PersonalDetails values={values} />
+                <PersonalDeets values={values} />
               ) : null}
             </div>
             <div
@@ -345,7 +308,7 @@ export interface PersonalDeetsProps {
   values: FormValues;
 }
 
-export function PersonalDetails({ values }: PersonalDeetsProps) {
+export function PersonalDeets({ values }: PersonalDeetsProps) {
   return (
     <div>
       <h2 className="heading heading--2">Card details</h2>
@@ -361,39 +324,29 @@ export function PersonalDetails({ values }: PersonalDeetsProps) {
         <BillingField name="email" value={values.email} label="Email" />
         <BillingField
           name="givenName"
-          label="First name"
           value={values.givenName}
-          maxlength={50}
+          label="First name"
         />
-        <BillingField
-          name="surname"
-          label="Last name"
-          value={values.surname}
-          maxlength={50}
-        />
+        <BillingField name="surname" value={values.surname} label="Last name" />
         <BillingField
           name="streetAddress"
-          label="Address Line 1"
           value={values.streetAddress}
-          maxlength={50}
+          label="Address Line 1"
         />
         <BillingField
           name="extendedAddress"
-          label="Address Line 2"
           value={values.extendedAddress}
-          maxlength={50}
+          label="Address Line 2"
         />
         <BillingField
           name="locality"
-          label="City/Town"
           value={values.locality}
-          maxlength={50}
+          label="City/Town"
         />
         <BillingField
           name="postalCode"
-          label="Postal code"
           value={values.postalCode}
-          maxlength={10}
+          label="Postal code"
         />
 
         <label htmlFor="country">Country</label>
@@ -437,35 +390,36 @@ function CurrencySelectionOrLoading({
   );
 }
 
-interface DropInOrLoadingProps extends Omit<BraintreeDropInProps, "options"> {
+interface DropInOrLoadingProps
+  extends Omit<BraintreeDropInProps, "authorization"> {
+  authorization: string | undefined;
   isFetchingCurrencies: boolean;
   isSelectingCurrency: boolean;
-  options: BraintreeWebDropInOptions | undefined;
 }
 
 function DropInOrLoading({
+  authorization,
   isFetchingCurrencies,
   isSelectingCurrency,
   onInstance,
   onPaymentMethodRequestable,
   onNoPaymentMethodRequestable,
   onTeardown,
-  options,
 }: DropInOrLoadingProps) {
   if (isFetchingCurrencies || isSelectingCurrency) {
     return null;
   }
-  if (options === undefined) {
+  if (authorization === undefined) {
     return null;
   }
 
   return (
     <BraintreeDropIn
+      authorization={authorization}
       onInstance={onInstance}
       onNoPaymentMethodRequestable={onNoPaymentMethodRequestable}
       onPaymentMethodRequestable={onPaymentMethodRequestable}
       onTeardown={onTeardown}
-      options={options}
     />
   );
 }

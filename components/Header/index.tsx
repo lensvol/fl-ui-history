@@ -1,6 +1,8 @@
+import { FEATURE_IS_IT_ADVENT } from "features/feature-flags";
 import React, { useCallback, useMemo } from "react";
 import { connect, useDispatch } from "react-redux";
 import { withRouter, Link, RouteComponentProps } from "react-router-dom";
+import { Feature } from "flagged";
 import { enterFullScreen, exitFullScreen } from "actions/screen";
 import { IAppState } from "types/app";
 
@@ -9,7 +11,6 @@ import MediaLgUp from "../Responsive/MediaLgUp";
 
 import AuthenticatedHeader from "./AuthenticatedHeader";
 import UnauthenticatedHeader from "./UnauthenticatedHeader";
-import AdventLink from "./AdventLink";
 
 function Header(props: Props) {
   const { loggedIn, screen } = props;
@@ -42,7 +43,25 @@ function Header(props: Props) {
   return (
     <MediaLgUp>
       <div className="top-stripe" role="banner">
-        <AdventLink />
+        <Feature name={FEATURE_IS_IT_ADVENT}>
+          <div
+            style={{
+              alignItems: "center",
+              display: "flex",
+              marginLeft: "1rem",
+            }}
+          >
+            <img
+              src="https://images.fallenlondon.com/icons/mistersackssmall.png"
+              height="18"
+              alt="Mr Sacks"
+              style={{
+                marginRight: ".5rem",
+              }}
+            />
+            <a href="//advent.fallenlondon.com"> It's Advent! </a>
+          </div>
+        </Feature>
         <div className="top-stripe__inner-container">
           <div
             style={{
@@ -66,6 +85,7 @@ function Header(props: Props) {
 const mapStateToProps = (state: IAppState) => ({
   loggedIn: state.user.loggedIn,
   screen: state.screen,
+  user: state.user.user,
 });
 
 type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;

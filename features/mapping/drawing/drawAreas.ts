@@ -1,3 +1,4 @@
+import drawSpriteRecords from "features/mapping/drawing/drawSpriteRecords";
 import {
   isBackgroundSpriteRecord,
   isForegroundSpriteRecord,
@@ -6,12 +7,11 @@ import {
   isUnterzeeBackgroundSpriteRecord,
 } from "features/mapping/util";
 import { IArea, SpriteRecord } from "types/map";
-import drawSpriteRecords from "./drawSpriteRecords";
 
-export default async function drawAreas(
+export default function drawAreas(
   sortedSpriteRecords: SpriteRecord[],
   areas: IArea[]
-): Promise<void> {
+): Promise<void>[] {
   // Order the sprites and exclude the background
   const filteredSpriteRecords = sortedSpriteRecords.filter(
     (sr) =>
@@ -22,5 +22,5 @@ export default async function drawAreas(
       !isSelectionSpriteRecord(sr)
   );
 
-  await drawSpriteRecords(filteredSpriteRecords, areas);
+  return drawSpriteRecords(filteredSpriteRecords, areas);
 }

@@ -1,26 +1,22 @@
 import React from "react";
-import { useAppSelector } from "features/app/store";
+import { connect } from "react-redux";
+import { IAppState } from "types/app";
 
-type Props = {
-  onRequestClose: () => void;
-};
-
-export default function CompleteMessage({ onRequestClose }: Props) {
-  const name = useAppSelector((state) => state.settings.data.name);
-
+export function CompleteMessage({ name }: Props) {
   return (
     <div>
-      <h2 className="media__heading heading heading--3">Success!</h2>
-      <p>Your username is now {`'${name}'`}.</p>
-      <div className="buttons" style={{ marginTop: ".5rem" }}>
-        <button
-          type="button"
-          onClick={onRequestClose}
-          className="button button--primary"
-        >
-          Close
-        </button>
-      </div>
+      Success! Your username is now '{name}
+      '.
     </div>
   );
 }
+
+const mapStateToProps = ({
+  settings: {
+    data: { name },
+  },
+}: IAppState) => ({ name });
+
+type Props = ReturnType<typeof mapStateToProps>;
+
+export default connect(mapStateToProps)(CompleteMessage);

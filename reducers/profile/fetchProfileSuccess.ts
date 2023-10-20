@@ -1,5 +1,5 @@
 import { FetchProfileSuccess } from "actions/profile/fetchProfile";
-import { IProfileState } from "features/profile";
+import { IProfileState } from "types/profile";
 
 export default function fetchProfileSuccess(
   state: IProfileState,

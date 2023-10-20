@@ -8,8 +8,7 @@ import {
   STORYLET_MESSAGE,
 } from "constants/messageTypes";
 
-import { deleteMessage, emailMessage } from "actions/messages";
-import { showAccountLinkReminder } from "actions/accountLinkReminder";
+import { deleteMessage } from "actions/messages";
 import { ThunkDispatch } from "redux-thunk";
 import { IAppState } from "types/app";
 import { FeedMessage } from "types/messages";
@@ -35,63 +34,17 @@ function MessageContainer(props: Props) {
     await dispatch(deleteMessage(id));
   }, [dispatch, relatedId]);
 
-  const handleEmail = useCallback(
-    async (hasMessagingEmail: boolean) => {
-      if (hasMessagingEmail) {
-        const id = relatedId;
-
-        if (!id && id !== 0) {
-          return; // no message id
-        }
-
-        dispatch(emailMessage(id));
-      } else {
-        // show user prompt for additional login methods
-        dispatch(showAccountLinkReminder());
-      }
-    },
-    [dispatch, relatedId]
-  );
-
   switch (data.type) {
     case INVITATION_FROM_YOU:
-      return (
-        <InvitationFromYou
-          data={data}
-          disabled={disabled}
-          onEmail={handleEmail}
-        />
-      );
+      return <InvitationFromYou data={data} disabled={disabled} />;
     case INVITATION_TO_YOU:
-      return (
-        <InvitationToYou
-          data={data}
-          disabled={disabled}
-          onEmail={handleEmail}
-        />
-      );
+      return <InvitationToYou data={data} disabled={disabled} />;
     case SOCIAL_MESSAGE:
-      return (
-        <SocialMessage data={data} disabled={disabled} onEmail={handleEmail} />
-      );
+      return <SocialMessage data={data} disabled={disabled} />;
     case STORYLET_MESSAGE:
-      return (
-        <StoryletMessage
-          data={data}
-          disabled={disabled}
-          onEmail={handleEmail}
-        />
-      );
+      return <StoryletMessage data={data} disabled={disabled} />;
     default:
-      return (
-        <MessageComponent
-          data={data}
-          deletable
-          onDelete={handleDelete}
-          emailable
-          onEmail={handleEmail}
-        />
-      );
+      return <MessageComponent data={data} deletable onDelete={handleDelete} />;
   }
 }
 

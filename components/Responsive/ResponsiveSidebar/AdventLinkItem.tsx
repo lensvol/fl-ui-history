@@ -1,28 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { Feature } from "flagged";
 import { FEATURE_IS_IT_ADVENT } from "features/feature-flags";
-import {
-  isDateDuringAdvent,
-  INTERVAL_ADVENT_DATE_CHECK,
-} from "components/Header/AdventLink";
 
 export default function AdventLinkItem() {
-  const [isItAdvent, setIsItAdvent] = useState(false);
-
-  const runAdventCheck = useCallback(() => {
-    setIsItAdvent(isDateDuringAdvent(new Date()));
-  }, []);
-
-  useEffect(() => {
-    runAdventCheck();
-    const interval = setInterval(runAdventCheck, INTERVAL_ADVENT_DATE_CHECK);
-    return () => clearInterval(interval);
-  }, [runAdventCheck]);
-
-  if (!isItAdvent) {
-    return null;
-  }
-
   return (
     <Feature name={FEATURE_IS_IT_ADVENT}>
       <li className="sidemenu__nav-item">

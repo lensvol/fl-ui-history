@@ -83,6 +83,20 @@ export interface ApiAddContactRequest {
   branchId: number;
 }
 
+/*
+export interface IAddNewContactResponseData {
+  addedFriendId: number,
+  message: string,
+  eligibleFriends: {
+    userId: number,
+    id: number,
+    name: string,
+    userName: string,
+  }[],
+}
+
+ */
+
 export interface IChooseBranchRequestData {
   branchId: number;
   secondChanceIds?: number[];

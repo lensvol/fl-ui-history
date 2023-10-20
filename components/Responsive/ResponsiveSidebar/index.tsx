@@ -1,6 +1,4 @@
 import ResponsiveSidebarOverlay from "components/Responsive/ResponsiveSidebar/ResponsiveSidebarOverlay";
-import { FEATURE_CREDITS } from "features/feature-flags";
-import { useFeature } from "flagged";
 import React, { useCallback } from "react";
 import { connect, useDispatch } from "react-redux";
 import classnames from "classnames";
@@ -15,17 +13,14 @@ import Qualities from "components/SidebarQualities";
 import SidebarOutfitSelector from "components/SidebarOutfitSelector";
 import Config from "configuration";
 import { IAppState } from "types/app";
-import { UIRestriction } from "types/myself";
 
 import NavItem from "./NavItem";
 import AdventLinkItem from "./AdventLinkItem";
 
 function ResponsiveSidebar(props: Props) {
-  const { history, isOpen, name, screen, showFateUI } = props;
+  const { history, isOpen, name, screen } = props;
 
   const dispatch = useDispatch();
-
-  const hasCredits = useFeature(FEATURE_CREDITS);
 
   const onCloseSidebar = useCallback(() => {
     dispatch(closeSidebar());
@@ -79,11 +74,9 @@ function ResponsiveSidebar(props: Props) {
             <NavItem icon="user" onClick={makeHandler("account")}>
               Account
             </NavItem>
-            {showFateUI && (
-              <NavItem fl icon="deck" onClick={makeHandler("fate")}>
-                Fate
-              </NavItem>
-            )}
+            <NavItem fl icon="deck" onClick={makeHandler("fate")}>
+              Fate
+            </NavItem>
             <NavItem icon="star" onClick={makeHandler("plans")}>
               Plans
             </NavItem>
@@ -96,11 +89,6 @@ function ResponsiveSidebar(props: Props) {
             >
               {screen.full ? "Exit fullscreen" : "Go fullscreen"}
             </NavItem>
-            {!!hasCredits && (
-              <NavItem icon="list" onClick={makeHandler("credits")}>
-                Credits
-              </NavItem>
-            )}
             <NavItem icon="sign-out" onClick={onLogoutUser}>
               Log out
             </NavItem>
@@ -117,15 +105,11 @@ const mapStateToProps = ({
   sidebar,
   myself: {
     character: { name },
-    uiRestrictions,
   },
 }: IAppState) => ({
   ...sidebar,
   screen,
   name,
-  showFateUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Fate
-  ),
 });
 
 type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;

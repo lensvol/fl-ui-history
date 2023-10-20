@@ -5,7 +5,7 @@ import getHeight, {
 
 export default function getContainerTop(
   actions: number,
-  actionBankSize: number
+  isExceptional: boolean
 ) {
   // If we have more than 20 actions, we have a full candle
   if (actions > 20) {
@@ -20,7 +20,7 @@ export default function getContainerTop(
   // If we are Exceptional, then we are showing either the height of
   // the remaining candle, or the height of the snuffed candle, whichever
   // is taller
-  if (actionBankSize > 20) {
+  if (isExceptional) {
     return -Math.max(getHeight({ actions }), SNUFFED_CANDLE_HEIGHT);
   }
   return -getHeight({ actions });

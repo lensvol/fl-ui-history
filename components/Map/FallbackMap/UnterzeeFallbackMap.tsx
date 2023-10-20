@@ -23,10 +23,10 @@ import {
   IMappableSetting,
 } from "types/map";
 import MapModalTooltipContext from "../MapModalTooltipContext";
-import { FallbackMapProps } from "./types";
+import { OwnProps } from "./props";
 import PlayerMarkers from "../PlayerMarkers";
 
-export function UnterzeeFallbackMap(props: FallbackMapProps & StateProps) {
+export function UnterzeeFallbackMap(props: OwnProps & StateProps) {
   const {
     areas,
     currentArea,

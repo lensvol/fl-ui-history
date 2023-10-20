@@ -7,7 +7,12 @@ import { withRouter } from "react-router-dom";
 import Loading from "components/Loading";
 import SearchField from "components/SearchField";
 
-import { addContact, addFromFacebook, deleteContact } from "actions/contacts";
+import {
+  addContact,
+  addFromFacebook,
+  addFromTwitter,
+  deleteContact,
+} from "actions/contacts";
 import AddContactForm from "./components/AddContactForm";
 import ContactsHeader from "./components/ContactsHeader";
 import ContactList from "./components/ContactList";
@@ -75,6 +80,14 @@ class Contacts extends React.Component {
     dispatch(addFromFacebook());
   };
 
+  /**
+   * Add from Twitter
+   */
+  addFromTwitter = () => {
+    const { dispatch } = this.props;
+    dispatch(addFromTwitter());
+  };
+
   handleSearchFieldChange = (e) => {
     this.setState({ filterString: e.currentTarget.value });
   };
@@ -85,7 +98,7 @@ class Contacts extends React.Component {
    */
   render() {
     const { isFetching, contacts, data, isAdding, message } = this.props;
-    const { facebookAuth } = data;
+    const { facebookAuth, twitterAuth } = data;
     const { filterString, userInput } = this.state;
 
     if (isFetching) {
@@ -125,6 +138,15 @@ class Contacts extends React.Component {
             {isAdding ? "fetching..." : "Add from Facebook"}
           </button>
         )}
+        {twitterAuth && (
+          <button
+            className="button button--primary"
+            onClick={this.addFromTwitter}
+            type="button"
+          >
+            {isAdding ? "fetching..." : "Add from Twitter"}
+          </button>
+        )}
       </div>
     );
   }
@@ -135,7 +157,6 @@ Contacts.propTypes = {
   data: PropTypes.shape({
     facebookAuth: PropTypes.bool.isRequired,
     twitterAuth: PropTypes.bool.isRequired,
-    googleAuth: PropTypes.bool.isRequired,
   }).isRequired,
   dispatch: PropTypes.func.isRequired,
   isAdding: PropTypes.bool.isRequired,

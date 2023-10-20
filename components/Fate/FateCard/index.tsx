@@ -9,23 +9,19 @@ import { IFateCard } from "types/fate";
 import MediaSmDown from "components/Responsive/MediaSmDown";
 import MediaMdUp from "components/Responsive/MediaMdUp";
 import FateCardTitleAndByline from "./FateCardTitleAndByline";
-import { ImageProps } from "components/Image/props";
 
 type Props = {
   data: IFateCard;
   onClick: (data: IFateCard) => void;
   story?: boolean;
-  badge?: ImageProps;
 };
 
-export function FateCard({ data, onClick, story, badge }: Props) {
+export function FateCard({ data, onClick, story }: Props) {
   const { description, shortDescription } = data;
 
   const handleClick = useCallback(() => {
     onClick(data);
   }, [data, onClick]);
-
-  const theData: any = data;
 
   return (
     <Fragment>
@@ -88,18 +84,13 @@ export function FateCard({ data, onClick, story, badge }: Props) {
               <button
                 className={classnames(
                   "button button--secondary",
-                  !theData.enhancedStore &&
-                    !(story || data.canAfford) &&
-                    "button--disabled",
-                  theData.buttonClassNames
+                  !(story || data.canAfford) && "button--disabled"
                 )}
-                disabled={!theData.enhancedStore && !(story || data.canAfford)}
+                disabled={!(story || data.canAfford)}
                 onClick={handleClick}
                 type="button"
               >
-                {theData.enhancedStore ? (
-                  <span>{theData.buttonText}</span>
-                ) : story ? (
+                {story ? (
                   <span>Learn more</span>
                 ) : (
                   <span>
@@ -111,7 +102,6 @@ export function FateCard({ data, onClick, story, badge }: Props) {
             </div>
           </div>
         </div>
-        {badge && <Image {...badge} />}
       </div>
     </Fragment>
   );
@@ -147,7 +137,7 @@ export function FateCardImage(
   const { border, image, name } = data;
   return (
     <Image
-      borderContainerClassName="small-card__border"
+      borderContainerClassName="fate-card__border"
       className="media__object fate-card__image"
       icon={image}
       alt={name}

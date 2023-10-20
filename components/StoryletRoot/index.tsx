@@ -103,7 +103,7 @@ export function StoryletRoot(props: Props) {
             />
           )}
         </div>
-        {data.deckType === "Sometimes" && data.distribution !== undefined && (
+        {data.frequency === "Sometimes" && data.distribution !== undefined && (
           <div className="storylet-root__frequency">
             <FrequencyButtonlet frequency={data.distribution} />
           </div>

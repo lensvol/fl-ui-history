@@ -41,9 +41,9 @@ export const CHANGEABLE_CATEGORIES: OutfitSlotName[] = [
   "ToolOfTheTrade",
 ];
 
-export const EFFECT_CATEGORIES: OutfitSlotName[] = ["Boon", "Burden"];
-
 const STANDARD_CATEGORIES: OutfitSlotName[] = [
+  "Burden",
+  "TestSlot2",
   "Hat",
   "Clothing",
   "Gloves",
@@ -65,7 +65,6 @@ const EXPANDED_CATEGORIES: OutfitSlotName[] = [
 ];
 
 export const OUTFIT_CATEGORIES = [
-  ...EFFECT_CATEGORIES,
   ...STANDARD_CATEGORIES,
   ...EXPANDED_CATEGORIES,
 ];

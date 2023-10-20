@@ -11,7 +11,6 @@ import FateService, {
 } from "services/FateService";
 import { fetchAvailable } from "actions/storylet";
 import { fetch as fetchCards } from "actions/cards";
-import { fetchActions } from "actions/actions";
 
 export type PurchaseItemRequested = {
   type: typeof FateActionTypes.PURCHASE_ITEM_REQUESTED;
@@ -76,7 +75,6 @@ export function purchaseItem(
       if (result instanceof Success) {
         const { data } = result;
         dispatch(purchaseItemSuccess(data));
-        dispatch(fetchActions());
         // Fetch opp cards and available storylets in case one of them changed
         dispatch(fetchCards({ background: true }));
         dispatch(fetchAvailable());

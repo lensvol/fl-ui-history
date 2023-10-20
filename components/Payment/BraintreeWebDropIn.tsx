@@ -1,16 +1,14 @@
 import dropin, {
   ChangeActiveViewPayload,
   Dropin,
-  Options,
   PaymentMethodRequestablePayload,
   PaymentOptionSelectedPayload,
 } from "braintree-web-drop-in";
+import getDefaultPayPalOptions from "components/Payment/getDefaultPayPalOptions";
 import React, { useEffect, useRef } from "react";
 
-export type BraintreeWebDropInOptions = Omit<Options, "container">;
-
 export interface BraintreeDropInProps {
-  // authorization: string,
+  authorization: string;
   onChangeActiveView?: (payload: ChangeActiveViewPayload) => void;
   onInstance?: (instance: Dropin | undefined) => void;
   on3dsCustomerCanceled?: () => void;
@@ -20,10 +18,11 @@ export interface BraintreeDropInProps {
   ) => void;
   onPaymentOptionSelected?: (payload: PaymentOptionSelectedPayload) => void;
   onTeardown?: () => void;
-  options: BraintreeWebDropInOptions;
+  // options: Omit<Options, 'container'> & Partial<{ container: Options['container'] }>,
 }
 
 export default function BraintreeDropIn({
+  authorization,
   onChangeActiveView,
   on3dsCustomerCanceled,
   onInstance,
@@ -31,7 +30,6 @@ export default function BraintreeDropIn({
   onPaymentMethodRequestable,
   onPaymentOptionSelected,
   onTeardown,
-  options,
 }: BraintreeDropInProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
   const instanceRef = useRef<Dropin | undefined>(undefined);
@@ -62,11 +60,12 @@ export default function BraintreeDropIn({
     };
 
     function initializeBraintree(container: HTMLDivElement) {
+      const defaultOptions = getDefaultPayPalOptions(authorization);
       dropin.create(
         {
-          ...options,
-          container,
+          ...defaultOptions,
           preselectVaultedPaymentMethod: false,
+          container,
         },
         (error, i) => {
           if (error) {
@@ -75,17 +74,21 @@ export default function BraintreeDropIn({
             instanceRef.current = i;
 
             // Register callbacks
-            i?.on("paymentMethodRequestable", (payload) =>
-              onPaymentMethodRequestable?.(payload)
+            i?.on(
+              "paymentMethodRequestable",
+              (payload) => onPaymentMethodRequestable?.(payload)
             );
-            i?.on("noPaymentMethodRequestable", () =>
-              onNoPaymentMethodRequestable?.()
+            i?.on(
+              "noPaymentMethodRequestable",
+              () => onNoPaymentMethodRequestable?.()
             );
-            i?.on("paymentOptionSelected", (payload) =>
-              onPaymentOptionSelected?.(payload)
+            i?.on(
+              "paymentOptionSelected",
+              (payload) => onPaymentOptionSelected?.(payload)
             );
-            i?.on("changeActiveView", (payload) =>
-              onChangeActiveView?.(payload)
+            i?.on(
+              "changeActiveView",
+              (payload) => onChangeActiveView?.(payload)
             );
             i?.on("3ds:customer-canceled", () => on3dsCustomerCanceled?.());
 
@@ -99,6 +102,10 @@ export default function BraintreeDropIn({
       );
     }
   }, [
+    // divRef,
+    // instanceRef,
+    // isInitializingRef,
+    authorization,
     on3dsCustomerCanceled,
     onChangeActiveView,
     onInstance,
@@ -106,7 +113,6 @@ export default function BraintreeDropIn({
     onPaymentMethodRequestable,
     onPaymentOptionSelected,
     onTeardown,
-    options,
   ]);
 
   return <div ref={divRef} />;

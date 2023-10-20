@@ -1,6 +1,5 @@
 export type FateData = {
   actionRefillFateCard: MultipleChoiceActionRefillFateCard | undefined;
-  enhancedActionRefreshCard?: MultipleChoiceEnhancedActionRefreshCard;
   currentFate: number;
   fateCards: IFateCard[];
   premiumSubPurchaseCard?: IFateCard;
@@ -23,8 +22,6 @@ export interface IFateCard {
   season?: string | undefined;
   shortDescription: string;
   type: FateCardType;
-  enhancedStoryAvailability?: EnhancedStoryAvailability;
-  enhancedFeaturedItem?: boolean;
 }
 
 export type MultipleChoiceActionRefillFateCard = Omit<
@@ -36,19 +33,6 @@ export type MultipleChoiceActionRefillFateCard = Omit<
     correspondingActivePurchase: IFateCard | undefined;
     description: string;
   }[];
-};
-
-export type MultipleChoiceEnhancedActionRefreshCard = Omit<
-  Partial<IFateCard>,
-  "action"
-> & {
-  action: FateCardAction;
-  buttons: {
-    correspondingActivePurchase?: IFateCard;
-    description: string;
-  }[];
-  remainingActionRefreshes?: number;
-  remainingStoryUnlocks?: number;
 };
 
 export enum ExceptionalFriendWizardStep {
@@ -66,8 +50,6 @@ export type FateCardAction =
   | "ContentPurchase"
   | "RefillCards"
   | "RefillThreeActions"
-  | "EnhancedRefresh"
-  | "EnhancedUnlock"
   | "RefillActions";
 
 export type FateCardType =
@@ -77,8 +59,6 @@ export type FateCardType =
   | "PurchaseStory"
   | "ResetStory"
   | "AmbitionReset";
-
-export type EnhancedStoryAvailability = "None" | "FreshlyAdded" | "FinalMonth";
 
 export type FateSubtab = "gameplay" | "new" | "reset";
 export const SUBTAB_GAMEPLAY: FateSubtab = "gameplay";

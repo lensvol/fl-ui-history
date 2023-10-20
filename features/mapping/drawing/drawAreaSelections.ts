@@ -7,10 +7,10 @@ import {
 } from "features/mapping/util";
 import { IArea, SpriteRecord } from "types/map";
 
-export default async function drawAreaSelections(
+export default function drawAreaSelections(
   spriteRecords: SpriteRecord[],
   areas: IArea[]
-) {
+): Promise<void>[] {
   // Filter the sprite records
   const filteredSpriteRecords = spriteRecords.filter(
     (sr) =>
@@ -20,5 +20,5 @@ export default async function drawAreaSelections(
       isSelectionSpriteRecord(sr)
   );
 
-  await drawSpriteRecords(filteredSpriteRecords, areas);
+  return drawSpriteRecords(filteredSpriteRecords, areas);
 }

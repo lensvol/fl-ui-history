@@ -8,33 +8,21 @@ import { closeSidebar } from "actions/sidebar";
 import Image from "components/Image";
 import getPremiumDaysRemaining from "selectors/fate/getPremiumDaysRemaining";
 import { IAppState } from "types/app";
-import { UIRestriction } from "types/myself";
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
-import { useFeature } from "flagged";
-import { isDowngradedSubscription } from "actions/fate/subscriptions";
 
 const mapStateToProps = (state: IAppState) => {
   const {
     actions: { actions },
     fate: {
+      isExceptionalFriend,
       data: { currentFate, fateCards },
     },
-    myself: { uiRestrictions },
-    settings: {
-      subscriptions: { hasBraintreeSubscription, subscriptionType },
-    },
   } = state;
-
   return {
     actions,
     currentFate,
     fateCards,
-    hasSubscription: hasBraintreeSubscription,
-    premiumDaysRemaining: Math.max(getPremiumDaysRemaining(state), 0),
-    showFateUI: !uiRestrictions?.find(
-      (restriction) => restriction === UIRestriction.Fate
-    ),
-    subscriptionType,
+    isExceptionalFriend,
+    premiumDaysRemaining: getPremiumDaysRemaining(state),
   };
 };
 
@@ -44,14 +32,11 @@ function PlayerFate({
   actions,
   currentFate,
   fateCards,
-  hasSubscription,
   history,
+  isExceptionalFriend,
   premiumDaysRemaining,
-  showFateUI,
-  subscriptionType,
 }: Props) {
   const dispatch = useDispatch();
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
 
   const handleClick = useCallback(() => {
     const actionsRemaining = actions;
@@ -67,89 +52,26 @@ function PlayerFate({
   }, [actions, dispatch, fateCards, history]);
 
   const renderSubscriptionInformation = useCallback(() => {
-    const userDidDowngrade = isDowngradedSubscription(
-      hasSubscription,
-      subscriptionType
-    );
-
-    if (subscriptionType === "ExceptionalFriendship") {
+    if (isExceptionalFriend) {
       return (
-        <>
-          <div>
-            <p>
-              {premiumDaysRemaining} day{premiumDaysRemaining !== 1 && "s"} left
-              of Exceptional Friendship
-            </p>
-
-            {supportsEnhancedEF && (
-              <>
-                <p>
-                  <Link
-                    onClick={closeSidebar}
-                    to="/fate"
-                    className="enhanced-text--inverse"
-                  >
-                    Enhance your membership for more benefits!
-                  </Link>
-                </p>
-              </>
-            )}
-          </div>
-        </>
-      );
-    }
-
-    if (
-      userDidDowngrade ||
-      subscriptionType === "EnhancedExceptionalFriendship"
-    ) {
-      return (
-        <>
-          {supportsEnhancedEF && (
-            <>
-              <div>
-                <p>
-                  {premiumDaysRemaining} day{premiumDaysRemaining !== 1 && "s"}{" "}
-                  left of{" "}
-                  <span className="enhanced-text--inverse">
-                    Enhanced Exceptional Friendship
-                  </span>
-                </p>
-              </div>
-            </>
-          )}
-        </>
-      );
-    }
-
-    return (
-      <>
         <div>
-          <h3
-            style={{
-              textTransform: "uppercase",
-            }}
-          >
-            Be Exceptional!
-          </h3>
-          <Link onClick={closeSidebar} to="/fate">
-            <p>
-              Subscribe for a second candle and brand new stories every month.
-            </p>
-          </Link>
+          {`${premiumDaysRemaining} day${
+            premiumDaysRemaining !== 1 ? "s" : ""
+          } left of Exceptional Friendship`}
         </div>
-      </>
+      );
+    }
+    return (
+      <div>
+        <h3>BE EXCEPTIONAL!</h3>
+        <p>
+          <Link onClick={closeSidebar} to="/fate">
+            Subscribe for a second candle and brand new stories every month.
+          </Link>
+        </p>
+      </div>
     );
-  }, [
-    hasSubscription,
-    premiumDaysRemaining,
-    subscriptionType,
-    supportsEnhancedEF,
-  ]);
-
-  if (!showFateUI) {
-    return null;
-  }
+  }, [isExceptionalFriend, premiumDaysRemaining]);
 
   return (
     <li className="item">

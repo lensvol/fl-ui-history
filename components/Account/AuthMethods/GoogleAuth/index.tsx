@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import Modal from "components/Modal";
 import GoogleAuthComponent from "./GoogleAuthComponent";
 
-export default function GoogleAuth({ inverse, onLinkSuccess }: Props) {
+export default function GoogleAuth({ inverse }: Props) {
   const [isResultModalOpen, setIsResultOpenModal] = useState(false);
   const [message, setMessage] = useState<string | undefined>(undefined);
 
@@ -17,7 +17,6 @@ export default function GoogleAuth({ inverse, onLinkSuccess }: Props) {
         inverse={inverse}
         onLinkFailure={handleFailure}
         onUnlinkFailure={handleFailure}
-        onLinkSuccess={onLinkSuccess}
       />
       <ResultModal
         isOpen={isResultModalOpen}
@@ -31,7 +30,6 @@ export default function GoogleAuth({ inverse, onLinkSuccess }: Props) {
 
 type Props = {
   inverse?: boolean;
-  onLinkSuccess?: () => void;
 };
 
 function ResultModal({

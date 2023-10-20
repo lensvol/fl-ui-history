@@ -20,16 +20,9 @@ import PurchaseStoriesTab from "./PurchaseStoriesTab";
 import GameplayTab from "./GameplayTab";
 import ResetStoriesTab from "./ResetStoriesTab";
 import Header from "./Header";
-import StoryletMenu from "./Subscription/StoryletMenu";
 
-function Fate({
-  activeSubtab,
-  data,
-  dispatch,
-  hasSubscription,
-  renewDate,
-  subscriptionType,
-}: Props) {
+function Fate({ activeSubtab, data, dispatch }: Props) {
+  // const [activeTab, setActiveTab] = useState<FateSubtab>(SUBTAB_GAMEPLAY);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isPurchaseContentModalOpen, setIsPurchaseContentModalOpen] =
     useState(false);
@@ -80,16 +73,7 @@ function Fate({
                 Buy fate
               </button>
             </div>
-
-            <StoryletMenu enhancedPlacement={true} />
-
-            <Header
-              data={data}
-              hasSubscription={hasSubscription}
-              renewDate={renewDate}
-              subscriptionType={subscriptionType}
-            />
-
+            <Header data={data} />
             <hr style={{ marginBottom: ".5rem" }} />
           </div>
 
@@ -166,13 +150,12 @@ function Fate({
 
 Fate.displayName = "Fate";
 
-const mapStateToProps = (state: IAppState) => ({
-  activeSubtab: state.fate.activeSubtab,
-  data: state.fate.data,
-  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
-  renewDate: state.subscription.data?.renewDate,
-  subscriptionType: state.settings.subscriptions.subscriptionType,
-});
+const mapStateToProps = (state: IAppState) => {
+  const {
+    fate: { activeSubtab, data },
+  } = state;
+  return { activeSubtab, data };
+};
 
 type Props = ReturnType<typeof mapStateToProps> & {
   dispatch: Function; // eslint-disable-line

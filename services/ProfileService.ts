@@ -1,6 +1,7 @@
 // @ts-ignore
 import querystring from "query-string";
 import { AreaWithNestedJsonInfo } from "types/map";
+import { IProfileCharacter } from "types/profile";
 import { IQuality } from "types/qualities";
 import BaseService, { Either } from "./BaseMonadicService";
 
@@ -44,23 +45,6 @@ export interface FetchSharedContentArgs {
   fromId?: any;
   offset?: any;
 }
-
-export interface IProfileCharacter {
-  avatarImage: string;
-  currentDomicile?: Domicile;
-  description: string;
-  descriptiveText: string;
-  mantelpieceItem?: IQuality;
-  scrapbookStatus?: IQuality;
-  name: string;
-}
-
-export type Domicile = {
-  name: string;
-  description: string;
-  image: string;
-  maxHandSize: number;
-};
 
 export interface IProfileService {
   deleteEntry: (entryId: number) => Promise<Either<DeleteEntryResponse>>;

@@ -8,11 +8,14 @@ import {
   MessageVia,
 } from "services/SettingsService";
 import { IQuality } from "types/qualities";
-import { MessagePreferences } from "types/settings";
 import * as SettingsActionTypes from "../actiontypes/settings";
-import { PremiumSubscriptionType } from "types/subscription";
-import { FETCH_ENHANCED_ACTIONS_SUCCESS } from "actiontypes/actions";
-import { FetchEnhancedActionsSuccess } from "actions/actions/fetchActions";
+
+export type MessagePreferences = {
+  messageAboutAnnouncements: boolean;
+  messageAboutNastiness: boolean;
+  messageAboutNiceness: boolean;
+  messageAboutStorylets: boolean;
+};
 
 export type ISettingsState = {
   authMethods: AuthMethod[] | undefined;
@@ -40,16 +43,12 @@ export type ISettingsState = {
     messageViaNetwork: MessageVia | undefined;
     qualitiesPossessedList: IQuality[];
     twitterAuth: boolean;
-    googleAuth: boolean;
   };
   messagePreferences: MessagePreferences;
   subscriptions: {
     hasAndroidSubscription: boolean;
     hasAppleSubscrption: boolean;
     hasBraintreeSubscription: boolean;
-    subscriptionType?: PremiumSubscriptionType;
-    remainingActionRefreshes?: number;
-    remainingStoryUnlocks?: number;
   };
 };
 
@@ -73,6 +72,7 @@ export const INITIAL_STATE: ISettingsState = {
   isDeactivating: false,
   messagePreferences: {
     messageAboutAnnouncements: false,
+    messageAboutNastiness: false,
     messageAboutNiceness: false,
     messageAboutStorylets: false,
   },
@@ -80,9 +80,6 @@ export const INITIAL_STATE: ISettingsState = {
     hasAndroidSubscription: false,
     hasAppleSubscrption: false,
     hasBraintreeSubscription: false,
-    subscriptionType: undefined,
-    remainingActionRefreshes: undefined,
-    remainingStoryUnlocks: undefined,
   },
   data: {
     emailAddress: undefined,
@@ -92,16 +89,12 @@ export const INITIAL_STATE: ISettingsState = {
     name: undefined,
     qualitiesPossessedList: [],
     twitterAuth: false,
-    googleAuth: false,
   },
 };
 
 export default function reducer(
   state: ISettingsState = INITIAL_STATE,
-  action:
-    | SettingsActions
-    | FetchSubscriptionSuccess
-    | FetchEnhancedActionsSuccess
+  action: SettingsActions | FetchSubscriptionSuccess
 ): ISettingsState {
   switch (action.type) {
     case SettingsActionTypes.FETCH_SETTINGS_REQUESTED:
@@ -117,33 +110,16 @@ export default function reducer(
         subscriptions: {
           ...state.subscriptions,
           hasBraintreeSubscription: action.payload.hasSubscription,
-          subscriptionType: action.payload.subscriptionType,
         },
       };
-
-    case FETCH_ENHANCED_ACTIONS_SUCCESS: {
-      const { remainingActionRefreshes } = (
-        action as FetchEnhancedActionsSuccess
-      ).payload;
-
-      return {
-        ...state,
-        subscriptions: {
-          ...state.subscriptions,
-          remainingActionRefreshes,
-        },
-      };
-    }
 
     case SettingsActionTypes.FETCH_SETTINGS_SUCCESS: {
       const {
         hasBraintreeSubscription,
         messageAboutAnnouncements,
         messageAboutNiceness,
+        messageAboutNastiness,
         messageAboutStorylets,
-        subscriptionType,
-        remainingActionRefreshes,
-        remainingStoryUnlocks,
       }: FetchSettingsResponse = (action as FetchSettingsSuccess).payload;
       return {
         ...state,
@@ -152,15 +128,13 @@ export default function reducer(
         messagePreferences: {
           ...state.messagePreferences,
           messageAboutAnnouncements,
+          messageAboutNastiness,
           messageAboutNiceness,
           messageAboutStorylets,
         },
         subscriptions: {
           ...state.subscriptions,
           hasBraintreeSubscription,
-          subscriptionType,
-          remainingActionRefreshes,
-          remainingStoryUnlocks,
         },
       };
     }
@@ -297,10 +271,6 @@ export default function reducer(
             action.payload.accountType === "facebook"
               ? false
               : state.data.facebookAuth,
-          googleAuth:
-            action.payload.accountType === "google"
-              ? false
-              : state.data.googleAuth,
         },
       };
 
@@ -317,10 +287,6 @@ export default function reducer(
             action.payload.accountType === "facebook"
               ? true
               : state.data.facebookAuth,
-          googleAuth:
-            action.payload.accountType === "google"
-              ? false
-              : state.data.googleAuth,
         },
       };
 

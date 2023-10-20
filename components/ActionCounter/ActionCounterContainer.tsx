@@ -15,29 +15,15 @@ class ActionCounterContainer extends Component<Props> {
   static displayName = "ActionCounterContainer";
 
   handleClick = () => {
-    const {
-      actions,
-      history,
-      onOpenActionRefreshModal,
-      onOpenEnhancedRefreshModal,
-      remainingActionRefreshes,
-      supportsEnhancedEF,
-    } = this.props;
-
-    if (supportsEnhancedEF && remainingActionRefreshes > 0) {
-      return onOpenEnhancedRefreshModal();
-    }
-
+    const { actions, history, onOpenActionRefreshModal } = this.props;
     if (actions <= 6) {
       return onOpenActionRefreshModal();
     }
-
     return history.push("/fate");
   };
 
   render = () => {
-    const { remainingTime, remainingActionRefreshes, supportsEnhancedEF } =
-      this.props;
+    const { remainingTime } = this.props;
 
     const duration = moment.duration(remainingTime);
     // TS complains that duration.format is not a function, which it isn't in vanilla moment.js,
@@ -59,36 +45,27 @@ class ActionCounterContainer extends Component<Props> {
         </div>
         <div className="item__desc">
           <span className="js-item-name item__name">Actions</span>
-          <ActionCounter
-            message={message}
-            onClick={this.handleClick}
-            remainingActionRefreshes={
-              supportsEnhancedEF ? remainingActionRefreshes : 0
-            }
-          />
+          <ActionCounter message={message} onClick={this.handleClick} />
         </div>
       </Fragment>
     );
   };
 }
 
-const mapStateToProps = (state: IAppState) => ({
-  actions: state.actions.actions,
-  fateData: state.fate.data,
-  remainingTime: state.timer.remainingTime,
-  remainingActionRefreshes:
-    state.settings.subscriptions.remainingActionRefreshes ?? 0,
+const mapStateToProps = ({
+  actions: { actions },
+  fate: { data: fateData },
+  timer: { remainingTime },
+}: IAppState) => ({
+  actions,
+  fateData,
+  remainingTime,
 });
-
-interface OwnProps {
-  supportsEnhancedEF: boolean;
-}
 
 type Props = ReturnType<typeof mapStateToProps> &
   RouteComponentProps &
-  IActionRefreshContextValues &
-  OwnProps;
+  IActionRefreshContextValues;
 
-export default connect(mapStateToProps)(
-  withActionRefreshContext(withRouter(ActionCounterContainer))
+export default withRouter(
+  connect(mapStateToProps)(withActionRefreshContext(ActionCounterContainer))
 );

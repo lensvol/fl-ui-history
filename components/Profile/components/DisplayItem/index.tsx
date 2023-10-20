@@ -16,7 +16,7 @@ const labelToQualityPickerHeader = (label: "Mantelpiece" | "Scrapbook") =>
   ({
     Mantelpiece: "Mantelpiece item",
     Scrapbook: "Scrapbook status",
-  }[label]);
+  })[label];
 
 export function DisplayItem(props: Props) {
   const { data, dispatch, label, profileCharacter, qualityPickerQualities } =
@@ -48,7 +48,7 @@ export function DisplayItem(props: Props) {
 
   return (
     <ProfileContext.Consumer>
-      {({ editable }) => (
+      {({ editable }: { editable: boolean }) => (
         <Fragment>
           <DisplayItemComponent
             data={data}

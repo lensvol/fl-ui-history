@@ -1,5 +1,5 @@
 import { FetchSharedContentSuccess } from "actions/profile/fetchSharedContent";
-import { IProfileState } from "features/profile";
+import { IProfileState } from "types/profile";
 
 export default function fetchSharedContentSuccess(
   state: IProfileState,

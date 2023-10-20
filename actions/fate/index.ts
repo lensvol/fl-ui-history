@@ -25,17 +25,12 @@ export type SetFateSubtab = {
   payload: { subtab: FateSubtab };
 };
 
-export type ToggleEnhancedStoreView = {
-  type: typeof FateActionTypes.TOGGLE_ENHANCED_STORE;
-};
-
 export type FateActions =
   | ChangeAvatarActions
   | FetchFateActions
   | ProcessFateChange
   | PurchaseDialogActions
   | PurchaseItemActions
-  | ToggleEnhancedStoreView
   | SetFateSubtab;
 
 /** ----------------------------------------------------------------------------
@@ -60,10 +55,4 @@ export const setFateSubtab: ActionCreator<SetFateSubtab> = (
 ) => ({
   type: FateActionTypes.SET_ACTIVE_SUBTAB,
   payload: { subtab },
-});
-
-export const toggleEnhancedStoreView: ActionCreator<
-  ToggleEnhancedStoreView
-> = () => ({
-  type: FateActionTypes.TOGGLE_ENHANCED_STORE,
 });

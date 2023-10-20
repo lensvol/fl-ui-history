@@ -37,7 +37,7 @@ export default function StoryletInComponent({
         <Branch
           key={branch.id}
           branch={branch}
-          storyletDeckType={storylet.deckType}
+          storyletFrequency={storylet.frequency}
           isGoingBack={isGoingBack}
           defaultCursor
         />

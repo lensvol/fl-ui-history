@@ -10,12 +10,11 @@ export default function fetchNewsSuccess(
   // a different Id from the one held in cookie store
   const active = state.active
     ? state.active
-    : store.get("dismissed_news_item") !== action.payload?.id;
+    : store.get("dismissed_news_item") !== action.payload.id;
 
   return {
     ...state,
     active,
-    isFetching: false,
     newsItem: action.payload,
   };
 }

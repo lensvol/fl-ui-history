@@ -6,38 +6,36 @@ export const OPTIMIZE_MYSELF_QUALITIES = "optimize-myself-qualities";
 export const SHOW_EQUIPMENT_SEARCH = "show-equipment-search";
 
 export const FEATURE_ACCOUNT_LINK_REMINDER = "feature/account-link-reminder";
-export const FEATURE_CREDITS = "feature/credits";
 export const FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS =
   "feature/does-storylet-state-lock-outfits";
-export const FEATURE_ENHANCED_EF = "feature/enhanced-exceptional-friendship";
 export const FEATURE_IS_IT_ADVENT = "feature/is-it-advent";
-export const FEATURE_PERSISTENT_DECK = "feature/persistent-deck";
 export const FEATURE_POSSESSIONS_TAB_AVATAR = "feature/possessions-tab-avatar";
+export const FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES =
+  "feature/require-recaptcha-for-purchases";
+export const FEATURE_SPECIAL_VISITABLE_ISLAND_LABELS =
+  "feature/visitable-special-island-labels";
+export const FEATURE_SEARCH_FATE_TAB = "feature/search-fate-tab";
 export const FEATURE_SHOW_VAT_BREAKDOWN = "feature/show-vat-breakdown";
 
-export const FEATURE_FLAGS: {
-  [key: string]: boolean;
-} = {
+export const FEATURE_FLAGS: { [key: string]: boolean } = {
   [FILTER_ENHANCEMENTS]: true,
   [NEW_OUTFIT_BEHAVIOUR]: true,
   [OPTIMIZE_MYSELF_QUALITIES]: true,
   [SHOW_EQUIPMENT_SEARCH]: true,
   [FEATURE_ACCOUNT_LINK_REMINDER]: true,
-  [FEATURE_CREDITS]: false,
-  [FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS]: true,
-  [FEATURE_ENHANCED_EF]: true,
-  [FEATURE_IS_IT_ADVENT]: true,
-  [FEATURE_PERSISTENT_DECK]: true,
+  [FEATURE_IS_IT_ADVENT]: false,
   [FEATURE_POSSESSIONS_TAB_AVATAR]: true,
+  [FEATURE_SPECIAL_VISITABLE_ISLAND_LABELS]: true,
+  [FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS]: true,
+  [FEATURE_SEARCH_FATE_TAB]: true,
   [FEATURE_SHOW_VAT_BREAKDOWN]: false,
+  [FEATURE_REQUIRE_RECAPTCHA_FOR_PURCHASES]: false,
 };
 
 export const DEBUG_ALWAYS_SHOW_ACCOUNT_LINK_REMINDER =
   "debug/always-show-account-link-reminder";
 
-const DEBUG_FLAG_SETTINGS: {
-  [key: string]: boolean;
-} = {
+const DEBUG_FLAG_SETTINGS: { [key: string]: boolean } = {
   [DEBUG_ALWAYS_SHOW_ACCOUNT_LINK_REMINDER]: true,
 };
 
@@ -49,7 +47,5 @@ export const DEBUG_FLAGS = Object.keys(DEBUG_FLAG_SETTINGS).reduce(
       DEBUG_FLAG_SETTINGS[next] &&
       (Config.environment === "staging" || Config.environment === "local"),
   }),
-  {} as {
-    [key: string]: boolean;
-  }
+  {} as { [key: string]: boolean }
 );

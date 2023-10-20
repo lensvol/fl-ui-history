@@ -33,7 +33,7 @@ export const unlinkSocialAccountRequested = () => ({
 
 export const unlinkSocialAccountSuccess: ActionCreator<
   UnlinkSocialAccountSuccess
-> = (_response: any, account: "twitter" | "facebook" | "google") => ({
+> = (_response: any, account: "twitter" | "facebook") => ({
   type: SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_SUCCESS,
   payload: {
     accountType: account,

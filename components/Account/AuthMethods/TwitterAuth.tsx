@@ -1,3 +1,4 @@
+import LinkTwitterAccount from "components/Account/AuthMethods/LinkTwitterAccount";
 import TippyWrapper from "components/TippyWrapper";
 import React, { useCallback, useMemo } from "react";
 import classnames from "classnames";
@@ -8,7 +9,7 @@ import { unlinkSocialAccount } from "actions/settings";
 function TwitterAuth(props: Props) {
   const {
     buttonClassName,
-    data: { emailAuth, facebookAuth, twitterAuth, googleAuth },
+    data: { emailAuth, facebookAuth, twitterAuth },
   } = props;
 
   const dispatch = useDispatch();
@@ -17,43 +18,55 @@ function TwitterAuth(props: Props) {
     dispatch(unlinkSocialAccount("twitter"));
   }, [dispatch]);
 
+  const onFailure = useCallback((reason: string | Error) => {
+    console.error("Failed to link Twitter account; original reason follows:");
+    console.error(reason);
+  }, []);
+
   const linkedComponent = useMemo(() => {
-    const canUnlink = emailAuth || facebookAuth || googleAuth;
+    const canUnlink = emailAuth || facebookAuth;
     if (canUnlink) {
       return (
-        <>
-          <i className="fa fa-fw fa-twitter" />{" "}
-          <button
-            type="button"
-            className={classnames("button--link", buttonClassName)}
-            onClick={onClickToUnlink}
-          >
-            Unlink Twitter from this account
-          </button>
-        </>
+        <button
+          type="button"
+          className={classnames("button--link", buttonClassName)}
+          onClick={onClickToUnlink}
+        >
+          Unlink Twitter from this account
+        </button>
       );
     }
     return (
-      <>
-        <i className="fa fa-fw fa-twitter" />{" "}
-        <TippyWrapper
-          tooltipData={{
-            description:
-              "Your account must be linked to Facebook, Google, or to an email address" +
-              " before you can unlink Twitter.",
-          }}
-        >
-          <span style={{ cursor: "default" }}>
-            Unlink Twitter from this account
-          </span>
-        </TippyWrapper>
-      </>
+      <TippyWrapper
+        tooltipData={{
+          description:
+            "Your account must be either linked to Facebook or to an email address" +
+            " before you can unlink Twitter.",
+        }}
+      >
+        <span style={{ cursor: "default" }}>
+          Unlink Twitter from this account
+        </span>
+      </TippyWrapper>
     );
-  }, [buttonClassName, emailAuth, facebookAuth, googleAuth, onClickToUnlink]);
+  }, [buttonClassName, emailAuth, facebookAuth, onClickToUnlink]);
 
-  const unlinkedComponent = useMemo(() => <></>, []);
+  const unlinkedComponent = useMemo(
+    () => (
+      <LinkTwitterAccount
+        buttonClassName={buttonClassName}
+        onFailure={onFailure}
+      />
+    ),
+    [buttonClassName, onFailure]
+  );
 
-  return <>{twitterAuth ? linkedComponent : unlinkedComponent}</>;
+  return (
+    <>
+      <i className="fa fa-fw fa-twitter" />{" "}
+      {twitterAuth ? linkedComponent : unlinkedComponent}
+    </>
+  );
 }
 
 type OwnProps = {

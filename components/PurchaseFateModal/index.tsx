@@ -13,7 +13,6 @@ import {
   IBraintreePurchaseFateRequest,
   ThreeDSecureCompleteResult,
 } from "types/payment";
-import { fetchActions } from "actions/actions";
 
 type Props = ModalProps & {
   onRequestClose: (_args?: any) => void;
@@ -70,7 +69,6 @@ export default function PurchaseFateModal({
       setMessage(data.message);
       if (data.isSuccess) {
         dispatch(fetchFate());
-        dispatch(fetchActions());
         setCurrentStep(PaymentStep.Success);
         return;
       }

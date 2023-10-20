@@ -58,17 +58,6 @@ export function fetch(service: ISettingsService) {
     try {
       const result: Either<FetchSettingsResponse> = await service.fetch();
       if (result instanceof Success) {
-        const { messageAboutStorylets } = result.data;
-        const { messageAboutStories } = result.data as any;
-        if (
-          messageAboutStorylets === undefined &&
-          messageAboutStories !== undefined
-        ) {
-          console.warn(
-            "Settings response contains a `messageAboutStories` field but no `messageAboutStorylets` field; patching"
-          );
-          result.data.messageAboutStorylets = messageAboutStories;
-        }
         const { data } = result;
         dispatch(fetchSettingsSuccess(data));
       } else {

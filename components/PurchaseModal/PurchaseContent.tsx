@@ -9,8 +9,6 @@ import { IFateCard } from "types/fate";
 import { FateCardImage } from "components/Fate/FateCard";
 import FateCardTitleAndByline from "components/Fate/FateCard/FateCardTitleAndByline";
 import Loading from "components/Loading";
-import Subscription from "components/Fate/Subscription";
-import { PremiumSubscriptionType } from "types/subscription";
 
 enum PurchaseContentStep {
   Ready,
@@ -20,21 +18,11 @@ enum PurchaseContentStep {
 export function PurchaseContent({
   card,
   dispatch,
-  enableSubscriptionModal,
-  hasSubscription,
   onClickToClose,
-  remainingStoryUnlocks,
-  renewDate,
-  subscriptionType,
 }: {
   card: IFateCard | undefined;
   dispatch: Function; // eslint-disable-line
-  enableSubscriptionModal?: boolean;
-  hasSubscription?: boolean;
   onClickToClose: () => void;
-  remainingStoryUnlocks?: number;
-  renewDate?: string;
-  subscriptionType?: PremiumSubscriptionType;
 }) {
   const [currentStep, setCurrentStep] = useState(PurchaseContentStep.Ready);
   const [responseMessage, setResponseMessage] = useState<string | undefined>(
@@ -51,13 +39,7 @@ export function PurchaseContent({
 
     setIsWorking(true);
 
-    const result = await dispatch(
-      purchaseItem({
-        storeItemId: id,
-        action: card.action,
-      })
-    );
-
+    const result = await dispatch(purchaseItem({ storeItemId: id }));
     let message;
     if (result instanceof Success) {
       ({ message } = result.data);
@@ -79,7 +61,6 @@ export function PurchaseContent({
           card={card}
           message={responseMessage ?? ""}
           onClick={onClickToClose}
-          remainingStoryUnlocks={remainingStoryUnlocks}
         />
       );
     case PurchaseContentStep.Ready:
@@ -87,13 +68,8 @@ export function PurchaseContent({
       return (
         <PurchaseContentReady
           card={card}
-          enableSubscriptionModal={enableSubscriptionModal ?? false}
-          hasSubscription={hasSubscription ?? false}
           isWorking={isWorking}
           onClick={handlePurchase}
-          remainingStoryUnlocks={remainingStoryUnlocks}
-          renewDate={renewDate}
-          subscriptionType={subscriptionType}
         />
       );
   }
@@ -105,18 +81,12 @@ function PurchaseContentSuccess({
   card,
   message,
   onClick,
-  remainingStoryUnlocks,
 }: {
   card: IFateCard;
   message: string;
   onClick: () => void;
-  remainingStoryUnlocks?: number;
 }) {
-  const { image, name, type } = card;
-
-  const isEnhancedStoryUnlock = card.action === "EnhancedUnlock";
-  const isEnhancedStoryReset = isEnhancedStoryUnlock && type === "ResetStory";
-
+  const { image, name } = card;
   return (
     <PurchaseResult
       image={image}
@@ -124,39 +94,20 @@ function PurchaseContentSuccess({
       onClick={onClick}
       message={message}
       isSuccess
-      isStoryUnlock={isEnhancedStoryUnlock}
-      remainingStoryUnlocks={
-        isEnhancedStoryReset ? remainingStoryUnlocks ?? 0 : undefined
-      }
     />
   );
 }
 
 function PurchaseContentReady({
   card,
-  enableSubscriptionModal,
-  hasSubscription,
   isWorking,
   onClick,
-  remainingStoryUnlocks,
-  renewDate,
-  subscriptionType,
 }: {
   card: IFateCard;
-  enableSubscriptionModal: boolean;
-  hasSubscription: boolean;
   isWorking: boolean;
   onClick: () => void;
-  remainingStoryUnlocks?: number;
-  renewDate?: string;
-  subscriptionType?: PremiumSubscriptionType;
 }) {
-  const { canAfford, description, fanFavourite, price, action } = card;
-
-  const isEnhancedStoryUnlock = action === "EnhancedUnlock";
-  const isDisabled =
-    (!isEnhancedStoryUnlock && !canAfford) ||
-    (isEnhancedStoryUnlock && (remainingStoryUnlocks ?? 0) < 0);
+  const { canAfford, description, fanFavourite, price } = card;
 
   return (
     <div className="media dialog__media">
@@ -188,65 +139,25 @@ function PurchaseContentReady({
               </p>
             </div>
           )}
-          {isEnhancedStoryUnlock && !isDisabled && card.type === "ResetStory" && (
-            <>
-              <p
-                style={{
-                  fontStyle: "bold",
-                }}
-              >
-                {remainingStoryUnlocks === 0 ? (
-                  <>This will be your second and final replay this month.</>
-                ) : (
-                  <>
-                    Choosing this story will leave you with one further replay
-                    this month.
-                  </>
-                )}
-              </p>
-            </>
-          )}
         </div>
         <hr />
       </div>
       <div className="dialog__actions">
-        {isEnhancedStoryUnlock &&
-        enableSubscriptionModal &&
-        (remainingStoryUnlocks ?? 0) < 0 ? (
-          <>
-            <Subscription
-              hasSubscription={hasSubscription}
-              renewDate={renewDate}
-              showButtonOnly
-              subscriptionType={subscriptionType}
-            />
-          </>
-        ) : (
-          <>
-            <button
-              type="button"
-              className={classnames(
-                "button",
-                isEnhancedStoryUnlock ? "button--ef" : "button--secondary",
-                isDisabled && "button--disabled"
-              )}
-              onClick={onClick}
-              disabled={isDisabled}
-            >
-              {isWorking ? (
-                <Loading spinner small />
-              ) : (
-                <span>
-                  {isEnhancedStoryUnlock ? (
-                    <>Choose</>
-                  ) : (
-                    <>Purchase ({price} Fate)</>
-                  )}
-                </span>
-              )}
-            </button>
-          </>
-        )}
+        <button
+          type="button"
+          className={classnames(
+            "button button--secondary",
+            !canAfford && "button--disabled"
+          )}
+          onClick={onClick}
+          disabled={!canAfford}
+        >
+          {isWorking ? (
+            <Loading spinner small />
+          ) : (
+            <span>Purchase ({price} Fate)</span>
+          )}
+        </button>
       </div>
     </div>
   );

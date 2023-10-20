@@ -1,7 +1,7 @@
 import React from "react";
 import { CurrencyCode } from "types/payment";
 
-const CODES: CurrencyCode[] = ["USD", "GBP", "EUR", "AUD", "CAD", "SEK"];
+const CODES: CurrencyCode[] = ["USD", "GBP", "EUR", "AUD", "CAD", "SEK", "RUB"];
 
 type Props = {
   value: CurrencyCode | undefined;

@@ -51,10 +51,9 @@ export interface IUserState {
   privilegeLevel: PrivilegeLevel | undefined;
   user:
     | {
-        createdAt: string | undefined;
-        name: string | undefined;
-        id: number | undefined;
-        hasMessagingEmail: boolean;
+        createdAt: string;
+        name: string;
+        id: number;
       }
     | undefined;
 }
@@ -116,10 +115,7 @@ class UserService extends BaseService implements IUserService {
     const config = {
       method: "post",
       url: "/google/callback",
-      data: {
-        accessCodeName: token?.accessCodeName,
-        token: token?.token?.access_token,
-      },
+      data: token,
     };
     return this.doRequest<LoginResponse>(config);
   };

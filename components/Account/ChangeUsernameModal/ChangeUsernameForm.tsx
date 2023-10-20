@@ -1,4 +1,3 @@
-import { useAppSelector } from "features/app/store";
 import React from "react";
 import { Formik, Form, Field, FormikHelpers as FormikActions } from "formik";
 
@@ -12,14 +11,12 @@ type Props = {
 };
 
 export default function ChangeUsernameForm(props: Props) {
-  const initialUsername = useAppSelector((state) => state.settings.data.name);
-
   const { onSubmit } = props;
   return (
     <Formik
-      initialValues={{ username: initialUsername ?? "" }}
+      initialValues={{ username: "" }}
       onSubmit={onSubmit}
-      render={({ values, errors, isSubmitting, dirty }) => (
+      render={({ values, errors, isSubmitting }) => (
         <div>
           <Form>
             <h2 className="media__heading heading heading--3">
@@ -34,12 +31,8 @@ export default function ChangeUsernameForm(props: Props) {
             {errors.username && (
               <p className="form__error">{errors.username}</p>
             )}
-            <div className="buttons" style={{ marginTop: ".5rem" }}>
-              <button
-                className="button button--primary"
-                disabled={!dirty || isSubmitting}
-                type="submit"
-              >
+            <div className="buttons">
+              <button className="button button--primary" type="submit">
                 {isSubmitting ? <Loading spinner small /> : "Submit"}
               </button>
             </div>

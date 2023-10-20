@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { Formik, Field, Form, FormikHelpers as FormikActions } from "formik";
 
 import Loading from "components/Loading";
 import { Either, Success } from "services/BaseMonadicService";
 import { LinkEmailResponse } from "services/SettingsService";
+import { IAppState } from "types/app";
 import Modal from "components/Modal";
 import { linkEmailToAccount } from "actions/settings";
-import { useAppSelector } from "features/app/store";
 
 type LinkEmailValues = { emailAddress: string; password: string };
 
@@ -17,20 +17,7 @@ enum LinkEmailModalStep {
   LinkSuccess,
 }
 
-type Props = {
-  isOpen: boolean;
-  onRequestClose: () => void;
-  onLinkSuccess?: () => void;
-};
-
-export default function LinkEmailModal({
-  isOpen,
-  onRequestClose,
-  onLinkSuccess,
-}: Props) {
-  const isLinkingEmail = useAppSelector(
-    (state) => state.settings.isLinkingEmail
-  );
+function LinkEmailModal({ isLinkingEmail, isOpen, onRequestClose }: Props) {
   const dispatch = useDispatch();
 
   const [currentStep, setCurrentStep] = useState(LinkEmailModalStep.Ready);
@@ -54,14 +41,9 @@ export default function LinkEmailModal({
       if (result instanceof Success) {
         setCurrentStep(LinkEmailModalStep.LinkSuccess);
         setMessage(result.data.message);
-        onLinkSuccess?.();
-
-        return;
       }
-
-      actions.setErrors({ emailAddress: result.message });
     },
-    [dispatch, onLinkSuccess]
+    [dispatch]
   );
 
   switch (currentStep) {
@@ -76,8 +58,7 @@ export default function LinkEmailModal({
             <Formik
               initialValues={{ emailAddress: "", password: "" }}
               onSubmit={handleSubmit}
-            >
-              {({ values, dirty, errors, touched }) => (
+              render={({ values, dirty }) => (
                 <Form>
                   <p>
                     <label htmlFor="emailAddress">Email</label>
@@ -85,11 +66,7 @@ export default function LinkEmailModal({
                       className="form__control"
                       name="emailAddress"
                       value={values.emailAddress}
-                      validate={validateRequired}
                     />
-                    {errors.emailAddress && touched.emailAddress && (
-                      <span className="form__error">{errors.emailAddress}</span>
-                    )}
                   </p>
 
                   <p>
@@ -99,11 +76,7 @@ export default function LinkEmailModal({
                       type="password"
                       name="password"
                       value={values.password}
-                      validate={validateRequired}
                     />
-                    {errors.password && touched.password && (
-                      <span className="form_error">{errors.password}</span>
-                    )}
                   </p>
 
                   <div className="dialog__actions" style={{ marginTop: 24 }}>
@@ -128,16 +101,22 @@ export default function LinkEmailModal({
                   </div>
                 </Form>
               )}
-            </Formik>
+            />
           </div>
         </Modal>
       );
   }
 }
 
-function validateRequired(value: string) {
-  if (!value) {
-    return "Required";
-  }
-  return undefined;
-}
+type OwnProps = {
+  isOpen: boolean;
+  onRequestClose: () => void;
+};
+
+const mapStateToProps = ({ settings }: IAppState) => ({
+  isLinkingEmail: settings.isLinkingEmail,
+});
+
+type Props = OwnProps & ReturnType<typeof mapStateToProps>;
+
+export default connect(mapStateToProps)(LinkEmailModal);

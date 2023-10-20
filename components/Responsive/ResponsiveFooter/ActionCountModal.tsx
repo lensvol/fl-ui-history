@@ -5,21 +5,18 @@ import ReactModal from "react-modal";
 import { connect } from "react-redux";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { IAppState } from "types/app";
-import { UIRestriction } from "types/myself";
 
 export function ActionCountModal(props: Props) {
   const {
     actions,
     actionBankSize,
     cardsCount,
-    deckSize,
     handSize,
     isOpen,
     onRequestClose,
     remainingTime,
     currentFate,
     setting,
-    showFateUI,
   } = props;
 
   // @ts-ignore
@@ -31,14 +28,14 @@ export function ActionCountModal(props: Props) {
     actions < actionBankSize || cardsCount < handSize;
 
   const cardsAvailableString = useMemo(() => {
-    if (setting?.isInfiniteDraw || cardsCount > deckSize) {
+    if (setting?.isInfiniteDraw) {
       return "No draw limit.";
     }
 
     return `${cardsCount} opportunity card${
       cardsCount === 1 ? "" : "s"
     } available`;
-  }, [cardsCount, deckSize, setting]);
+  }, [cardsCount, setting]);
 
   return (
     <ReactModal
@@ -80,11 +77,9 @@ export function ActionCountModal(props: Props) {
               <div className="action-count-modal__next-action-time">
                 {duration}
               </div>
-              {showFateUI && (
-                <Link className="button button--secondary" to="/fate">
-                  Buy actions and cards
-                </Link>
-              )}
+              <Link className="button button--secondary" to="/fate">
+                Buy actions and cards
+              </Link>
             </div>
           )}
         </div>
@@ -104,23 +99,18 @@ export function ActionCountModal(props: Props) {
 
 const mapStateToProps = ({
   actions: { actions, actionBankSize },
-  cards: { cardsCount, deckSize, handSize },
+  cards: { cardsCount, handSize },
   map: { setting },
   timer: { remainingTime },
   fate,
-  myself: { uiRestrictions },
 }: IAppState) => ({
   actions,
   actionBankSize,
   cardsCount,
-  deckSize,
   handSize,
   remainingTime,
   setting,
   currentFate: fate.data.currentFate,
-  showFateUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Fate
-  ),
 });
 
 type Props = ReturnType<typeof mapStateToProps> &

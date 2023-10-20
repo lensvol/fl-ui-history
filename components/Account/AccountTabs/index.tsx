@@ -4,7 +4,7 @@ import AccountContext, {
   TAB_TYPE_AUTH,
   TAB_TYPE_CONTACTS,
   TAB_TYPE_DANGER_ZONE,
-  TAB_TYPE_NOTIFICATIONS,
+  TAB_TYPE_MESSAGING,
   TAB_TYPE_PREFERENCES,
   TAB_TYPE_SUBSCRIPTION,
   TAB_TYPE_USER,
@@ -18,7 +18,7 @@ export default function AccountTabs() {
       <AccountTab tabType={TAB_TYPE_PREFERENCES} label="Preferences" />
       <AccountTab label="Authentication" tabType={TAB_TYPE_AUTH} />
       <AccountTab tabType={TAB_TYPE_SUBSCRIPTION} label="Subscription" />
-      <AccountTab tabType={TAB_TYPE_NOTIFICATIONS} label="Notifications" />
+      <AccountTab tabType={TAB_TYPE_MESSAGING} label="Notifications" />
       <AccountTab tabType={TAB_TYPE_CONTACTS} label="Contacts" />
       <AccountTab tabType={TAB_TYPE_DANGER_ZONE} label="Deletion" dangerous />
     </ul>

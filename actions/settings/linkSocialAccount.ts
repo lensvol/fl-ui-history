@@ -1,11 +1,12 @@
 import { handleVersionMismatch } from "actions/versionSync";
 import * as SettingsActionTypes from "actiontypes/settings";
 import { ThunkDispatch } from "redux-thunk";
-import { Success } from "services/BaseMonadicService";
+import { Either, Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
 import SettingsService, {
   FacebookPayload,
   ISettingsService,
+  LinkTwitterRequest,
 } from "services/SettingsService";
 
 export type LinkSocialAccountSuccess = {
@@ -74,4 +75,26 @@ export const linkGoogle =
       }
       throw error;
     }
+  };
+
+export const linkTwitter =
+  (req: LinkTwitterRequest) =>
+  async (
+    dispatch: ThunkDispatch<
+      Either<{
+        /* empty response */
+      }>,
+      any,
+      any
+    >
+  ) => {
+    dispatch(linkSocialAccountRequested());
+    const service: ISettingsService = new SettingsService();
+    const result = await service.linkTwitter(req);
+    if (result instanceof Success) {
+      dispatch(linkSocialAccountSuccess("twitter"));
+    } else {
+      dispatch(linkSocialAccountFailure());
+    }
+    return result;
   };

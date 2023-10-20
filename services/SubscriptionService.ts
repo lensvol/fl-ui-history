@@ -1,7 +1,4 @@
-import {
-  ISubscriptionService,
-  PremiumSubscriptionType,
-} from "types/subscription";
+import { ISubscriptionService } from "types/subscription";
 import BaseService from "./BaseService";
 
 export default class SubscriptionService
@@ -20,18 +17,14 @@ export default class SubscriptionService
   };
 
   /**
-   * Modify braintree subscription
+   * Cancel braintree subscription
    * @type {Object}
    */
-  modifyBraintreeSubscription = (subscriptionType: PremiumSubscriptionType) => {
+  cancelBraintreeSubscription = () => {
     const config = {
-      url: "/nex/modifybraintreesubscription",
+      url: "/nex/cancelbraintreesubscription",
       method: "post",
-      data: {
-        subscriptionType,
-      },
     };
-
     return this.doRequest(config);
   };
 }

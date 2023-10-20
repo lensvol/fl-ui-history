@@ -32,7 +32,6 @@ import { NAV_ITEMS } from "./constants";
 import RefreshActionsModal from "./RefreshActionsModal";
 import RefillOpportunityDeckModal from "./RefillOpportunityDeckModal";
 import PurchaseFateContext from "./PurchaseFateContext";
-import EnhancedRefreshModal from "./EnhancedRefreshModal";
 
 /**
  * This is a wrapper that contains the general app layout
@@ -43,14 +42,11 @@ export function GeneralContainer({
   currentArea,
   fateData,
   sectionName,
-  uiRestrictions,
 }: Props) {
   const [isActionRefreshModalOpen, setIsActionRefreshModalOpen] =
     useState(false);
   const [isDeckRefreshModalOpen, setIsDeckRefreshModalOpen] = useState(false);
   const [isPurchaseFateModalOpen, setIsPurchaseFateModalOpen] = useState(false);
-  const [isEnhancedRefreshModalOpen, setIsEnhancedRefreshModalOpen] =
-    useState(false);
 
   const handleCloseActionRefreshModal = useCallback(
     () => setIsActionRefreshModalOpen(false),
@@ -76,14 +72,6 @@ export function GeneralContainer({
     () => setIsPurchaseFateModalOpen(true),
     []
   );
-  const handleOpenEnhancedRefreshModal = useCallback(
-    () => setIsEnhancedRefreshModalOpen(true),
-    []
-  );
-  const handleCloseEnhancedRefreshModal = useCallback(
-    () => setIsEnhancedRefreshModalOpen(false),
-    []
-  );
 
   // This is an arbitrary "have we loaded" canary
   if (!fateData.fateCards.length) {
@@ -95,7 +83,6 @@ export function GeneralContainer({
       value={{
         onOpenActionRefreshModal: handleOpenActionRefreshModal,
         onOpenPurchaseFateModal: handleOpenPurchaseFateModal,
-        onOpenEnhancedRefreshModal: handleOpenEnhancedRefreshModal,
       }}
     >
       <PurchaseFateContext.Provider
@@ -129,10 +116,7 @@ export function GeneralContainer({
                   <div className="col-primary">
                     <MediaMdUp>
                       <nav className="nav nav--tabs nav--tabs--main">
-                        <Tabs
-                          items={NAV_ITEMS}
-                          uiRestrictions={uiRestrictions}
-                        />
+                        <Tabs items={NAV_ITEMS} />
                       </nav>
                     </MediaMdUp>
                     <div
@@ -180,10 +164,6 @@ export function GeneralContainer({
             isOpen={isPurchaseFateModalOpen}
             onRequestClose={handleClosePurchaseFateModal}
           />
-          <EnhancedRefreshModal
-            isOpen={isEnhancedRefreshModalOpen}
-            onRequestClose={handleCloseEnhancedRefreshModal}
-          />
         </DeckRefreshContext.Provider>
       </PurchaseFateContext.Provider>
     </ActionRefreshContext.Provider>
@@ -196,12 +176,10 @@ const mapStateToProps = ({
   actions: { actionBankSize },
   fate: { data: fateData },
   map: { currentArea },
-  myself: { uiRestrictions },
 }: IAppState) => ({
   actionBankSize, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
   fateData, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
   currentArea, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
-  uiRestrictions,
 });
 
 type OwnProps = {

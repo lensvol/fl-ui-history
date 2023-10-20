@@ -14,7 +14,6 @@ export function FacebookAuth(props: Props) {
   const {
     buttonClassName,
     data: { facebookAuth },
-    onLinkSuccess,
   } = props;
 
   const dispatch = useDispatch();
@@ -26,10 +25,8 @@ export function FacebookAuth(props: Props) {
   const onLoginSuccess = useCallback(
     (res: ReactFacebookLoginInfo) => {
       dispatch(linkFacebook(res));
-
-      onLinkSuccess?.();
     },
-    [dispatch, onLinkSuccess]
+    [dispatch]
   );
 
   const onClickToUnlink = useCallback(() => {
@@ -71,7 +68,6 @@ export function FacebookAuth(props: Props) {
 
 type OwnProps = {
   buttonClassName?: string;
-  onLinkSuccess?: () => void;
 };
 
 const mapStateToProps = (state: IAppState) => ({

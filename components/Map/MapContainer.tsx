@@ -39,7 +39,6 @@ interface State {
   isFetchingUpdatedMapData: boolean;
   isGateStoryletModalOpen: boolean;
   isPurchaseFateModalOpen: boolean;
-  isEnhancedRefreshModalOpen: boolean;
   isModalOpen: boolean;
   message?: string | undefined;
 }
@@ -58,7 +57,6 @@ class MapContainer extends React.Component<Props, State> {
     isFetchingUpdatedMapData: false,
     isGateStoryletModalOpen: false,
     isPurchaseFateModalOpen: false,
-    isEnhancedRefreshModalOpen: false,
     isModalOpen: false,
     message: undefined,
   };
@@ -195,14 +193,6 @@ class MapContainer extends React.Component<Props, State> {
 
   handleRequestCloseActionRefreshModal = () => {
     this.setState({ isActionRefreshModalOpen: false });
-  };
-
-  handleOpenEnhancedRefreshModal = () => {
-    this.setState({ isEnhancedRefreshModalOpen: true });
-  };
-
-  handleRequestCloseEnhancedRefreshModal = () => {
-    this.setState({ isEnhancedRefreshModalOpen: false });
   };
 
   handleRequestCloseExceptionalFriendModal = async (
@@ -360,7 +350,6 @@ class MapContainer extends React.Component<Props, State> {
       isActionRefreshModalOpen,
       isModalOpen,
       isPurchaseFateModalOpen,
-      isEnhancedRefreshModalOpen,
       message,
     } = this.state;
 
@@ -369,7 +358,6 @@ class MapContainer extends React.Component<Props, State> {
         value={{
           onOpenActionRefreshModal: this.handleOpenActionRefreshModal,
           onOpenPurchaseFateModal: this.handleOpenPurchaseFateModal,
-          onOpenEnhancedRefreshModal: this.handleOpenEnhancedRefreshModal,
         }}
       >
         <Fragment>
@@ -384,12 +372,6 @@ class MapContainer extends React.Component<Props, State> {
             isOpen={isActionRefreshModalOpen}
             onRequestClose={this.handleRequestCloseActionRefreshModal}
             overlayClassName="modal--map-action-refresh__overlay modal--map-action-refresh__overlay"
-            disableTouchEvents
-          />
-          <ActionRefreshModal
-            isOpen={isEnhancedRefreshModalOpen}
-            onRequestClose={this.handleRequestCloseEnhancedRefreshModal}
-            overlayClassName="modal--map-action-refresh__overlay"
             disableTouchEvents
           />
           <PurchaseFateFromGateEvent

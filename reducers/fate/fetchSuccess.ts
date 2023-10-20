@@ -2,7 +2,6 @@ import { FetchFateSuccess } from "actions/fate/fetch";
 import { IFateState } from "reducers/fate";
 import calculateEffectiveFate from "./calculateEffectiveFate";
 import makeFateRefreshCard from "./makeFateRefreshCard";
-import makeEnhancedActionRefreshCard from "./makeEnhancedActionRefreshCard";
 
 export default function fetchSuccess(
   state: IFateState,
@@ -26,7 +25,6 @@ export default function fetchSuccess(
     data: {
       ...payloadRest,
       actionRefillFateCard: makeFateRefreshCard(payload),
-      enhancedActionRefreshCard: makeEnhancedActionRefreshCard(payload),
       currentFate: calculateEffectiveFate({ currentFate, currentNex }),
       fateCards: payload.fateCards,
     },

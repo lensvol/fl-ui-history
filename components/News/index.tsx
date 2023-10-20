@@ -1,5 +1,5 @@
-import { useAppDispatch, useAppSelector } from "features/app/store";
 import React, { useCallback, useMemo } from "react";
+import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import Image from "components/Image";
@@ -9,12 +9,10 @@ import Buttonlet from "components/Buttonlet";
 import { dismissNewsItem } from "actions/news";
 
 import moment from "moment";
+import { IAppState } from "types/app";
 
-function News() {
-  const newsItem = useAppSelector((state) => state.news.newsItem);
-  const active = useAppSelector((state) => state.news.active);
-  const isFetching = useAppSelector((state) => state.news.isFetching);
-  const dispatch = useAppDispatch();
+function News(props: Props) {
+  const { active, dispatch, newsItem } = props;
 
   const dismiss = useCallback(() => {
     if (!newsItem) {
@@ -34,12 +32,8 @@ function News() {
     return null;
   }
 
-  if (isFetching) {
-    return <Loading spinner />;
-  }
-
   if (!newsItem) {
-    return null;
+    return <Loading spinner />;
   }
 
   return (
@@ -81,4 +75,13 @@ function News() {
   );
 }
 
-export default withRouter(News);
+const mapStateToProps = (state: IAppState) => ({
+  newsItem: state.news.newsItem,
+  active: state.news.active,
+});
+
+type Props = ReturnType<typeof mapStateToProps> & {
+  dispatch: Function; // eslint-disable-line
+};
+
+export default withRouter(connect(mapStateToProps)(News));

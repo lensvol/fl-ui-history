@@ -7,15 +7,7 @@ import * as SubscriptionActionCreators from "actions/subscription";
 
 import SubscriptionComponent from "./Subscription";
 
-import { PremiumSubscriptionType } from "types/subscription";
-
-function SubscriptionContainer({
-  hasSubscription,
-  onClick,
-  renewDate,
-  showButtonOnly,
-  subscriptionType,
-}: Props) {
+function SubscriptionContainer({ onClick }: Props) {
   const dispatch = useDispatch();
 
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
@@ -44,28 +36,18 @@ function SubscriptionContainer({
         transitionEnterTimeout={100}
         transitionLeaveTimeout={100}
       >
-        <SubscriptionComponent
-          onClick={handleClick}
-          showButtonOnly={showButtonOnly}
-        />
+        <SubscriptionComponent onClick={handleClick} />
       </ReactCSSTransitionReplace>
       <PurchaseSubscriptionModal
-        hasSubscription={hasSubscription}
         isOpen={isSubscriptionModalOpen}
         onRequestClose={handleRequestCloseSubscriptionModal}
-        renewDate={renewDate}
-        subscriptionType={subscriptionType}
       />
     </>
   );
 }
 
 interface Props {
-  hasSubscription: boolean;
   onClick?: () => void;
-  renewDate?: string;
-  showButtonOnly?: boolean;
-  subscriptionType?: PremiumSubscriptionType;
 }
 
 export default connect()(SubscriptionContainer);

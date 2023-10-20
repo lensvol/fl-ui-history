@@ -9,13 +9,11 @@ import Modal from "components/Modal";
 import { AccountLinkReminderStep } from "./constants";
 import AccountLinkReminderLoading from "./AccountLinkReminderLoading";
 import AccountLinkReminderReady from "./AccountLinkReminderReady";
-import { STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG } from "constants/accountLinkReminder";
 
 export function AccountLinkReminder({
   isFetchingAuthMethods,
   isFetchingSettings,
   isOpen,
-  twitterAuth,
 }: Props) {
   const isFetching = useMemo(
     () => isFetchingAuthMethods || isFetchingSettings,
@@ -47,14 +45,6 @@ export function AccountLinkReminder({
     }
   }, [currentStep, isFetching, onRequestClose]);
 
-  const userPrefersAuthNagSuppression = JSON.parse(
-    localStorage.getItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG) ?? "false"
-  );
-
-  if (userPrefersAuthNagSuppression && !twitterAuth) {
-    return null;
-  }
-
   return (
     <Modal
       isOpen={isOpen}
@@ -69,16 +59,11 @@ export function AccountLinkReminder({
 
 const mapStateToProps = ({
   accountLinkReminder: { isModalOpen: isOpen },
-  settings: {
-    isFetchingAuthMethods,
-    isFetching: isFetchingSettings,
-    data: { twitterAuth },
-  },
+  settings: { isFetchingAuthMethods, isFetching: isFetchingSettings },
 }: IAppState) => ({
   isFetchingAuthMethods,
   isFetchingSettings,
   isOpen,
-  twitterAuth,
 });
 
 type Props = ReturnType<typeof mapStateToProps>;

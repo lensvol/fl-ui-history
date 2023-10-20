@@ -8,7 +8,6 @@ import { twitterLogin, twitterLoginFailure } from "actions/user";
 import Config from "configuration";
 
 import redirectAfterLogin from "./redirectAfterLogin";
-import { useAppSelector } from "features/app/store";
 
 export function TwitterLoginContainer({ history, label }: Props) {
   const dispatch = useDispatch();
@@ -16,7 +15,7 @@ export function TwitterLoginContainer({ history, label }: Props) {
   const handleFailure = useCallback(
     (error) => {
       if (error.toString() !== "Error: Popup has been closed by user") {
-        dispatch(twitterLoginFailure(error));
+        dispatch(twitterLoginFailure());
       }
     },
     [dispatch]
@@ -27,45 +26,77 @@ export function TwitterLoginContainer({ history, label }: Props) {
       // Parse the response as JSON (the component is using native fetch, so doesn't do this for us)
       const data = await res.json();
 
-      if (data.isSuccess) {
-        // Update the Redux store
-        dispatch(twitterLogin(data));
+      // Update the Redux store
+      dispatch(twitterLogin(data));
 
-        redirectAfterLogin(history, data);
-      } else {
-        dispatch(twitterLoginFailure(data));
-      }
+      redirectAfterLogin(history, data);
     },
     [dispatch, history]
   );
 
   const { apiUrl } = Config;
 
-  // reusing a previously-abandoned property to indicate login error
-  const isTwitterNagScreenOpen = useAppSelector(
-    (state) => state.user.isTwitterNagScreenOpen
-  );
-
   return (
-    <>
+    <TwitterLogin
+      loginUrl={`${apiUrl}twitter/login`}
+      className="button button--big-blue-bird-from-san-francisco"
+      text={label}
+      onFailure={handleFailure}
+      onSuccess={handleSuccess}
+      requestTokenUrl={`${apiUrl}twitter/requesttoken`}
+      credentials="include"
+      showIcon
+    />
+  );
+}
+/*
+export class TwitterLoginContainer extends Component {
+  handleFailure = (error) => {
+    const { dispatch } = this.props;
+    if (error.toString() !== 'Error: Popup has been closed by user') {
+      dispatch(twitterLoginFailure());
+    }
+  }
+
+  handleSuccess = async (res) => {
+    const { dispatch, history } = this.props;
+    // Parse the response as JSON (the component is using native fetch, so doesn't do this for us)
+    const body = await res.json();
+    // Update the redux store
+    const data = await dispatch(twitterLogin(body));
+
+    // TODO: this is an error state; we are notifying Airbrake, but we should
+    // let the user know that something's gone wrong
+    if (!data) {
+      return;
+    }
+
+    redirectAfterLogin(history, data);
+  }
+
+  render = () => {
+    const { label } = this.props;
+    const { apiUrl } = Config;
+    return (
       <TwitterLogin
         loginUrl={`${apiUrl}twitter/login`}
         className="button button--big-blue-bird-from-san-francisco"
         text={label}
-        onFailure={handleFailure}
-        onSuccess={handleSuccess}
+        onFailure={this.handleFailure}
+        onSuccess={this.handleSuccess}
         requestTokenUrl={`${apiUrl}twitter/requesttoken`}
         credentials="include"
         showIcon
       />
-      <p>
-        {isTwitterNagScreenOpen
-          ? "We were not able to log you in with Twitter."
-          : null}
-      </p>
-    </>
-  );
+    );
+  }
 }
+
+TwitterLoginContainer.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
+};
+*/
 
 type OwnProps = { label: string };
 type Props = OwnProps & RouteComponentProps;

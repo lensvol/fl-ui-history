@@ -5,7 +5,6 @@ import cancel, { CancelAction } from "./cancel";
 import clearCache, { ClearMessagesCache } from "./clearCache";
 import closeDialog, { CloseDialog } from "./closeDialog";
 import deleteMessage, { DeleteAction } from "./deleteMessage";
-import emailMessage, { EmailAction } from "./emailMessage";
 import fetch, { FetchAllAction } from "./fetch";
 import fetchFeedMessages, {
   FetchFeedMessagesAction,
@@ -27,7 +26,6 @@ export type MessagesAction =
   | ClearNotification
   | CloseDialog
   | DeleteAction
-  | EmailAction
   | FetchAllAction
   | FetchFeedMessagesAction
   | FetchInteractionsAction
@@ -40,7 +38,6 @@ export {
   cancel,
   closeDialog,
   deleteMessage,
-  emailMessage,
   fetch,
   fetchFeedMessages,
   fetchInteractions,

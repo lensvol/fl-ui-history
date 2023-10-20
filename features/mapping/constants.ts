@@ -1,15 +1,17 @@
+/* eslint-disable quote-props */
 import Config from "configuration";
 
-// In development, allow overriding the base URL for map art assets; otherwise use versioned assets for this
-// environment
-export const MAP_BASE_URL =
-  process.env.REACT_APP_MAP_BASE_URL ??
-  `${Config.mapBaseUrl}/${Config.version}`;
+// Normal behaviour is to fetch the current version's spritesheets, but in
+// rare cases (e.g. local development) we want to ensure that we fetch the
+// latest ones; we make this choice at build time here
+export const SPRITESHEET_VERSION = (() => {
+  if (process.env.REACT_APP_USE_LATEST_SPRITESHEETS === "true") {
+    return "latest";
+  }
+  return Config.version;
+})();
 
-export const DUMMY_XY_COORDINATES = {
-  x: Number.MIN_SAFE_INTEGER,
-  y: Number.MAX_SAFE_INTEGER,
-};
+export const MAP_BASE_URL = Config.mapBaseUrl;
 
 export const LODGINGS_AREA_ID = 2;
 
@@ -25,6 +27,10 @@ export const MAP_ROOT_AREA_THE_UNTERZEE = Config.mapRootAreaIDs.unterzee;
 export const MAP_ROOT_AREA_THE_UNTERZEE_V2 = Config.mapRootAreaIDs.unterzeev2;
 
 export const SETTING_ID_ABOARD_AT_PORT = 107951;
+
+export const SPRITESHEET_SUBFOLDER_NAME_LONDON = "london";
+export const SPRITESHEET_SUBFOLDER_NAME_UNTERZEE = "unterzee";
+export const SPRITESHEET_SUBFOLDER_NAME_UNTERZEE_V2 = "unterzeev2";
 
 export const DEFAULT_CACHED_ZOOM_LEVELS_BY_MAP_ROOT_AREA_ID: {
   [areaKey: string]: number;
@@ -79,6 +85,14 @@ export const SPRITESHEET_PREFIXES_BY_MAP_ROOT_AREA_ID = {
   [MAP_ROOT_AREA_THE_UNTERZEE_V2]: "unterzeev2",
 };
 
+export const SPRITESHEET_SUBFOLDERS_BY_MAP_ROOT_AREA_ID: {
+  [areaKey: string]: string;
+} = {
+  [MAP_ROOT_AREA_THE_FIFTH_CITY]: SPRITESHEET_SUBFOLDER_NAME_LONDON,
+  [MAP_ROOT_AREA_THE_UNTERZEE]: SPRITESHEET_SUBFOLDER_NAME_UNTERZEE,
+  [MAP_ROOT_AREA_THE_UNTERZEE_V2]: SPRITESHEET_SUBFOLDER_NAME_UNTERZEE_V2,
+};
+
 export const SPRITE_REGEX = /([^-]*)-(.*)\.png/;
 
 export const SELECTION_SPRITE_SUFFIXES = [
@@ -87,7 +101,6 @@ export const SELECTION_SPRITE_SUFFIXES = [
 ];
 
 export const SPRITE_TYPE_ORDERING = {
-  /* eslint-disable quote-props */
   fog: -4,
   coastlinesea: -3,
   coastline: -2,
@@ -96,5 +109,4 @@ export const SPRITE_TYPE_ORDERING = {
   "main-destination": 1,
   selection: 2,
   "main-destination-selection": 3,
-  /* eslint-enable quote-props */
 };

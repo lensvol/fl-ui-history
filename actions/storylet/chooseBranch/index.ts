@@ -38,6 +38,12 @@ export function chooseBranch(service: IStoryletService) {
       // We're requesting
       dispatch(chooseBranchRequest());
       try {
+        // Check whether the branch being has cost-type requirements. We will not
+        // receive cost-related quality updates in the API response, so we need to
+        // prepare to trigger fetches of the character's myself+outfit qualities
+        const { qualityRequirements = [] } = branchData;
+        const hasCosts = qualityRequirements.some((qreq) => qreq.isCost);
+
         // Make the request
         const { data } = await service.chooseBranch(branchData);
 
@@ -46,11 +52,12 @@ export function chooseBranch(service: IStoryletService) {
 
         // Fetch Fate, too, in case we've spent it
         // dispatch(fetchFate());
-        // dispatch(fetchActions());
 
-        // fetch outfit + possessions
-        dispatch(fetchMyself());
-        dispatch(fetchOutfit());
+        // If this branch incurred a cost, then fetch outfit + possessions too
+        if (hasCosts) {
+          dispatch(fetchMyself());
+          dispatch(fetchOutfit());
+        }
 
         const { messages } = data;
         if (messages) {

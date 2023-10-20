@@ -88,7 +88,7 @@ export class InvitationToYou extends Component<Props, State> {
   };
 
   render = () => {
-    const { actions, data, isRequesting, onEmail } = this.props;
+    const { actions, data, isRequesting } = this.props;
     const { failureMessage, isAccepting, isFailureModalOpen, isRejecting } =
       this.state;
 
@@ -103,7 +103,7 @@ export class InvitationToYou extends Component<Props, State> {
 
     return (
       <>
-        <MessageComponent data={data} emailable onEmail={onEmail}>
+        <MessageComponent data={data}>
           <TertiaryButton disabled={disabled} onClick={this.handleReject}>
             {isRejecting ? <Loading spinner small /> : <span>Reject</span>}
           </TertiaryButton>
@@ -139,7 +139,6 @@ type Props = ReturnType<typeof mapStateToProps> & {
   disabled: boolean;
   dispatch: Function; // eslint-disable-line
   data: FeedMessage;
-  onEmail: (hasMessagingEmail: boolean) => Promise<void>;
 };
 
 export default connect(mapStateToProps)(InvitationToYou);

@@ -4,7 +4,6 @@ import { IOutfitState } from "reducers/outfit";
 import { OutfitSlotName } from "types/outfit";
 import { IQuality } from "types/qualities";
 import { IAppState } from "types/app";
-import { EFFECT_CATEGORIES } from "constants/outfits";
 
 type Props = {
   name: OutfitSlotName;
@@ -24,11 +23,7 @@ export function makeExcludeEquippedItems(
   outfit: IOutfitState,
   slotName: OutfitSlotName
 ) {
-  // can't call useIsEffect here, because it's a hook, and this is not a component
-  return (q: IQuality) =>
-    EFFECT_CATEGORIES.indexOf(q.category as OutfitSlotName) >= 0 ||
-    outfit[slotName] !== q.id ||
-    q.level > 1;
+  return (q: IQuality) => outfit[slotName] !== q.id || q.level > 1;
 }
 
 const getName = (_state: IAppState, { name }: Props) => name;

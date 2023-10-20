@@ -1,8 +1,9 @@
 import { googleLogin } from "actions/user";
 import Modal from "components/Modal";
 
+import Config from "configuration";
 import React, { useCallback, useState } from "react";
-import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
+import GoogleLogin from "react-google-login";
 import { connect, useDispatch } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
@@ -21,6 +22,8 @@ function isInitializationError(err: GoogleError) {
 }
 
 export function GoogleLoginContainer({ history, label }: Props) {
+  const { googleId } = Config;
+
   const dispatch = useDispatch();
 
   const [errors, setErrors] = useState<GoogleError[]>([]);
@@ -28,11 +31,17 @@ export function GoogleLoginContainer({ history, label }: Props) {
 
   const [areThirdPartyCookiesAvailable, setAreThirdPartyCookiesAvailable] =
     useState(true);
-  const [didScriptLoadingFail] = useState(false);
+  const [didScriptLoadingFail, setDidScriptLoadingFail] = useState(false);
+
+  const handleScriptLoadFailure = useCallback(() => {
+    console.warn("Google API failed to load; disabling the component");
+    setDidScriptLoadingFail(true);
+  }, []);
 
   const handleSuccess = useCallback(
-    async (googleAccessToken) => {
+    async (response) => {
       // NOTE: this is a Google-provided access token, not our JWT
+      const { access_token: googleAccessToken } = response.getAuthResponse();
       const data: any = await dispatch(googleLogin(googleAccessToken));
       // Send the user where they need to go next
       redirectAfterLogin(history, data);
@@ -40,41 +49,37 @@ export function GoogleLoginContainer({ history, label }: Props) {
     [dispatch, history]
   );
 
-  const handleFailure = useCallback(
-    (
-      error: Pick<TokenResponse, "error" | "error_description" | "error_uri">
-    ) => {
-      const err: GoogleError = {
-        error: error.error ?? "",
-        details: error.error_description ?? error.error_uri ?? "",
-      };
+  const handleFailure = useCallback((err: GoogleError) => {
+    setErrors((prevState) => [...prevState, err]);
 
-      setErrors((prevState) => [...prevState, err]);
-
-      // Open the modal if this is not an initialization error
-      // (otherwise we'd spam everyone with initialization errors, whether or not they
-      // might want to log in w/ Google).
-      if (isInitializationError(err)) {
-        setAreThirdPartyCookiesAvailable(false);
-      } else {
-        setIsErrorModalOpen(true);
-      }
-    },
-    []
-  );
-
-  const doGoogleAuth = useGoogleLogin({
-    onSuccess: handleSuccess,
-    onError: handleFailure,
-  });
+    // Open the modal if this is not an initialization error
+    // (otherwise we'd spam everyone with initialization errors, whether or not they
+    // might want to log in w/ Google).
+    if (isInitializationError(err)) {
+      setAreThirdPartyCookiesAvailable(false);
+    } else {
+      setIsErrorModalOpen(true);
+    }
+  }, []);
 
   return (
     <>
-      <GoogleLoginButton
+      <GoogleLogin
+        clientId={googleId}
+        className="button button--google"
+        autoLoad={false}
         disabled={didScriptLoadingFail || !areThirdPartyCookiesAvailable}
-        onClick={() => doGoogleAuth()}
-        didScriptLoadingFail={didScriptLoadingFail}
-        label={label}
+        buttonText={label}
+        onFailure={handleFailure}
+        onScriptLoadFailure={handleScriptLoadFailure}
+        onSuccess={handleSuccess}
+        render={(renderProps) => (
+          <GoogleLoginButton
+            {...renderProps}
+            didScriptLoadingFail={didScriptLoadingFail}
+            label={label}
+          />
+        )}
       />
       <GoogleLoginErrorModal
         isOpen={isErrorModalOpen}
