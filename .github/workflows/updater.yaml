@@ -1,0 +1,47 @@
+name: Track UI changes
+on:
+  # schedule:
+  #   - cron: '7 * * * *'
+  workflow_dispatch:
+
+env:
+  UI_BRANCH: staging
+
+jobs:
+  check-for-changes:
+    strategy:
+      matrix:
+        branch: [www]
+
+    runs-on: ubuntu-latest
+    name: Commit any changes to FL UI code
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+      - name: Install source-map-unpacker
+        run: npm install -g source-map-unpacker@1.2.0
+      - name: Install `prettier`
+        run: npm install -g prettier
+      - name: Extract latest UI commit for a branch
+        run: echo "UI_COMMIT_SHA=$(python3 ./.github/get_ui_version.py ${{ matrix.branch }})" >> $GITHUB_ENV
+      - name: Output debug info
+        run: |
+          echo Branch: ${{ matrix.branch }}
+          echo "Commit SHA: $UI_COMMIT_SHA"
+          echo https://${{ matrix.branch }}.fallenlondon.com/static/js/main.${{ env.UI_COMMIT_SHA }}.chunk.js.map
+      - name: Retrieve source map
+        run: "curl https://${{ matrix.branch }}.fallenlondon.com/static/js/main.${{ env.UI_COMMIT_SHA }}.chunk.js.map -o /tmp/source.map.js"
+      - name: Extract source code
+        run: source-map-unpacker -p /tmp/source.map.js -o .
+      - name: Prettify extracted code
+        run: prettier -w .
+      - name: Commit any changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "${{ matrix.branch }}: ${{ env.UI_COMMIT_SHA }}"
+          skip_fetch: true
+          skip_checkout: true
