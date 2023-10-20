@@ -8,11 +8,15 @@ import classnames from "classnames";
 import Buttonlet from "components/Buttonlet";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { ThunkDispatch } from "redux-thunk";
 import { IAppState } from "types/app";
 
 import DeleteDialog from "./DeleteDialog";
+
+import Image from "components/Image";
+import pin from "assets/img/pin.png";
+import unpin from "assets/img/unpin.png";
 
 type State = {
   isStarring: boolean;
@@ -50,15 +54,19 @@ class JournalEntry extends Component<Props, State> {
     }
   };
 
-  handleFetchFromId = () => {
+  copyLinkToClipboard = () => {
     const {
-      dispatch,
       profileCharacter,
       data: { id },
     } = this.props;
+
     const characterName = profileCharacter?.name;
+
     if (characterName) {
-      dispatch(fetchSharedContent({ characterName, fromId: id }));
+      const url =
+        window.location.origin + "/profile/" + characterName + "/" + id;
+
+      navigator.clipboard.writeText(url);
     }
   };
 
@@ -105,55 +113,54 @@ class JournalEntry extends Component<Props, State> {
   render() {
     const { data, canEdit, isFetching, profileCharacter } = this.props;
 
-    const { isStarring, modalIsOpen } = this.state;
+    const { modalIsOpen } = this.state;
 
     if (!profileCharacter) {
       return null;
     }
 
-    const { name } = profileCharacter;
-    const { areaName, fallenLondonDateTime, id, isFavourite } = data;
+    const { areaName, fallenLondonDateTime, isFavourite } = data;
 
     return (
       <Fragment>
         <div
           className={classnames(
             "journal-entry",
-            isFetching && "journal-entry--is-fetching"
+            isFetching && "journal-entry--is-fetching",
+            isFavourite && "journal-entry--is-favourite"
           )}
           style={{ marginBottom: 16 }}
         >
           <div className="media__body">
             <div className="journal-entry__buttonlet">
-              <Link
-                className="link--inverse journal-entry__permalink"
-                to={`/profile/${name}/${id}`}
-                onClick={this.handleFetchFromId}
-              >
-                <i className="fa fa-link heading--1" />
-              </Link>{" "}
-              <Buttonlet
-                type={isStarring ? "refresh" : isFavourite ? "star" : "star-o"}
-                title={
-                  canEdit
-                    ? isFavourite
-                      ? "Unmark as favourite"
-                      : "Mark as favourite"
-                    : undefined
-                }
-                onClick={canEdit ? this.handleToggleFavourite : () => {}}
-                classNames={{
-                  containerClassName: "journal-entry--star-button",
-                  iconClassName: "journal-entry--star-icon",
-                }}
-                spin={canEdit && isStarring}
+              <i
+                className="link--inverse journal-entry__permalink fa fa-link heading--1"
+                onClick={this.copyLinkToClipboard}
               />{" "}
               {canEdit && (
-                <Buttonlet
-                  type="delete"
-                  title="Delete this plan"
-                  onClick={this.showModal}
-                />
+                <>
+                  <Image
+                    alt={
+                      isFavourite ? "Unmark as favourite" : "Mark as favourite"
+                    }
+                    icon={isFavourite ? unpin : pin}
+                    interactiveProps={{
+                      className: "journal-entry--star-button",
+                    }}
+                    onClick={this.handleToggleFavourite}
+                    tooltipData={{
+                      description: isFavourite
+                        ? "Unmark as favourite"
+                        : "Mark as favourite",
+                    }}
+                    type="asset"
+                  />{" "}
+                  <Buttonlet
+                    type="delete"
+                    title="Delete this plan"
+                    onClick={this.showModal}
+                  />
+                </>
               )}
             </div>
             <h4

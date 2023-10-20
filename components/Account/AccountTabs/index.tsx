@@ -14,7 +14,7 @@ import AccountContext, {
 export default function AccountTabs() {
   return (
     <ul role="tablist" aria-label="Account sections" className="nav__list">
-      <AccountTab label="Profile" tabType={TAB_TYPE_USER} />
+      <AccountTab label="User" tabType={TAB_TYPE_USER} />
       <AccountTab tabType={TAB_TYPE_PREFERENCES} label="Preferences" />
       <AccountTab label="Authentication" tabType={TAB_TYPE_AUTH} />
       <AccountTab tabType={TAB_TYPE_SUBSCRIPTION} label="Subscription" />
