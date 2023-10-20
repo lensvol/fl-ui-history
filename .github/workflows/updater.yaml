@@ -29,7 +29,7 @@ jobs:
       - name: Extract latest UI commit for a branch
         run: echo "UI_COMMIT_SHA=$(python3 ./.github/get_ui_version.py $UI_BRANCH)" >> $GITHUB_ENV
       - name: Retrieve source map
-        run: "curl https://${{ matrix.branch }}.fallenlondon.com/static/js/main.$UI_COMMIT_SHA.chunk.js.map -o /tmp/source.map.js"
+        run: "curl https://${{ matrix.branch }}.fallenlondon.com/static/js/main.${{ env.UI_COMMIT_SHA }}.chunk.js.map -o /tmp/source.map.js"
       - name: Extract source code
         run: source-map-unpacker -p /tmp/source.map.js -o .
       - name: Prettify extracted code
@@ -37,6 +37,6 @@ jobs:
       - name: Commit any changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "${{ env.UI_BRANCH }}: ${{ env.UI_COMMIT_SHA }}"
+          commit_message: "${{ matrix.branch }}: ${{ env.UI_COMMIT_SHA }}"
           skip_fetch: true
           skip_checkout: true
