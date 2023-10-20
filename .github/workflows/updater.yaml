@@ -2,6 +2,7 @@ name: Track UI changes
 on:
   schedule:
     - cron: '7 * * * *'
+  workflow_dispatch:
 
 env:
   UI_BRANCH: staging
@@ -18,7 +19,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          ref: staging
+          ref: ${{ matrix.branch }}
       - name: Install Node.js
         uses: actions/setup-node@v3
       - name: Install source-map-unpacker
@@ -28,7 +29,7 @@ jobs:
       - name: Extract latest UI commit for a branch
         run: echo "UI_COMMIT_SHA=$(python3 ./.github/get_ui_version.py $UI_BRANCH)" >> $GITHUB_ENV
       - name: Retrieve source map
-        run: curl https://$UI_BRANCH.fallenlondon.com/static/js/main.$UI_COMMIT_SHA.chunk.js.map -o /tmp/source.map.js
+        run: "curl https://${{ matrix.branch }}.fallenlondon.com/static/js/main.$UI_COMMIT_SHA.chunk.js.map -o /tmp/source.map.js"
       - name: Extract source code
         run: source-map-unpacker -p /tmp/source.map.js -o .
       - name: Prettify extracted code
