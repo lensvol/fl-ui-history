@@ -143,9 +143,14 @@ class JournalEntry extends Component<Props, State> {
                     alt={
                       isFavourite ? "Unmark as favourite" : "Mark as favourite"
                     }
+                    className={
+                      isFavourite
+                        ? "journal-entry--unfavourite-image"
+                        : "journal-entry--favourite-image"
+                    }
                     icon={isFavourite ? unpin : pin}
                     interactiveProps={{
-                      className: "journal-entry--star-button",
+                      className: "journal-entry--favourite-container",
                     }}
                     onClick={this.handleToggleFavourite}
                     tooltipData={{
