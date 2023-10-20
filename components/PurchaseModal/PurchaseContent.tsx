@@ -188,24 +188,26 @@ function PurchaseContentReady({
               </p>
             </div>
           )}
-          {isEnhancedStoryUnlock && !isDisabled && card.type === "ResetStory" && (
-            <>
-              <p
-                style={{
-                  fontStyle: "bold",
-                }}
-              >
-                {remainingStoryUnlocks === 0 ? (
-                  <>This will be your second and final replay this month.</>
-                ) : (
-                  <>
-                    Choosing this story will leave you with one further replay
-                    this month.
-                  </>
-                )}
-              </p>
-            </>
-          )}
+          {isEnhancedStoryUnlock &&
+            !isDisabled &&
+            card.type === "ResetStory" && (
+              <>
+                <p
+                  style={{
+                    fontStyle: "bold",
+                  }}
+                >
+                  {remainingStoryUnlocks === 0 ? (
+                    <>This will be your second and final replay this month.</>
+                  ) : (
+                    <>
+                      Choosing this story will leave you with one further replay
+                      this month.
+                    </>
+                  )}
+                </p>
+              </>
+            )}
         </div>
         <hr />
       </div>

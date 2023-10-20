@@ -75,17 +75,21 @@ export default function BraintreeDropIn({
             instanceRef.current = i;
 
             // Register callbacks
-            i?.on("paymentMethodRequestable", (payload) =>
-              onPaymentMethodRequestable?.(payload)
+            i?.on(
+              "paymentMethodRequestable",
+              (payload) => onPaymentMethodRequestable?.(payload)
             );
-            i?.on("noPaymentMethodRequestable", () =>
-              onNoPaymentMethodRequestable?.()
+            i?.on(
+              "noPaymentMethodRequestable",
+              () => onNoPaymentMethodRequestable?.()
             );
-            i?.on("paymentOptionSelected", (payload) =>
-              onPaymentOptionSelected?.(payload)
+            i?.on(
+              "paymentOptionSelected",
+              (payload) => onPaymentOptionSelected?.(payload)
             );
-            i?.on("changeActiveView", (payload) =>
-              onChangeActiveView?.(payload)
+            i?.on(
+              "changeActiveView",
+              (payload) => onChangeActiveView?.(payload)
             );
             i?.on("3ds:customer-canceled", () => on3dsCustomerCanceled?.());
 
