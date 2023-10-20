@@ -5,20 +5,19 @@ import React, { Fragment } from "react";
 
 import { IQuality } from "types/qualities";
 
-export default function ProfileInventoryItem({
-  possession,
-}: {
-  possession: IQuality;
-}) {
-  const { availableAt, description, id, image, name } = possession;
+interface Props {
+  isLarge?: boolean;
+  possession?: IQuality;
+}
 
+export default function ProfileInventoryItem({ isLarge, possession }: Props) {
   const tooltipData = {
     ...possession,
     description: `
-        <p>${description}</p>
+        <p>${possession?.description}</p>
         ${
-          possession.availableAt
-            ? `<p class="tooltip__available-at">${availableAt}</p>`
+          possession?.availableAt
+            ? `<p class="tooltip__available-at">${possession?.availableAt}</p>`
             : ""
         }
       `,
@@ -28,19 +27,25 @@ export default function ProfileInventoryItem({
 
   return (
     <Fragment>
-      <li
-        data-quality-id={id}
-        className={classnames("profile__inventory-item")}
+      <div
+        data-quality-id={possession?.id}
+        className={classnames(
+          isLarge ? "profile__inventory-item-large" : "profile__inventory-item"
+        )}
       >
         <Image
-          className="profile__inventory-item-image"
-          icon={image}
-          alt={name}
-          type="small-icon"
-          tooltipData={tooltipData}
+          className={classnames(
+            isLarge
+              ? "profile__inventory-item-image-large"
+              : "profile__inventory-item-image"
+          )}
+          icon={possession?.image ?? "black"}
+          alt={possession?.name}
+          type={isLarge ? "icon" : "small-icon"}
+          tooltipData={possession !== undefined ? tooltipData : undefined}
           defaultCursor
         />
-      </li>
+      </div>
     </Fragment>
   );
 }
