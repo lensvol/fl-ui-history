@@ -10,7 +10,7 @@ if __name__ == "__main__":
         branch = sys.argv[1]
 
     if branch not in ("www", "beta", "staging"):
-        print(f"Invalid FL envrionment: {branch}")
+        print(f"Invalid FL environment: {branch}")
         exit(-1)
 
     # Disable certificate verification
