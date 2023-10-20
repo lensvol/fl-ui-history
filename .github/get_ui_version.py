@@ -3,19 +3,14 @@ import re
 import ssl
 import sys
 
-BRANCH_TO_SUBDOMAIN = {
-    "main": "www",
-    "staging": "staging",
-    "beta": "beta",
-}
 
 if __name__ == "__main__":
-    branch = "main"
+    branch = "www"
     if len(sys.argv) > 1:
         branch = sys.argv[1]
 
-    if branch not in ("main", "beta", "staging"):
-        print(f"Invalid branch: {branch}")
+    if branch not in ("www", "beta", "staging"):
+        print(f"Invalid FL envrionment: {branch}")
         exit(-1)
 
     # Disable certificate verification
@@ -24,7 +19,7 @@ if __name__ == "__main__":
     context.verify_mode = ssl.CERT_NONE
 
     # Connect to the site over HTTPS
-    conn = http.client.HTTPSConnection(f"{BRANCH_TO_SUBDOMAIN[branch]}.fallenlondon.com", context=context)
+    conn = http.client.HTTPSConnection(f"{branch}.fallenlondon.com", context=context)
 
     # Retrieve the contents of index.html
     conn.request("GET", "/index.html")
