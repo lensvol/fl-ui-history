@@ -10,7 +10,7 @@ jobs:
   check-for-changes:
     strategy:
       matrix:
-        branch: [www, staging, beta]
+        branch: [www]
 
     runs-on: ubuntu-latest
     name: Commit any changes to FL UI code
