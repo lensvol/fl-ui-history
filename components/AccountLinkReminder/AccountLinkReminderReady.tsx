@@ -22,9 +22,8 @@ export function AccountLinkReminderReady({
     )
   );
 
-  const [shouldShowDismissOptions, setShouldShowDismissOptions] = useState(
-    !twitterAuth
-  );
+  const [shouldShowDismissOptions, setShouldShowDismissOptions] =
+    useState(!twitterAuth);
 
   const onAddedSecondAuthMethod = useCallback(() => {
     setShouldShowDismissOptions(true);

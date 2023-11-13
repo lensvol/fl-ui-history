@@ -36,9 +36,9 @@ export default function Header({
     supportsEnhancedEF && subscriptionType === "EnhancedExceptionalFriendship"
       ? ""
       : supportsEnhancedEF &&
-        (userDidDowngrade || subscriptionType === "ExceptionalFriendship")
-      ? "Become an Enhanced Exceptional Friend"
-      : "Become an Exceptional Friend of the Bazaar";
+          (userDidDowngrade || subscriptionType === "ExceptionalFriendship")
+        ? "Become an Enhanced Exceptional Friend"
+        : "Become an Exceptional Friend of the Bazaar";
 
   return (
     <div key="content fate-header">

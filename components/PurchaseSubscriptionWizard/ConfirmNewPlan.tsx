@@ -79,8 +79,8 @@ export function ConfirmNewPlan({
     newSubscriptionType === "EnhancedExceptionalFriendship"
       ? "Proceed to Payment"
       : newSubscriptionType === "None"
-      ? "Cancel Subscription"
-      : "Confirm Changes";
+        ? "Cancel Subscription"
+        : "Confirm Changes";
 
   const didRecentlyDowngrade = isDowngradedSubscription(
     hasSubscription,

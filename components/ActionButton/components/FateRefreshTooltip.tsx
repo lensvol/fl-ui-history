@@ -16,8 +16,8 @@ export default function FateRefreshTooltip({
     secondaryDescription: hasActionRefreshes
       ? "Use your Enhanced Refreshes..."
       : hasEnoughFate
-      ? "Refresh your Actions with Fate..."
-      : "Not enough Fate! Purchase more...",
+        ? "Refresh your Actions with Fate..."
+        : "Not enough Fate! Purchase more...",
   };
 
   return <ToolTip data={data} />;

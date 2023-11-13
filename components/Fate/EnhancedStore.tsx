@@ -177,8 +177,8 @@ function EnhancedStore({
     (remainingStoryUnlocks ?? 0) === 0
       ? "You have selected your stories for this month. Return here next month for an updated selection!"
       : remainingStoryUnlocks === 1
-      ? "You may choose to reset one more story."
-      : "You may choose one new story to play, or two to reset.";
+        ? "You may choose to reset one more story."
+        : "You may choose one new story to play, or two to reset.";
 
   const userDidDowngrade = isDowngradedSubscription(
     hasSubscription,

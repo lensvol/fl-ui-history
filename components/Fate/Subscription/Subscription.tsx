@@ -68,8 +68,8 @@ export function Subscription({
   const subType: PremiumSubscriptionType = userDidDowngrade
     ? "ExceptionalFriendship"
     : hasSubscription
-    ? subscriptionType
-    : "None";
+      ? subscriptionType
+      : "None";
 
   switch (subType) {
     case "EnhancedExceptionalFriendship":
