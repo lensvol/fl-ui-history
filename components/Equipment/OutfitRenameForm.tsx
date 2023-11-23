@@ -39,7 +39,7 @@ export function OutfitRenameForm({
           <Field
             autoFocus
             className="form__control outfit-controls__outfit-rename-field"
-            maxlength={21}
+            maxLength={21}
             name="name"
             value={values.name}
           />

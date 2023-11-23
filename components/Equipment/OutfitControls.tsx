@@ -49,6 +49,9 @@ export function OutfitControls({
   const [outfitChangeErrorMessage, setOutfitChangeErrorMessage] = useState<
     string | undefined
   >(undefined);
+  const [outfitSuccessMessage, setOutfitSuccessMessage] = useState<
+    string | undefined
+  >(undefined);
 
   const selectedOutfit: IOutfit | undefined = useMemo(
     () => outfits.find((o) => o.selected),
@@ -91,27 +94,31 @@ export function OutfitControls({
     setOutfitChangeErrorMessage(undefined);
   }, []);
 
-  const showSaveOutfitSuccessMessage = useCallback(async () => {
-    setHasRecentlySaved(true);
-    setIsHidingSuccessMessage(false);
-    if (!isMounted.current) {
-      return;
-    }
+  const showSaveOutfitSuccessMessage = useCallback(
+    async (message?: string) => {
+      setOutfitSuccessMessage(message);
+      setHasRecentlySaved(true);
+      setIsHidingSuccessMessage(false);
+      if (!isMounted.current) {
+        return;
+      }
 
-    await wait(1000);
-    if (!isMounted.current) {
-      return;
-    }
+      await wait(1000);
+      if (!isMounted.current) {
+        return;
+      }
 
-    setIsHidingSuccessMessage(true);
+      setIsHidingSuccessMessage(true);
 
-    await wait(500);
-    if (!isMounted.current) {
-      return;
-    }
+      await wait(500);
+      if (!isMounted.current) {
+        return;
+      }
 
-    setHasRecentlySaved(false);
-  }, [isMounted]);
+      setHasRecentlySaved(false);
+    },
+    [isMounted]
+  );
 
   const handleRequestCloseOutfitChangeErrorModal = useCallback(() => {
     setIsOutfitChangeErrorModalOpen(false);
@@ -169,7 +176,10 @@ export function OutfitControls({
                   )}
                 </div>
                 {hasRecentlySaved && (
-                  <SaveOutfitSuccessMessage isHiding={isHidingSuccessMessage} />
+                  <SaveOutfitSuccessMessage
+                    isHiding={isHidingSuccessMessage}
+                    message={outfitSuccessMessage}
+                  />
                 )}
               </div>
               <Feature name={SHOW_EQUIPMENT_SEARCH}>

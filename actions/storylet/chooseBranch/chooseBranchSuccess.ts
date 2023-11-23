@@ -18,6 +18,7 @@ export type ChooseBranchSuccessAction = {
     | "socialAct"
     | "externalSocialAct"
     | "secondChance"
+    | "setting"
     | "messages"
   > & {
     eligibleFriends?: ApiCharacterFriend[];
@@ -39,6 +40,7 @@ export default function chooseBranchSuccess(
     externalSocialAct,
     secondChance,
     messages,
+    setting,
   } = data;
   return {
     type: StoryletActionTypes.CHOOSE_BRANCH_SUCCESS,
@@ -55,6 +57,7 @@ export default function chooseBranchSuccess(
       secondChance,
       messages,
       eligibleFriends: socialAct?.inviteeData.eligibleFriends,
+      setting,
     },
   };
 }

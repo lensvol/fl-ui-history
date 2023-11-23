@@ -139,6 +139,11 @@ export default function App() {
                 />
                 <RequireCharacter path="/plans" exact component={PlansTab} />
                 <RequireCharacter path="/me" exact component={MyProfileTab} />
+                <RequireCharacter
+                  path="/profile"
+                  exact
+                  component={ProfilePage}
+                />
                 <RequireCharacter path="/" exact component={StoryTabContent} />
 
                 {/* Also unrestricted but, it's the catch-all, so it lives at the end */}

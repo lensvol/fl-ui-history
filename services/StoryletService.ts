@@ -9,6 +9,8 @@ import {
 } from "types/storylet";
 import BaseService from "./BaseService";
 
+import { ISetting } from "types/map";
+
 type ApiExternalSocialActResponse = {
   branch: IBranch;
   message: string;
@@ -76,6 +78,8 @@ export interface IApiStoryletResponseData {
   socialAct?: ApiSocialActResponse;
   storylets?: ApiAvailableStorylet[];
   storylet?: IInStorylet;
+  setting?: ISetting;
+  hasUpdatedCharacter?: boolean;
 }
 
 export interface ApiAddContactRequest {

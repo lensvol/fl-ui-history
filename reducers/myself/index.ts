@@ -20,8 +20,10 @@ import {
 import { TransactionAction } from "actions/exchange/makeTransaction";
 import { MyselfActions } from "actions/myself";
 import { OutfitActions } from "actions/outfit";
+import { ChooseBranchSuccessAction } from "actions/storylet/chooseBranch/chooseBranchSuccess";
 
 import { BUY_ITEMS_SUCCESS, SELL_ITEMS_SUCCESS } from "actiontypes/exchange";
+import { CHOOSE_BRANCH_SUCCESS } from "actiontypes/storylet";
 import changeOutfitRequested from "reducers/myself/changeOutfitRequested";
 import renameOutfitSuccess from "reducers/myself/renameOutfitSuccess";
 
@@ -63,7 +65,11 @@ export const INITIAL_STATE: IMyselfState = {
 
 export default function reducer(
   state = INITIAL_STATE,
-  action: MyselfActions | OutfitActions | TransactionAction
+  action:
+    | MyselfActions
+    | OutfitActions
+    | TransactionAction
+    | ChooseBranchSuccessAction
 ): IMyselfState {
   switch (action.type) {
     case FETCH_MYSELF_REQUESTED:
@@ -134,6 +140,22 @@ export default function reducer(
           ...state.character,
           journalIsPrivate: (action as SetJournalPrivacySuccess).payload
             .journalIsPrivate,
+        },
+      };
+    }
+
+    case CHOOSE_BRANCH_SUCCESS: {
+      const { setting } = (action as ChooseBranchSuccessAction).payload;
+
+      if (!setting) {
+        return state;
+      }
+
+      return {
+        ...state,
+        character: {
+          ...state.character,
+          setting,
         },
       };
     }

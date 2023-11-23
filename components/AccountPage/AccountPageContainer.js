@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { fetchContacts } from "actions/contacts";
+import { fetchContacts } from "features/contacts";
 
 import Account from "components/Account";
 import Header from "components/Header";

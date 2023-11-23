@@ -1,6 +1,23 @@
 import { BaseResponse } from "types/app";
-import { IContact, IContactService } from "types/contacts";
-import BaseService from "./BaseService";
+import BaseService, { Either } from "./BaseMonadicService";
+
+export interface IContactService {
+  addContact: (userName: string) => Promise<Either<AddContactResponse>>;
+  addFacebookContacts: () => Promise<Either<unknown>>;
+  deleteContact: (id: number) => Promise<Either<unknown>>;
+  fetch: () => Promise<Either<IContact[]>>;
+}
+
+export interface AddContactResponse {
+  contact: IContact;
+  message: string;
+}
+
+export interface IContact {
+  id: number;
+  userId: number;
+  userName: string;
+}
 
 class ContactService extends BaseService implements IContactService {
   /**
@@ -25,7 +42,7 @@ class ContactService extends BaseService implements IContactService {
       method: "post",
       data: { userName },
     };
-    return this.doRequest<BaseResponse & { contact: IContact }>(config);
+    return this.doRequest<AddContactResponse>(config);
   };
 
   /**

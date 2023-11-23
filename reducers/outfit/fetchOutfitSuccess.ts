@@ -17,6 +17,7 @@ export default function fetchOutfitSuccess(
     dirty: payload.dirty,
     maxOutfits: payload.maxOutfits,
     isChanging: false,
+    isFavourite: payload.isFavourite,
   };
 }
 

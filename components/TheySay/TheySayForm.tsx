@@ -16,7 +16,7 @@ export default function TheySayForm(props: Props) {
             className="form__control"
             rows="4"
             component="textarea"
-            maxlength={THEY_SAY_MAX_LENGTH}
+            maxLength={THEY_SAY_MAX_LENGTH}
             name="description"
             value={values.description}
           />
@@ -33,5 +33,5 @@ export default function TheySayForm(props: Props) {
 
 type Props = {
   initialValue: string;
-  onSubmit: (values: any) => Promise<void>;
+  onSubmit: (values: { description: string }) => Promise<void>;
 };

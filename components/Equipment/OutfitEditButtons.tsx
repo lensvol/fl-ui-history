@@ -6,18 +6,23 @@ import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
 
 type Props = {
   dirty: boolean;
+  isFavourite: boolean;
   onStartEditing: () => void;
   onSaveOutfit: () => Promise<void>;
+  onToggleFavouriteOutfit: () => Promise<void>;
 };
 
 export default function OutfitEditButtons({
   dirty,
+  isFavourite,
   onSaveOutfit,
   onStartEditing,
+  onToggleFavouriteOutfit,
 }: Props) {
   const hasNewOutfitBehaviour = useFeature(NEW_OUTFIT_BEHAVIOUR);
 
   const [isSaving, setIsSaving] = useState(false);
+  const [isFavouriting, setIsFavouriting] = useState(false);
 
   const onClickToSaveOutfit = useCallback(async () => {
     setIsSaving(true);
@@ -32,12 +37,31 @@ export default function OutfitEditButtons({
     return "Save your changes to this outfit.";
   }, [dirty]);
 
+  const handleToggleFavourite = useCallback(async () => {
+    setIsFavouriting(true);
+
+    await onToggleFavouriteOutfit();
+
+    setIsFavouriting(false);
+  }, [onToggleFavouriteOutfit]);
+
   if (!hasNewOutfitBehaviour) {
     return null;
   }
 
   return (
     <>
+      <Buttonlet
+        type={isFavouriting ? "refresh" : isFavourite ? "star" : "star-o"}
+        onClick={handleToggleFavourite}
+        disabled={isFavouriting}
+        spin={isFavouriting}
+        tooltipData={{
+          description: isFavourite
+            ? "Unmark as favourite"
+            : "Mark as favourite",
+        }}
+      />
       <Buttonlet
         type="edit"
         onClick={onStartEditing}

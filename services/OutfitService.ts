@@ -2,6 +2,7 @@ import BaseService, { Either } from "services/BaseMonadicService";
 
 export type FetchOutfitResponse = {
   dirty: boolean;
+  isFavourite: boolean;
   maxOutfits: number;
   slots: { name: string; qualityId?: number }[];
 };
@@ -21,6 +22,7 @@ export interface IOutfitService {
     newName: string
   ) => Promise<Either<RenameOutfitResponse>>;
   saveCurrentOutfit: () => Promise<Either<FetchOutfitResponse>>;
+  toggleFavouriteOutfit: () => Promise<Either<FetchOutfitResponse>>;
   unequipQuality: (
     qualityId: number
   ) => Promise<Either<ChangeEquipmentResponse>>;
@@ -67,6 +69,15 @@ export default class OutfitService
       method: "post",
       url: "/outfit/save",
     };
+    return this.doRequest<FetchOutfitResponse>(config);
+  };
+
+  toggleFavouriteOutfit = () => {
+    const config = {
+      method: "post",
+      url: "/outfit/toggleFavourite",
+    };
+
     return this.doRequest<FetchOutfitResponse>(config);
   };
 

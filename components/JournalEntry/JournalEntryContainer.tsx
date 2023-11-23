@@ -1,23 +1,37 @@
-import { deleteEntry, fetchSharedContent } from "actions/profile";
+import {
+  deleteEntry,
+  fetchSharedContent,
+  toggleFavouriteJournalEntry,
+} from "features/profile";
 import classnames from "classnames";
 
 import Buttonlet from "components/Buttonlet";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { ThunkDispatch } from "redux-thunk";
 import { IAppState } from "types/app";
 
 import DeleteDialog from "./DeleteDialog";
 
+import Image from "components/Image";
+import MediaMdDown from "components/Responsive/MediaMdDown";
+import MediaLgUp from "components/Responsive/MediaLgUp";
+import pin from "assets/img/pin.png";
+import unpin from "assets/img/unpin.png";
+
 type State = {
+  isStarring: boolean;
   modalIsOpen: boolean;
 };
 
 class JournalEntry extends Component<Props, State> {
   mounted = false;
 
-  state = { modalIsOpen: false };
+  state = {
+    isStarring: false,
+    modalIsOpen: false,
+  };
 
   static displayName = "JournalEntry";
 
@@ -36,21 +50,45 @@ class JournalEntry extends Component<Props, State> {
     if (!canEdit) {
       return;
     }
-    await dispatch(deleteEntry(data.id));
+
+    await dispatch(
+      deleteEntry({
+        entryId: data.id,
+      })
+    );
+
     if (this.mounted) {
       this.handleRequestClose();
     }
   };
 
-  handleFetchFromId = () => {
+  copyLinkToClipboard = () => {
     const {
-      dispatch,
       profileCharacter,
       data: { id },
     } = this.props;
+
     const characterName = profileCharacter?.name;
+
     if (characterName) {
-      dispatch(fetchSharedContent({ characterName, fromId: id }));
+      const url =
+        window.location.origin + "/profile/" + characterName + "/" + id;
+
+      navigator.clipboard.writeText(url);
+
+      var style = document.getElementById("linkTooltip_" + id)?.style;
+
+      if (!style) {
+        return;
+      }
+
+      style.visibility = "visible";
+
+      setTimeout(() => {
+        if (style) {
+          style.visibility = "hidden";
+        }
+      }, 1000);
     }
   };
 
@@ -62,38 +100,126 @@ class JournalEntry extends Component<Props, State> {
     this.setState({ modalIsOpen: true });
   };
 
+  handleToggleFavourite = async () => {
+    this.setState({ isStarring: true });
+
+    const {
+      dispatch,
+      data: { id },
+      profileCharacter,
+    } = this.props;
+
+    await dispatch(
+      toggleFavouriteJournalEntry({
+        id: id,
+      })
+    );
+
+    const characterName = profileCharacter?.name;
+
+    if (characterName) {
+      await dispatch(
+        fetchSharedContent({
+          characterName,
+        })
+      );
+    }
+
+    this.setState({ isStarring: false });
+  };
+
   /**
    * Render
    * @return {Object}
    */
   render() {
     const { data, canEdit, isFetching, profileCharacter } = this.props;
+
     const { modalIsOpen } = this.state;
 
     if (!profileCharacter) {
       return null;
     }
 
-    const { name } = profileCharacter;
-    const { areaName, fallenLondonDateTime, id } = data;
+    const { areaName, fallenLondonDateTime, isFavourite, id } = data;
 
     return (
       <Fragment>
         <div
           className={classnames(
             "journal-entry",
-            isFetching && "journal-entry--is-fetching"
+            isFetching && "journal-entry--is-fetching",
+            isFavourite && "journal-entry--is-favourite"
           )}
           style={{ marginBottom: 16 }}
         >
           <div className="media__body">
             <div className="journal-entry__buttonlet">
-              {canEdit && (
-                <Buttonlet
-                  type="delete"
-                  title="Delete this plan"
-                  onClick={this.showModal}
+              <span className="profile__contacts-container">
+                <div
+                  id={"linkTooltip_" + id}
+                  className="profile__contacts-alert"
+                  style={{
+                    visibility: "hidden",
+                    color: "#efefef",
+                  }}
+                >
+                  Link copied to clipboard!
+                </div>
+                <i
+                  className="link--inverse journal-entry__permalink fa fa-link heading--1"
+                  onClick={this.copyLinkToClipboard}
                 />
+              </span>{" "}
+              {canEdit && (
+                <>
+                  <MediaMdDown>
+                    <Image
+                      alt={
+                        isFavourite ? "Unpin as favourite" : "Pin as favourite"
+                      }
+                      className={
+                        isFavourite
+                          ? "journal-entry--unfavourite-image"
+                          : "journal-entry--favourite-image"
+                      }
+                      icon={isFavourite ? unpin : pin}
+                      interactiveProps={{
+                        className: "journal-entry--favourite-container",
+                      }}
+                      onClick={this.handleToggleFavourite}
+                      type="asset"
+                    />
+                  </MediaMdDown>
+                  <MediaLgUp>
+                    <Image
+                      alt={
+                        isFavourite ? "Unpin as favourite" : "Pin as favourite"
+                      }
+                      className={
+                        isFavourite
+                          ? "journal-entry--unfavourite-image"
+                          : "journal-entry--favourite-image"
+                      }
+                      icon={isFavourite ? unpin : pin}
+                      interactiveProps={{
+                        className: "journal-entry--favourite-container",
+                      }}
+                      onClick={this.handleToggleFavourite}
+                      tooltipData={{
+                        description: isFavourite
+                          ? "Unpin as favourite"
+                          : "Pin as favourite",
+                      }}
+                      type="asset"
+                    />
+                  </MediaLgUp>{" "}
+                  <Buttonlet
+                    type="delete"
+                    title="Delete this plan"
+                    onClick={this.showModal}
+                  />
+                </>
               )}
             </div>
             <h4
@@ -106,13 +232,6 @@ class JournalEntry extends Component<Props, State> {
               </span>
               <span className="journal-entry__location">
                 {areaName && `(${areaName})`}
-                <Link
-                  className="link--inverse journal-entry__permalink"
-                  to={`/profile/${name}/${id}`}
-                  onClick={this.handleFetchFromId}
-                >
-                  <i className="fa fa-link" />
-                </Link>
               </span>
             </h2>
             <div
@@ -131,22 +250,6 @@ class JournalEntry extends Component<Props, State> {
     );
   }
 }
-
-/*
-JournalEntry.displayName = 'JournalEntry';
-
-JournalEntry.propTypes = {
-  canEdit: PropTypes.bool.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  data: PropTypes.shape({}).isRequired,
-  isFetching: PropTypes.bool.isRequired,
-  profileCharacter: PropTypes.shape({}),
-};
-
-JournalEntry.defaultProps = {
-  profileCharacter: undefined,
-};
-*/
 
 const mapStateToProps = ({ profile }: IAppState) => ({
   canEdit: profile.isLoggedInUsersProfile,

@@ -48,9 +48,11 @@ export function chooseBranch(service: IStoryletService) {
         // dispatch(fetchFate());
         // dispatch(fetchActions());
 
-        // fetch outfit + possessions
-        dispatch(fetchMyself());
-        dispatch(fetchOutfit());
+        // fetch outfit + possessions, if necessary
+        if (data.hasUpdatedCharacter) {
+          dispatch(fetchMyself());
+          dispatch(fetchOutfit());
+        }
 
         const { messages } = data;
         if (messages) {

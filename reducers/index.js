@@ -1,6 +1,9 @@
 import { combineReducers } from "redux";
 
 import timeTheHealer from "features/timeTheHealer/timeTheHealerSlice";
+import { reducer as contacts } from "features/contacts";
+import { reducer as profile } from "features/profile";
+
 import accountLinkReminder from "./accountLinkReminder";
 import actions from "./actions";
 import app from "./app";
@@ -9,7 +12,6 @@ import categories from "./categories";
 import user from "./user";
 import storylet from "./storylet";
 import cards from "./cards";
-import contacts from "./contacts";
 import equipment from "./equipment";
 import messages from "./messages";
 import myself from "./myself";
@@ -17,7 +19,6 @@ import exchange from "./exchange";
 import fate from "./fate";
 import mapAdmin from "./mapAdmin";
 import plans from "./plans";
-import profile from "./profile";
 import registration from "./registration";
 import map from "./map";
 import modalTooltip from "./modalTooltip";

@@ -18,6 +18,7 @@ import {
 } from "actiontypes/actions";
 import { logoutUser } from "actions/user";
 import { Failure, Success } from "services/BaseMonadicService";
+import { AppDispatch } from "features/app/store";
 
 export type FetchActionsRequested = { type: typeof FETCH_ACTIONS_REQUESTED };
 export type FetchActionsError = {
@@ -67,7 +68,7 @@ const fetchEnhancedActionsSuccess: ActionCreator<
 export default fetchActions(new ActionsService());
 
 export function fetchActions(service: IActionsService) {
-  return () => async (dispatch: Function) => {
+  return () => async (dispatch: AppDispatch) => {
     dispatch(fetchActionsRequested());
     try {
       const result: Success<FetchActionsResponse> | Failure =
@@ -89,13 +90,13 @@ export function fetchActions(service: IActionsService) {
       // Handle and return version mismatch errors
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
-        return error;
+        throw error;
       }
 
       // Unauthorized requests are easy to handle too
       if (error.response?.status === 401) {
         dispatch(logoutUser());
-        return;
+        throw error;
       }
 
       // We're in some kind of completely unexpected state, so put

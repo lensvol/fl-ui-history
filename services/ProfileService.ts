@@ -15,16 +15,24 @@ export type FetchProfileResponse = {
   profileCharacter: IProfileCharacter;
   standardEquippedPossessions: { name: string; possessions: IQuality[] };
   expandedEquippedPossessions: { name: string; possessions: IQuality[] };
+  profileName?: string;
+  profileDescription?: string;
+  profileBanner?: string;
+  outfitName?: string;
+  hasFavouredOutfit?: boolean;
 };
 
+export interface ApiSharedContent {
+  id: number;
+  eventName: string;
+  areaName: string;
+  fallenLondonDateTime: string;
+  playerMessage: string;
+  isFavourite: boolean;
+}
+
 export type FetchSharedContentResponse = {
-  shares: {
-    id: number;
-    eventName: string;
-    areaName: string;
-    fallenLondonDateTime: string;
-    playerMessage: string;
-  }[];
+  shares: ApiSharedContent[];
   next?: string;
   prev?: string;
 };
@@ -37,7 +45,7 @@ export type ShareResponse = {
   message: string;
 };
 
-export interface FetchSharedContentArgs {
+export interface FetchSharedContentRequest {
   characterName: string;
   count?: any;
   date?: any;
@@ -53,6 +61,7 @@ export interface IProfileCharacter {
   mantelpieceItem?: IQuality;
   scrapbookStatus?: IQuality;
   name: string;
+  userName?: string;
 }
 
 export type Domicile = {
@@ -62,6 +71,13 @@ export type Domicile = {
   maxHandSize: number;
 };
 
+export type ShareContentRequest = {
+  contentClass: string;
+  contentKey: string;
+  image: string;
+  message: string;
+};
+
 export interface IProfileService {
   deleteEntry: (entryId: number) => Promise<Either<DeleteEntryResponse>>;
   fetchProfile: (
@@ -69,17 +85,13 @@ export interface IProfileService {
     fromEchoId?: string | number
   ) => Promise<Either<FetchProfileResponse>>;
   fetchSharedContent: (
-    args: FetchSharedContentArgs
+    args: FetchSharedContentRequest
   ) => Promise<Either<FetchSharedContentResponse>>;
   fetchSharedContentByUrl: (
     url: string
   ) => Promise<Either<FetchSharedContentResponse>>;
-  share: (
-    contentClass: any,
-    contentKey: any,
-    image: any,
-    message: any
-  ) => Promise<Either<ShareResponse>>;
+  share: (req: ShareContentRequest) => Promise<Either<ShareResponse>>;
+  toggleFavouriteJournalEntry: (id: number) => Promise<Either<ShareResponse>>;
   updateDescription: (
     newDescription: string
   ) => Promise<Either<UpdateDescriptionResponse>>;
@@ -87,7 +99,7 @@ export interface IProfileService {
 
 class ProfileService extends BaseService implements IProfileService {
   fetchProfile = (characterName: string, fromEchoId?: string | number) => {
-    let url = `/profile?characterName=${characterName}`;
+    let url = `/profile?characterName=${characterName ?? ""}`;
     if (fromEchoId) {
       url += `/${fromEchoId}`;
     }
@@ -113,7 +125,7 @@ class ProfileService extends BaseService implements IProfileService {
     date,
     fromId,
     offset,
-  }: any) => {
+  }: FetchSharedContentRequest) => {
     const qs = querystring.stringify({
       characterName,
       date,
@@ -133,16 +145,27 @@ class ProfileService extends BaseService implements IProfileService {
     return this.doRequest<FetchSharedContentResponse>(config);
   };
 
+  toggleFavouriteJournalEntry = (id: number) => {
+    const config = {
+      method: "post",
+      url: "/profile/toggleFavourite",
+      data: { id },
+    };
+
+    return this.doRequest<ShareResponse>(config);
+  };
+
   updateDescription = (newDescription: string) => {
     const config = {
       method: "post",
       url: "/profile/update",
       data: { newDescription },
     };
-    return this.doRequest(config);
+    return this.doRequest<UpdateDescriptionResponse>(config);
   };
 
-  share = (contentClass: any, contentKey: any, image: any, message: any) => {
+  share = (request: ShareContentRequest) => {
+    const { contentClass, contentKey, image, message } = request;
     const config = {
       method: "post",
       url: "/profile/share",
