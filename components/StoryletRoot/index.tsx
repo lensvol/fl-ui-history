@@ -54,7 +54,7 @@ export function StoryletRoot(props: Props) {
         })
       );
 
-      setShareMessageResponse(result.data.message);
+      setShareMessageResponse(result.payload.message);
 
       setIsSharing(false);
 

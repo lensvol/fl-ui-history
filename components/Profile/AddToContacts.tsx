@@ -21,7 +21,7 @@ export default function AddToContacts() {
 
   const isMounted = useIsMounted();
   const [alertMessage, setAlertMessage] = useState<string | undefined>();
-  const [isHidingAlertMessage, setIsHidingAlertMessage] = useState(false);
+  const [isHidingAlertMessage, setIsHidingAlertMessage] = useState(true);
 
   const showAlertMessage = useCallback(
     async (message?: string) => {
