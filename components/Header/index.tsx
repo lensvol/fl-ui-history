@@ -9,7 +9,6 @@ import MediaLgUp from "../Responsive/MediaLgUp";
 
 import AuthenticatedHeader from "./AuthenticatedHeader";
 import UnauthenticatedHeader from "./UnauthenticatedHeader";
-import AdventLink from "./AdventLink";
 
 function Header(props: Props) {
   const { loggedIn, screen } = props;
@@ -42,7 +41,6 @@ function Header(props: Props) {
   return (
     <MediaLgUp>
       <div className="top-stripe" role="banner">
-        <AdventLink />
         <div className="top-stripe__inner-container">
           <div
             style={{

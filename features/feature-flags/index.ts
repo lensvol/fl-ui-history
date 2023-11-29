@@ -10,7 +10,6 @@ export const FEATURE_CREDITS = "feature/credits";
 export const FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS =
   "feature/does-storylet-state-lock-outfits";
 export const FEATURE_ENHANCED_EF = "feature/enhanced-exceptional-friendship";
-export const FEATURE_IS_IT_ADVENT = "feature/is-it-advent";
 export const FEATURE_PERSISTENT_DECK = "feature/persistent-deck";
 export const FEATURE_POSSESSIONS_TAB_AVATAR = "feature/possessions-tab-avatar";
 export const FEATURE_SHOW_VAT_BREAKDOWN = "feature/show-vat-breakdown";
@@ -26,7 +25,6 @@ export const FEATURE_FLAGS: {
   [FEATURE_CREDITS]: true,
   [FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS]: true,
   [FEATURE_ENHANCED_EF]: true,
-  [FEATURE_IS_IT_ADVENT]: true,
   [FEATURE_PERSISTENT_DECK]: true,
   [FEATURE_POSSESSIONS_TAB_AVATAR]: true,
   [FEATURE_SHOW_VAT_BREAKDOWN]: false,

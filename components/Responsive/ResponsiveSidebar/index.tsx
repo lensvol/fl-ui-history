@@ -18,7 +18,6 @@ import { IAppState } from "types/app";
 import { UIRestriction } from "types/myself";
 
 import NavItem from "./NavItem";
-import AdventLinkItem from "./AdventLinkItem";
 
 function ResponsiveSidebar(props: Props) {
   const { history, isOpen, name, screen, showFateUI } = props;
@@ -72,7 +71,6 @@ function ResponsiveSidebar(props: Props) {
         <Qualities />
         <nav className="sidemenu__nav">
           <ul className="items">
-            <AdventLinkItem />
             <NavItem fl icon="myself" onClick={makeHandler(`/profile/${name}`)}>
               Your profile
             </NavItem>
