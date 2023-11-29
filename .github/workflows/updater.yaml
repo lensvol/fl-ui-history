@@ -43,4 +43,4 @@ jobs:
         with:
           commit_message: "${{ matrix.branch }}: ${{ env.UI_COMMIT_SHA }}"
           skip_fetch: true
-          skip_checkout: true
+          skip_checkout: false
