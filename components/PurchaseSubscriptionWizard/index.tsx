@@ -244,6 +244,10 @@ export default function PurchaseSubscriptionWizard({
         await refreshPlayerData();
       }
 
+      if (nextStep === PurchaseSubscriptionWizardStep.PaymentFailure) {
+        setPaymentResponseMessage(message ?? "");
+      }
+
       setCurrentStep(
         nextStep ?? PurchaseSubscriptionWizardStep.CompletingTransaction
       );
@@ -271,32 +275,23 @@ export default function PurchaseSubscriptionWizard({
         return <CompletingTransaction />;
 
       case PurchaseSubscriptionWizardStep.PaymentSuccess: {
-        if (paymentResponseMessage !== undefined) {
-          return (
-            <PaymentSuccess
-              message={paymentResponseMessage}
-              onClick={onCloseAfterSuccess}
-              title={successTitle}
-            />
-          );
-        }
-
-        // Return null? Or an error page? We shouldn't be in this situation
-        return null;
+        return (
+          <PaymentSuccess
+            message={paymentResponseMessage ?? ""}
+            onClick={onCloseAfterSuccess}
+            title={successTitle}
+          />
+        );
       }
 
       case PurchaseSubscriptionWizardStep.PaymentFailure: {
-        if (paymentResponseMessage !== undefined) {
-          return (
-            <PaymentFailure
-              message={paymentResponseMessage}
-              onClick={onCloseAfterFailure}
-              onGoBack={onGoBackFromFailure}
-            />
-          );
-        }
-
-        return null;
+        return (
+          <PaymentFailure
+            message={paymentResponseMessage ?? ""}
+            onClick={onCloseAfterFailure}
+            onGoBack={onGoBackFromFailure}
+          />
+        );
       }
 
       case PurchaseSubscriptionWizardStep.ProvidePaymentDetails:

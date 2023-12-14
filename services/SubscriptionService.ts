@@ -14,6 +14,7 @@ export default class SubscriptionService
    */
   fetchSubscription = () => {
     const config = {
+      method: "get",
       url: "/fate/hassubscription",
     };
     return this.doRequest(config);

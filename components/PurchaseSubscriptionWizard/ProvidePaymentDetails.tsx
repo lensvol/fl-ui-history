@@ -54,12 +54,15 @@ export default function ProvidePaymentDetails({
   );
 
   const authorization = useMemo(() => clientRequestToken, [clientRequestToken]);
+
   const options: BraintreeWebDropInOptions = useMemo(
     () => ({
       authorization,
       threeDSecure: true,
       version: 2,
-      paypal: { flow: "vault" },
+      paypal: {
+        flow: "vault",
+      },
     }),
     [authorization]
   );

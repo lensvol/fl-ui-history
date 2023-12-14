@@ -19,7 +19,7 @@ export default class AccessCodeService extends BaseService {
   processAccessCode = (accessCodeName: string) => {
     const config = {
       data: { accessCodeName },
-      url: "/processaccesscode",
+      url: "/accesscode/processaccesscode",
       method: "post",
     };
     return this.doRequest(config);

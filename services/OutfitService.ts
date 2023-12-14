@@ -51,7 +51,11 @@ export default class OutfitService
   };
 
   fetchOutfit = () => {
-    const config = { url: "/outfit" };
+    const config = {
+      method: "get",
+      url: "/outfit",
+    };
+
     return this.doRequest<FetchOutfitResponse>(config);
   };
 

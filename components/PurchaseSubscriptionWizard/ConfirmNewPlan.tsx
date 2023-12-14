@@ -58,9 +58,13 @@ export function ConfirmNewPlan({
           );
         }
       } catch (error) {
-        if (isMounted.current) {
-          onSubmit(evt, PurchaseSubscriptionWizardStep.PaymentFailure);
-        }
+        const err: any = error;
+
+        onSubmit(
+          evt,
+          PurchaseSubscriptionWizardStep.PaymentFailure,
+          err?.response?.message ?? err?.message
+        );
       }
     },
     [dispatch, isMounted, newSubscriptionType, onSubmit]

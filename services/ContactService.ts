@@ -26,6 +26,7 @@ class ContactService extends BaseService implements IContactService {
    */
   fetch = () => {
     const config = {
+      method: "get",
       url: "/contact",
     };
     return this.doRequest<IContact[]>(config);

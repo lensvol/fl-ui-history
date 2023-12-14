@@ -105,6 +105,7 @@ class ProfileService extends BaseService implements IProfileService {
     }
 
     const config = {
+      method: "get",
       url,
     };
     return this.doRequest<FetchProfileResponse>(config);

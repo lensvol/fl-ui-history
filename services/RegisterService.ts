@@ -18,6 +18,7 @@ class RegisterService extends BaseService implements IRegisterService {
    */
   fetch = () => {
     const config = {
+      method: "get",
       url: "/register",
     };
     return this.doRequest(config);
@@ -25,7 +26,9 @@ class RegisterService extends BaseService implements IRegisterService {
 
   checkAvailability = (name: string) => {
     const config = {
-      url: `/register/characternameavailable?characterName=${name}`,
+      data: name,
+      method: "post",
+      url: "/register/characternameavailable",
     };
     return this.doRequest(config);
   };

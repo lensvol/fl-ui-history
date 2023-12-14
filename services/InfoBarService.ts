@@ -35,6 +35,7 @@ export default class InfoBarService
    */
   fetchSnippets = () => {
     const config = {
+      method: "get",
       url: "/infobar/snippets",
     };
     return this.doRequest<FetchSnippetsResponse>(config);
@@ -42,6 +43,7 @@ export default class InfoBarService
 
   getSupportingData = () => {
     const config = {
+      method: "get",
       url: "/infobar",
     };
     return this.doRequest<GetSupportingDataResponse>(config);

@@ -31,6 +31,7 @@ class CardsService extends BaseService implements ICardsService {
    */
   fetchOpportunityCards: () => Promise<Either<FetchCardsResponse>> = () => {
     const config = {
+      method: "get",
       url: "/opportunity",
     };
     return this.doRequest<FetchCardsResponse>(config);

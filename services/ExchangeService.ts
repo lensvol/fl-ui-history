@@ -29,6 +29,7 @@ export default class ExchangeService
    */
   fetchExchange = () => {
     const config = {
+      method: "get",
       url: "/exchange",
     };
     return this.doRequest<IFetchExchangeResponse>(config);
@@ -41,6 +42,7 @@ export default class ExchangeService
    */
   fetchAvailableItems = (shopId: number | "null" = "null") => {
     const config = {
+      method: "get",
       url: `/exchange/availabilities?shopId=${shopId}`,
     };
     return this.doRequest<IFetchAvailableItemsResponse>(config);

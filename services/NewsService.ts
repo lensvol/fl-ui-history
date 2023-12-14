@@ -19,6 +19,7 @@ export default class NewsService extends BaseService implements INewsService {
    */
   fetch = () => {
     const config = {
+      method: "get",
       url: "/news",
     };
     return this.doRequest<NewsResponse>(config);

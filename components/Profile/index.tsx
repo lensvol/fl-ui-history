@@ -71,6 +71,7 @@ export default function ProfileContainer() {
           <MantelAndScrap />
         </div>
         <div className="profile__inventory-theysay-container">
+          <div />
           <div className="profile__inventory-header">
             <h3 className="heading heading--2">
               {hasFavouredOutfit ? "Favoured Outfit" : "Currently Wearing"}
@@ -78,7 +79,10 @@ export default function ProfileContainer() {
             <h4 className="heading heading--4">{outfitName}</h4>
           </div>
           <ProfileInventory />
+          <div />
+          <div />
           <TheySay />
+          <div />
         </div>
         <div className="profile__player-journal">
           <JournalEntries />

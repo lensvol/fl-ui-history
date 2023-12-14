@@ -7,6 +7,7 @@ export default class ActionsService
 {
   fetchActions: () => Promise<Either<FetchActionsResponse>> = () => {
     const config = {
+      method: "get",
       url: "/character/actions",
     };
     return this.doRequest<FetchActionsResponse>(config);

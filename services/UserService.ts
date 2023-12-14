@@ -86,6 +86,7 @@ class UserService extends BaseService implements IUserService {
 
   login = (creds: ILoginCredentials) => {
     const config = {
+      method: "post",
       url: "/login",
       data: {
         accessCodeName: creds.accessCodeName,
@@ -98,7 +99,7 @@ class UserService extends BaseService implements IUserService {
 
   fetchUser = () => {
     const config = {
-      url: "login/user",
+      url: "/login/user",
       method: "get",
     };
     return this.doRequest(config);
@@ -106,6 +107,7 @@ class UserService extends BaseService implements IUserService {
 
   facebookLogin = (data: any) => {
     const config = {
+      method: "post",
       url: "/facebook/processsignedrequest",
       data,
     };
@@ -126,6 +128,7 @@ class UserService extends BaseService implements IUserService {
 
   logout = () => {
     const config = {
+      method: "post",
       url: "/login/logout",
     };
     return this.doRequest(config);

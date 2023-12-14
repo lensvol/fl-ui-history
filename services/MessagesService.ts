@@ -73,12 +73,20 @@ class MessagesService extends BaseService implements IMessagesService {
   };
 
   fetchAll = () => {
-    return this.doRequest<FetchAllMessagesResponse>({ url: "/messages" });
+    const config = {
+      method: "get",
+      url: "/messages",
+    };
+
+    return this.doRequest<FetchAllMessagesResponse>(config);
   };
 
   fetch = (what: "feed" | "interactions") => {
-    // const config = { url: '/messages' };
-    const config = { url: ["/messages", what].join("/") };
+    const config = {
+      method: "get",
+      url: `/messages/${what}`,
+    };
+
     return this.doRequest<FetchMessagesResponse>(config);
   };
 

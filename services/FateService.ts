@@ -36,6 +36,7 @@ class FateService extends BaseService implements IFateService {
    */
   fetchFate = () => {
     const config = {
+      method: "get",
       url: "/fate",
     };
     return this.doRequest(config);

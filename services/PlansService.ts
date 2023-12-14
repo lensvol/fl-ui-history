@@ -29,6 +29,7 @@ class PlansService extends BaseService implements IPlansService {
    */
   fetchPlans = () => {
     const config = {
+      method: "get",
       url: "/plan",
     };
     return this.doRequest(config);

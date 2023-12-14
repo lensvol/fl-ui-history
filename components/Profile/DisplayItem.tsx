@@ -29,10 +29,10 @@ export default function DisplayItem(props: OwnProps) {
 
   const { quality, label } = props;
 
-  const { category, nature } = quality;
+  const { nature } = quality;
 
   const qualityPickerQualities = useAppSelector((s) =>
-    s.myself.qualities.filter((q) => q.category === category)
+    s.myself.qualities.filter((q) => q.nature === nature)
   );
 
   const [isQualityPickerOpen, setIsQualityPickerOpen] = useState(false);
@@ -57,7 +57,16 @@ export default function DisplayItem(props: OwnProps) {
     setIsQualityPickerOpen(false);
   }, []);
 
-  const tooltipData = buildTooltipData(quality);
+  const tooltipData = {
+    ...buildTooltipData(quality),
+    smallButtons: [
+      {
+        label: "Change",
+        action: handleClick,
+      },
+    ],
+  };
+
   const { effectiveLevel, image, nameAndLevel } = quality;
 
   return (

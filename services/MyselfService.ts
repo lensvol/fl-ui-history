@@ -39,6 +39,7 @@ export default class MyselfService
 {
   fetchMyself = () => {
     const config = {
+      method: "get",
       url: "/character/myself",
     };
     return this.doRequest<IFetchMyselfResponseData>(config);
@@ -77,17 +78,6 @@ export default class MyselfService
       data: { avatarImage },
     };
     return this.doRequest<SetAvatarImageResponse>(config);
-  };
-
-  saveOutfit = () => {
-    const config = {
-      method: "post",
-      url: "/outfit/save",
-    };
-    console.warn(
-      "MyselfService.saveOutfit() is deprecated and will fail when the API updates."
-    );
-    return this.doRequest<any>(config);
   };
 
   setJournalPrivacy = (isPrivate: boolean) => {

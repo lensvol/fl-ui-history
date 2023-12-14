@@ -24,7 +24,8 @@ class MapService extends BaseService implements IMapService {
    */
   fetch = () => {
     const config = {
-      url: "map",
+      method: "get",
+      url: "/map",
     };
     return this.doRequest<IFetchMapResponse>(config);
   };
@@ -37,7 +38,7 @@ class MapService extends BaseService implements IMapService {
   changeLocation = (areaId: number) => {
     const config = {
       method: "post",
-      url: "map/move",
+      url: "/map/move",
       data: { areaId },
     };
     return this.doRequest<IChangeLocationResponse>(config);

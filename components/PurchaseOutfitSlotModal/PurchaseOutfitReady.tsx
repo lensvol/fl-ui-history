@@ -111,7 +111,7 @@ function BuyOutfitOrFateButton({
         onClick={onBuyOutfit}
         type="button"
       >
-        Purchase outfit (20 Fate)
+        Purchase outfit ({fateCard.price} Fate)
       </button>
     );
   }

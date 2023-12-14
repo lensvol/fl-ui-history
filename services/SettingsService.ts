@@ -166,6 +166,7 @@ export default class SettingsService
 {
   fetch = () => {
     const config = {
+      method: "get",
       url: "/settings",
     };
     return this.doRequest<FetchSettingsResponse>(config);
@@ -173,6 +174,7 @@ export default class SettingsService
 
   fetchAuthMethods = () => {
     const config = {
+      method: "get",
       url: "/settings/authmethods",
     };
     return this.doRequest<FetchAuthMethodsResponse>(config);
@@ -180,6 +182,7 @@ export default class SettingsService
 
   fetchTimeTheHealer = () => {
     const config = {
+      method: "get",
       url: "/settings/timethehealer",
     };
     return this.doRequest<FetchTimeTheHealerResponse>(config);
@@ -208,7 +211,7 @@ export default class SettingsService
     const config = {
       data,
       method: "post",
-      url: "settings/resetpassword",
+      url: "/settings/resetpassword",
     };
     return this.doRequest<ResetPasswordResponse>(config);
   };
@@ -217,7 +220,7 @@ export default class SettingsService
     const config = {
       data: username,
       method: "post",
-      url: `/settings/username`,
+      url: "/settings/username",
     };
     return this.doRequest<ChangeUsernameResponse>(config);
   };
@@ -260,7 +263,7 @@ export default class SettingsService
   unlinkTwitter = () => {
     const config = {
       method: "post",
-      url: "/settings/unlinktwitter",
+      url: "/twitter/unlink",
     };
     return this.doRequest<UnlinkTwitterResponse>(config);
   };
@@ -268,7 +271,7 @@ export default class SettingsService
   unlinkFacebook = () => {
     const config = {
       method: "post",
-      url: "/settings/unlinkfacebook",
+      url: "/facebook/unlink",
     };
     return this.doRequest<UnlinkFacebookResponse>(config);
   };
@@ -276,7 +279,7 @@ export default class SettingsService
   unlinkGoogle = () => {
     const config = {
       method: "post",
-      url: "/settings/unlinkgoogle",
+      url: "/google/unlink",
     };
     return this.doRequest<UnlinkGoogleResponse>(config);
   };

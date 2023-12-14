@@ -13,6 +13,11 @@ export interface IPageService {
 
 export default class PageService extends BaseService implements IPageService {
   fetch(name: PageName): Promise<Either<FetchPageResponse>> {
-    return this.doRequest({ url: `/page/${name}` });
+    const config = {
+      method: "get",
+      url: `/page/${name}`,
+    };
+
+    return this.doRequest(config);
   }
 }

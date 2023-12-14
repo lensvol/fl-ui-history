@@ -15,6 +15,7 @@ export default class PaymentService
    */
   selectCurrency = (currencyCode: string) => {
     const config = {
+      method: "get",
       url: `/nex/braintreenexoptions/${currencyCode}`,
     };
     return this.doRequest(config);
@@ -22,6 +23,7 @@ export default class PaymentService
 
   fetchPlan = (currencyCode: string) => {
     const config = {
+      method: "get",
       url: `/nex/braintreesubscriptionoptions/${currencyCode}`,
     };
     return this.doRequest(config);
@@ -33,6 +35,7 @@ export default class PaymentService
    */
   fetchPlans = () => {
     const config = {
+      method: "get",
       url: "/nex/braintreesubscriptionoptions",
     };
     return this.doRequest(config);
