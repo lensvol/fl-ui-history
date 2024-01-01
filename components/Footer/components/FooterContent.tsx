@@ -13,7 +13,7 @@ export default function FooterContent({ className }: Props) {
       <div className="">
         <p>
           © <a href="https://www.failbettergames.com/">Failbetter Games</a>{" "}
-          2010–2023{" "}
+          2010–2024{" "}
           <span style={{ fontWeight: "bold", marginLeft: "1em" }}>
             Version {Config.version}
           </span>
