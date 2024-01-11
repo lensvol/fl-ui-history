@@ -39,7 +39,7 @@ function Value({
       </div>
     );
   }
-  return <div className="item__value">{value}</div>;
+  return <div className="item__value">{value.toLocaleString("en-GB")}</div>;
 }
 
 const mapStateToProps = (state: IAppState) => ({

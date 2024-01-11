@@ -33,7 +33,9 @@ export function formatEnhancement(e: IEnhancement): string {
     return `${menaceEnhancementScale(e.level)} ${e.qualityName} build up`;
   }
 
-  return `${e.qualityName} ${e.level > 0 ? "+" : ""}${e.level}`;
+  return `${e.qualityName} ${e.level > 0 ? "+" : ""}${e.level.toLocaleString(
+    "en-GB"
+  )}`;
 }
 
 export function formatEnhancementList(

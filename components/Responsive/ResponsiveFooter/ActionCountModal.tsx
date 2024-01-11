@@ -71,7 +71,7 @@ export function ActionCountModal(props: Props) {
             </div>
             <div className="action-count-modal__count">
               <i className="fl-ico fl-ico-2x fl-ico-fate action-count-modal__icon" />
-              <span>{currentFate} Fate available</span>
+              <span>{currentFate.toLocaleString("en-GB")} Fate available</span>
             </div>
           </div>
           {willBeEligibleForMoreSoon && (

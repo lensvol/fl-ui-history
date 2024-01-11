@@ -28,8 +28,8 @@ export default function LevelDescription({
         dangerouslySetInnerHTML={{ __html: name ?? "" }}
       />{" "}
       <span className="item__value">
-        {level}
-        {cap !== undefined && ` / ${cap}`}
+        {level?.toLocaleString("en-GB")}
+        {cap !== undefined && ` / ${cap.toLocaleString("en-GB")}`}
       </span>
     </Fragment>
   );

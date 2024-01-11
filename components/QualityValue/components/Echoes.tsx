@@ -8,7 +8,12 @@ type Props = {
 
 export default function Echoes(props: Props) {
   const { invert, value } = props;
-  const formattedValue = (value / 100).toFixed(2);
+  const formattedValue = (value / 100).toLocaleString("en-GB", {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   return (
     <div
       className={classnames("price item__price", invert && "price--inverted")}

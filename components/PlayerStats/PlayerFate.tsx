@@ -176,7 +176,7 @@ function PlayerFate({
 
       <div className="item__desc">
         <span className="js-item-name item__name">Fate</span>
-        <div className="item__value">{currentFate}</div>
+        <div className="item__value">{currentFate.toLocaleString("en-GB")}</div>
         {renderSubscriptionInformation()}
       </div>
     </li>

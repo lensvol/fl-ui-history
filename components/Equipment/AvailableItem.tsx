@@ -190,7 +190,7 @@ function AvailableItem(props: Props) {
           defaultCursor={!canChangeOutfit}
         />
         <span className="js-item-value icon__value">
-          {isEquipped ? level - 1 : level}
+          {(isEquipped ? level - 1 : level).toLocaleString("en-GB")}
         </span>
       </div>
     </Fragment>

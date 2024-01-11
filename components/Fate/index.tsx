@@ -65,7 +65,8 @@ function Fate({
             <div className="fate-header">
               <div className="fate-header__text">
                 <h1 className="heading heading--1">
-                  You have {data.currentFate} Fate Points
+                  You have {data.currentFate.toLocaleString("en-GB")} Fate
+                  Points
                 </h1>
                 <p className="col-2-of-3 lede">
                   Buy Fate to get premium content, extra storylines or faster

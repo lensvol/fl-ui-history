@@ -43,7 +43,9 @@ function SecondChance({ data, locked, toggleSecondChance }: Props) {
       <div className="second-chance__left">
         <div className="icon second-chance__icon">
           <Image icon={SECOND_CHANCE_ICONS[name]} type="small-icon" />
-          <div className="icon__value">{secondChanceLevel}</div>
+          <div className="icon__value">
+            {secondChanceLevel.toLocaleString("en-GB")}
+          </div>
         </div>
       </div>
       <div className="second-chance__body">

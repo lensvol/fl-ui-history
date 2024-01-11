@@ -50,7 +50,7 @@ function BillingFieldLabelContainer({
     <span style={{ display: "flex", justifyContent: "space-between" }}>
       <span>{label}</span>
       <span>
-        {value.length}/{maxlength}
+        {value.length}/{maxlength.toLocaleString("en-GB")}
       </span>
     </span>
   );

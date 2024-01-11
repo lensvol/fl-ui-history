@@ -118,7 +118,11 @@ function InventoryItem({
     if (overrideLevels) {
       return null;
     }
-    return <span className="js-item-value icon__value">{level}</span>;
+    return (
+      <span className="js-item-value icon__value">
+        {level.toLocaleString("en-GB")}
+      </span>
+    );
   }, [level, overrideLevels]);
 
   const altText = useMemo(
@@ -126,7 +130,9 @@ function InventoryItem({
       createEquipmentQualityAltText({
         description,
         secondaryDescription,
-        name: overrideLevels ? name : `${name} × ${level}`,
+        name: overrideLevels
+          ? name
+          : `${name} × ${level.toLocaleString("en-GB")}`,
       }),
     [description, level, name, overrideLevels, secondaryDescription]
   );

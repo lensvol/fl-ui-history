@@ -56,7 +56,9 @@ export default function ExchangeItem({
           tooltipPos="right"
         />
         {quantity > 0 && (
-          <span className="js-item-value icon__value">{quantity}</span>
+          <span className="js-item-value icon__value">
+            {quantity.toLocaleString("en-GB")}
+          </span>
         )}
       </div>
       <div className="item__desc">

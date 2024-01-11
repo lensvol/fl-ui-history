@@ -37,8 +37,8 @@ export default function ModalTooltipComponent(props: ITooltipData) {
           dangerouslySetInnerHTML={{ __html: name ?? "" }}
         />{" "}
         <span className="item__value">
-          {level}
-          {cap !== undefined && ` / ${cap}`}
+          {level?.toLocaleString("en-GB")}
+          {cap !== undefined && ` / ${cap.toLocaleString("en-GB")}`}
         </span>
         <p>
           <span dangerouslySetInnerHTML={{ __html: description ?? "" }} />

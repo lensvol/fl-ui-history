@@ -10,7 +10,7 @@ export default function getModifier({
     return null; // Render nothing if there's no modifier
   }
   if (difference < 0) {
-    return `${difference}`;
+    return `${difference.toLocaleString("en-GB")}`;
   }
-  return `+${difference}`;
+  return `+${difference.toLocaleString("en-GB")}`;
 }

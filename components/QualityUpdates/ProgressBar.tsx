@@ -67,7 +67,7 @@ export default function ProgressBar(props: Props) {
 
   return (
     <div className="progress">
-      <div className="progress__current">{before}</div>
+      <div className="progress__current">{before?.toLocaleString("en-GB")}</div>
       <div className="progress__bar">
         <div
           className={classnames(
@@ -85,7 +85,9 @@ export default function ProgressBar(props: Props) {
           />
         </div>
       </div>
-      {after !== undefined && <div className="progress__current">{after}</div>}
+      {after !== undefined && (
+        <div className="progress__current">{after.toLocaleString("en-GB")}</div>
+      )}
     </div>
   );
 }

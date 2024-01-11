@@ -33,6 +33,12 @@ export function AccessibleSidebar({
   }
 
   const formattedNextActionAt = moment(new Date(nextActionAt)).format("hh:mm");
+  const formattedEchoes = echoes.toLocaleString("en-GB", {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   return (
     <div
       id="accessible-sidebar"
@@ -54,12 +60,12 @@ export function AccessibleSidebar({
         </time>
       </section>
       <section className="player-echoes">
-        {`Echoes: ${echoes.toFixed(2)}`}
+        {`Echoes: ${formattedEchoes}`}
       </section>
       <ul className="sidebar-qualities">
         {sidebarQualities.map((quality) => (
           <li key={quality.id} className={quality.category}>
-            {quality.name}: {quality.effectiveLevel}
+            {quality.name}: {quality.effectiveLevel.toLocaleString("en-GB")}
           </li>
         ))}
       </ul>

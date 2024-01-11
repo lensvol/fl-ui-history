@@ -87,7 +87,9 @@ export default function DisplayItem(props: OwnProps) {
             tooltipData={tooltipData}
             onClick={handleClick}
           />
-          <span className="icon__value">{effectiveLevel}</span>
+          <span className="icon__value">
+            {effectiveLevel.toLocaleString("en-GB")}
+          </span>
         </div>
 
         <div>

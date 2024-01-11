@@ -44,7 +44,9 @@ export default function DisplayQualityMdUp({
             onClick={onClick}
             tooltipData={tooltipData}
           />
-          <span className="icon__value">{effectiveLevel}</span>
+          <span className="icon__value">
+            {effectiveLevel.toLocaleString("en-GB")}
+          </span>
         </div>
         <div>
           <span className="js-item-name item__name">{nameAndLevel}</span>

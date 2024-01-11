@@ -18,7 +18,7 @@ function MetaQuality(props: {
           {name}{" "}
           <em>
             (Level:
-            {level})
+            {level.toLocaleString("en-GB")})
           </em>
         </p>
         <p dangerouslySetInnerHTML={{ __html: description }} />

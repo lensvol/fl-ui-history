@@ -47,7 +47,9 @@ function EffectItem(props: Props) {
           defaultCursor={true}
         />
         {level > 1 && (
-          <span className="js-item-value icon__value">{level}</span>
+          <span className="js-item-value icon__value">
+            {level.toLocaleString("en-GB")}
+          </span>
         )}
       </div>
     </Fragment>

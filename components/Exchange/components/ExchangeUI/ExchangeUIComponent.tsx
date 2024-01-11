@@ -51,7 +51,7 @@ export function ExchangeUI(props: Props) {
             />
             {countCharacterAlreadyHas > 0 && (
               <span className="js-item-value icon__value">
-                {countCharacterAlreadyHas}
+                {countCharacterAlreadyHas.toLocaleString("en-GB")}
               </span>
             )}
           </div>
@@ -66,7 +66,7 @@ export function ExchangeUI(props: Props) {
             />
           ) : (
             <>
-              {priceValue * (+sellAmount || 0)} ×{" "}
+              {(priceValue * (+sellAmount || 0)).toLocaleString("en-GB")} ×{" "}
               {availability.purchaseQuality.name}
             </>
           )}

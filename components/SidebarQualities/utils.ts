@@ -41,8 +41,12 @@ export function buildLevelDescription({
 >) {
   const bits = [
     name,
-    level,
-    `${(useCap ?? false) && cap !== undefined ? ` / ${cap}` : ""}`,
+    level.toLocaleString("en-GB"),
+    `${
+      (useCap ?? false) && cap !== undefined
+        ? ` / ${cap.toLocaleString("en-GB")}`
+        : ""
+    }`,
     levelDescription ? `— ${levelDescription}` : "",
   ];
   return bits.join(" ");

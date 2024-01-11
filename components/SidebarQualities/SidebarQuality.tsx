@@ -38,7 +38,7 @@ export default function SidebarQuality({
       </div>
       <div className="item__desc">
         <span className="js-item-name item__name">{name}</span>{" "}
-        <span className="item__value">{level}</span>
+        <span className="item__value">{level.toLocaleString("en-GB")}</span>
         {modifier && <span className="item__adjust">{modifier}</span>}
         <div
           className={classnames(

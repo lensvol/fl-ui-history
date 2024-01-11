@@ -31,7 +31,7 @@ export default function QualityValue(props: Props) {
       <div>
         {qualityImage}
         <span>
-          {value} x {quality?.name}
+          {value.toLocaleString("en-GB")} x {quality?.name}
         </span>
       </div>
     );
