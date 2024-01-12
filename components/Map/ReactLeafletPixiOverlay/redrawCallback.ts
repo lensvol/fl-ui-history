@@ -35,10 +35,7 @@ function onAreas(utils: IUtils, payload: object) {
   const { areas } = payload as AreasPayload;
   utils.addAreas(areas);
   _log(
-    `RedrawCallback.onAreas() took ${(
-      (window.performance.now() - startAt) /
-      1000
-    ).toFixed(2)} s`
+    `RedrawCallback.onAreas() took ${((window.performance.now() - startAt) / 1000).toFixed(2)} s`
   );
 }
 
@@ -47,9 +44,6 @@ function onSelectedArea(utils: IUtils, payload: SelectedAreaPayload) {
   const { selectedArea, setting, zoomLevel } = payload;
   utils.setSelectedArea(selectedArea, setting, zoomLevel);
   _log(
-    `RedrawCallback.onSelectedArea(zoomLevel=${zoomLevel}) took ${(
-      (window.performance.now() - startAt) /
-      1000
-    ).toFixed(2)} s`
+    `RedrawCallback.onSelectedArea(zoomLevel=${zoomLevel}) took ${((window.performance.now() - startAt) / 1000).toFixed(2)} s`
   );
 }

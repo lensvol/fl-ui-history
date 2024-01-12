@@ -39,9 +39,7 @@ export default function FrequencyButtonlet({ frequency }: Props) {
             /* This no-op is necessary so that the Buttonlet component doesn't self-disable */
           }}
           tooltipData={{
-            description: `This card appears with ${humanize(
-              frequency
-            )} frequency`,
+            description: `This card appears with ${humanize(frequency)} frequency`,
           }}
         />
       </MediaXlUp>

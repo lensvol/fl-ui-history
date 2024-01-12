@@ -35,9 +35,7 @@ export function ActionCountModal(props: Props) {
       return "No draw limit.";
     }
 
-    return `${cardsCount} opportunity card${
-      cardsCount === 1 ? "" : "s"
-    } available`;
+    return `${cardsCount} opportunity card${cardsCount === 1 ? "" : "s"} available`;
   }, [cardsCount, deckSize, setting]);
 
   return (

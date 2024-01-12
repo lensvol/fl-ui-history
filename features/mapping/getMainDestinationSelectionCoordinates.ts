@@ -9,9 +9,7 @@ export default function getMainDestinationSelectionCoordinates(area: IArea): {
   // only Districts have main destination selection sprites
   if (!isDistrict(area)) {
     throw new Error(
-      `Attempted to fetch main-destination-selection sprite for non-district area ${
-        area.name || area.areaKey
-      }`
+      `Attempted to fetch main-destination-selection sprite for non-district area ${area.name || area.areaKey}`
     );
   }
 

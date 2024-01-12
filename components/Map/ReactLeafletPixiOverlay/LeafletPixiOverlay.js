@@ -44,9 +44,7 @@ const LeafletPixiOverlay = L.Layer.extend({
 
   setSelectedArea: async function (area, setting, zoomLevel) {
     _log(
-      `LeafletPixiOverlay.setSelectedArea(${
-        area ? area.name || area.areaKey : area
-      }, zoomLevel=${zoomLevel})`
+      `LeafletPixiOverlay.setSelectedArea(${area ? area.name || area.areaKey : area}, zoomLevel=${zoomLevel})`
     );
 
     const isZoomLevelBelowDestinationThreshold =
@@ -80,9 +78,7 @@ const LeafletPixiOverlay = L.Layer.extend({
 
   _updateArea: function (area) {
     _log(
-      `LeafletPixiOverlay._updateArea(${area.name || area.areaKey}, isLit=${
-        area.isLit
-      })`
+      `LeafletPixiOverlay._updateArea(${area.name || area.areaKey}, isLit=${area.isLit})`
     );
     if (area.isDistrict) {
       // Darken unlit districts
@@ -257,9 +253,7 @@ const LeafletPixiOverlay = L.Layer.extend({
     this._drawCallback(this.utils, e);
     duration = (window.performance.now() - startAt) / 1000;
     _log(
-      `LeafletPixiOverlay._redraw(): draw callback took ${duration.toFixed(
-        2
-      )} s`
+      `LeafletPixiOverlay._redraw(): draw callback took ${duration.toFixed(2)} s`
     );
     this._enableLeafletRounding();
     _log(`LeafletPixiOverlay._redraw() took ${duration.toFixed(2)} s`);

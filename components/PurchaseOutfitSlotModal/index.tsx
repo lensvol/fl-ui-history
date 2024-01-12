@@ -40,8 +40,9 @@ export function PurchaseOutfitSlotModal({
         ];
     }
 
-    const storeItemId = fateCards.find((fc) => fc.action === OUTFIT_PURCHASE)
-      ?.id;
+    const storeItemId = fateCards.find(
+      (fc) => fc.action === OUTFIT_PURCHASE
+    )?.id;
 
     if (!storeItemId) {
       setErrorMessage(

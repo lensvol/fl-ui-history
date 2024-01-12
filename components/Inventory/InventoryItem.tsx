@@ -81,11 +81,7 @@ function InventoryItem({
       secondaryDescription,
       description:
         `<p>${description}</p>` +
-        `${
-          data.availableAt
-            ? `<p class="tooltip__available-at">${availableAt}</p>`
-            : ""
-        }`,
+        `${data.availableAt ? `<p class="tooltip__available-at">${availableAt}</p>` : ""}`,
       level: overrideLevels ? undefined : level,
       smallButtons: [],
     };

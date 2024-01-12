@@ -8,9 +8,7 @@ interface Props {
 export default function ActionCostTooltip({ cost }: Props) {
   const data = {
     image: "actions",
-    secondaryDescription: `This will cost you ${
-      cost > 0 ? cost : "no "
-    } actions`,
+    secondaryDescription: `This will cost you ${cost > 0 ? cost : "no "} actions`,
   };
   return <ToolTip data={data} />;
 }

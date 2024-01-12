@@ -54,9 +54,7 @@ export function PossibleDisplayQuality(props: Props) {
       )}
       <QualityPicker
         activateButtonLabel="Flaunt"
-        header={`Choose your new ${
-          nature === "Thing" ? "Mantelpiece item" : "Scrapbook status"
-        }`}
+        header={`Choose your new ${nature === "Thing" ? "Mantelpiece item" : "Scrapbook status"}`}
         isOpen={isQualityPickerOpen}
         onChoose={handleChoose}
         onRequestClose={handleRequestClose}

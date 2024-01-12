@@ -28,11 +28,7 @@ export default function ProfileInventoryItem({
     ...possession,
     description: possession
       ? `<p>${possession.description}</p>
-        ${
-          possession.availableAt
-            ? `<p class="tooltip__available-at">${possession.availableAt}</p>`
-            : ""
-        }`
+        ${possession.availableAt ? `<p class="tooltip__available-at">${possession.availableAt}</p>` : ""}`
       : undefined,
     level: undefined,
     levelDescription: undefined, // Don't let the tooltip override the quality name
