@@ -34,7 +34,7 @@ type State = {
 
 type OwnProps = {
   onRequestClose: () => void;
-  onTransactionComplete: (message: string) => void;
+  onTransactionComplete: (message: string, isSuccess: boolean) => void;
 };
 
 type Props = OwnProps &
@@ -89,7 +89,7 @@ class ExchangeUIContainer extends Component<Props, State> {
       quality,
       purchaseQuality,
       availabilityId: activeItem.availability.id,
-      amount: sellAmount,
+      amount: Number(sellAmount),
     };
 
     // The action data are the same whether we're buying or selling;
@@ -103,7 +103,7 @@ class ExchangeUIContainer extends Component<Props, State> {
       const { data } = result;
       const { message: successMessage, possessionsChanged: changes } = data;
       // We should update the UI to show the success message
-      onTransactionComplete(successMessage);
+      onTransactionComplete(successMessage, true);
 
       // Check whether, by buying or selling stuff, we have acquired something new
       const myItems = shops["null"].items;
@@ -111,6 +111,9 @@ class ExchangeUIContainer extends Component<Props, State> {
         // Dispatch a full on re-fetch of sellable items
         dispatch(fetchAvailableItems("null", { background: true }));
       }
+    } else {
+      // We should update the UI to show the success message
+      onTransactionComplete(result.message, false);
     }
   };
 

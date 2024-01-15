@@ -35,7 +35,7 @@ export const buyItemsFailure: ActionCreator<BuyItemsFailure> = (
 ) => ({
   type: BUY_ITEMS_FAILURE,
   error: true,
-  status: error?.response?.status,
+  status: error?.response?.status || error?.message,
 });
 
 const buyItems = makeTransaction("buy", {

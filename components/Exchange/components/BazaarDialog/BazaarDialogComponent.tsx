@@ -1,29 +1,36 @@
 import React, { useCallback, useState } from "react";
 
-import Loading from "components/Loading";
-
-import ExchangeUI from "../ExchangeUI";
-import TransactionComplete from "./TransactionComplete";
 import ExchangeContext from "components/Exchange/ExchangeContext";
+import ExchangeUI from "components/Exchange/components/ExchangeUI";
+import TransactionComplete from "components/Exchange/components/BazaarDialog/TransactionComplete";
+import Loading from "components/Loading";
 
 export default function BazaarDialogComponent(props: Props) {
   const { isTransacting, onRequestClose } = props;
 
-  const [successMessage, setSuccessMessage] = useState<string | undefined>();
+  const [transactionCompleteMessage, setTransactionCompleteMessage] = useState<
+    string | undefined
+  >();
+  const [isTransactionSuccess, setIsTransactionSuccess] = useState(false);
 
-  const handleTransactionComplete = useCallback((message: string) => {
-    setSuccessMessage(message);
-  }, []);
+  const handleTransactionComplete = useCallback(
+    (message: string, isSuccess: boolean) => {
+      setTransactionCompleteMessage(message);
+      setIsTransactionSuccess(isSuccess);
+    },
+    []
+  );
 
   if (isTransacting) {
     return <Loading spinner />;
   }
 
-  if (successMessage) {
+  if (transactionCompleteMessage) {
     return (
       <TransactionComplete
+        isTransactionSuccess={isTransactionSuccess}
         onRequestClose={onRequestClose}
-        successMessage={successMessage}
+        transactionCompleteMessage={transactionCompleteMessage}
       />
     );
   }
@@ -46,5 +53,7 @@ BazaarDialogComponent.displayName = "BazaarDialogComponent";
 type Props = {
   isTransacting: boolean;
   onRequestClose: () => void;
-  quantities: { [key: number]: number };
+  quantities: {
+    [key: number]: number;
+  };
 };

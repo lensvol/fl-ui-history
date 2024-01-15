@@ -67,6 +67,8 @@ export default function makeTransaction(
           // And they also affect our outfit/ourselves
           dispatch(fetchOutfit());
           dispatch(fetchMyself());
+        } else {
+          dispatch(failure(result));
         }
         return result;
       } catch (err) {

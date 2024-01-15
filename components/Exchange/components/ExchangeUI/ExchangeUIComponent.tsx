@@ -74,8 +74,8 @@ export function ExchangeUI(props: Props) {
       </div>
       <div className="exchange-ui__rubric-and-controls">
         <em>
-          You may buy or sell up to 60,000 items at a time. If you need to{" "}
-          {verb} more, do so in batches.
+          You may buy or sell up to {MAX_SELL_AMOUNT.toLocaleString("en-GB")}{" "}
+          items at a time. If you need to {verb} more, do so in batches.
         </em>
         <form className="exchange-ui__form" onSubmit={onSubmit}>
           <div className="exchange-ui__controls">

@@ -1,15 +1,21 @@
 import { ActionCreator } from "redux";
-import { ITransactionResponse } from "types/exchange";
+
+import makeTransaction from "actions/exchange/makeTransaction";
+
 import {
   SELL_ITEMS_FAILURE,
   SELL_ITEMS_REQUESTED,
   SELL_ITEMS_SUCCESS,
 } from "actiontypes/exchange";
 
-import makeTransaction from "./makeTransaction";
+import { ITransactionResponse } from "types/exchange";
 
-export type SellItemsRequested = { type: typeof SELL_ITEMS_REQUESTED };
-export type SellItemsFailure = { type: typeof SELL_ITEMS_FAILURE };
+export type SellItemsRequested = {
+  type: typeof SELL_ITEMS_REQUESTED;
+};
+export type SellItemsFailure = {
+  type: typeof SELL_ITEMS_FAILURE;
+};
 export type SellItemsSuccess = {
   type: typeof SELL_ITEMS_SUCCESS;
   payload: ITransactionResponse;
@@ -35,8 +41,7 @@ export const sellItemsFailure: ActionCreator<SellItemsFailure> = (
 ) => ({
   type: SELL_ITEMS_FAILURE,
   error: true,
-  status: error.response && error.response.status,
-  stuff: error,
+  status: error?.response?.status || error?.message,
 });
 
 const sellItems = makeTransaction("sell", {
@@ -44,4 +49,5 @@ const sellItems = makeTransaction("sell", {
   requested: sellItemsRequested,
   success: sellItemsSuccess,
 });
+
 export default sellItems;
