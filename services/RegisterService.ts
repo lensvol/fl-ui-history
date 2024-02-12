@@ -3,6 +3,9 @@ import BaseService from "./BaseService";
 export interface IRegisterService {
   emailRegister: (data: any) => Promise<{ data: any }>;
   fetch: () => Promise<{ data: any }>;
+  confirmEmail: (token: string) => Promise<{
+    data: any;
+  }>;
 }
 
 export type FetchRegisterResponse = {
@@ -58,6 +61,16 @@ class RegisterService extends BaseService implements IRegisterService {
       url: "/register/createcharacter",
       data,
     };
+    return this.doRequest(config);
+  };
+
+  confirmEmail = (token: string) => {
+    const config = {
+      method: "post",
+      url: "/register/confirmemail",
+      data: token,
+    };
+
     return this.doRequest(config);
   };
 }

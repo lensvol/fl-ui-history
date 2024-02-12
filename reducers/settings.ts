@@ -28,6 +28,7 @@ export type ISettingsState = {
   isDeactivateDialogVisible: boolean;
   isEmailLinkDialogVisible: boolean;
   isUpdatingEmail: boolean;
+  isVerifyingEmail: boolean;
   isEmailUpdateDialogVisible: boolean;
   isUnlinking: boolean;
   isLinkingEmail: boolean;
@@ -41,6 +42,8 @@ export type ISettingsState = {
     qualitiesPossessedList: IQuality[];
     twitterAuth: boolean;
     googleAuth: boolean;
+    emailVerified: boolean;
+    socialActsAvailable: boolean;
   };
   messagePreferences: MessagePreferences;
   subscriptions: {
@@ -67,6 +70,7 @@ export const INITIAL_STATE: ISettingsState = {
   isDeactivateDialogVisible: false,
   isEmailLinkDialogVisible: false,
   isUpdatingEmail: false,
+  isVerifyingEmail: false,
   isEmailUpdateDialogVisible: false,
   isUnlinking: false,
   isLinkingEmail: false,
@@ -93,6 +97,8 @@ export const INITIAL_STATE: ISettingsState = {
     qualitiesPossessedList: [],
     twitterAuth: false,
     googleAuth: false,
+    emailVerified: false,
+    socialActsAvailable: false,
   },
 };
 
@@ -274,6 +280,19 @@ export default function reducer(
           ...state.data,
           emailAddress: action.payload.emailAddress,
         },
+      };
+
+    case SettingsActionTypes.VERIFY_EMAIL_REQUESTED:
+      return {
+        ...state,
+        isVerifyingEmail: true,
+      };
+
+    case SettingsActionTypes.VERIFY_EMAIL_FAILURE:
+    case SettingsActionTypes.VERIFY_EMAIL_SUCCESS:
+      return {
+        ...state,
+        isVerifyingEmail: false,
       };
 
     case SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_REQUESTED:

@@ -42,7 +42,12 @@ export default function reducer(state = INITIAL_STATE, action: any) {
       return { ...state, isLoggingIn: true };
 
     case RegistrationActionTypes.SIGNUP_FAILURE:
-      return { ...state, isLoggingIn: false };
+      return {
+        ...state,
+        isLoggingIn: false,
+        isSuccess: payload?.isSuccess ?? false,
+        message: payload?.message,
+      };
 
     case RegistrationActionTypes.SIGNUP_SUCCESS:
       return {

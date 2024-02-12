@@ -66,7 +66,15 @@ export default function LinkEmailModal({
 
   switch (currentStep) {
     case LinkEmailModalStep.LinkSuccess:
-      return <div>{message}</div>;
+      return (
+        <div
+          style={{
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {message}
+        </div>
+      );
 
     default:
       return (

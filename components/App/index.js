@@ -52,6 +52,9 @@ import MapAdminOverlay from "components/Map/AdminOverlay";
 
 import AccountLinkReminder from "components/AccountLinkReminder";
 
+import EmailVerificationContainer from "components/Account/AuthMethods/EmailVerificationContainer";
+import UnsubscribeContainer from "components/Messages/UnsubscribeContainer";
+
 // 404 Route
 import NotFound from "components/NotFound";
 
@@ -96,6 +99,16 @@ export default function App() {
                   <Route path="/credits" exact component={CreditsPage} />
                 )}
                 <Route path="/500" exact component={ErrorThrower} />
+                <Route
+                  path="/email/:token"
+                  exact
+                  component={EmailVerificationContainer}
+                />
+                <Route
+                  path="/unsubscribe/:userId/:token/:purpose?"
+                  exact
+                  component={UnsubscribeContainer}
+                />
 
                 {/* Routes that only logged-out users can visit */}
                 <RequireUnauthenticated

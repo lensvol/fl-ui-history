@@ -20,23 +20,10 @@ export default function Login() {
           <FacebookLoginContainer />
         </p>
         <p className="u-text-center">or</p>
-        <p>
-          <TwitterLoginContainer label="Log in with Twitter" />
-        </p>
+        <TwitterLoginContainer label="Log in with Twitter" />
         <p className="u-text-center">or</p>
         <GoogleLoginContainer label="Log in with Google" />
       </div>
     </>
   );
 }
-
-/*
-const mapStateToProps = (state: IAppState) => ({
-  isFetching: state.user.isFetching,
-});
-
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;
-
-export default withRouter(connect(mapStateToProps)(Login));
-
- */

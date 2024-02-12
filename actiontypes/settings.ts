@@ -76,6 +76,11 @@ export const UPDATE_EMAIL_REQUESTED = "settings/UPDATE_EMAIL_REQUESTED";
 export const UPDATE_EMAIL_SUCCESS = "settings/UPDATE_EMAIL_SUCCESS";
 export const UPDATE_EMAIL_FAILURE = "settings/UPDATE_EMAIL_FAILURE";
 
+// Verify email address
+export const VERIFY_EMAIL_REQUESTED = "settings/VERIFY_EMAIL_REQUESTED";
+export const VERIFY_EMAIL_SUCCESS = "settings/VERIFY_EMAIL_SUCCESS";
+export const VERIFY_EMAIL_FAILURE = "settings/VERIFY_EMAIL_FAILURE";
+
 // Unlink social account
 export const UNLINK_SOCIAL_ACCOUNT_REQUESTED =
   "settings/UNLINK_SOCIAL_ACCOUNT_REQUESTED";

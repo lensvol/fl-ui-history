@@ -1,7 +1,3 @@
-// Change these!
-// const TWITTER_URL = 'https://twitter.com/failbettergames/status/1235127888904687617';
-// const TWITTER_URL = 'https://twitter.com/failbettergames/status/1257940665910124545';
-
 export default function createMaintenanceModeDOM(document, backAt) {
   const container = document.createElement("div");
   container.classList.add("error-boundary__content");

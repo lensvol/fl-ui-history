@@ -11,7 +11,7 @@ export default function AuthMethods() {
       <h2 className="heading heading--2">Authentication methods</h2>
       <ul className="list-icons">
         <li>
-          <EmailAuth />
+          <EmailAuth showVerificationLink />
         </li>
         <li>
           <FacebookAuth />

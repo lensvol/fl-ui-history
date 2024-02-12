@@ -59,6 +59,10 @@ export interface ISettingsService {
     payload: FacebookPayload
   ) => Promise<Either<LinkFacebookResponse>>;
   linkGoogle: (req: LinkGoogleRequest) => Promise<Either<LinkGoogleResponse>>;
+  requestVerifyEmail: () => Promise<Either<VerifyEmailResponse>>;
+  unsubscribe: (
+    request: UnsubscribeRequest
+  ) => Promise<Either<UnsubscribeResponse>>;
 }
 
 export type ChangeUsernameResponse = { message: string };
@@ -90,6 +94,8 @@ export type FetchSettingsResponse = {
   emailAddress: string;
   nex: number;
   id: number;
+  emailVerified: boolean;
+  socialActsAvailable: boolean;
 };
 
 export type LinkEmailRequest = {
@@ -157,6 +163,21 @@ export type UpdateEmailRequest = {
 };
 
 export type UpdateEmailResponse = {
+  message: string;
+};
+
+export type VerifyEmailResponse = {
+  message: string;
+};
+
+export type UnsubscribeRequest = {
+  userId: string;
+  purpose?: string;
+  token: string;
+};
+
+export type UnsubscribeResponse = {
+  success: boolean;
   message: string;
 };
 
@@ -300,5 +321,27 @@ export default class SettingsService
       method: "post",
     };
     return this.doRequest<LinkGoogleResponse>(config);
+  };
+
+  requestVerifyEmail = () => {
+    const config = {
+      method: "get",
+      url: "/settings/requestverifyemail",
+    };
+
+    return this.doRequest<VerifyEmailResponse>(config);
+  };
+
+  unsubscribe = (request: UnsubscribeRequest) => {
+    const config = {
+      method: "post",
+      url: "/settings/unsubscribe",
+      data: {
+        ...request,
+        worldId: 1,
+      },
+    };
+
+    return this.doRequest<UnsubscribeResponse>(config);
   };
 }

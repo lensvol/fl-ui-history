@@ -12,11 +12,18 @@ import InvitationForm from "./InvitationForm";
 import sortEligibleFriends from "./sortEligibleFriends";
 import ActContext from "./ActContext";
 import SelectContactOrDesignatedContact from "./SelectContactOrDesignatedContact";
+import EmailVerificationModal from "components/Act/EmailVerificationModal";
 
 export default function Act() {
   const dispatch = useAppDispatch();
   const socialAct = useAppSelector((state) => state.storylet.socialAct);
   const storylet = useAppSelector((state) => state.storylet.storylet);
+  const isFetchingSettings = useAppSelector(
+    (state) => state.settings.isFetching
+  );
+  const socialActsAvailable = useAppSelector(
+    (state) => state.settings.data.socialActsAvailable
+  );
 
   const { branch, inviteeData } = socialAct ?? {};
   const designatedContact = inviteeData?.designatedFriend;
@@ -37,6 +44,7 @@ export default function Act() {
   const [selectedContactId, setSelectedContactId] = useState<
     number | undefined
   >(undefined);
+  const [shouldShowModalIfNeeded, setShouldShowModalIfNeeded] = useState(true);
 
   const fetchIneligibleContactsAsync = useCallback(async () => {
     if (!branchId) {
@@ -97,6 +105,10 @@ export default function Act() {
     },
     [eligibleFriends]
   );
+
+  const onRequestCloseModal = useCallback(() => {
+    setShouldShowModalIfNeeded(false);
+  }, []);
 
   useEffect(() => {
     setIsFetchingIneligibleContacts(true);
@@ -159,6 +171,13 @@ export default function Act() {
           selectedContactId={selectedContactId}
         />
       </div>
+
+      <EmailVerificationModal
+        isOpen={
+          shouldShowModalIfNeeded && !isFetchingSettings && !socialActsAvailable
+        }
+        onRequestClose={onRequestCloseModal}
+      />
     </ActContext.Provider>
   );
 }

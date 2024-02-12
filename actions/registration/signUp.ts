@@ -28,6 +28,7 @@ export const signUpSuccess = (data: any) => ({
 
 export const signUpFailure = (error?: any) => ({
   type: SIGNUP_FAILURE,
+  payload: error,
   status: error?.response?.status,
 });
 
@@ -49,7 +50,10 @@ export function signUp(service: IRegisterService) {
           // Cool, we should now be logged in, so bootstrap the app state
           dispatch(bootstrap());
         }
+
         // Return the data (for callers that need to inspect it)
+        dispatch(signUpFailure(data));
+
         return data;
       } catch (error) {
         if (error instanceof VersionMismatch) {

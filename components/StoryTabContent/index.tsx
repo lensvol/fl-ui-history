@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import { fetch as fetchMap } from "actions/map";
+import { fetch as fetchSettings } from "actions/settings";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 
 import DomManipulationContext from "components/DomManipulationContext";
@@ -42,6 +43,7 @@ class StoryTabContentContainer extends React.Component<Props, State> {
     // If we have falsy values for both 'storylets' and 'storylet', or we have stale social act state,
     if (storyletsAreFalsy || weNeedToBackOutOfASocialAct) {
       dispatch(fetchAvailableStorylets());
+      dispatch(fetchSettings());
     }
   };
 
