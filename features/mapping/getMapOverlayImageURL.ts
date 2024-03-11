@@ -3,14 +3,21 @@ import { getPrefixForSetting } from "features/mapping/getSpriteSheetFilenamesFor
 
 import { IMappableSetting } from "types/map";
 
-export default function getFallbackMapImageURL(setting: IMappableSetting) {
+export default function getMapOverlayImageURL(
+  setting: IMappableSetting,
+  index: number
+) {
+  if (!setting.jsonInfo?.hasMapOverlay) {
+    return undefined;
+  }
+
   const basePrefix = getPrefixForSetting(setting);
 
-  if (basePrefix === undefined || basePrefix === "london") {
-    return `${MAP_BASE_URL}/london/fallback/london-fallback.jpg`;
+  if (basePrefix === undefined) {
+    return undefined;
   }
 
   const prefix = basePrefix === "unterzeev2" ? "unterzee" : basePrefix;
 
-  return `${MAP_BASE_URL}/${prefix}/background/${prefix}-background.jpg`;
+  return `${MAP_BASE_URL}/${prefix}/background/${prefix}-background-overlay-${index}.png`;
 }

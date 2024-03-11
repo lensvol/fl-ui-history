@@ -1,33 +1,37 @@
-import ZoomControl from "components/Map/PixiMap/ZoomControl";
-import getFallbackMapImageURL from "features/mapping/getFallbackMapImageURL";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import L from "leaflet";
 import { ImageOverlay, Map as LeafletMap, Pane } from "react-leaflet";
 import { connect } from "react-redux";
 
+import L from "leaflet";
+
 import DistrictLabelLayer from "components/Map/DistrictLabelLayer";
+import MapOverlay from "components/Map/MapOverlay";
+import { BaseProps } from "components/Map/PixiMap/props";
 import useHandleAreaClick from "components/Map/PixiMap/useHandleAreaClick";
 import useHandleHitboxTap from "components/Map/PixiMap/useHandleHitboxTap";
+import useHandleZoomEnd from "components/Map/PixiMap/useHandleZoomEnd";
 import useZoomToDistrict from "components/Map/PixiMap/useZoomToDistrict";
+import ZoomControl from "components/Map/PixiMap/ZoomControl";
+import PlayerMarkers from "components/Map/PlayerMarkers";
 import ReactLeafletPixiOverlay from "components/Map/ReactLeafletPixiOverlay";
+import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
+import { ITooltipData } from "components/ModalTooltip/types";
+
 import {
   getMapDimensionsForSetting,
   getMinimumZoomThatFits,
   xy,
 } from "features/mapping";
-import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
-import { ITooltipData } from "components/ModalTooltip/types";
 import getCRSForSetting from "features/mapping/getCRSForSetting";
+import getFallbackMapImageURL from "features/mapping/getFallbackMapImageURL";
 import getIdealMinimumZoomForSetting from "features/mapping/getIdealMinimumZoomForSetting";
 import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting";
 import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
+
 import getLabelledStateAwareAreas from "selectors/map/getLabelledStateAwareAreas";
+
 import { IAppState } from "types/app";
 import { IMappableSetting } from "types/map";
-import { BaseProps } from "./props";
-
-import useHandleZoomEnd from "./useHandleZoomEnd";
-import PlayerMarkers from "../PlayerMarkers";
 
 const SAFE_AREA_PADDING = 0;
 
@@ -55,13 +59,18 @@ export function UnterzeePixiMap({
     if (!setting?.mapRootArea?.areaKey) {
       return 0;
     }
+
     return getMinimumZoomLevelForDestinations(setting as IMappableSetting);
   }, [setting]);
 
   const { height: mapHeight, width: mapWidth } = useMemo(() => {
     if (!setting?.mapRootArea?.areaKey) {
-      return { height: 0, width: 0 };
+      return {
+        height: 0,
+        width: 0,
+      };
     }
+
     return getMapDimensionsForSetting(setting as IMappableSetting);
   }, [setting]);
 
@@ -69,6 +78,7 @@ export function UnterzeePixiMap({
     if (!setting?.mapRootArea?.areaKey) {
       return 0;
     }
+
     return getMapZoomLimitsForSetting(setting as IMappableSetting)?.max;
   }, [setting]);
 
@@ -137,6 +147,7 @@ export function UnterzeePixiMap({
     () => getCRSForSetting(setting as IMappableSetting),
     [setting]
   );
+
   const bounds = useMemo(
     () => L.latLngBounds(xy(0, 0), xy(mapWidth, -mapHeight)),
     [mapWidth, mapHeight]
@@ -150,6 +161,8 @@ export function UnterzeePixiMap({
       ),
     [mapHeight, mapWidth]
   );
+
+  const hideZoomControl = setting?.jsonInfo?.hideZoomControl ?? false;
 
   if (!setting?.mapRootArea?.areaKey) {
     return null;
@@ -180,20 +193,23 @@ export function UnterzeePixiMap({
       zoomControl={false}
     >
       <Pane
-        style={{ zIndex: 99 }} // Hide this pane if we can show basically anything else
+        style={{
+          zIndex: 99, // Hide this pane if we can show basically anything else
+        }}
       >
         <ImageOverlay
           url={getFallbackMapImageURL(mappableSetting)}
           bounds={bounds}
         />
+        <MapOverlay />
       </Pane>
-
-      <ZoomControl
-        setZoomLevel={setZoomLevel}
-        zoomLevel={zoomLevel}
-        zoomDelta={0.3}
-      />
-
+      {!hideZoomControl && (
+        <ZoomControl
+          setZoomLevel={setZoomLevel}
+          zoomLevel={zoomLevel}
+          zoomDelta={0.3}
+        />
+      )}
       <ReactLeafletPixiOverlay
         // This is a hack to work around the fact that TS doesn't recognise that ReactLeafletPixiOverlay
         // can take `selectedArea` as a prop; it's not an excess property but relates to this issue:
@@ -202,7 +218,6 @@ export function UnterzeePixiMap({
         // @ts-ignore
         selectedArea={selectedArea}
       />
-
       <DistrictLabelLayer
         areas={areas}
         currentArea={currentArea}
@@ -212,9 +227,7 @@ export function UnterzeePixiMap({
         tooltipClassName="leaflet-tooltip--fbg__name--unterzee-landmark"
         zoomLevel={zoomLevel}
       />
-
       <PlayerMarkers />
-
       <ModalTooltip
         modalIsOpen={isModalTooltipOpen}
         onRequestClose={handleRequestCloseModalTooltip}

@@ -1,4 +1,5 @@
 import { getMapDimensionsForSetting } from "features/mapping/index";
+
 import { IMappableSetting } from "types/map";
 
 export default function getMinimumZoomThatFits(
@@ -11,7 +12,8 @@ export default function getMinimumZoomThatFits(
     return undefined;
   }
 
-  const { height: mapHeight } = getMapDimensionsForSetting({ mapRootArea });
+  const { height: mapHeight } = getMapDimensionsForSetting(setting!);
+
   // On sufficiently wide screens, we can show the map fully zoomed out
   if (innerWidth >= 768) {
     return 3;

@@ -56,7 +56,7 @@ export type ISettingsState = {
   };
 };
 
-export const INITIAL_STATE: ISettingsState = {
+const INITIAL_STATE: ISettingsState = {
   authMethods: undefined,
   isFetching: false,
   isFetchingAuthMethods: false,
@@ -111,10 +111,16 @@ export default function reducer(
 ): ISettingsState {
   switch (action.type) {
     case SettingsActionTypes.FETCH_SETTINGS_REQUESTED:
-      return { ...state, isFetching: true };
+      return {
+        ...state,
+        isFetching: true,
+      };
 
     case SettingsActionTypes.FETCH_SETTINGS_FAILURE:
-      return { ...state, isFetching: false };
+      return {
+        ...state,
+        isFetching: false,
+      };
 
     // Listen for changes that get propagated via refreshing the subscription state
     case SubscriptionActionTypes.FETCH_SUCCESS:
@@ -195,10 +201,16 @@ export default function reducer(
       };
 
     case SettingsActionTypes.SAVE_MESSAGE_PREFERENCES_REQUESTED:
-      return { ...state, isSaving: true };
+      return {
+        ...state,
+        isSaving: true,
+      };
 
     case SettingsActionTypes.SAVE_MESSAGE_PREFERENCES_FAILURE:
-      return { ...state, isSaving: false };
+      return {
+        ...state,
+        isSaving: false,
+      };
 
     case SettingsActionTypes.SAVE_MESSAGE_PREFERENCES_SUCCESS:
       return {
@@ -224,10 +236,16 @@ export default function reducer(
       };
 
     case SettingsActionTypes.CHANGE_USERNAME_REQUESTED:
-      return { ...state, isChangingUsername: true };
+      return {
+        ...state,
+        isChangingUsername: true,
+      };
 
     case SettingsActionTypes.CHANGE_USERNAME_FAILURE:
-      return { ...state, isChangingUsername: false };
+      return {
+        ...state,
+        isChangingUsername: false,
+      };
 
     case SettingsActionTypes.CHANGE_USERNAME_SUCCESS:
       return {
@@ -240,37 +258,70 @@ export default function reducer(
       };
 
     case SettingsActionTypes.SAVE_MESSAGES_VIA_REQUESTED:
-      return { ...state, isChangingVia: true };
+      return {
+        ...state,
+        isChangingVia: true,
+      };
 
     case SettingsActionTypes.SAVE_MESSAGES_VIA_FAILURE:
-      return { ...state, isChangingVia: false };
+      return {
+        ...state,
+        isChangingVia: false,
+      };
 
     case SettingsActionTypes.SAVE_MESSAGES_VIA_SUCCESS:
-      return { ...state, isChangingVia: false };
+      return {
+        ...state,
+        isChangingVia: false,
+      };
 
     case SettingsActionTypes.DEACTIVATE_ACCOUNT_REQUESTED:
-      return { ...state, isDeactivating: true };
+      return {
+        ...state,
+        isDeactivating: true,
+      };
 
     case SettingsActionTypes.DEACTIVATE_ACCOUNT_FAILURE:
-      return { ...state, isDeactivating: false };
+      return {
+        ...state,
+        isDeactivating: false,
+      };
 
     case SettingsActionTypes.DEACTIVATE_ACCOUNT_SUCCESS:
-      return { ...state, isDeactivating: false };
+      return {
+        ...state,
+        isDeactivating: false,
+      };
 
     case SettingsActionTypes.LINK_EMAIL_TO_ACCOUNT_REQUESTED:
-      return { ...state, isLinkingEmail: true };
+      return {
+        ...state,
+        isLinkingEmail: true,
+      };
 
     case SettingsActionTypes.LINK_EMAIL_TO_ACCOUNT_FAILURE:
-      return { ...state, isLinkingEmail: false };
+      return {
+        ...state,
+        isLinkingEmail: false,
+      };
 
     case SettingsActionTypes.LINK_EMAIL_TO_ACCOUNT_SUCCESS:
-      return { ...state, isLinkingEmail: false };
+      return {
+        ...state,
+        isLinkingEmail: false,
+      };
 
     case SettingsActionTypes.UPDATE_EMAIL_REQUESTED:
-      return { ...state, isUpdatingEmail: true };
+      return {
+        ...state,
+        isUpdatingEmail: true,
+      };
 
     case SettingsActionTypes.UPDATE_EMAIL_FAILURE:
-      return { ...state, isUpdatingEmail: false };
+      return {
+        ...state,
+        isUpdatingEmail: false,
+      };
 
     case SettingsActionTypes.UPDATE_EMAIL_SUCCESS:
       return {
@@ -296,10 +347,16 @@ export default function reducer(
       };
 
     case SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_REQUESTED:
-      return { ...state, isUnlinking: true };
+      return {
+        ...state,
+        isUnlinking: true,
+      };
 
     case SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_FAILURE:
-      return { ...state, isUnlinking: false };
+      return {
+        ...state,
+        isUnlinking: false,
+      };
 
     case SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_SUCCESS:
       return {
@@ -344,13 +401,22 @@ export default function reducer(
       };
 
     case SettingsActionTypes.PASSWORD_RESET_REQUESTED:
-      return { ...state, isResetting: true };
+      return {
+        ...state,
+        isResetting: true,
+      };
 
     case SettingsActionTypes.PASSWORD_RESET_FAILURE:
-      return { ...state, isResetting: false };
+      return {
+        ...state,
+        isResetting: false,
+      };
 
     case SettingsActionTypes.PASSWORD_RESET_SUCCESS:
-      return { ...state, isResetting: false };
+      return {
+        ...state,
+        isResetting: false,
+      };
 
     default:
       return state;

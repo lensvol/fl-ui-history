@@ -1,4 +1,4 @@
-import { OutfitSlotName, OutfitType } from "types/outfit";
+import { OutfitType } from "types/outfit";
 
 export const OUTFIT_TYPE_EXCEPTIONAL: OutfitType = "Exceptional";
 export const OUTFIT_TYPE_GIVEN_IN_GAME: OutfitType = "GivenInGame";
@@ -25,50 +25,6 @@ export const HUMAN_READABLE_OUTFIT_NAMES: { [key in OutfitType]: string } = {
   Purchased: "Purchased", // eslint-disable-line quote-props
   Standard: "Standard", // eslint-disable-line quote-props
 };
-
-export const CHANGEABLE_CATEGORIES: OutfitSlotName[] = [
-  "Treasure",
-  "Hat",
-  "Clothing",
-  "Gloves",
-  "Weapon",
-  "Boots",
-  "Companion",
-  "Affiliation",
-  "Transportation",
-  // 'Home Comfort',
-  "HomeComfort",
-  "ToolOfTheTrade",
-];
-
-export const EFFECT_CATEGORIES: OutfitSlotName[] = ["Boon", "Burden"];
-
-const STANDARD_CATEGORIES: OutfitSlotName[] = [
-  "Hat",
-  "Clothing",
-  "Gloves",
-  "Weapon",
-  "Boots",
-  "Companion",
-  "Treasure",
-  "Destiny",
-];
-
-const EXPANDED_CATEGORIES: OutfitSlotName[] = [
-  "ToolOfTheTrade",
-  "Affiliation",
-  "Transportation",
-  "HomeComfort",
-  "Ship",
-  "Spouse",
-  "Club",
-];
-
-export const OUTFIT_CATEGORIES = [
-  ...EFFECT_CATEGORIES,
-  ...STANDARD_CATEGORIES,
-  ...EXPANDED_CATEGORIES,
-];
 
 export const MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT =
   "You cannot put this outfit on unless you are an Exceptional Friend.";

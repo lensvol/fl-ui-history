@@ -38,11 +38,11 @@ function EquipmentGroup(props: Props) {
     [availableQualities.length]
   );
 
-  const isChangeable = useIsChangeable(name);
-  const isEffect = useIsEffect(name);
+  const isChangeable = useIsChangeable(name, outfit);
+  const isEffect = useIsEffect(name, outfit);
 
   const isItemEquippedInThisSlot = useMemo(
-    () => outfit[name] !== undefined,
+    () => outfit.slots[name]?.id !== undefined,
     [name, outfit]
   );
 

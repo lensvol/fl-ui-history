@@ -14,7 +14,6 @@ import { OutfitSlotName } from "types/outfit";
 import { Feature } from "flagged";
 import EquipmentContext from "components/Equipment/EquipmentContext";
 import OutfitControls from "components/Equipment/OutfitControls";
-import { OUTFIT_CATEGORIES } from "constants/outfits";
 import {
   FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS,
   NEW_OUTFIT_BEHAVIOUR,
@@ -23,7 +22,7 @@ import { IQuality } from "types/qualities";
 import PossessionsContext from "components/Possessions/PossessionsContext";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
-export function Equipment({ history, outfit }: Props) {
+export function Equipment({ history, outfit, outfitState }: Props) {
   const dispatch = useDispatch();
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -38,15 +37,21 @@ export function Equipment({ history, outfit }: Props) {
     | undefined
   >();
 
-  const groups = useMemo(() => OUTFIT_CATEGORIES.map((name) => ({ name })), []);
+  const groups = useMemo(() => {
+    return Object.keys(outfitState.slots)
+      .map((name) => name as OutfitSlotName)
+      .map((name) => ({ name }));
+  }, [outfitState]);
 
   const handleEquipQuality = useCallback(() => {
     setIsUseOrEquipModalOpen(false);
+
     if (qualityBeingUsedOrEquipped) {
       const {
         equipped,
         quality: { id },
       } = qualityBeingUsedOrEquipped;
+
       if (equipped) {
         dispatch(unequipQuality(id));
       } else {
@@ -61,6 +66,7 @@ export function Equipment({ history, outfit }: Props) {
 
   const handleUseQuality = useCallback(() => {
     setIsUseOrEquipModalOpen(false);
+
     if (qualityBeingUsedOrEquipped) {
       dispatch(_useQuality(qualityBeingUsedOrEquipped.quality.id, history));
     }
@@ -92,10 +98,13 @@ export function Equipment({ history, outfit }: Props) {
 
       try {
         const result = await renameOutfit(outfit.id, name)(dispatch);
+
         if (result instanceof Success) {
           setIsRenameModalOpen(false);
+
           return;
         }
+
         setErrorMessage(result.message);
       } catch (e) {
         // Possibly a bad request
@@ -181,6 +190,7 @@ Equipment.displayName = "Equipment";
 
 const mapStateToProps = (state: IAppState) => ({
   outfit: findSelectedOutfit(state),
+  outfitState: state.outfit,
 });
 
 type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;

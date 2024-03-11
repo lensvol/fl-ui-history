@@ -1,7 +1,6 @@
 import { MAP_DIMENSIONS_BY_MAP_ROOT_AREA_ID } from "features/mapping/constants";
-import { IMappableSetting } from "types/map";
 
-// import { SETTING_ID_THE_FIFTH_CITY } from 'mapping/constants';
+import { IMappableSetting } from "types/map";
 
 export interface IMapDimensions {
   width: number;
@@ -9,7 +8,15 @@ export interface IMapDimensions {
 }
 
 export default function getMapDimensionsForSetting({
-  mapRootArea: { areaKey },
-}: Pick<IMappableSetting, "mapRootArea">) {
-  return MAP_DIMENSIONS_BY_MAP_ROOT_AREA_ID[areaKey];
+  jsonInfo,
+  mapRootArea,
+}: Pick<IMappableSetting, "jsonInfo" | "mapRootArea">): IMapDimensions {
+  if (jsonInfo?.height && jsonInfo?.width) {
+    return {
+      height: jsonInfo.height,
+      width: jsonInfo.width,
+    };
+  }
+
+  return MAP_DIMENSIONS_BY_MAP_ROOT_AREA_ID[mapRootArea.areaKey];
 }

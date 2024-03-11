@@ -1,25 +1,29 @@
 import { ExchangeActions } from "actions/exchange";
 import { SetCurrentSetting } from "actions/map/setCurrentSetting";
-import { IExchangeState } from "types/exchange";
+
 import * as ExchangeActionTypes from "actiontypes/exchange";
 import * as MapActionTypes from "actiontypes/map";
 
-import fetchAvailableSuccess from "./fetchAvailableSuccess";
-import fetchExchangeSuccess from "./fetchExchangeSuccess";
-import mergeShopData from "./mergeShopData";
-import updateShopItems from "./updateShopItems";
+import fetchAvailableSuccess from "reducers/exchange/fetchAvailableSuccess";
+import fetchExchangeSuccess from "reducers/exchange/fetchExchangeSuccess";
+import mergeShopData from "reducers/exchange/mergeShopData";
+import updateShopItems from "reducers/exchange/updateShopItems";
+
+import { IExchangeState } from "types/exchange";
 
 /**
  * Initial state
  * @type {Object}
  */
-export const INITIAL_STATE: IExchangeState = {
+const INITIAL_STATE: IExchangeState = {
   activeStore: "null",
   description: "",
   isAvailable: true,
   isFetching: false,
   isFetchingAvailable: false,
-  data: { shops: [] },
+  data: {
+    shops: [],
+  },
   isFetchingSellItem: false,
   shops: {
     null: {
@@ -116,7 +120,9 @@ const Exchange = (
 
     case MapActionTypes.SET_CURRENT_SETTING:
       // Reset shop data entirely when we change Setting
-      return { ...INITIAL_STATE };
+      return {
+        ...INITIAL_STATE,
+      };
 
     default:
       return state;

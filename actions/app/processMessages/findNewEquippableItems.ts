@@ -1,6 +1,6 @@
-import { OUTFIT_CATEGORIES } from "constants/outfits";
 import { IAppState } from "types/app";
 import { ApiResultMessageQualityEffect } from "types/app/messages";
+import { OutfitSlotName } from "types/outfit";
 
 export default function findNewEquippableItems(
   messages: ApiResultMessageQualityEffect[],
@@ -32,7 +32,9 @@ function isNewEquippableItemMesage(
   }
 
   // If it's not an outfit quality, return false
-  if ((OUTFIT_CATEGORIES as string[]).indexOf(category.replace(/ /g, "")) < 0) {
+  if (
+    !state.outfit.slots[category.replace(/ /g, "") as OutfitSlotName]?.isOutfit
+  ) {
     return false;
   }
 

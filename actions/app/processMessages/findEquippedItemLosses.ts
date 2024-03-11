@@ -26,6 +26,8 @@ export default function findEquippedItemLosses(
 
     // Check whether any slot currently has this item in it; if so, then
     // we have lost an equipped item
-    return Object.keys(outfit).some((k) => outfit[k as OutfitSlotName] === id);
+    return Object.keys(outfit.slots).some(
+      (k) => outfit.slots[k as OutfitSlotName]?.id === id
+    );
   }
 }

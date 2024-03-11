@@ -1,6 +1,7 @@
 import { EquipQualitySuccess } from "actions/outfit/changeEquipped";
 import { ChangeOutfitSuccessAction } from "actions/outfit/changeOutfit";
 import { FetchOutfitSuccessAction } from "actions/outfit/fetchOutfit";
+
 import { IOutfitState } from "reducers/outfit/index";
 
 export default function fetchOutfitSuccess(
@@ -11,9 +12,13 @@ export default function fetchOutfitSuccess(
     | FetchOutfitSuccessAction
 ): IOutfitState {
   const { payload } = action;
+
   return {
     ...state,
-    ...payload.slots.reduce(reduceFn, {}),
+    slots: {
+      ...state.slots,
+      ...payload.slots.reduce(reduceFn, {}),
+    },
     dirty: payload.dirty,
     maxOutfits: payload.maxOutfits,
     isChanging: false,
@@ -22,9 +27,31 @@ export default function fetchOutfitSuccess(
 }
 
 function reduceFn(
-  acc: { [key: string]: number | undefined },
-  next: { name: string; qualityId?: number | undefined }
+  acc: {
+    [key: string]: {
+      id: number | undefined;
+      canChange: boolean;
+      isEffect: boolean;
+      isOutfit: boolean;
+    };
+  },
+  next: {
+    name: string;
+    qualityId?: number | undefined;
+    canChange: boolean;
+    isEffect: boolean;
+    isOutfit: boolean;
+  }
 ) {
-  const { name, qualityId: id } = next;
-  return { ...acc, [name.replace(/ /g, "")]: id };
+  const { name, qualityId, canChange, isEffect, isOutfit } = next;
+
+  return {
+    ...acc,
+    [name.replace(/ /g, "")]: {
+      id: qualityId,
+      canChange,
+      isEffect,
+      isOutfit,
+    },
+  };
 }

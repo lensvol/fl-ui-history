@@ -1,16 +1,23 @@
-import { CHANGEABLE_CATEGORIES, EFFECT_CATEGORIES } from "constants/outfits";
 import { useMemo } from "react";
+
+import { IOutfitState } from "reducers/outfit";
+
 import { OutfitSlotName } from "types/outfit";
 
-export const useIsChangeable = (slotName: OutfitSlotName) =>
+export const useIsChangeable = (
+  slotName: OutfitSlotName,
+  outfit: IOutfitState
+) =>
   useMemo(() => {
-    return CHANGEABLE_CATEGORIES.indexOf(slotName) >= 0;
-  }, [slotName]);
+    return outfit.slots[slotName]?.canChange ?? false;
+  }, [outfit, slotName]);
 
 export const useSelectedOutfit = (outfits: any[]) =>
-  useMemo(() => outfits.find((o) => o.selected), [outfits]);
-
-export const useIsEffect = (slotName: OutfitSlotName) =>
   useMemo(() => {
-    return EFFECT_CATEGORIES.indexOf(slotName) >= 0;
-  }, [slotName]);
+    return outfits.find((o) => o.selected);
+  }, [outfits]);
+
+export const useIsEffect = (slotName: OutfitSlotName, outfit: IOutfitState) =>
+  useMemo(() => {
+    return outfit.slots[slotName]?.isEffect ?? false;
+  }, [outfit, slotName]);

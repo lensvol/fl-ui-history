@@ -1,24 +1,23 @@
 import baseSlugify from "@sindresorhus/slugify";
+
 import { LatLng } from "leaflet";
+
 import {
   LODGINGS_AREA_ID,
   MAP_ROOT_AREA_THE_FIFTH_CITY,
-  MAP_ROOT_AREA_THE_UNTERZEE,
-  MAP_ROOT_AREA_THE_UNTERZEE_V2,
-  MINIMUM_ZOOM_LEVEL_FOR_DESTINATIONS_BY_MAP_ROOT_AREA_ID,
   SETTING_ID_ABOARD_AT_PORT,
 } from "features/mapping/constants";
 import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
-import { IArea, IMappableSetting, ISetting } from "types/map";
-
 import isDistrict from "features/mapping/isDistrict";
+
+import { IArea, IMappableSetting, ISetting } from "types/map";
 
 export { default as isDistrict } from "features/mapping/isDistrict";
 export { default as areaToTooltipData } from "features/mapping/areaToTooltipData";
 export { default as getMapDimensionsForSetting } from "features/mapping/getMapDimensionsForSetting";
 export { default as getMinimumZoomThatFits } from "features/mapping/getMinimumZoomThatFits";
 
-export const NON_MAP_LOCATION_IDS = [
+const NON_MAP_LOCATION_IDS = [
   2, // Your Lodgings
   15, // a dark place
 ];
@@ -38,13 +37,12 @@ export function getHitboxForArea(
   setting: IMappableSetting,
   zoomLevel: number
 ): number[][] | undefined {
-  const minZoomLevel =
-    MINIMUM_ZOOM_LEVEL_FOR_DESTINATIONS_BY_MAP_ROOT_AREA_ID[
-      setting.mapRootArea.areaKey
-    ];
+  const minZoomLevel = getMinimumZoomLevelForDestinations(setting);
+
   if (isDistrict(area) && zoomLevel >= minZoomLevel) {
     return area.mainDestinationHitbox;
   }
+
   return area.hitbox;
 }
 
@@ -56,8 +54,13 @@ export const isCurrentArea = (area: IArea, currentArea: IArea | undefined) =>
 export const isDestination = (a?: IArea) => a?.type === "Destination";
 
 export const isDrawable = (
-  a: Pick<IArea, "spriteTopLeftX" | "spriteTopLeftY">
-) => a.spriteTopLeftX !== undefined && a.spriteTopLeftY !== undefined;
+  a: Pick<
+    IArea,
+    "spriteTopLeftX" | "spriteTopLeftY" | "headerOffsetX" | "headerOffsetY"
+  >
+) =>
+  (a.spriteTopLeftX !== undefined && a.spriteTopLeftY !== undefined) ||
+  (a.headerOffsetX !== undefined && a.headerOffsetY !== undefined);
 
 // Can the user do something with this area?
 export const isInteractable = (a: IArea) =>
@@ -76,9 +79,8 @@ export function isLit(area: IArea) {
 
   // An undiscovered area is lit if any of its children are discovered
   if (isDistrict(area)) {
-    const { childAreas } = area;
     return (
-      childAreas?.some(
+      area.childAreas?.some(
         (otherArea) =>
           !isLandmark(otherArea) && (otherArea.discovered || otherArea.unlocked)
       ) ?? false
@@ -93,9 +95,11 @@ export const isLodgings = (a: IArea) => a.id === LODGINGS_AREA_ID;
 
 export const isSubLodgings = (area: IArea, areas: IArea[]) => {
   const lodgings = (areas || []).find(isLodgings);
+
   if (!lodgings) {
     return false;
   }
+
   return !!lodgings.childAreas.find((childArea) => childArea.id === area.id);
 };
 
@@ -106,6 +110,7 @@ export const isMappable = (area: IArea, areas: IArea[]) => {
   if (isLodgings(area) || isSubLodgings(area, areas)) {
     return false;
   }
+
   // Validate coordinates
   return !(
     (area.labelX ?? Number.MIN_SAFE_INTEGER) < 0 ||
@@ -127,9 +132,7 @@ export const isUnterzeePlanningSetting = (s: ISetting | undefined) =>
 
 export const isUnterzeeSetting = (s: ISetting | undefined) =>
   s?.mapRootArea?.areaKey !== undefined &&
-  [MAP_ROOT_AREA_THE_UNTERZEE, MAP_ROOT_AREA_THE_UNTERZEE_V2].indexOf(
-    s.mapRootArea.areaKey
-  ) >= 0;
+  s.mapRootArea.areaKey !== MAP_ROOT_AREA_THE_FIFTH_CITY;
 
 export const shouldAppearOnMap = (a: IArea | undefined) =>
   (a?.labelX ?? Number.MIN_SAFE_INTEGER) > 0 &&
@@ -212,8 +215,10 @@ export const sortByLayerWithDestinationsLast = (a: IArea, b: IArea) => {
   if (isDistrict(a) && !isDistrict(b)) {
     return -1;
   }
+
   if (isDistrict(b) && !isDistrict(a)) {
     return 1;
   }
+
   return sortByLayer(a, b);
 };

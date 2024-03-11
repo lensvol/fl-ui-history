@@ -1,32 +1,37 @@
-import { getMapModalStyles } from "components/Map/styles";
-import { getMapDimensionsForSetting } from "features/mapping";
-import getCachedZoomLevelForSetting from "features/mapping/getCachedZoomLevelForSetting";
 import React, { Fragment } from "react";
-import classnames from "classnames";
 import ReactModal from "react-modal";
 import { connect } from "react-redux";
 
+import classnames from "classnames";
+
 import { fetch as fetchCards } from "actions/cards";
 import { changeLocation, hideMap, setCurrentArea } from "actions/map";
-import TravelFailureModal from "components/TravelFailureModal";
 
 import ActionRefreshContext from "components/ActionRefreshContext";
+import ActionRefreshModal from "components/ActionRefreshModal";
+import ExceptionalFriendModal from "components/ExceptionalFriendModal";
+import ExceptionalFriendModalContext from "components/ExceptionalFriendModal/ExceptionalFriendModalContext";
+import GateStoryletModal from "components/GateEventModal";
+import CloseButton from "components/Map/CloseButton";
 import MapComponent from "components/Map/MapComponent";
+import MapContext from "components/Map/MapContext";
+import PurchaseFateFromGateEvent from "components/Map/PurchaseFateFromGateEvent";
+import { getMapModalStyles } from "components/Map/styles";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+import TravelFailureModal from "components/TravelFailureModal";
+
+import { getMapDimensionsForSetting } from "features/mapping";
+import getCachedZoomLevelForSetting from "features/mapping/getCachedZoomLevelForSetting";
+import getInitialMapCenter from "features/mapping/getInitialMapCenter";
+
 import { Either, Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
+import MapService, { IChangeLocationResponse } from "services/MapService";
+
 import { IArea, IGateEvent, IMappableSetting } from "types/map";
 import { IAppState } from "types/app";
 
-import GateStoryletModal from "components/GateEventModal";
-import MediaSmDown from "components/Responsive/MediaSmDown";
-import CloseButton from "components/Map/CloseButton";
-import MapContext from "components/Map/MapContext";
-import ActionRefreshModal from "components/ActionRefreshModal";
-import PurchaseFateFromGateEvent from "components/Map/PurchaseFateFromGateEvent";
 import wait from "utils/wait";
-import ExceptionalFriendModal from "components/ExceptionalFriendModal";
-import ExceptionalFriendModalContext from "components/ExceptionalFriendModal/ExceptionalFriendModalContext";
-import MapService, { IChangeLocationResponse } from "services/MapService";
 
 interface State {
   cachedMapCenter: number[];
@@ -73,8 +78,18 @@ class MapContainer extends React.Component<Props, State> {
         const { width, height } = getMapDimensionsForSetting(
           setting as IMappableSetting
         );
-        this.setState({ cachedMapCenter: [width / 2, height / 2] });
+        const { initPercentX, initPercentY } = getInitialMapCenter(
+          setting as IMappableSetting
+        );
+
+        this.setState({
+          cachedMapCenter: [
+            (width * initPercentX) / 100.0,
+            (-height * initPercentY) / 100.0,
+          ],
+        });
       }
+
       // Same for cached zoom from previously using the map
       if (cachedZoomLevel < 0) {
         this.setState({
@@ -96,6 +111,7 @@ class MapContainer extends React.Component<Props, State> {
 
   handleAreaClick = async (area: IArea) => {
     const { currentArea, dispatch, isMoving, readonly } = this.props;
+
     const { isChangingArea, isDelayingCloseAfterGateEventModalClose } =
       this.state;
     const { gateEvent, id, unlocked } = area;
@@ -123,7 +139,10 @@ class MapContainer extends React.Component<Props, State> {
     // If we're locked, with a gate storylet, then enter it
     if (!unlocked) {
       if (gateEvent) {
-        this.setState({ gateEvent, isGateStoryletModalOpen: true });
+        this.setState({
+          gateEvent,
+          isGateStoryletModalOpen: true,
+        });
       }
     } else {
       const startAt = window.performance.now();
@@ -156,6 +175,7 @@ class MapContainer extends React.Component<Props, State> {
         const elapsedTravelTime = window.performance.now() - startAt;
         const travelTimeRemaining =
           MINIMUM_TRAVEL_DURATION_MILLISECONDS - elapsedTravelTime;
+
         if (travelTimeRemaining > 20) {
           await wait(travelTimeRemaining);
         }
@@ -164,6 +184,7 @@ class MapContainer extends React.Component<Props, State> {
 
         // We have successfully moved; close up the map
         this.handleRequestCloseMap();
+
         return;
       }
 
@@ -209,6 +230,7 @@ class MapContainer extends React.Component<Props, State> {
     didUserSubscribe: boolean
   ) => {
     const { gateEvent, isGateStoryletModalOpen } = this.state;
+
     // Close the modal
     this.setState({ isExceptionalFriendModalOpen: false });
 
@@ -222,6 +244,7 @@ class MapContainer extends React.Component<Props, State> {
         const {
           data: { areas },
         } = result;
+
         // If the gate event modal is open and has gate event data, update state
         if (isGateStoryletModalOpen && gateEvent) {
           // We need to cast to IGateEvent because TS thinks gateEvent is a 'never'
@@ -229,10 +252,12 @@ class MapContainer extends React.Component<Props, State> {
           const gatedArea = (areas as IArea[]).find(
             (area) => area.gateEvent?.id === gateEventID
           );
+
           if (gatedArea) {
             this.setState({ gateEvent: gatedArea.gateEvent });
           }
         }
+
         this.setState({ isFetchingUpdatedMapData: false });
       }
     }
@@ -244,11 +269,13 @@ class MapContainer extends React.Component<Props, State> {
 
   handleRequestCloseMap = () => {
     const { dispatch } = this.props;
+
     dispatch(hideMap());
   };
 
   handleRequestOpenGateStorylet = (area: IArea) => {
     const { unlocked, gateEvent } = area;
+
     if (unlocked) {
       return;
     }
@@ -268,6 +295,7 @@ class MapContainer extends React.Component<Props, State> {
       async () => {
         if (shouldAutoClose) {
           await wait(500);
+
           dispatch(hideMap());
         }
       }
@@ -340,7 +368,6 @@ class MapContainer extends React.Component<Props, State> {
             gateEvent={gateEvent}
             onRequestClose={this.handleRequestCloseGateStorylet}
           />
-
           <ExceptionalFriendModal
             isOpen={isExceptionalFriendModalOpen}
             onRequestClose={this.handleRequestCloseExceptionalFriendModal}

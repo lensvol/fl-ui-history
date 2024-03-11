@@ -45,6 +45,7 @@ type OwnProps = Pick<EquipmentContextValue, "openUseOrEquipModal"> &
 const mapStateToProps = (state: IAppState, props: OwnProps) => ({
   canChangeOutfit: getCanUserChangeOutfit(state, props),
   isChanging: state.outfit.isChanging,
+  outfit: state.outfit,
   selectedEnhancementQualityId: state.equipment.selectedEnhancementQualityId,
   setting: state.map.setting,
 });
@@ -72,6 +73,7 @@ function EquippedItem(props: Props) {
     level,
     name,
     openUseOrEquipModal,
+    outfit,
     selectedEnhancementQualityId,
     setting,
     useEventId,
@@ -85,7 +87,7 @@ function EquippedItem(props: Props) {
   ) as boolean;
   const hasUseEventId = !!useEventId;
 
-  const isChangeable = useIsChangeable(category);
+  const isChangeable = useIsChangeable(category, outfit);
 
   const handleUnequip = useCallback(() => {
     // Unchangeable items can't be unequipped through the UI

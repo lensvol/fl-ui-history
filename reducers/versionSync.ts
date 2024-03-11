@@ -1,11 +1,13 @@
-import Config from "configuration";
 import {
   CLIENT_BECAME_OUTDATED,
   VERSION_MISMATCH_MODAL_DISMISSED,
 } from "actiontypes/versionSync";
+
+import Config from "configuration";
+
 import { IVersionSyncState } from "types/versionSync";
 
-export const INITIAL_STATE: IVersionSyncState = {
+const INITIAL_STATE: IVersionSyncState = {
   isClientOutdated: false,
   isModalDismissed: false,
   latestVersion: Config.version,
@@ -19,11 +21,13 @@ export default function reducer(state = INITIAL_STATE, action: any) {
         isModalDismissed: false, // Force the user to see the modal again
         latestVersion: action.payload.latestVersion,
       };
+
     case VERSION_MISMATCH_MODAL_DISMISSED:
       return {
         ...state,
         isModalDismissed: true,
       };
+
     default:
       return state;
   }

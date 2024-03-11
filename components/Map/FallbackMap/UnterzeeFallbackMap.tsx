@@ -1,30 +1,38 @@
-import CompatibilityWarning from "components/Map/FallbackMap/CompatibilityWarning";
-import UnterzeeFallbackAreaOverlay from "components/Map/FallbackMap/UnterzeeFallbackAreaOverlay";
-import { ITooltipData } from "components/ModalTooltip/types";
 import React, { useCallback, useMemo, useState } from "react";
+import { ImageOverlay, Map as LeafletMap } from "react-leaflet";
+import { connect } from "react-redux";
+
+import L from "leaflet";
+
 import DistrictLabelLayer from "components/Map/DistrictLabelLayer";
+import CompatibilityWarning from "components/Map/FallbackMap/CompatibilityWarning";
+import { FallbackMapProps } from "components/Map/FallbackMap/types";
+import MapModalTooltipContext from "components/Map/MapModalTooltipContext";
+import MapOverlay from "components/Map/MapOverlay";
+import PlayerMarkers from "components/Map/PlayerMarkers";
+import UnterzeeFallbackAreaOverlay from "components/Map/FallbackMap/UnterzeeFallbackAreaOverlay";
+import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
+import { ITooltipData } from "components/ModalTooltip/types";
+
 import {
   getMapDimensionsForSetting,
   getMinimumZoomThatFits,
   xy,
 } from "features/mapping";
-import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
-import L from "leaflet";
 import getCRSForSetting from "features/mapping/getCRSForSetting";
 import getFallbackMapImageURL from "features/mapping/getFallbackMapImageURL";
+import getIdealMaximumZoomForSetting from "features/mapping/getIdealMaximumZoomForSetting";
+import getIdealMinimumZoomForSetting from "features/mapping/getIdealMinimumZoomForSetting";
 import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
-import { ImageOverlay, Map as LeafletMap } from "react-leaflet";
-import { connect } from "react-redux";
+
 import getLabelledStateAwareAreas from "selectors/map/getLabelledStateAwareAreas";
+
 import { IAppState } from "types/app";
 import {
   IHasSprite,
   ILabelledStateAwareArea,
   IMappableSetting,
 } from "types/map";
-import MapModalTooltipContext from "../MapModalTooltipContext";
-import { FallbackMapProps } from "./types";
-import PlayerMarkers from "../PlayerMarkers";
 
 export function UnterzeeFallbackMap(props: FallbackMapProps & StateProps) {
   const {
@@ -66,18 +74,24 @@ export function UnterzeeFallbackMap(props: FallbackMapProps & StateProps) {
 
   const mappableSetting = setting as IMappableSetting;
 
-  const { height: mapHeight, width: mapWidth } = getMapDimensionsForSetting({
-    mapRootArea: setting.mapRootArea,
-  });
+  const { height: mapHeight, width: mapWidth } =
+    getMapDimensionsForSetting(mappableSetting);
 
   let minZoom: undefined | number;
   let maxZoom: undefined | number;
 
   if (mappableSetting !== undefined) {
     const minimumZoomThatFits = getMinimumZoomThatFits(window, mappableSetting);
+
     if (minimumZoomThatFits !== undefined) {
-      minZoom = Math.max(4.35107444, minimumZoomThatFits);
-      maxZoom = Math.max(5, minZoom);
+      minZoom = Math.max(
+        getIdealMinimumZoomForSetting(mappableSetting) ?? 1,
+        minimumZoomThatFits
+      );
+      maxZoom = Math.max(
+        getIdealMaximumZoomForSetting(mappableSetting),
+        minZoom
+      );
     }
   }
 
@@ -110,6 +124,7 @@ export function UnterzeeFallbackMap(props: FallbackMapProps & StateProps) {
         url={getFallbackMapImageURL(mappableSetting)}
         bounds={L.latLngBounds(xy(0, 0), xy(mapWidth, -mapHeight))}
       />
+      <MapOverlay />
       <DistrictLabelLayer
         areas={labelledAreas}
         currentArea={currentArea}
@@ -120,7 +135,6 @@ export function UnterzeeFallbackMap(props: FallbackMapProps & StateProps) {
         }}
         zoomLevel={getMinimumZoomLevelForDestinations(mappableSetting)}
       />
-
       {areasWithSprites.map((area) => (
         <UnterzeeFallbackAreaOverlay
           key={area.areaKey}
@@ -128,11 +142,8 @@ export function UnterzeeFallbackMap(props: FallbackMapProps & StateProps) {
           setting={setting}
         />
       ))}
-
       <PlayerMarkers />
-
       <CompatibilityWarning />
-
       <MapModalTooltipContext.Consumer>
         {({ onRequestClose }) => (
           <ModalTooltip

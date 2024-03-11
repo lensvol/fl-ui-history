@@ -36,11 +36,10 @@ import nameChanged from "./nameChanged";
 
 // This is the expected state structure; we're explicitly setting
 // things as undefined so that we have a record of how we expect it to look
-export const INITIAL_STATE: IMyselfState = {
+const INITIAL_STATE: IMyselfState = {
   categories: [],
   character: {
     avatarImage: "beardy",
-    // canChangeOutfit: false,
     currentDomicile: {
       description: undefined,
       image: undefined,

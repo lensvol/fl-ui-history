@@ -8,7 +8,6 @@ import accountLinkReminder from "./accountLinkReminder";
 import actions from "./actions";
 import app from "./app";
 import branches from "./branches";
-import categories from "./categories";
 import user from "./user";
 import storylet from "./storylet";
 import cards from "./cards";
@@ -54,7 +53,6 @@ const appReducer = combineReducers({
   branches,
   cards,
   myself,
-  categories,
   contacts,
   equipment,
   exchange,

@@ -1,8 +1,9 @@
-import { IMappableSetting } from "types/map";
-import { DEFAULT_CACHED_ZOOM_LEVELS_BY_MAP_ROOT_AREA_ID } from "./constants";
+import getIdealMinimumZoomForSetting from "features/mapping/getIdealMinimumZoomForSetting";
 
-export default function getCachedZoomLevelForSetting({
-  mapRootArea: { areaKey },
-}: Pick<IMappableSetting, "mapRootArea">) {
-  return DEFAULT_CACHED_ZOOM_LEVELS_BY_MAP_ROOT_AREA_ID[areaKey];
+import { IMappableSetting } from "types/map";
+
+export default function getCachedZoomLevelForSetting(
+  setting: IMappableSetting
+) {
+  return getIdealMinimumZoomForSetting(setting) ?? 1;
 }

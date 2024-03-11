@@ -1,29 +1,48 @@
 import React, { useMemo } from "react";
+import { Marker } from "react-leaflet";
+import { connect } from "react-redux";
+
 import classnames from "classnames";
+
 import L from "leaflet";
+
 import { xy } from "features/mapping";
 import {
   MAP_BASE_URL,
   PLAYER_MARKER_HEIGHT,
   PLAYER_MARKER_WIDTH,
 } from "features/mapping/constants";
-import { Marker } from "react-leaflet";
-import { connect } from "react-redux";
+
 import getCurrentStateAwareArea from "selectors/map/getCurrentStateAwareArea";
 import getIsCurrentPlayerMarkerArea from "selectors/map/getIsCurrentPlayerMarkerArea";
+
 import { IAppState } from "types/app";
 import { IStateAwareArea } from "types/map";
 
 function PlayerMarker({ area, avatarImage, isCurrentPlayerMarkerArea }: Props) {
-  const { areaKey, labelX, labelY, playerMarkerAnchorX, playerMarkerAnchorY } =
-    area;
+  const {
+    areaKey,
+    labelX,
+    labelY,
+    pinOffsetX,
+    pinOffsetY,
+    playerMarkerAnchorX,
+    playerMarkerAnchorY,
+  } = area;
 
   const iconAnchor = useMemo(() => {
     if (playerMarkerAnchorX && playerMarkerAnchorY) {
-      return new L.Point(112 / 4, 159 / 2);
+      return new L.Point(
+        112 / 4 + (pinOffsetX ?? 0),
+        159 / 2 + (pinOffsetY ?? 0)
+      );
     }
-    return new L.Point(112 / 4 + 16, 159 / 2 + 8);
-  }, [playerMarkerAnchorX, playerMarkerAnchorY]);
+
+    return new L.Point(
+      112 / 4 + 16 + (pinOffsetX ?? 0),
+      159 / 2 + 8 + (pinOffsetY ?? 0)
+    );
+  }, [pinOffsetX, pinOffsetY, playerMarkerAnchorX, playerMarkerAnchorY]);
 
   const icon = useMemo(
     () =>

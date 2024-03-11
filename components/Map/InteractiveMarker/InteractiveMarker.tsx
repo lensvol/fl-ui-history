@@ -1,4 +1,3 @@
-import isInteractableAtThisZoomLevel from "features/mapping/isInteractableAtThisZoomLevel";
 import React, {
   useCallback,
   useEffect,
@@ -6,14 +5,20 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { connect } from "react-redux";
+
 import classnames from "classnames";
-import TippyWrapper from "components/TippyWrapper";
+
 import BorderFanciness from "components/Map/AreaMarker/BorderFanciness";
 import { SELECTED_LABEL_FILTER_STRING } from "components/Map/AreaMarker/constants";
 import GateIcon from "components/Map/AreaMarker/GateIcon";
 import LockIcon from "components/Map/AreaMarker/LockIcon";
+import HeaderImage from "components/Map/HeaderImage";
 import { useCursor } from "components/Map/InteractiveMarker/hooks";
+import { ContainerProps } from "components/Map/InteractiveMarker/props";
 import { MapModalTooltipContextValue } from "components/Map/MapModalTooltipContext";
+import TippyWrapper from "components/TippyWrapper";
+
 import {
   areaToTooltipData,
   isUnterzeeSetting,
@@ -21,10 +26,10 @@ import {
   shouldZoomOnTapAtZoomLevel,
 } from "features/mapping";
 import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
-import { connect } from "react-redux";
+import isInteractableAtThisZoomLevel from "features/mapping/isInteractableAtThisZoomLevel";
+
 import { IAppState } from "types/app";
 import { IMappableSetting, IStateAwareArea } from "types/map";
-import { ContainerProps } from "./props";
 
 const DRAG_THRESHOLD = 10; // px movement before we treat this as a drag
 
@@ -63,6 +68,7 @@ export function InteractiveMarker({
     if (!setting?.mapRootArea?.areaKey) {
       return 0;
     }
+
     return getMinimumZoomLevelForDestinations(setting as IMappableSetting);
   }, [setting]);
 
@@ -92,6 +98,7 @@ export function InteractiveMarker({
     if (!isUnterzeeSetting(setting)) {
       return false;
     }
+
     return area.visitable ?? false;
   }, [area.visitable, setting]);
 
@@ -128,6 +135,7 @@ export function InteractiveMarker({
         } else {
           onTapAtLowZoomLevel(area);
         }
+
         return;
       }
 
@@ -161,16 +169,18 @@ export function InteractiveMarker({
 
       // Check whether we've moved far enough to be considered "dragging"
       const { clientX, clientY } = e;
+
       isMouseDragging.current =
         isMouseDragging.current ||
         Math.abs(clientX - dragStartX.current) > DRAG_THRESHOLD ||
         Math.abs(clientY - dragStartY.current) > DRAG_THRESHOLD;
     },
-    [isMouseDown, isMouseDragging, dragStartX, dragStartY]
+    [dragStartX, dragStartY, isMouseDown, isMouseDragging]
   );
 
   const onMouseDown = useCallback((e) => {
     const { clientX, clientY } = e;
+
     isMouseDown.current = true;
     isMouseDragging.current = false;
     dragStartX.current = clientX;
@@ -191,13 +201,16 @@ export function InteractiveMarker({
     (e) => {
       e.preventDefault();
       e.stopPropagation(); // Don't send this to the parent
+
       isTouchActive.current = false;
+
       if (isTouchDragging.current) {
         return;
       }
 
       if (shouldZoomOnTapAtZoomLevel(area, setting, zoomLevel)) {
         onTapAtLowZoomLevel(area);
+
         return;
       }
 
@@ -222,16 +235,18 @@ export function InteractiveMarker({
   const onTouchMove = useCallback(
     (e: TouchEvent) => {
       const { clientX, clientY } = e.touches[0];
+
       isTouchDragging.current =
         isTouchDragging.current ||
         Math.abs(clientX - dragStartX.current) > DRAG_THRESHOLD ||
         Math.abs(clientY - dragStartY.current) > DRAG_THRESHOLD;
     },
-    [isTouchDragging, dragStartX, dragStartY]
+    [dragStartX, dragStartY, isTouchDragging]
   );
 
   const onTouchStart = useCallback((e: TouchEvent) => {
     const { clientX, clientY } = e.touches[0];
+
     isTouchActive.current = true;
     isTouchDragging.current = false;
     dragStartX.current = clientX;
@@ -273,6 +288,9 @@ export function InteractiveMarker({
       zoomLevel,
     ]
   );
+
+  const mappedSetting = setting as IMappableSetting;
+  const customMarkerColour = mappedSetting?.jsonInfo?.labelBackgroundColour;
 
   useEffect(() => {
     const domElement = ref.current;
@@ -324,9 +342,11 @@ export function InteractiveMarker({
           area.isDestination && "leaflet-tooltip--fbg__name--destination",
           (area.isLandmark || !setting?.canTravel) &&
             "leaflet-tooltip--fbg__name--landmark",
+          area.isLandmark &&
+            setting?.jsonInfo?.landmarkStyle !== undefined &&
+            setting?.jsonInfo?.landmarkStyle,
           isIsland && "leaflet-tooltip--fbg__name--island",
           isVisitableIsland && "leaflet-tooltip--fbg__name--visitable-island",
-
           area.isDistrict &&
             !shouldAreaBeInteractiveAtZoomLevel &&
             "leaflet-tooltip--fbg__name--district--non-interactive"
@@ -336,7 +356,11 @@ export function InteractiveMarker({
           filter: shouldExhibitSelectionGlow
             ? SELECTED_LABEL_FILTER_STRING
             : undefined,
-          transition: "boxShadow .2s, filter .2s",
+          transition: "boxShadow 0.2s, filter 0.2s",
+          backgroundColor:
+            area.isLandmark || customMarkerColour === undefined
+              ? undefined
+              : customMarkerColour,
         }}
       >
         <div style={{ cursor }}>{area.name}</div>
@@ -345,6 +369,7 @@ export function InteractiveMarker({
     [
       area,
       cursor,
+      customMarkerColour,
       isIsland,
       isVisitableIsland,
       setting,
@@ -367,6 +392,9 @@ export function InteractiveMarker({
           padding: "16px",
         }}
       >
+        {shouldAreaBeInteractiveAtZoomLevel && (
+          <HeaderImage area={area} setting={setting} />
+        )}
         {shouldAreaBeInteractiveAtZoomLevel && shouldShowGateIcon && (
           <GateIcon area={area} selected={shouldExhibitSelectionGlow} />
         )}
@@ -380,7 +408,6 @@ export function InteractiveMarker({
             selected={shouldExhibitSelectionGlow}
           />
         )}
-
         {tooltipData.description ? (
           <TippyWrapper tooltipData={tooltipData}>
             {tippyChildComponent}
@@ -388,7 +415,6 @@ export function InteractiveMarker({
         ) : (
           tippyChildComponent
         )}
-
         {shouldShowBorderFancinessAtZoomLevel && (
           <BorderFanciness
             side="bottom"
@@ -410,6 +436,8 @@ const mapStateToProps = ({
 
 type Props = ContainerProps &
   Pick<MapModalTooltipContextValue, "openModalTooltip"> &
-  ReturnType<typeof mapStateToProps> & { selectedArea?: IStateAwareArea };
+  ReturnType<typeof mapStateToProps> & {
+    selectedArea?: IStateAwareArea;
+  };
 
 export default connect(mapStateToProps)(InteractiveMarker);

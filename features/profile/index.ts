@@ -18,7 +18,7 @@ export interface IProfileState {
   characterName: string | undefined;
   currentArea: AreaWithNestedJsonInfo | undefined;
   description: string | undefined;
-  expandedEquipped: { name: string; possessions: IQuality[] } | undefined;
+  expandedEquipped: { possessions: IQuality[] } | undefined;
   isFetching: boolean;
   isLoggedInUsersProfile: boolean;
   isSharing: boolean;
@@ -29,7 +29,7 @@ export interface IProfileState {
   scrapbookStatus: IQuality | undefined;
   sharedContent: ApiSharedContent[];
   shareMessageResponse: string | null;
-  standardEquipped: { name: string; possessions: IQuality[] } | undefined;
+  standardEquipped: { possessions: IQuality[] } | undefined;
   profileName?: string;
   profileDescription?: string;
   profileBanner?: string;

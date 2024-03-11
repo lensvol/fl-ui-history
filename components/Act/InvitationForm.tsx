@@ -58,7 +58,7 @@ function InvitationForm({
 
     const youQualifyMessage =
       youQualify !== undefined && youQualify.length > 0
-        ? "you lack requires qualities"
+        ? "you lack required qualities"
         : "";
 
     const correctInstanceMessage =

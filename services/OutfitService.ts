@@ -4,7 +4,13 @@ export type FetchOutfitResponse = {
   dirty: boolean;
   isFavourite: boolean;
   maxOutfits: number;
-  slots: { name: string; qualityId?: number }[];
+  slots: {
+    name: string;
+    qualityId?: number;
+    canChange: boolean;
+    isEffect: boolean;
+    isOutfit: boolean;
+  }[];
 };
 
 export type RenameOutfitResponse = {
@@ -36,8 +42,11 @@ export default class OutfitService
     const config = {
       method: "post",
       url: "/outfit/change",
-      data: { outfitId: id },
+      data: {
+        outfitId: id,
+      },
     };
+
     return this.doRequest<FetchOutfitResponse>(config);
   };
 
@@ -45,8 +54,11 @@ export default class OutfitService
     const config = {
       method: "post",
       url: "/outfit/equip",
-      data: { qualityId: id },
+      data: {
+        qualityId: id,
+      },
     };
+
     return this.doRequest<ChangeEquipmentResponse>(config);
   };
 
@@ -63,8 +75,12 @@ export default class OutfitService
     const config = {
       method: "post",
       url: "/outfit/rename",
-      data: { outfitId, newName },
+      data: {
+        outfitId,
+        newName,
+      },
     };
+
     return this.doRequest<RenameOutfitResponse>(config);
   };
 
@@ -73,6 +89,7 @@ export default class OutfitService
       method: "post",
       url: "/outfit/save",
     };
+
     return this.doRequest<FetchOutfitResponse>(config);
   };
 
@@ -89,8 +106,11 @@ export default class OutfitService
     const config = {
       method: "post",
       url: "/outfit/unequip",
-      data: { qualityId },
+      data: {
+        qualityId,
+      },
     };
+
     return this.doRequest<ChangeEquipmentResponse>(config);
   };
 }

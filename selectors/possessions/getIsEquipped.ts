@@ -16,6 +16,9 @@ const cacheKey = (_state: IAppState, { id }: Props) => `${id}`;
 const output = (
   id: ReturnType<typeof getId>,
   outfit: ReturnType<typeof getOutfit>
-) => Object.keys(outfit).some((k) => outfit[k as OutfitSlotName] === id);
+) =>
+  Object.keys(outfit.slots).some(
+    (k) => outfit.slots[k as OutfitSlotName]?.id === id
+  );
 
 export default createCachedSelector(getId, getOutfit, output)(cacheKey);

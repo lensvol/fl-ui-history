@@ -1,10 +1,23 @@
 import { OutfitActions } from "actions/outfit";
+
 import * as MyselfActionTypes from "actiontypes/myself";
+
+import fetchOutfitSuccess from "reducers/outfit/fetchOutfitSuccess";
+
 import { OutfitSlotName } from "types/outfit";
 
-import fetchOutfitSuccess from "./fetchOutfitSuccess";
+type IOutfitSlots = {
+  [key in OutfitSlotName]?: {
+    id: number | undefined;
+    canChange: boolean;
+    isEffect: boolean;
+    isOutfit: boolean;
+  };
+};
 
-export type IOutfitState = { [key in OutfitSlotName]?: number | undefined } & {
+export type IOutfitState = {
+  slots: IOutfitSlots;
+} & {
   dirty: boolean;
   isChanging: boolean;
   isFavourite: boolean;
@@ -12,6 +25,7 @@ export type IOutfitState = { [key in OutfitSlotName]?: number | undefined } & {
 };
 
 export const INITIAL_STATE: IOutfitState = {
+  slots: {},
   dirty: false,
   isChanging: false,
   isFavourite: false,

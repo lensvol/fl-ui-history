@@ -26,14 +26,6 @@ export const MAP_ROOT_AREA_THE_UNTERZEE_V2 = Config.mapRootAreaIDs.unterzeev2;
 
 export const SETTING_ID_ABOARD_AT_PORT = 107951;
 
-export const DEFAULT_CACHED_ZOOM_LEVELS_BY_MAP_ROOT_AREA_ID: {
-  [areaKey: string]: number;
-} = {
-  [MAP_ROOT_AREA_THE_UNTERZEE]: 4.35107444,
-  [MAP_ROOT_AREA_THE_UNTERZEE_V2]: 4.35107444,
-  [MAP_ROOT_AREA_THE_FIFTH_CITY]: 3,
-};
-
 export const IDEAL_MINIMUM_ZOOMS_BY_MAP_ROOT_AREA_ID: {
   [areaKey: string]: number;
 } = {

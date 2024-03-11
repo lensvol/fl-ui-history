@@ -1,42 +1,52 @@
-import { ICategoriesState } from "reducers/categories";
 import { createSelector } from "reselect";
-import { OUTFIT_CATEGORIES } from "constants/outfits";
 import { EXCLUDED_CATEGORY_NAMES } from "constants/possessions";
+import { IOutfitState } from "reducers/outfit";
 import { IAppState } from "types/app";
+import { OutfitSlotName } from "types/outfit";
 import { ICategory } from "types/possessions";
-
-function getAllCategories(state: IAppState) {
-  return state.categories;
-}
+import { IQuality } from "types/qualities";
 
 function getMyselfCategories({ myself: { categories } }: IAppState) {
   return categories;
 }
 
-export function hasThingNaturedQualities(
-  category: ICategory,
-  allCategories: ICategoriesState
-) {
-  // We need to remove spaces to normalize name -> enum
-  return allCategories.Thing.indexOf(category.name.replace(/ /g, "")) >= 0;
+const getMyselfQualities = (state: IAppState) => state.myself.qualities;
+
+function getOutfit(state: IAppState) {
+  return state.outfit;
 }
 
-export function isNotAnEquippableCategory(category: ICategory): boolean {
-  return (
-    (OUTFIT_CATEGORIES as string[]).indexOf(category.name.replace(/ /g, "")) < 0
+export function hasThingNaturedQualities(
+  category: ICategory,
+  myselfQualities: IQuality[]
+) {
+  // We need to remove spaces to normalize name -> enum
+  const categoryName = category.name.replace(/ /g, "");
+
+  return myselfQualities.some(
+    (q) => q.nature === "Thing" && q.category === categoryName
   );
 }
 
+export function isNotAnEquippableCategory(
+  category: ICategory,
+  outfit: IOutfitState
+): boolean {
+  return !outfit.slots[category.name.replace(/ /g, "") as OutfitSlotName]
+    ?.isOutfit;
+}
+
 function outputFn(
-  allCategories: ReturnType<typeof getAllCategories>,
-  myselfCategories: ReturnType<typeof getMyselfCategories>
+  myselfCategories: ReturnType<typeof getMyselfCategories>,
+  myselfQualities: ReturnType<typeof getMyselfQualities>,
+  outfit: ReturnType<typeof getOutfit>
 ) {
   return [...myselfCategories]
     .map((c, i) => ({ ...c, id: i }))
     .filter((c) => c.qualities.length)
     .filter(isNotExcluded)
-    .filter(isNotAnEquippableCategory)
-    .filter((c) => hasThingNaturedQualities(c, allCategories))
+    .filter((c) => isNotAnEquippableCategory(c, outfit))
+    .filter((c) => hasThingNaturedQualities(c, myselfQualities))
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -45,6 +55,6 @@ export function isNotExcluded(category: { name: string }): boolean {
 }
 
 export default createSelector(
-  [getAllCategories, getMyselfCategories],
+  [getMyselfCategories, getMyselfQualities, getOutfit],
   outputFn
 );

@@ -13,8 +13,8 @@ export type FetchProfileResponse = {
   characterName: string;
   currentArea: AreaWithNestedJsonInfo;
   profileCharacter: IProfileCharacter;
-  standardEquippedPossessions: { name: string; possessions: IQuality[] };
-  expandedEquippedPossessions: { name: string; possessions: IQuality[] };
+  standardEquippedPossessions: { possessions: IQuality[] };
+  expandedEquippedPossessions: { possessions: IQuality[] };
   profileName?: string;
   profileDescription?: string;
   profileBanner?: string;

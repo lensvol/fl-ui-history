@@ -1,18 +1,19 @@
-import { MAP_ROOT_AREA_THE_FIFTH_CITY } from "features/mapping/constants";
 import * as PIXI from "pixi.js";
 
-import { IArea, IStateAwareArea, SpriteType } from "types/map";
-import { getMapDimensionsForSetting, isDistrict } from "features/mapping";
 import GlobalSpriteMap from "components/Map/PixiMap/GlobalSpriteMap";
-import getPositionForSprite from "features/mapping/getPositionForSprite";
 import {
+  clearPixiContainer,
   getPixiContainer,
   getPixiMainRenderer,
-  clearPixiContainer,
-} from "./PixiSingletons";
+} from "components/Map/ReactLeafletPixiOverlay/PixiSingletons";
+
+import { getMapDimensionsForSetting, isDistrict } from "features/mapping";
+import { MAP_ROOT_AREA_THE_FIFTH_CITY } from "features/mapping/constants";
+import getPositionForSprite from "features/mapping/getPositionForSprite";
+
+import { IArea, IStateAwareArea, SpriteType } from "types/map";
 
 export const AVAILABLE_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
-export const FIXED_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
 export const SELECTION_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
 export const MAIN_DESTINATION_SPRITE_CACHE: { [key: string]: PIXI.Sprite } = {};
 export const MAIN_DESTINATION_SELECTION_SPRITE_CACHE: {
@@ -27,15 +28,22 @@ export function addForegroundStalagmiteSprite(
 ) {
   /* eslint-disable no-param-reassign */
   const { width: mapWidth, height: mapHeight } = getMapDimensionsForSetting({
-    mapRootArea: { areaKey: MAP_ROOT_AREA_THE_FIFTH_CITY },
+    jsonInfo: {},
+    mapRootArea: {
+      areaKey: MAP_ROOT_AREA_THE_FIFTH_CITY,
+    },
   });
+
   sprite.scale = new PIXI.Point(0.5, 0.5);
+
   const y = mapHeight / 2 - FOREGROUND_STALAGMITE_SPRITE_HEIGHT / 2;
+
   if (aOrB === "a" || aOrB === "stalagmites-a") {
     sprite.position = new PIXI.Point(0, y);
   } else {
     sprite.position = new PIXI.Point(mapWidth / 4, y);
   }
+
   getPixiContainer().addChild(sprite);
   /* eslint-enable no-param-reassign */
 }
@@ -45,6 +53,7 @@ export async function addAreaSpriteToContainer(
   spriteType: SpriteType
 ) {
   const pixiContainer = getPixiContainer();
+
   // Sprite has already been added, go away
   if (isSpriteInCache(area, spriteType)) {
     // console.info(`Sprite for ${area.areaKey} is in cache, not redrawing`);
@@ -64,6 +73,7 @@ export async function addAreaSpriteToContainer(
 
   if (sprite) {
     sprite.position = getPositionForSprite(area, spriteType);
+
     pixiContainer.addChild(sprite);
   } else {
     // throw new Error(`Cache miss on ${area.areaKey}:${spriteType}`);
@@ -79,6 +89,7 @@ export async function addAreaSpriteToContainer(
  */
 export function clearContainerAndCaches() {
   console.info("SpriteCache.clearContainerAndCaches()");
+
   clearPixiContainer();
   clearCaches();
 }
@@ -86,7 +97,6 @@ export function clearContainerAndCaches() {
 function clearCaches() {
   [
     AVAILABLE_SPRITE_CACHE,
-    FIXED_SPRITE_CACHE,
     MAIN_DESTINATION_SPRITE_CACHE,
     MAIN_DESTINATION_SELECTION_SPRITE_CACHE,
     SELECTION_SPRITE_CACHE,
@@ -97,10 +107,13 @@ export function getCacheForSpriteType(whatKind: SpriteType) {
   switch (whatKind) {
     case "available":
       return AVAILABLE_SPRITE_CACHE;
+
     case "selection":
       return SELECTION_SPRITE_CACHE;
+
     case "main-destination-selection":
       return MAIN_DESTINATION_SELECTION_SPRITE_CACHE;
+
     case "main-destination":
     default:
       return MAIN_DESTINATION_SPRITE_CACHE;
@@ -113,9 +126,12 @@ export function forceRender() {
 
 export async function getSpriteFromCache(area: IArea, whatKind: SpriteType) {
   const { areaKey, name: areaName } = area;
+
   const cache = getCacheForSpriteType(whatKind);
+
   if (!cache[areaKey]) {
     const sprite = await GlobalSpriteMap.get(area, whatKind);
+
     if (sprite) {
       cache[areaKey] = sprite;
     } else {
@@ -126,11 +142,13 @@ export async function getSpriteFromCache(area: IArea, whatKind: SpriteType) {
       );
     }
   }
+
   return cache[areaKey];
 }
 
 export function isSpriteInCache(area: IArea, whatKind: SpriteType) {
   const cache = getCacheForSpriteType(whatKind);
+
   return !!cache[area.areaKey];
 }
 
@@ -179,17 +197,22 @@ export async function updateSpriteForArea(area: IStateAwareArea) {
  */
 function addAreaSpritesToContainer(area: IStateAwareArea): Promise<void>[] {
   const promises = [];
+
   if (!isSpriteInCache(area, "available")) {
     promises.push(addAreaSpriteToContainer(area, "available"));
   }
+
   if (!isSpriteInCache(area, "selection")) {
     promises.push(addAreaSpriteToContainer(area, "selection"));
   }
+
   if (!isSpriteInCache(area, "main-destination")) {
     promises.push(addAreaSpriteToContainer(area, "main-destination"));
   }
+
   if (!isSpriteInCache(area, "main-destination-selection")) {
     promises.push(addAreaSpriteToContainer(area, "main-destination-selection"));
   }
+
   return promises;
 }

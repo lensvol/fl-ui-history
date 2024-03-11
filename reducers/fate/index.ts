@@ -1,10 +1,12 @@
+import { FateActions } from "actions/fate";
+
 import * as FateActionTypes from "actiontypes/fate";
 
 import fetchSuccess from "reducers/fate/fetchSuccess";
+import processFateChange from "reducers/fate/processFateChange";
 import purchaseItemSuccess from "reducers/fate/purchaseItemSuccess";
+
 import { FateData, FateSubtab, SUBTAB_GAMEPLAY } from "types/fate";
-import { FateActions } from "actions/fate";
-import processFateChange from "./processFateChange";
 
 export interface IFateState {
   activePurchase: any | null;
@@ -23,7 +25,7 @@ export interface IFateState {
   remainingStoryUnlocks?: number;
 }
 
-export const INITIAL_STATE: IFateState = {
+const INITIAL_STATE: IFateState = {
   activePurchase: null,
   activeSubtab: SUBTAB_GAMEPLAY,
   hasFetched: false,
@@ -59,6 +61,7 @@ export default function fateReducer(
         isFetching: true,
         purchaseComplete: false,
       };
+
     case FateActionTypes.FETCH_FAILURE:
       return {
         ...state,
@@ -80,7 +83,10 @@ export default function fateReducer(
       return purchaseItemSuccess(state, action);
 
     case FateActionTypes.PURCHASE_ITEM_FAILURE:
-      return { ...state, isPurchasing: false };
+      return {
+        ...state,
+        isPurchasing: false,
+      };
 
     case FateActionTypes.OPEN_PURCHASE_DIALOG:
       return {

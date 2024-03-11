@@ -2,11 +2,8 @@ import { showAccountLinkReminder } from "actions/accountLinkReminder";
 
 import { fetchActions } from "actions/actions";
 import extractImages from "actions/app/extractImages";
-// import extractImages from './extractImages';
-// import preloadImages from './preloadImages';
 import preloadImages from "actions/app/preloadImages";
 import { fetch as fetchCards } from "actions/cards";
-import fetchCategories from "actions/categories/fetchCategories";
 import { fetchExchange } from "actions/exchange";
 import { fetch as fetchFate } from "actions/fate";
 import { getSupportingData } from "actions/infoBar";
@@ -54,13 +51,6 @@ export default function performInitialRequests(options = {}) {
     // If not, then just return.
     if (!characterId) {
       return;
-    }
-
-    // Fetch the list of app categories (which may not be available)
-    try {
-      await dispatch(fetchCategories());
-    } catch (error) {
-      console.warn("Failed to fetch categories; continuing bootstrap");
     }
 
     // Fetch myself qualities and optionally prefetch quality images

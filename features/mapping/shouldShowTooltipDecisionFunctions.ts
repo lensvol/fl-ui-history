@@ -3,6 +3,7 @@ import {
   MAP_ROOT_AREA_THE_UNTERZEE,
   MAP_ROOT_AREA_THE_UNTERZEE_V2,
 } from "features/mapping/constants";
+
 import { IArea } from "types/map";
 
 const shouldShowTooltipDecisionFunctions: {
