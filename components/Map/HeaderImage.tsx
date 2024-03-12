@@ -47,7 +47,7 @@ export default function HeaderImage({ area, setting }: Props) {
     };
   }, [area, imageUrl, setting]);
 
-  if (area === undefined || setting === undefined) {
+  if (area === undefined || setting === undefined || !width || !height) {
     return null;
   }
 
