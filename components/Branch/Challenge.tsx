@@ -11,7 +11,8 @@ export interface Props {
 }
 
 export default function Challenge({ data, locked, toggleSecondChance }: Props) {
-  const { description, image, name, targetNumber, bonuses } = data;
+  const { description, baseDescription, image, name, targetNumber, bonuses } =
+    data;
 
   var hasBonus = bonuses && bonuses.length;
   var challengeName = hasBonus
@@ -26,7 +27,19 @@ export default function Challenge({ data, locked, toggleSecondChance }: Props) {
       <div className={classnames("challenge", locked && "challenge--locked")}>
         <div className="challenge__left">
           <div className="js-icon icon icon--circular challenge__icon">
-            <Image icon={image} alt={name} type="small-icon" defaultCursor />
+            <Image
+              icon={image}
+              alt={name}
+              type="small-icon"
+              defaultCursor
+              tooltipData={
+                hasBonus
+                  ? {
+                      description: baseDescription,
+                    }
+                  : undefined
+              }
+            />
           </div>
           {bonuses &&
             bonuses.map((b) => (

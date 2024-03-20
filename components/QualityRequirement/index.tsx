@@ -19,15 +19,7 @@ interface Props {
 export default function QualityRequirement(props: Props) {
   const { data, storylet, tooltipPos, type } = props;
 
-  const {
-    availableAtMessage,
-    category,
-    image,
-    nature,
-    status,
-    tooltip,
-    bonuses,
-  } = data;
+  const { availableAtMessage, category, image, nature, status, tooltip } = data;
 
   const isExcluded = useMemo(
     () => category !== undefined && HIDDEN_CATEGORIES.indexOf(category) >= 0,
@@ -64,25 +56,6 @@ export default function QualityRequirement(props: Props) {
 
   return (
     <>
-      {bonuses &&
-        bonuses.reverse().map((b) => (
-          <>
-            <div className={qreqClass}>
-              <Image
-                icon={b.image}
-                alt={
-                  b.description === undefined ? "" : stripHtml(b.description)
-                }
-                type="small-icon"
-                tooltipData={{
-                  description: b.description,
-                }}
-                tooltipPos={tooltipPos}
-                defaultCursor
-              />
-            </div>
-          </>
-        ))}
       <div className={qreqClass}>
         <Image
           icon={image}
