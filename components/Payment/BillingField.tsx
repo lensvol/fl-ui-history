@@ -18,7 +18,6 @@ export default function BillingField({
 }: BillingFieldProps) {
   return (
     <p>
-      {/* <label htmlFor={name}>{label}</label> */}
       <BillingFieldLabelContainer
         name={name}
         value={value}
@@ -29,6 +28,7 @@ export default function BillingField({
         className="form__control"
         value={value}
         name={name}
+        id={name}
         required={required}
         maxLength={maxlength}
       />

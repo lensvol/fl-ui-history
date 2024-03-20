@@ -15,6 +15,7 @@ export default function AddContactForm({ onSubmit }: Props) {
           </label>
           <Field
             name="userName"
+            id="userName"
             className="form__control"
             placeholder="Add a contact"
             type="text"
@@ -31,41 +32,3 @@ export default function AddContactForm({ onSubmit }: Props) {
     </Formik>
   );
 }
-
-/*
-export default function AddContactForm(props: Props) {
-  const { userInput, onChange, onSubmit } = props;
-  return (
-    <form className="account__add-contact-form">
-      <label htmlFor="user-friends-name" className="u-visually-hidden">Username:</label>
-      <input
-        name="userName"
-        className="form__control"
-        placeholder="Add a contact"
-        type="text"
-        onChange={onChange}
-        value={userInput}
-      />
-      <button
-        className="button button--primary"
-        onClick={onSubmit}
-        disabled={!userInput}
-        type="button"
-      >
-        Add
-      </button>
-    </form>
-  );
-}
-
-AddContactForm.displayName = 'AddContactForm';
-
- */
-
-/*
-AddContactForm.propTypes = {
-  userInput: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-};
- */

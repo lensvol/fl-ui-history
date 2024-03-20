@@ -67,6 +67,7 @@ export function AccountLinkReminderReady({
           <label htmlFor="dont-ask-again">
             Don't remind me about this again on this device
             <input
+              id="dont-ask-again"
               type="checkbox"
               onChange={onChange}
               checked={isChecked}

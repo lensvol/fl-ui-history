@@ -21,6 +21,7 @@ export default function NameForm() {
             className="form__control"
             disabled={isCheckingAvailability}
             name="userName"
+            id="userName"
             type="text"
             onBlur={onBlur}
             onChange={onChange}

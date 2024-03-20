@@ -71,6 +71,7 @@ export default function SignUpWithEmail() {
             <Field
               className="form__control"
               name="userName"
+              id="userName"
               type="text"
               value={values.userName}
               required
@@ -84,6 +85,7 @@ export default function SignUpWithEmail() {
             <Field
               className="form__control"
               name="emailAddress"
+              id="emailAddress"
               type="email"
               value={values.emailAddress}
               required
@@ -97,6 +99,7 @@ export default function SignUpWithEmail() {
             <Field
               className="form__control"
               name="password"
+              id="password"
               type="password"
               value={values.password}
               required

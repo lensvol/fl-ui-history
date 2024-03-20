@@ -400,6 +400,7 @@ export function PersonalDetails({ values }: PersonalDeetsProps) {
         <Field
           autofill="country"
           name="country"
+          id="country"
           value={values.country}
           component={CountrySelect}
         />
@@ -429,7 +430,7 @@ function CurrencySelectionOrLoading({
   return (
     <>
       {/* select currency */}
-      <label htmlFor="currency" style={{ fontWeight: "bold" }}>
+      <label htmlFor="currency-code" style={{ fontWeight: "bold" }}>
         Currency
       </label>
       <CurrencySelector value={value} onChange={onSelect} />

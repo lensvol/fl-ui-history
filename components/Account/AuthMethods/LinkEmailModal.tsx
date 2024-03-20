@@ -92,6 +92,7 @@ export default function LinkEmailModal({
                     <Field
                       className="form__control"
                       name="emailAddress"
+                      id="emailAddress"
                       value={values.emailAddress}
                       validate={validateRequired}
                     />
@@ -106,6 +107,7 @@ export default function LinkEmailModal({
                       className="form__control"
                       type="password"
                       name="password"
+                      id="password"
                       value={values.password}
                       validate={validateRequired}
                     />

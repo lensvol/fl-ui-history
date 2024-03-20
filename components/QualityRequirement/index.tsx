@@ -22,11 +22,11 @@ export default function QualityRequirement(props: Props) {
   const {
     availableAtMessage,
     category,
-    // description,
     image,
     nature,
     status,
     tooltip,
+    bonuses,
   } = data;
 
   const isExcluded = useMemo(
@@ -63,16 +63,37 @@ export default function QualityRequirement(props: Props) {
   }
 
   return (
-    <div className={qreqClass}>
-      <Image
-        icon={image}
-        alt={tooltip === undefined ? "" : stripHtml(tooltip)}
-        type="small-icon"
-        tooltipData={tooltipData}
-        tooltipPos={tooltipPos}
-        defaultCursor
-      />
-    </div>
+    <>
+      {bonuses &&
+        bonuses.reverse().map((b) => (
+          <>
+            <div className={qreqClass}>
+              <Image
+                icon={b.image}
+                alt={
+                  b.description === undefined ? "" : stripHtml(b.description)
+                }
+                type="small-icon"
+                tooltipData={{
+                  description: b.description,
+                }}
+                tooltipPos={tooltipPos}
+                defaultCursor
+              />
+            </div>
+          </>
+        ))}
+      <div className={qreqClass}>
+        <Image
+          icon={image}
+          alt={tooltip === undefined ? "" : stripHtml(tooltip)}
+          type="small-icon"
+          tooltipData={tooltipData}
+          tooltipPos={tooltipPos}
+          defaultCursor
+        />
+      </div>
+    </>
   );
 }
 
