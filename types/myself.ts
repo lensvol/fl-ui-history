@@ -60,7 +60,6 @@ export interface IFetchMyselfResponseData {
   };
   possessions: {
     categories: string[];
-    appearance: string;
     name: string;
     possessions: IQuality[];
   }[];

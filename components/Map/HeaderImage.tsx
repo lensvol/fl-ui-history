@@ -42,8 +42,8 @@ export default function HeaderImage({ area, setting }: Props) {
     image.onload = (evt) => {
       const target = evt.target as HTMLImageElement;
 
-      setWidth(target.width);
-      setHeight(target.height);
+      setWidth(target.width / 2);
+      setHeight(target.height / 2);
     };
   }, [area, imageUrl, setting]);
 

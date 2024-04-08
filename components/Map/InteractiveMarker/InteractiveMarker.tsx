@@ -45,10 +45,16 @@ export function InteractiveMarker({
   setting,
   zoomLevel,
 }: Props) {
-  const shouldShowGateIcon = useMemo(
-    () => area.shouldShowGateIcon && setting?.canTravel,
-    [area, setting]
-  );
+  const shouldShowGateIcon = useMemo(() => {
+    const hideCurrentGateIcon =
+      currentArea.areaKey === area.areaKey &&
+      (setting?.jsonInfo?.hideCurrentGateIcon ?? false);
+
+    return (
+      area.shouldShowGateIcon && setting?.canTravel && !hideCurrentGateIcon
+    );
+  }, [area, currentArea, setting]);
+
   const shouldShowLockIcon = useMemo(
     () => area.shouldShowLockIcon && setting?.canTravel,
     [area, setting]

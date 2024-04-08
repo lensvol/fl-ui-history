@@ -8,10 +8,10 @@ import L from "leaflet";
 
 import { xy } from "features/mapping";
 import {
-  MAP_BASE_URL,
   PLAYER_MARKER_HEIGHT,
   PLAYER_MARKER_WIDTH,
 } from "features/mapping/constants";
+import getPlayerMarkerIconURL from "features/mapping/getPlayerMarkerIconURL";
 
 import getCurrentStateAwareArea from "selectors/map/getCurrentStateAwareArea";
 import getIsCurrentPlayerMarkerArea from "selectors/map/getIsCurrentPlayerMarkerArea";
@@ -26,6 +26,7 @@ function PlayerMarker({ area, avatarImage, isCurrentPlayerMarkerArea }: Props) {
     labelY,
     pinOffsetX,
     pinOffsetY,
+    pinPrefix,
     playerMarkerAnchorX,
     playerMarkerAnchorY,
   } = area;
@@ -52,10 +53,10 @@ function PlayerMarker({ area, avatarImage, isCurrentPlayerMarkerArea }: Props) {
           "map__player-marker",
           isCurrentPlayerMarkerArea && "map__player-marker--visible"
         ),
-        iconUrl: `${MAP_BASE_URL}/playermarkers/${avatarImage}-player-marker.png`,
+        iconUrl: getPlayerMarkerIconURL(pinPrefix, avatarImage),
         iconSize: new L.Point(PLAYER_MARKER_WIDTH, PLAYER_MARKER_HEIGHT),
       }),
-    [avatarImage, iconAnchor, isCurrentPlayerMarkerArea]
+    [avatarImage, iconAnchor, isCurrentPlayerMarkerArea, pinPrefix]
   );
 
   const position = useMemo(() => {

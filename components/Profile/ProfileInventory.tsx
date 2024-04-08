@@ -8,13 +8,9 @@ import categoryNameToHumanReadableCategoryName from "utils/categoryNameToHumanRe
 
 export default function ProfileInventory() {
   const standardEquipped = useAppSelector((s) => s.profile.standardEquipped);
-  const expandedEquipped = useAppSelector((s) => s.profile.expandedEquipped);
 
   const allPossessions = useMemo(() => {
-    const unsortedPossessions = [
-      ...(standardEquipped?.possessions ?? []),
-      ...(expandedEquipped?.possessions ?? []),
-    ];
+    const unsortedPossessions = [...(standardEquipped?.possessions ?? [])];
 
     const dict: { [x: string]: IQuality | undefined } = {};
 
@@ -23,7 +19,7 @@ export default function ProfileInventory() {
     });
 
     return dict;
-  }, [standardEquipped, expandedEquipped]);
+  }, [standardEquipped]);
 
   var clothing = allPossessions["Clothing"];
   var hat = allPossessions["Hat"];

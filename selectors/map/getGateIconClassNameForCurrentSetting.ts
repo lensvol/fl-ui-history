@@ -19,7 +19,8 @@ const outputFn = (
     "interactive-marker__gate-icon",
     selected && "interactive-marker__gate-icon--selected",
     (isUnterzeePlanningSetting(setting) || isUnterzeeSetting(setting)) &&
-      "interactive-marker__gate-icon--unterzee"
+      (setting?.jsonInfo?.gateIconStyle ??
+        "interactive-marker__gate-icon--unterzee")
   );
 
 export default createSelector(getCurrentSetting, getIsSelected, outputFn);

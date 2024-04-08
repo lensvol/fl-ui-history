@@ -14,7 +14,6 @@ export type FetchProfileResponse = {
   currentArea: AreaWithNestedJsonInfo;
   profileCharacter: IProfileCharacter;
   standardEquippedPossessions: { possessions: IQuality[] };
-  expandedEquippedPossessions: { possessions: IQuality[] };
   profileName?: string;
   profileDescription?: string;
   profileBanner?: string;

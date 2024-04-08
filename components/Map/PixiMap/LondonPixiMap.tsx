@@ -354,7 +354,6 @@ export function LondonPixiMap(props: Props) {
         zoomLevel={zoomLevel}
       />
 
-      {/* <PlayerMarkerLayer /> */}
       <PlayerMarkers />
 
       <ModalTooltip

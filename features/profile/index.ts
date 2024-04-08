@@ -18,7 +18,6 @@ export interface IProfileState {
   characterName: string | undefined;
   currentArea: AreaWithNestedJsonInfo | undefined;
   description: string | undefined;
-  expandedEquipped: { possessions: IQuality[] } | undefined;
   isFetching: boolean;
   isLoggedInUsersProfile: boolean;
   isSharing: boolean;
@@ -45,7 +44,6 @@ const initialState: IProfileState = {
   currentArea: undefined,
   profileCharacter: undefined,
   standardEquipped: undefined,
-  expandedEquipped: undefined,
   mantelpieceItem: undefined,
   scrapbookStatus: undefined,
   sharedContent: [],
@@ -240,7 +238,6 @@ function onFetchProfileFulfilled(
   const {
     characterName,
     currentArea,
-    expandedEquippedPossessions,
     isLoggedInUsersProfile,
     profileCharacter,
     standardEquippedPossessions,
@@ -254,7 +251,6 @@ function onFetchProfileFulfilled(
 
   state.characterName = characterName;
   state.currentArea = currentArea;
-  state.expandedEquipped = expandedEquippedPossessions;
   state.isLoggedInUsersProfile = isLoggedInUsersProfile;
   state.profileCharacter = profileCharacter;
   state.standardEquipped = standardEquippedPossessions;
