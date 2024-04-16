@@ -42,6 +42,9 @@ export default function ProfileInventoryItem({
       : "profile__inventory-item-image"
   );
 
+  const isSpacer =
+    possession === undefined && slotCategory === "" && slotDescription === "";
+
   const dispatch = useDispatch();
 
   const onClickEmptySlot = useCallback(
@@ -66,7 +69,9 @@ export default function ProfileInventoryItem({
           isLarge ? "profile__inventory-item-large" : "profile__inventory-item"
         )}
       >
-        {possession ? (
+        {isSpacer ? (
+          ""
+        ) : possession ? (
           <Image
             className={imageClass}
             icon={possession.image ?? "black"}
