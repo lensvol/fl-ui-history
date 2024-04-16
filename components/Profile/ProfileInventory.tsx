@@ -78,7 +78,7 @@ export default function ProfileInventory() {
             slotCategory="Luggage"
             slotDescription={
               "Why, did you think you were carrying all this stuff in your pockets? " +
-              "Luggage items are found throughout Fallen London, including in the Bazaar."
+              "Luggage items are found throughout Fallen London, including in the bazaar side-streets."
             }
           />
           <ProfileInventoryItem
@@ -231,7 +231,7 @@ export default function ProfileInventory() {
             slotDescription={
               "A conveyance through the upper airs of the Neath. " +
               "These can be obtained by following the Firmament storyline, " +
-              "which opens by drawing a card in London after gaining access to Station VIII through the Railway."
+              "which opens by drawing a card in London after gaining access to Ealing Gardens through the Railway."
             }
           />
           <div className="profile__inventory--cluster">
