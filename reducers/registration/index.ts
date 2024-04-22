@@ -1,6 +1,5 @@
 import * as RegistrationActionTypes from "actiontypes/registration";
 
-import flattenAvatars from "reducers/registration/flattenAvatars";
 import { IRegistrationState } from "types/registration";
 
 /**
@@ -34,7 +33,7 @@ export default function reducer(state = INITIAL_STATE, action: any) {
     case RegistrationActionTypes.FETCH_REGISTER_SUCCESS:
       return {
         ...state,
-        avatars: flattenAvatars(payload),
+        avatars: payload.indistinctAvatars,
         isFetching: false,
       };
 

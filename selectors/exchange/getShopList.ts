@@ -7,8 +7,8 @@ const outputFunc = (shops: ReturnType<typeof getShops>) => {
   return [...Object.keys(shops)]
     .map((k) => shops[k])
     .sort(
-      (a: { id: number | null }, b: { id: number | null }) =>
-        (a.id ?? 0) - (b.id ?? 0)
+      (a: { ordering: number | null }, b: { ordering: number | null }) =>
+        (a.ordering ?? -1) - (b.ordering ?? -1)
     );
 };
 

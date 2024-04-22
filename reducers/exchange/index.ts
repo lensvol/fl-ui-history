@@ -28,6 +28,7 @@ const INITIAL_STATE: IExchangeState = {
   shops: {
     null: {
       id: null,
+      ordering: null,
       name: "Sell my things",
       items: [],
     },

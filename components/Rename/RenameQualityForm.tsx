@@ -20,7 +20,7 @@ import { renameQuality } from "actions/storylet";
 const ERROR_MESSAGE =
   "Names may only contain letters, numbers, spaces, and apostrophes.";
 
-const SIMPLIFIED_REGEX_STRING = "[A-Za-zÀ-ÖØ-öø-ÿ0-9 ']*";
+const SIMPLIFIED_REGEX_STRING = "[A-Za-zÀ-ÖØ-öø-ÿ0-9 ',]*";
 
 function NameableQualityForm({
   branchId,
