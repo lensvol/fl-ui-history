@@ -21,10 +21,9 @@ class ActionCounterContainer extends Component<Props> {
       onOpenActionRefreshModal,
       onOpenEnhancedRefreshModal,
       remainingActionRefreshes,
-      supportsEnhancedEF,
     } = this.props;
 
-    if (supportsEnhancedEF && remainingActionRefreshes > 0) {
+    if (remainingActionRefreshes > 0) {
       return onOpenEnhancedRefreshModal();
     }
 
@@ -36,8 +35,7 @@ class ActionCounterContainer extends Component<Props> {
   };
 
   render = () => {
-    const { remainingTime, remainingActionRefreshes, supportsEnhancedEF } =
-      this.props;
+    const { remainingTime, remainingActionRefreshes } = this.props;
 
     const duration = moment.duration(remainingTime);
     // TS complains that duration.format is not a function, which it isn't in vanilla moment.js,
@@ -62,9 +60,7 @@ class ActionCounterContainer extends Component<Props> {
           <ActionCounter
             message={message}
             onClick={this.handleClick}
-            remainingActionRefreshes={
-              supportsEnhancedEF ? remainingActionRefreshes : 0
-            }
+            remainingActionRefreshes={remainingActionRefreshes}
           />
         </div>
       </Fragment>
@@ -80,14 +76,9 @@ const mapStateToProps = (state: IAppState) => ({
     state.settings.subscriptions.remainingActionRefreshes ?? 0,
 });
 
-interface OwnProps {
-  supportsEnhancedEF: boolean;
-}
-
 type Props = ReturnType<typeof mapStateToProps> &
   RouteComponentProps &
-  IActionRefreshContextValues &
-  OwnProps;
+  IActionRefreshContextValues;
 
 export default connect(mapStateToProps)(
   withActionRefreshContext(withRouter(ActionCounterContainer))

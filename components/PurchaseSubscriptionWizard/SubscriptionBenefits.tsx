@@ -1,30 +1,15 @@
 import React from "react";
 
-import { useFeature } from "flagged";
-
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
-
 interface Props {
   orientation: "horizontal" | "vertical";
 }
 
 export default function SubscriptionBenefits({ orientation }: Props) {
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
   const isHorizontal = orientation === "horizontal";
   const wrapperClassName = isHorizontal ? "ef-benefits" : "ef-subscribe";
   const allSubscribersClassName = isHorizontal
     ? "inner-tab--with-border"
     : "ef-all-subscriber-benefits";
-
-  if (!supportsEnhancedEF) {
-    return (
-      <p>
-        Exceptional friends receive a substantial story every month, double the
-        actions (up to 40 at once), more cards to draw in their opportunity deck
-        (10 instead of 6) and access to the House of Chimes.
-      </p>
-    );
-  }
 
   return (
     <div className={wrapperClassName}>

@@ -222,6 +222,7 @@ export default function PaymentStuff({
           email: values.email,
           amount,
           billingAddress: formValuesToBillingAddress(values),
+          collectDeviceData: true,
         },
       };
 

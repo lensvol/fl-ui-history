@@ -160,28 +160,28 @@ function StaticContent({ history }: RouteComponentProps) {
           type="book"
           title="Blog"
           onClick={() =>
-            window.open("http://www.failbettergames.com/news/", "_blank")
+            window.open("https://www.failbettergames.com/news/", "_blank")
           }
         />
         <Buttonlet
           type="twitter"
           title="Twitter"
           onClick={() =>
-            window.open("https://www.twitter.com/echobazaar", "_blank")
+            window.open("https://twitter.com/failbettergames", "_blank")
           }
         />
         <Buttonlet
           type="facebook"
           title="Facebook"
           onClick={() =>
-            window.open("http://www.facebook.com/fallenlondon", "_blank")
+            window.open("https://www.facebook.com/fallenlondon", "_blank")
           }
         />
         <Buttonlet
           type="quote-left"
           title="Forums"
           onClick={() =>
-            window.open("http://community.failbettergames.com", "_blank")
+            window.open("https://community.failbettergames.com", "_blank")
           }
         />
       </div>

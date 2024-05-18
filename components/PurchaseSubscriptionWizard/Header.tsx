@@ -1,6 +1,4 @@
-import React, { CSSProperties } from "react";
-
-import { useFeature } from "flagged";
+import React from "react";
 
 import {
   isRecentlyCancelledSubscription,
@@ -8,8 +6,6 @@ import {
 } from "actions/fate/subscriptions";
 
 import SubscriptionBenefits from "components/PurchaseSubscriptionWizard/SubscriptionBenefits";
-
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
 
 import { PremiumSubscriptionType } from "types/subscription";
 
@@ -19,6 +15,7 @@ interface Props {
   isEnhanced: boolean;
   renewDate?: string;
   subscriptionType?: PremiumSubscriptionType;
+  upgradeAmountString?: string;
 }
 
 export default function Header({
@@ -27,16 +24,8 @@ export default function Header({
   isEnhanced,
   renewDate,
   subscriptionType,
+  upgradeAmountString,
 }: Props) {
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
-  const paragraphStyle: CSSProperties = {
-    padding: "8px 0",
-  };
-
-  if (supportsEnhancedEF) {
-    paragraphStyle.fontStyle = "italic";
-  }
-
   const formattedRenewDate = new Date(renewDate ?? "").toLocaleDateString(
     "en-gb",
     {
@@ -54,25 +43,27 @@ export default function Header({
 
   return (
     <>
-      {supportsEnhancedEF && (
-        <>
-          <h1 className="media__heading heading heading--2 fate-header">
-            Create a New Subscription
-          </h1>
-          {!amountString && <SubscriptionBenefits orientation="vertical" />}
-        </>
-      )}
+      <h1 className="media__heading heading heading--2 fate-header">
+        Create a New Subscription
+      </h1>
+      {!amountString && <SubscriptionBenefits orientation="vertical" />}
 
-      <p style={paragraphStyle}>
+      <p
+        style={{
+          fontStyle: "italic",
+          padding: "8px 0",
+        }}
+      >
         {isCurrentlyRestoringSubscription ? (
           <>
             Your previously cancelled {subscriptionName(subscriptionType)}{" "}
             remains in effect.{" "}
             {subscriptionType === "ExceptionalFriendship" && isEnhanced ? (
               <>
-                You will be charged today to upgrade to an Enhanced Exceptional
-                Friendship. Starting on {formattedRenewDate}, you will be
-                charged {theAmountChosen} to keep it renewed.
+                You will be charged {upgradeAmountString ?? ""} today to upgrade
+                to an Enhanced Exceptional Friendship. Starting on{" "}
+                {formattedRenewDate}, you will be charged {theAmountChosen} to
+                keep it renewed.
               </>
             ) : (
               <>
@@ -85,9 +76,8 @@ export default function Header({
                   </>
                 ) : (
                   <>
-                    Restoring it will renew your{" "}
-                    {supportsEnhancedEF && isEnhanced && "Enhanced"} Exceptional
-                    Friendship on {formattedRenewDate}, and charge{" "}
+                    Restoring it will renew your {isEnhanced && "Enhanced"}{" "}
+                    Exceptional Friendship on {formattedRenewDate}, and charge{" "}
                     {theAmountChosen} to your chosen payment method every month.
                   </>
                 )}
@@ -97,9 +87,8 @@ export default function Header({
         ) : (
           <>
             Creating a subscription will automatically renew your{" "}
-            {supportsEnhancedEF && isEnhanced && "Enhanced"} Exceptional
-            Friendship every month and charge {theAmountChosen} to your chosen
-            payment method.
+            {isEnhanced && "Enhanced"} Exceptional Friendship every month and
+            charge {theAmountChosen} to your chosen payment method.
           </>
         )}
       </p>

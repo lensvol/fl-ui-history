@@ -53,6 +53,15 @@ export default function ProvidePaymentDetails({
     [addOnPrice, currencyIsoCode, price]
   );
 
+  const formattedUpgradePrice = useMemo(
+    () =>
+      new Intl.NumberFormat("en-GB", {
+        currency: currencyIsoCode,
+        style: "currency",
+      }).format(addOnPrice),
+    [addOnPrice, currencyIsoCode]
+  );
+
   const authorization = useMemo(() => clientRequestToken, [clientRequestToken]);
 
   const options: BraintreeWebDropInOptions = useMemo(
@@ -142,6 +151,7 @@ export default function ProvidePaymentDetails({
             isEnhanced={addOnPrice !== 0}
             renewDate={renewDate}
             subscriptionType={subscriptionType}
+            upgradeAmountString={formattedUpgradePrice}
           />
           <BraintreeDropIn
             onInstance={handleInstance}

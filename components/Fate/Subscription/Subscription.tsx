@@ -7,8 +7,6 @@ import { openDialog } from "actions/payment";
 import Loading from "components/Loading";
 import { IAppState } from "types/app";
 import { PremiumSubscriptionType } from "types/subscription";
-import { useFeature } from "flagged";
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
 
 export function Subscription({
@@ -29,36 +27,9 @@ export function Subscription({
     dispatch(openDialog("subscribe"));
   }, [dispatch, onParentClick]);
 
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
-
   // Show spinner while we're loading
   if (!subscriptionType) {
     return <Loading spinner small />;
-  }
-
-  const handleOnClick = hasSubscription
-    ? () => history.push("/account")
-    : onClick;
-
-  if (!supportsEnhancedEF) {
-    return (
-      <p className="buttons">
-        <button
-          type="button"
-          className="button button--secondary"
-          onClick={handleOnClick}
-        >
-          {hasSubscription ? <>Manage Your Subscriptions</> : <>Subscribe</>}
-        </button>
-        <strong>
-          {hasSubscription ? (
-            <>You are already an Exceptional Friend. Thanks for your support.</>
-          ) : (
-            <>Subscribe for just $9 a month</>
-          )}
-        </strong>
-      </p>
-    );
   }
 
   const userDidDowngrade = isDowngradedSubscription(

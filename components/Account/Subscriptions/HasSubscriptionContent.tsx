@@ -1,12 +1,8 @@
 import React, { useEffect, useMemo } from "react";
 import { connect, useDispatch } from "react-redux";
 
-import { useFeature } from "flagged";
-
 import { fetch as fetchSettings } from "actions/settings";
 import { fetch as fetchSubscription } from "actions/subscription";
-
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
 
 import Loading from "components/Loading";
 import SubscriptionComponent from "components/Fate/Subscription/Subscription";
@@ -18,14 +14,11 @@ function HasSubscriptionContent({
   hasSubscription,
   isFetching,
   isFetchingSubscription,
-  isModifying,
   loggedIn,
   onClick,
-  onClickLegacy,
   subscriptionData,
   subscriptionType,
 }: Props) {
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
   const isEnhanced = subscriptionType === "EnhancedExceptionalFriendship";
   const renewDateAsDate = new Date(subscriptionData?.renewDate ?? "");
 
@@ -67,14 +60,10 @@ function HasSubscriptionContent({
   return (
     <div>
       <p>
-        {supportsEnhancedEF ? (
-          <>
-            You currently have {isEnhanced ? <>an enhanced</> : <>a</>}{" "}
-            subscription to Fallen London
-          </>
-        ) : (
-          <>You are currently subscribed to Fallen London</>
-        )}
+        <>
+          You currently have {isEnhanced ? <>an enhanced</> : <>a</>}{" "}
+          subscription to Fallen London
+        </>
         {subscriptionData?.subscriptionPastDue && (
           <>, but there was a problem with your latest payment</>
         )}
@@ -133,7 +122,7 @@ function HasSubscriptionContent({
           </div>
         </div>
       </div>
-      {supportsEnhancedEF && isEnhanced && (
+      {isEnhanced && (
         <>
           <p>
             You can cancel or downgrade your subscription at any time. By
@@ -155,7 +144,7 @@ function HasSubscriptionContent({
           </p>
         </>
       )}
-      {supportsEnhancedEF && !isEnhanced && (
+      {!isEnhanced && (
         <>
           <p>
             You can cancel your subscription at any time. By cancelling, you
@@ -167,33 +156,7 @@ function HasSubscriptionContent({
           </p>
         </>
       )}
-      {!supportsEnhancedEF && (
-        <>
-          <p>
-            You can cancel your subscription at any time. By cancelling your
-            subscription, you will no longer have a second action candle,
-            expanded opportunity deck, three additional outfits, or access to
-            the House of Chimes. You will no longer receive a new Exceptional
-            Story every month. You will still be able to spend Memories of a
-            Tale in Mr Chimes' Lost &amp; Found.
-          </p>
-        </>
-      )}
-      {supportsEnhancedEF ? (
-        <>
-          <SubscriptionComponent onClick={onClick} />
-        </>
-      ) : (
-        <>
-          <button
-            className="button button--primary button--no-margin"
-            onClick={onClickLegacy}
-            type="button"
-          >
-            {isModifying ? "cancelling..." : "Cancel subscription"}
-          </button>
-        </>
-      )}
+      <SubscriptionComponent onClick={onClick} />
     </div>
   );
 }
@@ -207,18 +170,13 @@ const mapStateToProps = ({
     },
     isFetching,
   },
-  subscription: {
-    data: subscriptionData,
-    isFetching: isFetchingSubscription,
-    isModifying,
-  },
+  subscription: { data: subscriptionData, isFetching: isFetchingSubscription },
   user: { loggedIn },
 }: IAppState) => ({
   data,
   hasSubscription,
   isFetching,
   isFetchingSubscription,
-  isModifying,
   loggedIn,
   subscriptionData,
   subscriptionType,
@@ -226,7 +184,6 @@ const mapStateToProps = ({
 
 type Props = ReturnType<typeof mapStateToProps> & {
   onClick: () => void;
-  onClickLegacy: () => void;
 };
 
 export default connect(mapStateToProps)(HasSubscriptionContent);

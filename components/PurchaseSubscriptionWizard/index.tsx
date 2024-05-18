@@ -26,8 +26,6 @@ import SelectNewPlan from "./SelectNewPlan";
 import ServerErrorMessage from "./ServerErrorMessage";
 
 import { PremiumSubscriptionType } from "types/subscription";
-import { useFeature } from "flagged";
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
 
 export enum PurchaseSubscriptionWizardStep {
   /* eslint-disable no-shadow */
@@ -61,10 +59,7 @@ export default function PurchaseSubscriptionWizard({
 }: Props) {
   const dispatch = useDispatch();
 
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
-  const isModifyingSubscription = supportsEnhancedEF && hasSubscription;
-
-  const firstStep = isModifyingSubscription
+  const firstStep = hasSubscription
     ? PurchaseSubscriptionWizardStep.SelectNewPlan
     : PurchaseSubscriptionWizardStep.SelectCurrency;
 

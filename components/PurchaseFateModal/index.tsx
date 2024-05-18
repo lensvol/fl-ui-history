@@ -1,6 +1,5 @@
 import Loading from "components/Loading";
 import Modal, { Props as ModalProps } from "components/Modal";
-import { PaymentStep } from "components/Payment";
 import PaymentStuff from "components/Payment/PaymentStuff";
 import PurchaseFateFailure from "components/Payment/PurchaseFateFailure";
 import PurchaseFateSuccess from "components/Payment/PurchaseFateSuccess";
@@ -18,6 +17,13 @@ import { fetchActions } from "actions/actions";
 type Props = ModalProps & {
   onRequestClose: (_args?: any) => void;
 };
+
+enum PaymentStep {
+  Details,
+  Processing,
+  Failure,
+  Success,
+}
 
 export default function PurchaseFateModal({
   disableTouchEvents,

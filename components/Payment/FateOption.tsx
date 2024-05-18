@@ -83,14 +83,3 @@ export default function FateOption({
 }
 
 FateOption.displayName = "FateOption";
-
-/*
-FateOption.propTypes = {
-  data: PropTypes.shape({}).isRequired,
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  isBreakdownVisible: PropTypes.bool.isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  onSelect: PropTypes.func.isRequired,
-};
-
- */

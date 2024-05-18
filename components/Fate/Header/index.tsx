@@ -8,8 +8,6 @@ import ExceptionalStoryTrailerSmUp from "./ExceptionalStoryTrailerSmUp";
 import ExceptionalStoryTrailerXsDown from "./ExceptionalStoryTrailerXsDown";
 import { Props as TrailerProps } from "./props";
 import SubscriptionBenefits from "components/PurchaseSubscriptionWizard/SubscriptionBenefits";
-import { useFeature } from "flagged";
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
 import StoryletMenu from "../Subscription/StoryletMenu";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
 
@@ -26,17 +24,15 @@ export default function Header({
   renewDate,
   subscriptionType,
 }: Props) {
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
   const userDidDowngrade = isDowngradedSubscription(
     hasSubscription,
     subscriptionType
   );
 
   const heading =
-    supportsEnhancedEF && subscriptionType === "EnhancedExceptionalFriendship"
+    subscriptionType === "EnhancedExceptionalFriendship"
       ? ""
-      : supportsEnhancedEF &&
-          (userDidDowngrade || subscriptionType === "ExceptionalFriendship")
+      : userDidDowngrade || subscriptionType === "ExceptionalFriendship"
         ? "Become an Enhanced Exceptional Friend"
         : "Become an Exceptional Friend of the Bazaar";
 

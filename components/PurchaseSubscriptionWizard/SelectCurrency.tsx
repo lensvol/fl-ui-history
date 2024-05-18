@@ -10,8 +10,6 @@ import {
 import Loading from "components/Loading";
 import { Formik, Form } from "formik";
 import Header from "./Header";
-import { useFeature } from "flagged";
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
 
 import { PremiumSubscriptionType } from "types/subscription";
 
@@ -42,9 +40,11 @@ export default function SelectCurrency({
     IBraintreeAddOn | undefined
   >(undefined);
   const [isEnhanced, setIsEnhanced] = useState(false);
+  const [formattedUpgradePrice, setFormattedUpgradePrice] = useState<
+    string | undefined
+  >(undefined);
 
   const isMounted = useIsMounted();
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
 
   useEffect(() => {
     fetchPlans();
@@ -74,21 +74,6 @@ export default function SelectCurrency({
 
   const onCurrencySelect = useCallback(
     (evt: ChangeEvent<HTMLSelectElement>) => {
-      if (!supportsEnhancedEF) {
-        const planId = evt.target.value;
-        const plan = plans.find((p) => p.id === planId);
-
-        if (!plan) {
-          onServerError(`Couldn't find a plan with ID '${planId}'`);
-
-          return;
-        }
-
-        setSelectedPlan(plan);
-
-        return;
-      }
-
       const currencyIsoCode = evt.target.value;
       const plan = plans.find((p) => p.currencyIsoCode === currencyIsoCode);
 
@@ -103,16 +88,13 @@ export default function SelectCurrency({
       setSelectedPlan(plan);
       setSelectedAddOn(undefined);
       setIsEnhanced(false);
+      setFormattedUpgradePrice(undefined);
     },
-    [plans, onServerError, supportsEnhancedEF]
+    [plans, onServerError]
   );
 
   const onPlanSelect = useCallback(
     (evt: ChangeEvent<HTMLSelectElement>) => {
-      if (!supportsEnhancedEF) {
-        return;
-      }
-
       const planId = evt.target.value.split("_")[0];
       const plan = plans.find((p) => p.id === planId);
 
@@ -129,8 +111,15 @@ export default function SelectCurrency({
 
       setSelectedAddOn(addOn);
       setIsEnhanced(!!addOn);
+
+      const addOnPrice = new Intl.NumberFormat("en-GB", {
+        currency: plan.currencyIsoCode,
+        style: "currency",
+      }).format(addOn?.amount ?? 0);
+
+      setFormattedUpgradePrice(addOnPrice);
     },
-    [plans, onServerError, supportsEnhancedEF]
+    [plans, onServerError]
   );
 
   const onSubmit = useCallback(async () => {
@@ -153,78 +142,6 @@ export default function SelectCurrency({
     return <Loading spinner />;
   }
 
-  if (!supportsEnhancedEF) {
-    return (
-      <div>
-        <Header
-          hasSubscription={hasSubscription}
-          isEnhanced={false}
-          renewDate={renewDate}
-          subscriptionType={subscriptionType}
-        />
-        <Formik
-          initialValues={{
-            planId: undefined,
-          }}
-          onSubmit={onSubmit}
-        >
-          {() => (
-            <Form
-              className="subscription-panel"
-              method="post"
-              style={{
-                width: "100%",
-              }}
-            >
-              <div
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <label htmlFor="planId">Choose currency: </label>
-                <select
-                  name="planId"
-                  id="planId"
-                  style={{
-                    border: "2px solid #666",
-                    borderRadius: 2,
-                    marginLeft: 8,
-                  }}
-                  onChange={onCurrencySelect}
-                  value={selectedPlan?.id}
-                >
-                  {plans.map((plan) => (
-                    <option key={plan.id} value={plan.id}>
-                      {plan.price} {plan.currencyIsoCode}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="buttons buttons--no-squash">
-                <button
-                  className="button button--secondary"
-                  disabled={loading || submitting || !selectedPlan}
-                  type="submit"
-                >
-                  {submitting ? <Loading spinner small /> : <span>Next</span>}
-                </button>
-                <button
-                  className="button button--primary"
-                  type="button"
-                  onClick={onCancel}
-                  disabled={submitting}
-                >
-                  Cancel
-                </button>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    );
-  }
-
   return (
     <div>
       <Header
@@ -232,6 +149,7 @@ export default function SelectCurrency({
         isEnhanced={isEnhanced}
         renewDate={renewDate}
         subscriptionType={subscriptionType}
+        upgradeAmountString={formattedUpgradePrice}
       />
       <Formik
         initialValues={{

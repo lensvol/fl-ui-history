@@ -9,8 +9,6 @@ import { Feature } from "flagged";
 import PlayerEchoes from "./PlayerEchoes";
 import PlayerFate from "./PlayerFate";
 import PlayerScrip from "./PlayerScrip";
-import { useFeature } from "flagged";
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
 
 const mapStateToProps = (state: IAppState) => ({
   actions: state.actions,
@@ -19,8 +17,6 @@ const mapStateToProps = (state: IAppState) => ({
 type Props = ReturnType<typeof mapStateToProps>;
 
 export function PlayerStats({ actions }: Props) {
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
-
   if (!actions) {
     return <Loading spinner />;
   }
@@ -28,7 +24,7 @@ export function PlayerStats({ actions }: Props) {
   return (
     <ul className="items items--list">
       <li className="item">
-        <ActionCounter supportsEnhancedEF={!!supportsEnhancedEF} />
+        <ActionCounter />
       </li>
       <PlayerFate />
       <PlayerEchoes />

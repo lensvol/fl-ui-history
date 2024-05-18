@@ -9,8 +9,6 @@ import Image from "components/Image";
 import getPremiumDaysRemaining from "selectors/fate/getPremiumDaysRemaining";
 import { IAppState } from "types/app";
 import { UIRestriction } from "types/myself";
-import { FEATURE_ENHANCED_EF } from "features/feature-flags";
-import { useFeature } from "flagged";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
 
 const mapStateToProps = (state: IAppState) => {
@@ -51,7 +49,6 @@ function PlayerFate({
   subscriptionType,
 }: Props) {
   const dispatch = useDispatch();
-  const supportsEnhancedEF = useFeature(FEATURE_ENHANCED_EF);
 
   const handleClick = useCallback(() => {
     const actionsRemaining = actions;
@@ -80,20 +77,15 @@ function PlayerFate({
               {premiumDaysRemaining} day{premiumDaysRemaining !== 1 && "s"} left
               of Exceptional Friendship
             </p>
-
-            {supportsEnhancedEF && (
-              <>
-                <p>
-                  <Link
-                    onClick={closeSidebar}
-                    to="/fate"
-                    className="enhanced-text--inverse"
-                  >
-                    Enhance your membership for more benefits!
-                  </Link>
-                </p>
-              </>
-            )}
+            <p>
+              <Link
+                onClick={closeSidebar}
+                to="/fate"
+                className="enhanced-text--inverse"
+              >
+                Enhance your membership for more benefits!
+              </Link>
+            </p>
           </div>
         </>
       );
@@ -105,19 +97,15 @@ function PlayerFate({
     ) {
       return (
         <>
-          {supportsEnhancedEF && (
-            <>
-              <div>
-                <p>
-                  {premiumDaysRemaining} day{premiumDaysRemaining !== 1 && "s"}{" "}
-                  left of{" "}
-                  <span className="enhanced-text--inverse">
-                    Enhanced Exceptional Friendship
-                  </span>
-                </p>
-              </div>
-            </>
-          )}
+          <div>
+            <p>
+              {premiumDaysRemaining} day{premiumDaysRemaining !== 1 && "s"} left
+              of{" "}
+              <span className="enhanced-text--inverse">
+                Enhanced Exceptional Friendship
+              </span>
+            </p>
+          </div>
         </>
       );
     }
@@ -140,12 +128,7 @@ function PlayerFate({
         </div>
       </>
     );
-  }, [
-    hasSubscription,
-    premiumDaysRemaining,
-    subscriptionType,
-    supportsEnhancedEF,
-  ]);
+  }, [hasSubscription, premiumDaysRemaining, subscriptionType]);
 
   if (!showFateUI) {
     return null;

@@ -7,7 +7,6 @@ import { fetch as fetchSettings } from "actions/settings";
 import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
 
 import { IAppState } from "types/app";
-import ConfirmationModal from "./ConfirmationModal";
 
 function Subscriptions({
   data,
@@ -15,7 +14,6 @@ function Subscriptions({
   renewDate,
   subscriptionType,
 }: Props) {
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -32,13 +30,8 @@ function Subscriptions({
         <h2 className="heading heading--2">Subscriptions</h2>
         <HasSubscriptionContent
           onClick={() => setIsSubscriptionModalOpen(true)}
-          onClickLegacy={() => setIsConfirmationModalOpen(true)}
         />
       </div>
-      <ConfirmationModal
-        isOpen={isConfirmationModalOpen}
-        onRequestClose={() => setIsConfirmationModalOpen(false)}
-      />
       <PurchaseSubscriptionModal
         hasSubscription={hasBraintreeSubscription}
         isOpen={isSubscriptionModalOpen}
