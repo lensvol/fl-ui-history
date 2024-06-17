@@ -9,10 +9,16 @@ const { sidebarQualityCategories } = Config;
 const getMyself = ({ myself }: IAppState) => myself;
 
 const outputFunc = (myself: IMyselfState) => {
-  const { qualities } = myself;
+  const qualities = myself.qualities;
+  const settingId = myself.character.setting?.id;
+
   return [...qualities]
     .filter((q) => sidebarQualityCategories.indexOf(q.category) >= 0)
     .filter((q) => q.category !== "Skills" || !!q.cap)
+    .filter(
+      (q) =>
+        q.sidebarSettingId === undefined || q.sidebarSettingId === settingId
+    )
     .sort(compareByCategoryOrdering);
 };
 

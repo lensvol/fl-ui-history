@@ -1,12 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import SidebarQuality from "components/SidebarQualities/SidebarQuality";
+import { buildTooltipData } from "components/SidebarQualities/utils";
+
 import getSidebarQualities from "selectors/myself/getSidebarQualities";
 
 import { IAppState } from "types/app";
 import { IQuality } from "types/qualities";
-import SidebarQuality from "./SidebarQuality";
-import { buildTooltipData } from "./utils";
 
 export function SidebarQualities({ qualities }: Props) {
   return (
@@ -17,7 +18,10 @@ export function SidebarQualities({ qualities }: Props) {
           <SidebarQuality
             key={q.id}
             {...q}
-            tooltipData={buildTooltipData({ ...q, useCap: true })}
+            tooltipData={buildTooltipData({
+              ...q,
+              useCap: true,
+            })}
           />
         ))}
     </ul>
@@ -29,6 +33,7 @@ SidebarQualities.displayName = "SidebarQualities";
 const mapStateToProps = (state: IAppState) => ({
   qualities: getSidebarQualities(state),
 });
+
 type Props = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(SidebarQualities);

@@ -67,6 +67,7 @@ export default function ProvidePaymentDetails({
   const options: BraintreeWebDropInOptions = useMemo(
     () => ({
       authorization,
+      locale: "en_GB",
       threeDSecure: true,
       version: 2,
       paypal: {

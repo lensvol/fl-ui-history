@@ -5,6 +5,7 @@ export default function getDefaultPayPalOptions(
 ): Omit<Options, "container"> {
   return {
     authorization,
+    locale: "en_GB",
     paypal: {
       flow: "vault",
       buttonStyle: {
@@ -20,6 +21,7 @@ export default function getDefaultPayPalOptions(
     vaultManager: true,
     card: {
       vault: {
+        // Unlike with subscriptions, Fate purchasers should have the option to decline vaulting of cards
         allowVaultCardOverride: true,
       },
     },
