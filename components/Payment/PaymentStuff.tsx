@@ -125,7 +125,7 @@ export default function PaymentStuff({
       return undefined;
     }
 
-    return getDefaultPayPalOptions(nexOptions.clientRequestToken);
+    return getDefaultPayPalOptions(nexOptions);
   }, [nexOptions]);
 
   const fetchNexOptions = useCallback(
@@ -189,9 +189,43 @@ export default function PaymentStuff({
     [fetchNexOptions, isMounted]
   );
 
-  const handleSelectPackage = useCallback((quantity: NexQuantity) => {
-    setSelectedPackage(quantity);
-  }, []);
+  const handleSelectPackage = useCallback(
+    (quantity: NexQuantity) => {
+      setSelectedPackage(quantity);
+
+      const price = (quantity.currencyAmount + quantity.valueAddedTax).toFixed(
+        2
+      );
+      const currencyCode = quantity.currency.code;
+
+      const applePayPaymentRequest = {
+        total: {
+          type: "final",
+          label: "Failbetter Games",
+          amount: price,
+        },
+        currencyCode: currencyCode,
+      };
+
+      const googlePayTransactionInfo = {
+        currencyCode: currencyCode,
+        totalPrice: price,
+        totalPriceStatus: "FINAL",
+      };
+
+      dropInInstance?.updateConfiguration(
+        "applePay",
+        "paymentRequest",
+        applePayPaymentRequest
+      );
+      dropInInstance?.updateConfiguration(
+        "googlePay",
+        "transactionInfo",
+        googlePayTransactionInfo
+      );
+    },
+    [dropInInstance]
+  );
 
   const handleFormSubmit = useCallback(
     async (values: FormValues, helpers: FormikHelpers<FormValues>) => {

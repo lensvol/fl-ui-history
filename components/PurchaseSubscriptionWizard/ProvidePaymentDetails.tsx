@@ -12,6 +12,7 @@ import {
 import BraintreeDropIn, {
   BraintreeWebDropInOptions,
 } from "components/Payment/BraintreeWebDropIn";
+import Config from "configuration";
 import {
   IBraintreePlanWithClientRequestToken,
   PaymentMethodType,
@@ -73,8 +74,50 @@ export default function ProvidePaymentDetails({
       paypal: {
         flow: "vault",
       },
+      applePay: {
+        buttonStyle: "black",
+        displayName: "Failbetter Games",
+        paymentRequest: {
+          total: {
+            type: "final",
+            label: "Failbetter Games",
+            amount: (price + addOnPrice).toFixed(2),
+            paymentTiming: "recurring",
+          },
+          currencyCode: currencyIsoCode,
+        },
+      },
+      googlePay: {
+        merchantId: Config.googleMerchantId,
+        googlePayVersion: 2,
+        transactionInfo: {
+          currencyCode: currencyIsoCode,
+          totalPrice: (price + addOnPrice).toFixed(2),
+          totalPriceStatus: "FINAL",
+        },
+        button: {
+          onClick: (_event: Event) => {
+            // custom event handler when user clicks Google Pay button
+            // no-op for now
+          },
+          buttonType: "subscribe", // "Subscribe with G Pay"
+          buttonSizeMode: "fill",
+          allowedPaymentMethods: [
+            {
+              type: "CARD", // Cannot use Google Pay + PayPal for subscriptions
+              parameters: {
+                allowedAuthMethods: [
+                  "CRYPTOGRAM_3DS", // ThreeDSecure
+                ],
+                allowedCardNetworks: ["DISCOVER", "MASTERCARD", "VISA"],
+                allowPrepaidCards: false, // avoid for subscriptions
+              },
+            },
+          ],
+        },
+      },
     }),
-    [authorization]
+    [addOnPrice, authorization, currencyIsoCode, price]
   );
 
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<
