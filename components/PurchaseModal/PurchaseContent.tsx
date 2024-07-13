@@ -126,7 +126,7 @@ function PurchaseContentSuccess({
       isSuccess
       isStoryUnlock={isEnhancedStoryUnlock}
       remainingStoryUnlocks={
-        isEnhancedStoryReset ? remainingStoryUnlocks ?? 0 : undefined
+        isEnhancedStoryReset ? (remainingStoryUnlocks ?? 0) : undefined
       }
     />
   );

@@ -54,7 +54,7 @@ export default function PurchaseResult({
             <>
               <h2 className="heading heading--2 heading--inverse media__heading">
                 {isPurchase && "Purchase"}{" "}
-                {isSuccess ?? false ? "Success!" : "Failure."}
+                {(isSuccess ?? false) ? "Success!" : "Failure."}
               </h2>
               <hr />
             </>

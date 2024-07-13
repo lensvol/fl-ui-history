@@ -15,7 +15,7 @@ const mapStateToProps = ({
   isFetching,
   pennies: isFetching
     ? 0
-    : qualities.find(({ name }) => name === "Penny")?.level ?? 0,
+    : (qualities.find(({ name }) => name === "Penny")?.level ?? 0),
   showBazaarUI: !uiRestrictions?.find(
     (restriction) => restriction === UIRestriction.EchoBazaar
   ),
