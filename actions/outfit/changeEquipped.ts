@@ -1,4 +1,3 @@
-import saveCurrentOutfit from "actions/outfit/saveCurrentOutfit";
 import { ActionCreator } from "redux";
 
 import { fetchMyself } from "actions/myself";
@@ -24,10 +23,6 @@ export type EquipQualitySuccess = {
   payload: ChangeEquipmentResponse;
 };
 
-export type EquipQualityOptions = {
-  autosaveOutfit?: boolean;
-};
-
 export const equipQualityRequested: ActionCreator<
   EquipQualityRequested
 > = () => ({
@@ -48,7 +43,7 @@ type EquipmentChangeAction = (
 ) => Promise<Either<ChangeEquipmentResponse>>;
 
 export default function changeEquipped(action: EquipmentChangeAction) {
-  return (qualityId: number, options?: EquipQualityOptions) =>
+  return (qualityId: number) =>
     async (
       dispatch: ThunkDispatch<
         Either<ChangeEquipmentResponse> | VersionMismatch,
@@ -66,11 +61,6 @@ export default function changeEquipped(action: EquipmentChangeAction) {
       try {
         const result: Either<ChangeEquipmentResponse> = await action(qualityId);
         if (result instanceof Success) {
-          // If we should autosave the outfit, do so now
-          if (options?.autosaveOutfit) {
-            await dispatch(saveCurrentOutfit());
-          }
-
           dispatch(equipQualitySuccess(result.data));
 
           // Re-fetch plans in case the user has qualified/disqualified themselves

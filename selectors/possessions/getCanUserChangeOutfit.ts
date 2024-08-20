@@ -3,13 +3,8 @@ import { IAppState } from "types/app";
 import { StoryletPhase } from "types/storylet";
 
 type Props = {
-  areOutfitsLockable: boolean;
   doesStoryletStateLockOutfits: boolean;
 };
-
-function getAreOutfitsLockable(_state: IAppState, props: Props) {
-  return props.areOutfitsLockable;
-}
 
 function getCanChangeOutfitInArea(state: IAppState): boolean {
   return state.map.currentArea?.canChangeOutfit ?? false;
@@ -32,18 +27,12 @@ function getStoryletPhase(state: IAppState) {
 }
 
 function outputFn(
-  areOutfitsLockable: boolean,
   canChangeOutfitInArea: boolean,
   canChangeOutfitInSetting: boolean,
   canChangeOutfitInStorylet: boolean,
   doesStoryletStateLockOutfits: boolean,
   phase: StoryletPhase
 ) {
-  // If outfits are not lockable (feature is not enabled) then return true
-  if (!areOutfitsLockable) {
-    return true;
-  }
-
   // If this area and setting both lock outfits, then return false
   if (!(canChangeOutfitInArea || canChangeOutfitInSetting)) {
     return false;
@@ -60,7 +49,6 @@ function outputFn(
 
 export default createSelector(
   [
-    getAreOutfitsLockable,
     getCanChangeOutfitInArea,
     getCanChangeOutfitInSetting,
     getCanChangeOutfitInStorylet,

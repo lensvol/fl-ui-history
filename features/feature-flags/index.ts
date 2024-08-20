@@ -1,7 +1,6 @@
 import Config from "configuration";
 
 export const FILTER_ENHANCEMENTS = "filter-enhancements";
-export const NEW_OUTFIT_BEHAVIOUR = "new-outfit-behaviour";
 export const OPTIMIZE_MYSELF_QUALITIES = "optimize-myself-qualities";
 export const SHOW_EQUIPMENT_SEARCH = "show-equipment-search";
 
@@ -17,7 +16,6 @@ export const FEATURE_FLAGS: {
   [key: string]: boolean;
 } = {
   [FILTER_ENHANCEMENTS]: true,
-  [NEW_OUTFIT_BEHAVIOUR]: true,
   [OPTIMIZE_MYSELF_QUALITIES]: true,
   [SHOW_EQUIPMENT_SEARCH]: true,
   [FEATURE_ACCOUNT_LINK_REMINDER]: true,

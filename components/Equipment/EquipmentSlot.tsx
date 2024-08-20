@@ -10,10 +10,7 @@ import EquippedItem from "components/Equipment/EquippedItem";
 import EmptySlot from "components/Equipment/EmptySlot";
 import PossessionsContext from "components/Possessions/PossessionsContext";
 import { Feature } from "flagged";
-import {
-  FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS,
-  NEW_OUTFIT_BEHAVIOUR,
-} from "features/feature-flags";
+import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
 import EquipmentContext from "./EquipmentContext";
 
 function EquipmentSlot(props: Props) {
@@ -34,23 +31,16 @@ function EquipmentSlot(props: Props) {
         {({ currentlyInStorylet }) => (
           <EquipmentContext.Consumer>
             {({ filterString, openUseOrEquipModal }) => (
-              <Feature name={NEW_OUTFIT_BEHAVIOUR}>
-                {(isEnabled: boolean) => (
-                  <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
-                    {(doesStoryletStateLockOutfits: boolean) => (
-                      <EquippedItem
-                        {...quality!}
-                        areOutfitsLockable={isEnabled}
-                        category={quality!.category as OutfitSlotName}
-                        currentlyInStorylet={currentlyInStorylet}
-                        doesStoryletStateLockOutfits={
-                          doesStoryletStateLockOutfits
-                        }
-                        filterString={filterString}
-                        openUseOrEquipModal={openUseOrEquipModal}
-                      />
-                    )}
-                  </Feature>
+              <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
+                {(doesStoryletStateLockOutfits: boolean) => (
+                  <EquippedItem
+                    {...quality!}
+                    category={quality!.category as OutfitSlotName}
+                    currentlyInStorylet={currentlyInStorylet}
+                    doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
+                    filterString={filterString}
+                    openUseOrEquipModal={openUseOrEquipModal}
+                  />
                 )}
               </Feature>
             )}

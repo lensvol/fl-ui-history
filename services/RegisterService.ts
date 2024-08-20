@@ -32,7 +32,11 @@ class RegisterService extends BaseService implements IRegisterService {
       data: name,
       method: "post",
       url: "/register/characternameavailable",
+      headers: {
+        "Content-Type": "text/plain",
+      },
     };
+
     return this.doRequest(config);
   };
 

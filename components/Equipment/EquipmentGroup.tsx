@@ -1,7 +1,4 @@
-import {
-  FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS,
-  NEW_OUTFIT_BEHAVIOUR,
-} from "features/feature-flags";
+import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
 import React, { useMemo } from "react";
 import { useIsChangeable, useIsEffect } from "components/Equipment/hooks";
 import LockedSlotIcon from "components/Equipment/LockedSlotIcon";
@@ -119,24 +116,19 @@ function EquipmentGroup(props: Props) {
                     <li className="available-item-list__item" key={quality.id}>
                       <PossessionsContext.Consumer>
                         {({ currentlyInStorylet }) => (
-                          <Feature name={NEW_OUTFIT_BEHAVIOUR}>
-                            {(areOutfitsLockable: boolean) => (
-                              <Feature
-                                name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}
-                              >
-                                {(doesStoryletStateLockOutfits: boolean) => (
-                                  <AvailableItem
-                                    {...quality}
-                                    key={quality.id}
-                                    areOutfitsLockable={areOutfitsLockable}
-                                    doesStoryletStateLockOutfits={
-                                      doesStoryletStateLockOutfits
-                                    }
-                                    currentlyInStorylet={currentlyInStorylet}
-                                    openUseOrEquipModal={openUseOrEquipModal}
-                                  />
-                                )}
-                              </Feature>
+                          <Feature
+                            name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}
+                          >
+                            {(doesStoryletStateLockOutfits: boolean) => (
+                              <AvailableItem
+                                {...quality}
+                                key={quality.id}
+                                doesStoryletStateLockOutfits={
+                                  doesStoryletStateLockOutfits
+                                }
+                                currentlyInStorylet={currentlyInStorylet}
+                                openUseOrEquipModal={openUseOrEquipModal}
+                              />
                             )}
                           </Feature>
                         )}
@@ -156,7 +148,6 @@ function EquipmentGroup(props: Props) {
 EquipmentGroup.displayName = "EquippedGroup";
 
 type OwnProps = {
-  areOutfitsLockable: boolean;
   doesStoryletStateLockOutfits: boolean;
   name: OutfitSlotName;
 };

@@ -3,7 +3,6 @@ import React, { Fragment, useCallback, useMemo } from "react";
 import classnames from "classnames";
 import { connect, useDispatch } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { useFeature } from "flagged";
 
 import { equipQuality } from "actions/outfit";
 import { useQuality as _useQuality } from "actions/storylet";
@@ -12,7 +11,6 @@ import getIsEquipped from "selectors/possessions/getIsEquipped";
 import { IAppState } from "types/app";
 import { IEnhancement } from "types/qualities";
 import Image from "components/Image";
-import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
 import { createEquipmentQualityAltText } from "utils";
 
 function AvailableItem(props: Props) {
@@ -36,8 +34,6 @@ function AvailableItem(props: Props) {
 
   const dispatch = useDispatch();
 
-  const hasNewOutfitBehaviour = useFeature(NEW_OUTFIT_BEHAVIOUR) as boolean;
-
   const canPlayerUseItems = useMemo(
     () => (setting?.itemsUsableHere ?? false) && !currentlyInStorylet,
     [currentlyInStorylet, setting]
@@ -47,8 +43,9 @@ function AvailableItem(props: Props) {
     if (isChanging) {
       return;
     }
-    dispatch(equipQuality(id, { autosaveOutfit: !hasNewOutfitBehaviour }));
-  }, [dispatch, hasNewOutfitBehaviour, id, isChanging]);
+
+    dispatch(equipQuality(id));
+  }, [dispatch, id, isChanging]);
 
   const handleUse = useCallback(() => {
     _useQuality(id, history)(dispatch);
@@ -60,15 +57,20 @@ function AvailableItem(props: Props) {
       if (!canChangeOutfit) {
         return;
       }
+
       handleEquip();
+
       return;
     }
+
     // Player can't use items right now, so just equip it
     if (!canPlayerUseItems) {
       if (!canChangeOutfit) {
         return;
       }
+
       handleEquip();
+
       return;
     }
 
@@ -102,6 +104,7 @@ function AvailableItem(props: Props) {
         label: "Use",
         action: handleUse,
       };
+
       buttons.push(useButton);
     }
 
@@ -118,12 +121,15 @@ function AvailableItem(props: Props) {
     if (!useEventId) {
       return undefined;
     }
+
     if (!itemsUsableHere) {
       return "icon--usable icon--blocked";
     }
+
     if (currentlyInStorylet) {
       return "icon--usable icon--blocked";
     }
+
     return "icon--usable";
   }, [currentlyInStorylet, itemsUsableHere, useEventId]);
 
@@ -131,6 +137,7 @@ function AvailableItem(props: Props) {
     if (!useEventId) {
       return undefined;
     }
+
     if (currentlyInStorylet) {
       return (
         "<span class='item-use-warning'>" +
@@ -138,6 +145,7 @@ function AvailableItem(props: Props) {
         "</span>"
       );
     }
+
     return undefined;
   }, [currentlyInStorylet, useEventId]);
 
@@ -200,7 +208,6 @@ function AvailableItem(props: Props) {
 AvailableItem.displayName = "AvailableItem";
 
 type OwnProps = {
-  areOutfitsLockable: boolean;
   currentlyInStorylet: boolean;
   description: string;
   doesStoryletStateLockOutfits: boolean;

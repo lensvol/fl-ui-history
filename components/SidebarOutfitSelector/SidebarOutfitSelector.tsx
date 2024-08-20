@@ -6,8 +6,6 @@ import * as DropdownStyles from "components/Equipment/dropdown-styles";
 import { compareOutfits } from "components/Equipment/util";
 
 import { OUTFIT_TYPE_EXCEPTIONAL } from "constants/outfits";
-import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
-import { useFeature } from "flagged";
 import { connect } from "react-redux";
 import Select from "react-select";
 import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
@@ -21,14 +19,11 @@ import { UIRestriction } from "types/myself";
 function SidebarOutfitSelector({
   canUserChangeOutfit,
   dispatch,
-  // isChanging,
   isExceptionalFriend,
   outfits,
   showPossessionsUI,
 }: Props) {
   const [isChanging, setIsChanging] = useState(false);
-
-  const hasNewOutfitBehaviour = useFeature(NEW_OUTFIT_BEHAVIOUR);
 
   const selectedOutfit = useMemo(
     () => outfits.find((o) => o.selected),
@@ -71,19 +66,17 @@ function SidebarOutfitSelector({
           if (a.isDisabled === b.isDisabled) {
             return 0;
           }
+
           if (a.isDisabled) {
             return 1;
           }
+
           return -1;
         }),
     [choices, isExceptionalFriend, selectedOutfitId]
   );
 
   if (!showPossessionsUI) {
-    return null;
-  }
-
-  if (!hasNewOutfitBehaviour) {
     return null;
   }
 
@@ -124,7 +117,6 @@ function SidebarOutfitSelector({
 interface OwnProps {
   /// These props are sent to getCanUserChangeOutfit(state, props) but are linted as unused here
   /* eslint-disable react/no-unused-prop-types */
-  areOutfitsLockable: boolean;
   doesStoryletStateLockOutfits: boolean;
 }
 

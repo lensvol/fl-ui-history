@@ -41,10 +41,13 @@ export default class ExchangeService
    * @return {Promise}
    */
   fetchAvailableItems = (shopId: number | "null" = "null") => {
+    const shopIdQueryParameter = shopId === "null" ? "" : shopId;
+
     const config = {
       method: "get",
-      url: `/exchange/availabilities?shopId=${shopId}`,
+      url: `/exchange/availabilities?shopId=${shopIdQueryParameter}`,
     };
+
     return this.doRequest<IFetchAvailableItemsResponse>(config);
   };
 

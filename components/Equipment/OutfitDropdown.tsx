@@ -1,8 +1,6 @@
 import { OUTFIT_TYPE_EXCEPTIONAL } from "constants/outfits";
 import React, { ChangeEvent, useCallback, useMemo } from "react";
 import { connect } from "react-redux";
-import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
-import { useFeature } from "flagged";
 import Select from "react-select";
 import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
 import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
@@ -12,13 +10,6 @@ import { useSelectedOutfit } from "./hooks";
 import { compareOutfits } from "./util";
 import * as DropdownStyles from "./dropdown-styles";
 import EquipmentContext from "./EquipmentContext";
-
-type DropdownOption = {
-  label: string;
-  type: string;
-  value: number | string;
-  isDisabled: boolean;
-};
 
 export function OutfitDropdown({
   isChanging,
@@ -48,8 +39,6 @@ export function OutfitDropdown({
     [onChange]
   );
 
-  const hasNewOutfitBehaviour = useFeature(NEW_OUTFIT_BEHAVIOUR);
-
   const choices = useMemo(() => {
     const sortedOutfits = [...outfits].sort(compareOutfits);
 
@@ -57,11 +46,6 @@ export function OutfitDropdown({
 
     // We can't buy any more outfits; just return what the player has
     if (purchasedOutfits.length >= maxOutfits) {
-      return sortedOutfits;
-    }
-
-    // We shouldn't offer the option to buy more; just return what the player has
-    if (!hasNewOutfitBehaviour) {
       return sortedOutfits;
     }
 
@@ -74,7 +58,7 @@ export function OutfitDropdown({
         type: "BuyOutfit",
       },
     ];
-  }, [hasNewOutfitBehaviour, maxOutfits, outfits]);
+  }, [maxOutfits, outfits]);
 
   const options = useMemo(
     () =>
@@ -161,7 +145,6 @@ export function OutfitDropdown({
 }
 
 type OwnProps = {
-  areOutfitsLockable: boolean;
   doesStoryletStateLockOutfits: boolean;
   onChange: (id: string | number) => void;
 };

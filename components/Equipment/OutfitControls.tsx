@@ -71,10 +71,12 @@ export function OutfitControls({
 
       // Check whether this is an Exceptional outfit
       const newlySelectedOutfit = outfits.find((o) => o.id === id);
+
       if (newlySelectedOutfit?.type === OUTFIT_TYPE_EXCEPTIONAL) {
         if (!isExceptionalFriend) {
           setOutfitChangeErrorMessage(MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT);
           setIsOutfitChangeErrorModalOpen(true);
+
           return;
         }
       }
@@ -99,11 +101,13 @@ export function OutfitControls({
       setOutfitSuccessMessage(message);
       setHasRecentlySaved(true);
       setIsHidingSuccessMessage(false);
+
       if (!isMounted.current) {
         return;
       }
 
       await wait(1000);
+
       if (!isMounted.current) {
         return;
       }
@@ -111,6 +115,7 @@ export function OutfitControls({
       setIsHidingSuccessMessage(true);
 
       await wait(500);
+
       if (!isMounted.current) {
         return;
       }
@@ -261,7 +266,6 @@ function OutfitChangeErrorModal(
 }
 
 type OwnProps = {
-  areOutfitsLockable: boolean;
   doesStoryletStateLockOutfits: boolean;
 };
 

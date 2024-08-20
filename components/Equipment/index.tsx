@@ -14,10 +14,7 @@ import { OutfitSlotName } from "types/outfit";
 import { Feature } from "flagged";
 import EquipmentContext from "components/Equipment/EquipmentContext";
 import OutfitControls from "components/Equipment/OutfitControls";
-import {
-  FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS,
-  NEW_OUTFIT_BEHAVIOUR,
-} from "features/feature-flags";
+import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
 import { IQuality } from "types/qualities";
 import PossessionsContext from "components/Possessions/PossessionsContext";
 import { withRouter, RouteComponentProps } from "react-router-dom";
@@ -128,47 +125,39 @@ export function Equipment({ history, outfit, outfitState }: Props) {
             },
           }}
         >
-          <Feature name={NEW_OUTFIT_BEHAVIOUR}>
-            {(areOutfitsLockable: boolean) => (
-              <>
-                <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
-                  {(doesStoryletStateLockOutfits: boolean) => (
-                    <OutfitControls
-                      areOutfitsLockable={areOutfitsLockable}
-                      doesStoryletStateLockOutfits={
-                        doesStoryletStateLockOutfits
-                      }
-                    />
-                  )}
-                </Feature>
-                <ul className="equipment-group-list">
-                  {groups.map(({ name }: { name: OutfitSlotName }) => (
-                    <li className="equipment-group-list__item" key={name}>
-                      <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
-                        {(doesStoryletStateLockOutfits: boolean) => (
-                          <EquipmentGroup
-                            areOutfitsLockable={areOutfitsLockable}
-                            doesStoryletStateLockOutfits={
-                              doesStoryletStateLockOutfits
-                            }
-                            filterString={filterString}
-                            key={name}
-                            name={name}
-                          />
-                        )}
-                      </Feature>
-                    </li>
-                  ))}
-                </ul>
-                <RenameOutfitModal
-                  errorMessage={errorMessage}
-                  isOpen={isRenameModalOpen}
-                  onRequestClose={() => setIsRenameModalOpen(false)}
-                  onSubmit={onSubmit}
+          <>
+            <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
+              {(doesStoryletStateLockOutfits: boolean) => (
+                <OutfitControls
+                  doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
                 />
-              </>
-            )}
-          </Feature>
+              )}
+            </Feature>
+            <ul className="equipment-group-list">
+              {groups.map(({ name }: { name: OutfitSlotName }) => (
+                <li className="equipment-group-list__item" key={name}>
+                  <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
+                    {(doesStoryletStateLockOutfits: boolean) => (
+                      <EquipmentGroup
+                        doesStoryletStateLockOutfits={
+                          doesStoryletStateLockOutfits
+                        }
+                        filterString={filterString}
+                        key={name}
+                        name={name}
+                      />
+                    )}
+                  </Feature>
+                </li>
+              ))}
+            </ul>
+            <RenameOutfitModal
+              errorMessage={errorMessage}
+              isOpen={isRenameModalOpen}
+              onRequestClose={() => setIsRenameModalOpen(false)}
+              onSubmit={onSubmit}
+            />
+          </>
           {qualityBeingUsedOrEquipped && (
             <UseOrEquipModal
               currentlyInStorylet={currentlyInStorylet}

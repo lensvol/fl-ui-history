@@ -1,10 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 
 import { QUALITY_ID_DUMMY_SHOW_ALL_ITEMS } from "components/Equipment/constants";
-import {
-  FILTER_ENHANCEMENTS,
-  NEW_OUTFIT_BEHAVIOUR,
-} from "features/feature-flags";
+import { FILTER_ENHANCEMENTS } from "features/feature-flags";
 import { unequipQuality } from "actions/outfit";
 import { useQuality as _useQuality } from "actions/storylet";
 import classnames from "classnames";
@@ -39,7 +36,6 @@ type OwnProps = Pick<EquipmentContextValue, "openUseOrEquipModal"> &
   > & {
     category: OutfitSlotName;
     doesStoryletStateLockOutfits: boolean;
-    areOutfitsLockable: boolean;
   };
 
 const mapStateToProps = (state: IAppState, props: OwnProps) => ({
@@ -82,9 +78,6 @@ function EquippedItem(props: Props) {
   const dispatch = useDispatch();
 
   const canPlayerUseItems = setting?.itemsUsableHere && !currentlyInStorylet;
-  const hasNewOutfitBehaviour: boolean = useFeature(
-    NEW_OUTFIT_BEHAVIOUR
-  ) as boolean;
   const hasUseEventId = !!useEventId;
 
   const isChangeable = useIsChangeable(category, outfit);
@@ -94,8 +87,9 @@ function EquippedItem(props: Props) {
     if (!isChangeable) {
       return;
     }
-    dispatch(unequipQuality(id, { autosaveOutfit: !hasNewOutfitBehaviour }));
-  }, [dispatch, hasNewOutfitBehaviour, id, isChangeable]);
+
+    dispatch(unequipQuality(id));
+  }, [dispatch, id, isChangeable]);
 
   const hasFilterEnhancementsFeature = useFeature(FILTER_ENHANCEMENTS);
 
@@ -103,9 +97,11 @@ function EquippedItem(props: Props) {
     if (!hasFilterEnhancementsFeature) {
       return true;
     }
+
     if (selectedEnhancementQualityId === QUALITY_ID_DUMMY_SHOW_ALL_ITEMS) {
       return true;
     }
+
     return enhancements?.find(
       (e) => e.qualityId === selectedEnhancementQualityId
     );
@@ -136,10 +132,13 @@ function EquippedItem(props: Props) {
 
     if (!hasUseEventId) {
       handleUnequip();
+
       return;
     }
+
     if (!canPlayerUseItems) {
       handleUnequip();
+
       return;
     }
     openUseOrEquipModal({ id, image, name }, true);
@@ -159,6 +158,7 @@ function EquippedItem(props: Props) {
     if (!isChangeable || !canChangeOutfit) {
       return [];
     }
+
     return [{ label: "Unequip", action: handleUnequip }];
   }, [canChangeOutfit, handleUnequip, isChangeable]);
 

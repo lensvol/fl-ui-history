@@ -3,10 +3,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { Feature } from "flagged";
 
-import {
-  FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS,
-  NEW_OUTFIT_BEHAVIOUR,
-} from "features/feature-flags";
+import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
 import { Success } from "services/BaseMonadicService";
 import { IOutfit } from "types/outfit";
 import { IAppState } from "types/app";
@@ -38,6 +35,7 @@ export function ChangeableControls({
       if (selectedOutfit === undefined) {
         return;
       }
+
       await dispatch(renameOutfit(selectedOutfit.id, name));
       setIsEditing(false);
     },
@@ -48,10 +46,13 @@ export function ChangeableControls({
     if (!dirty) {
       return;
     }
+
     const result = await dispatch(saveCurrentOutfit());
+
     if (!(result instanceof Success)) {
       return;
     }
+
     onSaveOutfitSuccess();
   }, [dirty, dispatch, onSaveOutfitSuccess]);
 
@@ -70,38 +71,33 @@ export function ChangeableControls({
   const onStartEditing = useCallback(() => setIsEditing(true), []);
 
   return (
-    <Feature name={NEW_OUTFIT_BEHAVIOUR}>
-      {(areOutfitsLockable: boolean) => (
-        <>
-          {isEditing && selectedOutfit ? (
-            <OutfitRenameForm
-              initialName={selectedOutfit.name}
-              onSubmit={onSaveName}
-              onCancel={onCancel}
-            />
-          ) : (
-            <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
-              {(doesStoryletStateLockOutfits: boolean) => (
-                <OutfitDropdown
-                  areOutfitsLockable={areOutfitsLockable}
-                  doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
-                  onChange={onSelectOutfit}
-                />
-              )}
-            </Feature>
-          )}
-          {isEditing ? null : (
-            <OutfitEditButtons
-              dirty={dirty}
-              isFavourite={isFavourite}
-              onStartEditing={onStartEditing}
-              onSaveOutfit={onSaveOutfit}
-              onToggleFavouriteOutfit={onToggleFavouriteOutfit}
+    <>
+      {isEditing && selectedOutfit ? (
+        <OutfitRenameForm
+          initialName={selectedOutfit.name}
+          onSubmit={onSaveName}
+          onCancel={onCancel}
+        />
+      ) : (
+        <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
+          {(doesStoryletStateLockOutfits: boolean) => (
+            <OutfitDropdown
+              doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
+              onChange={onSelectOutfit}
             />
           )}
-        </>
+        </Feature>
       )}
-    </Feature>
+      {isEditing ? null : (
+        <OutfitEditButtons
+          dirty={dirty}
+          isFavourite={isFavourite}
+          onStartEditing={onStartEditing}
+          onSaveOutfit={onSaveOutfit}
+          onToggleFavouriteOutfit={onToggleFavouriteOutfit}
+        />
+      )}
+    </>
   );
 }
 

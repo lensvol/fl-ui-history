@@ -242,7 +242,11 @@ export default class SettingsService
       data: username,
       method: "post",
       url: "/settings/username",
+      headers: {
+        "Content-Type": "text/plain",
+      },
     };
+
     return this.doRequest<ChangeUsernameResponse>(config);
   };
 

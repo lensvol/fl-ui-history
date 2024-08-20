@@ -1,14 +1,12 @@
-import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
 import React from "react";
 import { connect } from "react-redux";
 
 import Loading from "components/Loading";
 import ActionCounter from "components/ActionCounter";
 import { IAppState } from "types/app";
-import { Feature } from "flagged";
 import PlayerEchoes from "./PlayerEchoes";
 import PlayerFate from "./PlayerFate";
-import PlayerScrip from "./PlayerScrip";
+import SidebarCurrencies from "./SidebarCurrencies";
 
 const mapStateToProps = (state: IAppState) => ({
   actions: state.actions,
@@ -28,9 +26,7 @@ export function PlayerStats({ actions }: Props) {
       </li>
       <PlayerFate />
       <PlayerEchoes />
-      <Feature name={NEW_OUTFIT_BEHAVIOUR}>
-        <PlayerScrip />
-      </Feature>
+      <SidebarCurrencies />
     </ul>
   );
 }

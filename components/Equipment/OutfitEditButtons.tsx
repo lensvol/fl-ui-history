@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useFeature } from "flagged";
 
 import Buttonlet from "components/Buttonlet";
-import { NEW_OUTFIT_BEHAVIOUR } from "features/feature-flags";
 
 type Props = {
   dirty: boolean;
@@ -19,8 +17,6 @@ export default function OutfitEditButtons({
   onStartEditing,
   onToggleFavouriteOutfit,
 }: Props) {
-  const hasNewOutfitBehaviour = useFeature(NEW_OUTFIT_BEHAVIOUR);
-
   const [isSaving, setIsSaving] = useState(false);
   const [isFavouriting, setIsFavouriting] = useState(false);
 
@@ -44,10 +40,6 @@ export default function OutfitEditButtons({
 
     setIsFavouriting(false);
   }, [onToggleFavouriteOutfit]);
-
-  if (!hasNewOutfitBehaviour) {
-    return null;
-  }
 
   return (
     <>

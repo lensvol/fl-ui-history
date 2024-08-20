@@ -40,20 +40,24 @@ export default function SidebarQuality({
         <span className="js-item-name item__name">{name}</span>{" "}
         <span className="item__value">{level.toLocaleString("en-GB")}</span>
         {modifier && <span className="item__adjust">{modifier}</span>}
-        <div
-          className={classnames(
-            "progress-bar",
-            category === MENACE && "progress-bar--menace"
-          )}
-        >
-          <span
-            className={classnames(
-              "progress-bar__stripe progress-bar__stripe--has-transition",
-              category === MENACE && "progress-bar__stripe--menace"
-            )}
-            style={{ width: `${Number(progressAsPercentage) || 0}%` }}
-          />
-        </div>
+        {progressAsPercentage >= 0 && (
+          <>
+            <div
+              className={classnames(
+                "progress-bar",
+                category === MENACE && "progress-bar--menace"
+              )}
+            >
+              <span
+                className={classnames(
+                  "progress-bar__stripe progress-bar__stripe--has-transition",
+                  category === MENACE && "progress-bar__stripe--menace"
+                )}
+                style={{ width: `${Number(progressAsPercentage) || 0}%` }}
+              />
+            </div>
+          </>
+        )}
       </div>
     </li>
   );
