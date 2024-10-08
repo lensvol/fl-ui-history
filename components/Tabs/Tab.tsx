@@ -1,21 +1,23 @@
 import React from "react";
-import classnames from "classnames";
+
 import { connect, useDispatch } from "react-redux";
+
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 
+import classnames from "classnames";
+
 import * as MessageActions from "actions/messages";
-import MessageNotificationConstants from "constants/messageNotificationConstants";
+
 import { IAppState } from "types/app";
 
-const mapStateToProps = ({ messages: { isChanged } }: IAppState) => ({
-  messagesChanged: isChanged,
+const mapStateToProps = ({ messages }: IAppState) => ({
+  messagesChanged: messages.isChanged,
 });
 
 type OwnProps = {
   children: React.ReactNode;
   id: string;
   name: string;
-  onSelect: () => void;
   to: string;
 };
 
@@ -27,11 +29,9 @@ export function Tab({
   id,
   children,
   history,
-  location,
   messagesChanged,
   name,
   to,
-  onSelect: parentOnSelect,
 }: Props) {
   const dispatch = useDispatch();
 
@@ -39,20 +39,22 @@ export function Tab({
     location: { pathname },
   } = history;
 
-  const onSelect =
-    location.pathname === MessageNotificationConstants.messagesPathName
-      ? () => {
-          dispatch(MessageActions.clearNotification());
-        }
-      : parentOnSelect;
+  const isNotifying = name === "messages" && messagesChanged;
+
+  const clearMessages = () => {
+    dispatch(MessageActions.clearNotification());
+  };
+
+  const noOp = () => {};
+
+  const onSelect = name === "messages" ? clearMessages : noOp;
 
   const activeLabel = pathname === "/" ? "/" : pathname.replace("/", "");
 
   const tabClass = classnames({
     nav__item: true,
     active: activeLabel === id,
-    notifying:
-      to === MessageNotificationConstants.messagesLinkTo && messagesChanged,
+    notifying: isNotifying,
   });
 
   return (
@@ -63,7 +65,7 @@ export function Tab({
       onKeyUp={onSelect}
       role="tab"
     >
-      <Link className={classnames(onSelect && "cursor-pointer")} to={to}>
+      <Link className="cursor-pointer" to={to}>
         {children}
       </Link>
     </li>

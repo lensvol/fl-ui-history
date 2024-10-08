@@ -27,23 +27,32 @@ export default function JournalEntriesContainer() {
     "prev" | "next" | undefined
   >(undefined);
   const [isFetching, setIsFetching] = useState(false);
+  const [didLoad, setDidLoad] = useState(false);
 
   const handleFetchDirection = useCallback(
     async (direction: "prev" | "next") => {
       const url = direction === "next" ? next : prev;
+
       if (!url) {
         return;
       }
+
       setFetchDirection(direction);
       setIsFetching(true);
+
       const response = await dispatch(
         fetchSharedContentByUrl({ url })
       ).unwrap();
+
       setIsFetching(false);
       setFetchDirection(undefined);
+
       const { shares } = response;
+
       if (shares.length > 0) {
-        history.replace(`/profile/${profileName}/${shares[0].id}`);
+        history.replace(
+          `/profile/${encodeURIComponent(profileName)}/${shares[0].id}`
+        );
       }
     },
     [dispatch, history, next, prev, profileName]
@@ -67,20 +76,30 @@ export default function JournalEntriesContainer() {
         fetchSharedContent({ characterName, date })
       ).unwrap();
       const { shares } = response;
+
       if (shares.length > 0) {
-        history.replace(`/profile/${profileName}/${shares[0].id}`);
+        history.replace(
+          `/profile/${encodeURIComponent(profileName)}/${shares[0].id}`
+        );
       }
     },
     [dispatch, history, profileName]
   );
 
   useEffect(() => {
+    if (didLoad) {
+      return;
+    }
+
     // For compatibility, accept either of the following paths:
     // /profile/:profileName/:fromEchoId
     // /profile/:profileName?fromEchoId=xxxxxxx
     const fromId = fromEchoId ?? qs.parse(search)["fromEchoId"]; // eslint-disable-line dot-notation
+
     dispatch(fetchSharedContent({ fromId, characterName: profileName }));
-  }, [dispatch, fromEchoId, profileName, search]);
+
+    setDidLoad(true);
+  }, [didLoad, dispatch, fromEchoId, profileName, search]);
 
   return (
     <div className="journal-entries-container">

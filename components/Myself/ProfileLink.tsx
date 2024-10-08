@@ -6,7 +6,7 @@ import { IAppState } from "types/app";
 export function ProfileLink({ name }: Props) {
   return (
     <a
-      href={`/profile/${name}`}
+      href={`/profile/${encodeURIComponent(name)}`}
       target="_blank"
       className="button button--primary button--no-margin"
       rel="opener"

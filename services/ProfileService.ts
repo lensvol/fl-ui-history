@@ -46,10 +46,8 @@ export type ShareResponse = {
 
 export interface FetchSharedContentRequest {
   characterName: string;
-  count?: any;
   date?: any;
   fromId?: any;
-  offset?: any;
 }
 
 export interface IProfileCharacter {
@@ -57,6 +55,7 @@ export interface IProfileCharacter {
   currentDomicile?: Domicile;
   description: string;
   descriptiveText: string;
+  frameImage?: string;
   mantelpieceItem?: IQuality;
   scrapbookStatus?: IQuality;
   name: string;
@@ -121,17 +120,13 @@ class ProfileService extends BaseService implements IProfileService {
 
   fetchSharedContent = ({
     characterName,
-    count,
     date,
     fromId,
-    offset,
   }: FetchSharedContentRequest) => {
     const qs = querystring.stringify({
       characterName,
       date,
       fromId,
-      offset,
-      count,
     });
     const config = {
       method: "get",

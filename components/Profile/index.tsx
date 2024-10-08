@@ -9,11 +9,8 @@ import { fetchContacts } from "features/contacts";
 import Loading from "components/Loading";
 import Header from "components/Header";
 import JournalEntries from "components/JournalEntries";
-// import MediaMdUp from 'components/Responsive/MediaMdUp';
-// import MediaSmDown from 'components/Responsive/MediaSmDown';
-// import MediaSmUp from 'components/Responsive/MediaSmUp';
-// import MediaXsDown from 'components/Responsive/MediaXsDown';
 import TheySay from "components/TheySay";
+import TippyWrapper from "components/TippyWrapper";
 
 import Hero from "./Hero";
 import MantelAndScrap from "./MantelAndScrap";
@@ -32,6 +29,9 @@ export default function ProfileContainer() {
   const profileBanner = useAppSelector((s) => s.profile.profileBanner);
   const outfitName = useAppSelector((s) => s.profile.outfitName);
   const hasFavouredOutfit = useAppSelector((s) => s.profile.hasFavouredOutfit);
+  const isLoggedInUsersProfile = useAppSelector(
+    (s) => s.profile.isLoggedInUsersProfile
+  );
 
   useEffect(() => {
     dispatch(fetchProfile({ characterName: params.profileName }));
@@ -72,12 +72,23 @@ export default function ProfileContainer() {
         </div>
         <div className="profile__inventory-theysay-container">
           <div />
-          <div className="profile__inventory-header">
-            <h3 className="heading heading--2">
-              {hasFavouredOutfit ? "Favoured Outfit" : "Currently Wearing"}
-            </h3>
-            <h4 className="heading heading--4">{outfitName}</h4>
-          </div>
+          <TippyWrapper
+            tooltipData={
+              isLoggedInUsersProfile
+                ? {
+                    description:
+                      "Change this through the storylet &#8216;Attend to Matters of Identity&#8217;, in your Lodgings.",
+                  }
+                : undefined
+            }
+          >
+            <div className="profile__inventory-header">
+              <h3 className="heading heading--2">
+                {hasFavouredOutfit ? "Favoured Outfit" : "Currently Wearing"}
+              </h3>
+              <h4 className="heading heading--4">{outfitName}</h4>
+            </div>
+          </TippyWrapper>
           <ProfileInventory />
           <div />
           <div />

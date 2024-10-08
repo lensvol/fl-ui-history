@@ -71,7 +71,11 @@ function ResponsiveSidebar(props: Props) {
         <Qualities />
         <nav className="sidemenu__nav">
           <ul className="items">
-            <NavItem fl icon="myself" onClick={makeHandler(`/profile/${name}`)}>
+            <NavItem
+              fl
+              icon="myself"
+              onClick={makeHandler(`/profile/${encodeURIComponent(name)}`)}
+            >
               Your profile
             </NavItem>
             <NavItem icon="user" onClick={makeHandler("account")}>

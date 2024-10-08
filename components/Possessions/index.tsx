@@ -70,7 +70,6 @@ type Props = ReturnType<typeof mapStateToProps> & {
 
 const mapStateToProps = (state: IAppState) => ({
   categories: getPossessionsCategories(state),
-  isFetching: state.myself.isFetching,
   storyletPhase: state.storylet.phase,
 });
 

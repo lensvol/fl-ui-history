@@ -45,7 +45,7 @@ export function ShareResponse({
           </p>
           <p>View or delete it here</p>
           <a
-            href={`/profile/${characterName}`}
+            href={`/profile/${encodeURIComponent(characterName)}`}
             className="link link--inverse"
             target="_blank"
             rel="noopener noreferrer"

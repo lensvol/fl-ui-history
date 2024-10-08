@@ -72,7 +72,11 @@ class JournalEntry extends Component<Props, State> {
 
     if (characterName) {
       const url =
-        window.location.origin + "/profile/" + characterName + "/" + id;
+        window.location.origin +
+        "/profile/" +
+        encodeURIComponent(characterName) +
+        "/" +
+        id;
 
       navigator.clipboard.writeText(url);
 

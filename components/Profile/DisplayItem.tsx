@@ -67,7 +67,7 @@ export default function DisplayItem(props: OwnProps) {
     ],
   };
 
-  const { effectiveLevel, image, nameAndLevel } = quality;
+  const { effectiveLevel, image, nameAndLevel, levelDescription } = quality;
 
   return (
     <Fragment>
@@ -95,9 +95,27 @@ export default function DisplayItem(props: OwnProps) {
         <div>
           <h3 className="heading heading--2">{label}</h3>
           <div className="item__desc">
-            <span className="js-item-name item__name profile__display-item-description">
-              {nameAndLevel}
-            </span>
+            {quality.nature === "Thing" ? (
+              <>
+                <div className="js-item-name item__name profile__display-item-description">
+                  {nameAndLevel}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="js-item-name item__name profile__display-item-description">
+                  {quality.name}
+                </div>
+                <div
+                  className="js-item-name item__name profile__display-item-description"
+                  style={{
+                    fontStyle: "italic",
+                  }}
+                >
+                  {levelDescription}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

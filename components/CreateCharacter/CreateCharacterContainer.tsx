@@ -77,14 +77,14 @@ export class CreateCharacterContainer extends Component<Props, State> {
       // const { isSuccess } = await dispatch(checkAvailability(userName));
       const result = await dispatch(checkAvailability(userName));
 
-      const { isSuccess } = result;
-
       this.setState((state) => ({
         isCheckingAvailability: false,
-        userNameIsAvailable: isSuccess,
+        userNameIsAvailable: result.isSuccess,
         errors: {
           ...state.errors,
-          userName: isSuccess ? undefined : `'${userName}' is taken.`,
+          userName: result.isSuccess
+            ? undefined
+            : (result.message ?? `'${userName}' is taken.`),
         },
       }));
     } catch (e) {

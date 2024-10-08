@@ -28,7 +28,6 @@ export default function Tabs({
           <Tab
             key={item.value}
             id={item.value}
-            onSelect={item.onSelect}
             name={item.value === "/" ? "story" : item.value}
             to={item.value}
           >
