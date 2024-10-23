@@ -1,15 +1,24 @@
 import React, { useCallback, useState } from "react";
+
 import { useDispatch } from "react-redux";
-import { Formik, Field, Form, FormikHelpers as FormikActions } from "formik";
+
+import { Field, Form, Formik, FormikHelpers as FormikActions } from "formik";
+
+import { linkEmailToAccount } from "actions/settings";
 
 import Loading from "components/Loading";
-import { Either, Success } from "services/BaseMonadicService";
-import { LinkEmailResponse } from "services/SettingsService";
 import Modal from "components/Modal";
-import { linkEmailToAccount } from "actions/settings";
+import PasswordField from "components/Registration/PasswordField";
+
 import { useAppSelector } from "features/app/store";
 
-type LinkEmailValues = { emailAddress: string; password: string };
+import { Either, Success } from "services/BaseMonadicService";
+import { LinkEmailResponse } from "services/SettingsService";
+
+type LinkEmailValues = {
+  emailAddress: string;
+  password: string;
+};
 
 enum LinkEmailModalStep {
   Ready,
@@ -19,14 +28,14 @@ enum LinkEmailModalStep {
 
 type Props = {
   isOpen: boolean;
-  onRequestClose: () => void;
   onLinkSuccess?: () => void;
+  onRequestClose: () => void;
 };
 
 export default function LinkEmailModal({
   isOpen,
-  onRequestClose,
   onLinkSuccess,
+  onRequestClose,
 }: Props) {
   const isLinkingEmail = useAppSelector(
     (state) => state.settings.isLinkingEmail
@@ -42,6 +51,7 @@ export default function LinkEmailModal({
       actions: FormikActions<LinkEmailValues>
     ) => {
       const { emailAddress, password } = values;
+
       actions.setSubmitting(true);
 
       const result: Either<LinkEmailResponse> = await linkEmailToAccount({
@@ -82,7 +92,10 @@ export default function LinkEmailModal({
           <div>
             <h3 className="heading heading--2">Link Email To Account</h3>
             <Formik
-              initialValues={{ emailAddress: "", password: "" }}
+              initialValues={{
+                emailAddress: "",
+                password: "",
+              }}
               onSubmit={handleSubmit}
             >
               {({ values, dirty, errors, touched }) => (
@@ -91,10 +104,10 @@ export default function LinkEmailModal({
                     <label htmlFor="emailAddress">Email</label>
                     <Field
                       className="form__control"
-                      name="emailAddress"
                       id="emailAddress"
-                      value={values.emailAddress}
+                      name="emailAddress"
                       validate={validateRequired}
+                      value={values.emailAddress}
                     />
                     {errors.emailAddress && touched.emailAddress && (
                       <span className="form__error">{errors.emailAddress}</span>
@@ -103,20 +116,23 @@ export default function LinkEmailModal({
 
                   <p>
                     <label htmlFor="password">Password</label>
-                    <Field
+                    <PasswordField
                       className="form__control"
-                      type="password"
                       name="password"
-                      id="password"
-                      value={values.password}
                       validate={validateRequired}
+                      value={values.password}
                     />
                     {errors.password && touched.password && (
                       <span className="form_error">{errors.password}</span>
                     )}
                   </p>
 
-                  <div className="dialog__actions" style={{ marginTop: 24 }}>
+                  <div
+                    className="dialog__actions"
+                    style={{
+                      marginTop: 24,
+                    }}
+                  >
                     <button
                       className="button button--primary"
                       onClick={onRequestClose}
@@ -145,9 +161,12 @@ export default function LinkEmailModal({
   }
 }
 
+LinkEmailModal.displayValue = "LinkEmailModal";
+
 function validateRequired(value: string) {
   if (!value) {
     return "Required";
   }
+
   return undefined;
 }

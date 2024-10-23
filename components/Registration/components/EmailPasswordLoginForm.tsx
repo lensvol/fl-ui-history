@@ -1,11 +1,18 @@
-import RequestPasswordResetModal from "components/RequestPasswordResetModal";
 import React, { useCallback, useState } from "react";
+
 import { connect, useDispatch } from "react-redux";
-import { Formik, Form, Field, FormikHelpers as FormikActions } from "formik";
-import { IAppState } from "types/app";
-import Loading from "components/Loading";
-import * as UserActionCreators from "actions/user";
+
 import { RouteComponentProps, withRouter } from "react-router-dom";
+
+import { Field, Form, Formik, FormikHelpers as FormikActions } from "formik";
+
+import * as UserActionCreators from "actions/user";
+
+import Loading from "components/Loading";
+import RequestPasswordResetModal from "components/RequestPasswordResetModal";
+import PasswordField from "components/Registration/PasswordField";
+
+import { IAppState } from "types/app";
 
 interface FormValues {
   emailAddress: string;
@@ -63,20 +70,18 @@ export function EmailPasswordLoginForm({
             <p className="form__group">
               <label htmlFor="emailAddress">Email address</label>
               <Field
-                type="email"
                 className="form__control"
                 id="emailAddress"
                 name="emailAddress"
+                type="email"
                 value={values.emailAddress}
               />
             </p>
 
             <p className="form__group">
               <label htmlFor="password">Password</label>
-              <Field
-                type="password"
+              <PasswordField
                 className="form__control"
-                id="password"
                 name="password"
                 value={values.password}
               />
@@ -87,9 +92,9 @@ export function EmailPasswordLoginForm({
                 <span className="checkbox">
                   <label>
                     <Field
-                      type="checkbox"
-                      name="rememberMe"
                       checked={values.rememberMe}
+                      name="rememberMe"
+                      type="checkbox"
                     />{" "}
                     Remember me
                   </label>
@@ -128,6 +133,8 @@ export function EmailPasswordLoginForm({
     </Formik>
   );
 }
+
+EmailPasswordLoginForm.displayName = "EmailPasswordLoginForm";
 
 const mapStateToProps = (state: IAppState) => ({
   isFetching: state.user.isFetching,

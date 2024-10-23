@@ -1,7 +1,11 @@
-import Loading from "components/Loading";
-import useIsMounted from "hooks/useIsMounted";
 import React, { useCallback, useState } from "react";
-import { Formik, Form, Field, FormikHelpers as FormikActions } from "formik";
+
+import { Form, Formik, FormikHelpers as FormikActions } from "formik";
+
+import Loading from "components/Loading";
+
+import useIsMounted from "hooks/useIsMounted";
+import PasswordField from "components/Registration/PasswordField";
 
 type SubmitType = (
   values: { password: string },
@@ -12,8 +16,7 @@ type Props = {
   onSubmit: SubmitType;
 };
 
-export default function ForgottenPasswordResetForm(props: Props) {
-  const { onSubmit } = props;
+export default function ForgottenPasswordResetForm({ onSubmit }: Props) {
   const [submitting, setSubmitting] = useState(false);
 
   const isMounted = useIsMounted();
@@ -33,25 +36,25 @@ export default function ForgottenPasswordResetForm(props: Props) {
 
   return (
     <Formik
-      initialValues={{ password: "" }}
+      initialValues={{
+        password: "",
+      }}
       onSubmit={handleSubmit}
       render={({ values }) => (
         <Form>
           <h2 className="media__heading heading heading--3">Reset password</h2>
           <p>Please enter your new password</p>
-          <Field
+          <PasswordField
             className="form__control form__control--has-buttons"
-            type="password"
             name="password"
-            id="password"
-            value={values.password}
             required
+            value={values.password}
           />
           <div className="buttons">
             <button
-              type="submit"
               className="button button--primary"
               disabled={submitting}
+              type="submit"
             >
               {submitting ? <Loading spinner small /> : <span>Reset</span>}
             </button>
@@ -61,3 +64,5 @@ export default function ForgottenPasswordResetForm(props: Props) {
     />
   );
 }
+
+ForgottenPasswordResetForm.displayName = "ForgottenPasswordResetForm";

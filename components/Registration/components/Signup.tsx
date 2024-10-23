@@ -1,8 +1,8 @@
 import React from "react";
 
-import FacebookLoginContainer from "./FacebookLoginContainer";
-import GoogleLoginContainer from "./GoogleLoginContainer";
-import SignUpWithEmail from "./SignUpWithEmail";
+import FacebookLoginContainer from "components/Registration/components/FacebookLoginContainer";
+import GoogleLoginContainer from "components/Registration/components/GoogleLoginContainer";
+import SignUpWithEmail from "components/Registration/components/SignUpWithEmail";
 
 export default function Signup() {
   return (
@@ -10,15 +10,15 @@ export default function Signup() {
       <h2 className="heading heading--2 heading--hr">Create a free account</h2>
       <div>
         <SignUpWithEmail />
-        <Or />
+        <p className="u-text-center">or</p>
         <p className="fb-root">
           <FacebookLoginContainer />
         </p>
-        <Or />
+        <p className="u-text-center">or</p>
         <GoogleLoginContainer label="Sign up with Google" />
       </div>
     </div>
   );
 }
 
-const Or = () => <p className="u-text-center">or</p>;
+Signup.displayName = "Signup";

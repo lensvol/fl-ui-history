@@ -1,21 +1,34 @@
 import React, { Component } from "react";
 
+import classnames from "classnames";
+
 import Registration from "components/Registration";
 import FooterContent from "components/Footer/components/FooterContent";
+import LoginCopy from "components/Login/components/LoginCopy";
+import TitleBar from "components/Login/components/TitleBar";
+
 import scrollToComponent from "utils/scrollToComponent";
-import classnames from "classnames";
-import LoginCopy from "./components/LoginCopy";
-import TitleBar from "./components/TitleBar";
 
 export default class LoginContainer extends Component {
   constructor(props) {
     super(props);
+
     this.container = React.createRef();
     this.titleBar = React.createRef();
   }
 
-  //possibleClassNames = ['ambassador', 'astrologer', 'aunt', 'boatman', 'edward', 'magician', 'master', 'surveyor','plenty', 'november'];
-  possibleClassNames = ["ambassador", "aunt", "boatman", "edward"];
+  possibleClassNames = [
+    "ambassador",
+    // 'astrologer',
+    "aunt",
+    "boatman",
+    "edward",
+    // 'magician',
+    // 'master',
+    // 'november',
+    // 'plenty',
+    // 'surveyor',
+  ];
 
   state = {
     hasScrolled: false,
@@ -26,15 +39,20 @@ export default class LoginContainer extends Component {
   componentDidMount = () => {
     // On mount, work out where the container's original y-position is
     const node = this.container.current;
+
     this.originalY = node.getBoundingClientRect().top;
+
     let className;
+
     try {
       className = new URLSearchParams(window.location.search).get("hero");
     } finally {
       if (this.possibleClassNames.indexOf(className) >= 0) {
         this.setState({ heroClassName: className });
+
         return;
       }
+
       this.setState({ heroClassName: this.getRandomClassName() });
     }
   };
@@ -42,10 +60,13 @@ export default class LoginContainer extends Component {
   handleScroll = () => {
     // Try to update state on scroll so that the backdrop opacity changes
     const node = this.container.current;
+
     if (!node) {
       return;
     }
+
     const currentY = node.getBoundingClientRect().top;
+
     this.setState({ currentY, hasScrolled: true });
   };
 
@@ -54,6 +75,7 @@ export default class LoginContainer extends Component {
     if (!this.titleBar.current) {
       return;
     }
+
     scrollToComponent(this.titleBar.current, {
       align: "top",
       offset: 0,
@@ -62,9 +84,11 @@ export default class LoginContainer extends Component {
 
   calculateOpacity = () => {
     const { currentY, hasScrolled } = this.state;
+
     if (!hasScrolled) {
       return 0;
     }
+
     if (currentY === undefined || currentY === null) {
       return 0;
     }
@@ -97,7 +121,9 @@ export default class LoginContainer extends Component {
       <div>
         <div
           className="login__overlay"
-          style={{ opacity: this.calculateOpacity() }}
+          style={{
+            opacity: this.calculateOpacity(),
+          }}
         />
         <div className="login" ref={this.container}>
           <div ref={this.titleBar}>
@@ -107,7 +133,7 @@ export default class LoginContainer extends Component {
             <div className="login__copy">
               <LoginCopy />
             </div>
-            <div className="">
+            <div>
               <Registration {...this.props} />
             </div>
           </div>

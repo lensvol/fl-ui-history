@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from "react";
+
 import { useDispatch } from "react-redux";
+
 import { useHistory } from "react-router-dom";
 
 import classnames from "classnames";
@@ -9,6 +11,7 @@ import { Formik, Form, Field } from "formik";
 import { signUp } from "actions/registration";
 
 import Loading from "components/Loading";
+import PasswordField from "components/Registration/PasswordField";
 import redirectAfterLogin from "components/Registration/components/redirectAfterLogin";
 
 import useIsMounted from "hooks/useIsMounted";
@@ -70,11 +73,11 @@ export default function SignUpWithEmail() {
             <label htmlFor="userName">Username</label>
             <Field
               className="form__control"
-              name="userName"
               id="userName"
+              name="userName"
+              required
               type="text"
               value={values.userName}
-              required
             />
             {errors.userName && (
               <div className="form__error">{errors.userName}</div>
@@ -84,11 +87,11 @@ export default function SignUpWithEmail() {
             <label htmlFor="emailAddress">Email address</label>
             <Field
               className="form__control"
-              name="emailAddress"
               id="emailAddress"
+              name="emailAddress"
+              required
               type="email"
               value={values.emailAddress}
-              required
             />
             {errors.emailAddress && (
               <div className="form__error">{errors.emailAddress}</div>
@@ -96,13 +99,11 @@ export default function SignUpWithEmail() {
           </div>
           <p className="form__group">
             <label htmlFor="password">Password</label>
-            <Field
+            <PasswordField
               className="form__control"
               name="password"
-              id="password"
-              type="password"
-              value={values.password}
               required
+              value={values.password}
             />
             {errors.password && (
               <div className="form__error">{errors.password}</div>
@@ -125,3 +126,5 @@ export default function SignUpWithEmail() {
     />
   );
 }
+
+SignUpWithEmail.displayName = "SignUpWithEmail";

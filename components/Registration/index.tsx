@@ -1,65 +1,81 @@
-import React, { Component } from "react";
+import React, { useCallback, useState } from "react";
+import { connect } from "react-redux";
 
 import Login from "components/Registration/components/Login";
-import Signup from "./components/Signup";
-import Tab from "./components/Tab";
+import Promotion from "components/Registration/components/Promotion";
+import Signup from "components/Registration/components/Signup";
+import Tab from "components/Registration/components/Tab";
 
-interface State {
-  activeTab: string;
-}
+import { IAppState } from "types/app";
 
-class Registration extends Component<never, State> {
-  state: State = {
-    activeTab: "login",
-  };
+const LoginTab = "login";
+const SignUpTab = "signup";
+const PromotionalTab = "promo";
 
-  static displayName = "Registration";
+type RegistrationTab =
+  | typeof LoginTab
+  | typeof SignUpTab
+  | typeof PromotionalTab;
 
-  renderActiveTab = () => {
-    const { activeTab } = this.state;
-    if (activeTab === "signup") {
-      return <Signup />;
-    }
-    return <Login />;
-  };
+function Registration({ accessCode }: Props) {
+  const [activeTab, setActiveTab] = useState<RegistrationTab>(LoginTab);
 
-  handleTabClick = (e: { target: { name: string } }) => {
-    this.setState({ activeTab: e.target.name });
-  };
+  const handleTabClick = useCallback((e: { target: { name: string } }) => {
+    setActiveTab(e.target.name as RegistrationTab);
+  }, []);
 
-  /**
-   * Render
-   * @return {Object}
-   */
-  render() {
-    const { activeTab } = this.state;
-
-    return (
-      <div>
+  return (
+    <>
+      <div className="login__form">
         <nav className="nav nav--tabs">
-          <ul role="tablist">
+          <ul role="tablist" className="login__tabs">
             <Tab
-              name="login"
+              activeTab={activeTab}
               label="Log in"
-              activeTab={activeTab}
-              onClick={this.handleTabClick}
+              name={LoginTab}
+              onClick={handleTabClick}
             />
             <Tab
-              name="signup"
-              label="Sign up"
               activeTab={activeTab}
-              onClick={this.handleTabClick}
+              label="Sign up"
+              name={SignUpTab}
+              onClick={handleTabClick}
             />
+            <li className="nav__item" />
+            {accessCode ? (
+              <></>
+            ) : (
+              <>
+                <Tab
+                  activeTab={activeTab}
+                  alt="Redeem code"
+                  className="login-promo-tab"
+                  label="&nbsp;"
+                  name={PromotionalTab}
+                  onClick={handleTabClick}
+                />
+              </>
+            )}
           </ul>
         </nav>
         <div className="tab-content tab-content--inverse inverse--bordered">
           <div className="tab-content__bordered-container">
-            {this.renderActiveTab()}
+            {activeTab === LoginTab && <Login />}
+            {activeTab === SignUpTab && <Signup />}
+            {activeTab === PromotionalTab && <Promotion />}
           </div>
         </div>
       </div>
-    );
-  }
+    </>
+  );
 }
 
-export default Registration;
+Registration.displayName = "Registration";
+
+const mapStateToProps = (state: IAppState) => ({
+  accessCode: state.accessCodes.accessCode,
+});
+
+type Props = ReturnType<typeof mapStateToProps>;
+
+export default connect(mapStateToProps)(Registration);

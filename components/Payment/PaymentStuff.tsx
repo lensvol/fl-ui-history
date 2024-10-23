@@ -344,10 +344,13 @@ export default function PaymentStuff({
                 <PersonalDetails values={values} />
               ) : null}
             </div>
+            <div className="purchase-disclaimer">
+              By purchasing Fate you acknowledge you have read and accepted our{" "}
+              <a href="/terms">terms and conditions</a>.
+            </div>
             <div
               className="buttons buttons--left buttons--no-squash buttons--space-between"
               style={{
-                paddingTop: "2rem",
                 paddingBottom:
                   currentPaymentMethod === "CreditCard" ? ".5rem" : 0,
               }}

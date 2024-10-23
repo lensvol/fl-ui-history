@@ -1,144 +1,87 @@
-import React, { Component, Fragment } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+
+import { useHistory, useLocation, withRouter } from "react-router-dom";
+
+import AccountComponent from "components/Account/AccountComponent";
+import ForgottenPasswordResetModal from "components/Account/ForgottenPasswordResetModal";
 
 import { IAppState } from "types/app";
 
-import RequestPasswordResetModal from "components/RequestPasswordResetModal";
-import AccountComponent from "./AccountComponent";
-import ForgottenPasswordResetModal from "./ForgottenPasswordResetModal";
-import PasswordResetModal from "./PasswordResetModal";
+function AccountContainer({ loggedIn }: Props) {
+  const history = useHistory();
+  const location = useLocation();
 
-type State = {
-  hash: any | undefined;
-  token: string | undefined;
-  isForgottenPasswordResetModalOpen: boolean;
-  isPasswordResetModalOpen: boolean;
-  isPasswordResetRequestModalOpen: boolean;
-};
+  const [didLoad, setDidLoad] = useState(false);
+  const [hash, setHash] = useState<any | undefined>(undefined);
+  const [token, setToken] = useState<string | undefined>(undefined);
+  const [
+    isForgottenPasswordResetModalOpen,
+    setIsForgottenPasswordResetModalOpen,
+  ] = useState(false);
 
-class AccountContainer extends Component<Props, State> {
-  static displayName = "AccountContainer";
-
-  state = {
-    hash: undefined,
-    token: undefined,
-    isForgottenPasswordResetModalOpen: false,
-    isPasswordResetModalOpen: false,
-    isPasswordResetRequestModalOpen: false,
-  };
-
-  /**
-   * Component Did Mount
-   * @return {undefined}
-   */
-  componentDidMount = () => {
-    const {
-      history,
-      location: { hash },
-      user: { loggedIn },
-    } = this.props;
-
-    const token = this.getQueryVariable("token");
-
-    this.setState({ hash });
-
-    if (token) {
-      this.setState({
-        token,
-        isForgottenPasswordResetModalOpen: true,
-      });
-    } else if (!loggedIn) {
-      history.push("/login");
-    }
-  };
-
-  getQueryVariable = (variable: string) => {
+  const getQueryVariable = useCallback((variable: string) => {
     const query = window.location.search.substring(1);
     const vars = query.split("&");
 
     for (let i = 0; i < vars.length; i += 1) {
       const pair = vars[i].split("=");
+
       if (decodeURIComponent(pair[0]) === variable) {
         return decodeURIComponent(pair[1]);
       }
     }
+
     return undefined;
-  };
+  }, []);
 
-  handleDismissForgottenPasswordResetModal = () => {
-    this.setState({ isForgottenPasswordResetModalOpen: false });
-  };
+  useEffect(() => {
+    if (didLoad) {
+      // only run once
+      return;
+    }
 
-  handleDismissPasswordResetModal = () => {
-    this.setState({ isPasswordResetModalOpen: false });
-  };
+    setHash(location.hash);
 
-  handleDismissPasswordResetRequestModal = () => {
-    this.setState({ isPasswordResetRequestModalOpen: false });
-  };
+    const token = getQueryVariable("token");
 
-  handleSummonPasswordResetModal = () => {
-    this.setState({ isPasswordResetModalOpen: true });
-  };
+    if (token) {
+      setToken(token);
+      setIsForgottenPasswordResetModalOpen(true);
+    } else if (!loggedIn) {
+      history.push("/login");
+    }
 
-  handleSummonPasswordResetRequestModal = () => {
-    this.setState({ isPasswordResetRequestModalOpen: true });
-  };
+    setDidLoad(true);
+  }, [didLoad, getQueryVariable, history, location, loggedIn]);
 
-  /**
-   * Render
-   * @return {JSX}
-   */
-  render() {
-    const {
-      user: { loggedIn },
-    } = this.props;
+  const handleDismissForgottenPasswordResetModal = useCallback(() => {
+    setIsForgottenPasswordResetModalOpen(false);
+  }, []);
 
-    const {
-      hash,
-      isForgottenPasswordResetModalOpen,
-      isPasswordResetModalOpen,
-      isPasswordResetRequestModalOpen,
-      token,
-    } = this.state;
+  return (
+    <>
+      {loggedIn && <AccountComponent hash={hash} />}
 
-    return (
-      <Fragment>
-        {loggedIn && <AccountComponent hash={hash} />}
-
-        {/* Don't mount the forgotten password modal if we don't have a token */}
-        {token && (
-          <ForgottenPasswordResetModal
-            isOpen={isForgottenPasswordResetModalOpen}
-            onRequestClose={this.handleDismissForgottenPasswordResetModal}
-            token={token as unknown as string} // TODO: why does this need double casting?
-          />
-        )}
-
-        <PasswordResetModal
-          isOpen={isPasswordResetModalOpen}
-          onRequestClose={this.handleDismissPasswordResetModal}
+      {/* Don't mount the forgotten password modal if we don't have a token */}
+      {token && (
+        <ForgottenPasswordResetModal
+          isOpen={isForgottenPasswordResetModalOpen}
+          onRequestClose={handleDismissForgottenPasswordResetModal}
           token={token}
         />
-
-        <RequestPasswordResetModal
-          isOpen={isPasswordResetRequestModalOpen}
-          onRequestClose={this.handleDismissPasswordResetRequestModal}
-        />
-      </Fragment>
-    );
-  }
+      )}
+    </>
+  );
 }
 
-const mapStateToProps = ({ user }: IAppState) => ({
-  user,
+AccountContainer.displayName = "AccountContainer";
+
+const mapStateToProps = (state: IAppState) => ({
+  loggedIn: state.user.loggedIn,
 });
 
-type Props = RouteComponentProps &
-  ReturnType<typeof mapStateToProps> & {
-    dispatch: ThunkDispatch<any, any, any>;
-  };
+type Props = ReturnType<typeof mapStateToProps>;
 
 export default withRouter(connect(mapStateToProps)(AccountContainer));

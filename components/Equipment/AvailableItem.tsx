@@ -34,10 +34,9 @@ function AvailableItem(props: Props) {
 
   const dispatch = useDispatch();
 
-  const canPlayerUseItems = useMemo(
-    () => (setting?.itemsUsableHere ?? false) && !currentlyInStorylet,
-    [currentlyInStorylet, setting]
-  );
+  const canPlayerUseItems = useMemo(() => {
+    return (setting?.itemsUsableHere ?? false) && !currentlyInStorylet;
+  }, [currentlyInStorylet, setting]);
 
   const handleEquip = useCallback(() => {
     if (isChanging) {
