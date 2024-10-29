@@ -1,21 +1,23 @@
 import React, { useCallback } from "react";
 import { connect, useDispatch } from "react-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import FacebookLogin from "react-facebook-login";
 
-import Config from "configuration";
+import FacebookLogin from "react-facebook-login";
 
 import { facebookLogin } from "actions/user";
 
-import redirectAfterLogin from "./redirectAfterLogin";
+import redirectAfterLogin from "components/Registration/components/redirectAfterLogin";
 
-function FacebookLoginContainer({ history }: Props) {
+import Config from "configuration";
+
+function FacebookLoginContainer({ history, label }: Props) {
   const dispatch = useDispatch();
   const { facebookAppId } = Config;
 
   const handleCallback = useCallback(
     async (res: any) => {
       const data: any = await dispatch(facebookLogin(res));
+
       redirectAfterLogin(history, data);
     },
     [dispatch, history]
@@ -25,16 +27,19 @@ function FacebookLoginContainer({ history }: Props) {
     <FacebookLogin
       appId={`${facebookAppId}`}
       autoLoad={false}
+      callback={handleCallback}
       cssClass="button button--menlo-park-panopticon"
+      disableMobileRedirect
       fields="name,email,picture"
       icon={<i className="fa fa-facebook-official fa-2x" />}
-      callback={handleCallback}
+      textButton={label}
       version="3.1"
-      disableMobileRedirect
     />
   );
 }
 
-type Props = RouteComponentProps;
+type Props = RouteComponentProps & {
+  label?: string;
+};
 
 export default withRouter(connect()(FacebookLoginContainer));

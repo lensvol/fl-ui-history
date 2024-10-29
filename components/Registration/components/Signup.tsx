@@ -12,7 +12,7 @@ export default function Signup() {
         <SignUpWithEmail />
         <p className="u-text-center">or</p>
         <p className="fb-root">
-          <FacebookLoginContainer />
+          <FacebookLoginContainer label="Sign up with Facebook" />
         </p>
         <p className="u-text-center">or</p>
         <GoogleLoginContainer label="Sign up with Google" />

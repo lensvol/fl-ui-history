@@ -14,7 +14,7 @@ export default function Login() {
         <hr />
         <p className="u-text-center">or</p>
         <p className="fb-root">
-          <FacebookLoginContainer />
+          <FacebookLoginContainer label="Log in with Facebook" />
         </p>
         <p className="u-text-center">or</p>
         <TwitterLoginContainer label="Log in with Twitter" />

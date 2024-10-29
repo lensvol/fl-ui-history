@@ -17,6 +17,14 @@ export default function QualityItemNameAndDescription({
 
   const toggleExpanded = useCallback(() => setExpanded(!expanded), [expanded]);
 
+  const shouldRenderNameAndLevel =
+    nameAndLevel
+      .replaceAll("<i>", "")
+      .replaceAll("</i>", "")
+      .replaceAll("<em>", "")
+      .replaceAll("</em>", "")
+      .indexOf("<") === -1;
+
   return (
     <div className="quality-item__body">
       <span
@@ -25,7 +33,11 @@ export default function QualityItemNameAndDescription({
           !!relationshipDescription && "item__name--has-expansion"
         )}
       >
-        {nameAndLevel}
+        {shouldRenderNameAndLevel ? (
+          <span dangerouslySetInnerHTML={{ __html: nameAndLevel }} />
+        ) : (
+          nameAndLevel
+        )}
         {relationshipDescription && (
           <QualityItemExpansionToggle
             expanded={expanded}
