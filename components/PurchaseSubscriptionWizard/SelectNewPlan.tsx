@@ -29,6 +29,7 @@ export function SelectNewPlan({
 
   const [loading, setLoading] = useState(true);
 
+  const [plan, setPlan] = useState<IBraintreePlan | undefined>(undefined);
   const [plans, setPlans] = useState<IBraintreePlan[]>([]);
   const [addOn, setAddOn] = useState<IBraintreeAddOn | undefined>(undefined);
   const [selectedSubscriptionType, setSelectedSubscriptionType] =
@@ -58,11 +59,14 @@ export function SelectNewPlan({
 
       setPlans(planData.plans);
 
-      const currentPlan = planData.plans.find(
-        (plan) => plan.currencyIsoCode === subscriptionData?.currencyIsoCode
+      const { data } = await paymentService.fetchPlan(
+        subscriptionData?.currencyIsoCode ?? ""
       );
+
+      const currentPlan = data.plans[0];
       const currentAddOn = currentPlan?.addOns?.[0];
 
+      setPlan(currentPlan);
       setAddOn(currentAddOn);
       setAddOnPrice(currentAddOn?.amount);
 
@@ -90,6 +94,10 @@ export function SelectNewPlan({
     },
     [doChangeSubscriptionType]
   );
+
+  const handleSubmit = useCallback(() => {
+    onSubmit(plan);
+  }, [onSubmit, plan]);
 
   const formattedRenewDate = new Date(
     subscriptionData?.renewDate ?? ""
@@ -252,7 +260,7 @@ export function SelectNewPlan({
         <div className="buttons buttons--no-squash">
           <button
             className="button button--secondary"
-            onClick={onSubmit}
+            onClick={handleSubmit}
             type="button"
           >
             Next

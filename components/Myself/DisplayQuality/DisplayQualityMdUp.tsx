@@ -1,10 +1,14 @@
 import React from "react";
+
 import classnames from "classnames";
 
-import { ITooltipData } from "components/ModalTooltip/types";
 import Image from "components/Image";
+import { ITooltipData } from "components/ModalTooltip/types";
 import MediaMdUp from "components/Responsive/MediaMdUp";
+
 import { IQuality } from "types/qualities";
+
+import shouldRenderQualityName from "utils/shouldRenderQualityName";
 
 type Props = IQuality & {
   isChanging: boolean;
@@ -22,6 +26,8 @@ export default function DisplayQualityMdUp({
   onClick,
   tooltipData,
 }: Props) {
+  const shouldRenderNameAndLevel = shouldRenderQualityName(nameAndLevel);
+
   return (
     <MediaMdUp>
       <div
@@ -49,7 +55,13 @@ export default function DisplayQualityMdUp({
           </span>
         </div>
         <div>
-          <span className="js-item-name item__name">{nameAndLevel}</span>
+          <span className="js-item-name item__name">
+            {shouldRenderNameAndLevel ? (
+              <span dangerouslySetInnerHTML={{ __html: nameAndLevel }} />
+            ) : (
+              nameAndLevel
+            )}
+          </span>
         </div>
       </div>
     </MediaMdUp>

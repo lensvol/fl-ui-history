@@ -1,18 +1,24 @@
 import React, { Fragment, useCallback, useState } from "react";
+
 import { connect, useDispatch } from "react-redux";
 
 import { chooseNewMantelpiece, chooseNewScrapbook } from "actions/myself";
-import { IQuality } from "types/qualities";
-import { IAppState } from "types/app";
-import getQualities from "selectors/qualityPicker/getQualities";
-import getItem from "selectors/myself/getItem";
+
 import QualityPicker from "components/QualityPicker";
+import DisplayQuality from "components/Myself/DisplayQuality";
 import EmptyDisplayQuality from "components/Myself/EmptyDisplayQuality";
-import DisplayQuality from "./DisplayQuality";
 
-export function PossibleDisplayQuality(props: Props) {
-  const { item, nature, qualityPickerQualities } = props;
+import getItem from "selectors/myself/getItem";
+import getQualities from "selectors/qualityPicker/getQualities";
 
+import { IAppState } from "types/app";
+import { IQuality } from "types/qualities";
+
+export function PossibleDisplayQuality({
+  item,
+  nature,
+  qualityPickerQualities,
+}: Props) {
   const dispatch = useDispatch();
 
   const [isChanging, setIsChanging] = useState(false);
@@ -34,8 +40,11 @@ export function PossibleDisplayQuality(props: Props) {
     async (newItem: IQuality) => {
       const action =
         nature === "Thing" ? chooseNewMantelpiece : chooseNewScrapbook;
+
       setIsChanging(true);
+
       await dispatch(action(newItem));
+
       setIsChanging(false);
     },
     [dispatch, nature]

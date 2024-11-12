@@ -1,10 +1,14 @@
 import React from "react";
+
 import classnames from "classnames";
 
 import Image from "components/Image";
-import MediaSmDown from "components/Responsive/MediaSmDown";
 import { ITooltipData } from "components/ModalTooltip/types";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+
 import { IQuality } from "types/qualities";
+
+import shouldRenderQualityName from "utils/shouldRenderQualityName";
 
 type Props = IQuality & {
   isChanging: boolean;
@@ -21,6 +25,8 @@ export default function DisplayQualitySmDown({
   onClick,
   tooltipData,
 }: Props) {
+  const shouldRenderNameAndLevel = shouldRenderQualityName(nameAndLevel);
+
   return (
     <MediaSmDown>
       <li
@@ -44,7 +50,13 @@ export default function DisplayQualitySmDown({
           />
         </div>
         <div className="item__desc">
-          <span className="js-item-name item__name">{nameAndLevel}</span>
+          <span className="js-item-name item__name">
+            {shouldRenderNameAndLevel ? (
+              <span dangerouslySetInnerHTML={{ __html: nameAndLevel }} />
+            ) : (
+              nameAndLevel
+            )}
+          </span>
         </div>
       </li>
     </MediaSmDown>

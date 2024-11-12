@@ -20,6 +20,7 @@ export default function getDefaultPayPalOptions(
       },
     },
     threeDSecure: true,
+    dataCollector: true,
     vaultManager: true,
     card: {
       vault: {

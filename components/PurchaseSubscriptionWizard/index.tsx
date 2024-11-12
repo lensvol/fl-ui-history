@@ -155,6 +155,8 @@ export default function PurchaseSubscriptionWizard({
       result: ThreeDSecureCompleteResult<{
         nonce: string;
         recaptchaResponse: string | null;
+        paymentType?: string;
+        deviceData?: string;
       }>
     ) => {
       // no-op
@@ -171,10 +173,13 @@ export default function PurchaseSubscriptionWizard({
 
       setCurrentStep(PurchaseSubscriptionWizardStep.CompletingTransaction);
 
-      const { nonce, recaptchaResponse } = result.payload;
+      const { nonce, deviceData, paymentType, recaptchaResponse } =
+        result.payload;
 
       const purchaseRequest: ICreateBraintreeSubscriptionRequest = {
         nonce,
+        deviceData,
+        paymentType,
         recaptchaResponse,
         planId: braintreePlan?.id,
         addOnId: braintreePlan?.addOns?.[0]?.id,
@@ -189,8 +194,10 @@ export default function PurchaseSubscriptionWizard({
 
         ({ isSuccess, message } = response.data);
       } catch (e) {
-        if (e.response?.message) {
-          ({ message } = e.response);
+        const err: any = e;
+
+        if (err?.response?.message) {
+          ({ message } = err.response);
         }
       }
 
@@ -209,20 +216,20 @@ export default function PurchaseSubscriptionWizard({
     [braintreePlan, refreshPlayerData]
   );
 
-  const onDidSelectNewPlan = useCallback(() => {
-    setCurrentStep(PurchaseSubscriptionWizardStep.ConfirmNewPlan);
-  }, []);
+  const onDidSelectNewPlan = useCallback(
+    (currentPlan: IBraintreePlanWithClientRequestToken) => {
+      setBraintreePlan(currentPlan);
+      setCurrentStep(PurchaseSubscriptionWizardStep.ConfirmNewPlan);
+    },
+    []
+  );
 
   const onGoBackFromConfirmNewPlan = useCallback(() => {
     setCurrentStep(PurchaseSubscriptionWizardStep.SelectNewPlan);
   }, []);
 
   const onDidConfirmNewPlan = useCallback(
-    async (
-      _?: any,
-      nextStep?: PurchaseSubscriptionWizardStep,
-      message?: string
-    ) => {
+    async (nextStep: PurchaseSubscriptionWizardStep, message?: string) => {
       if (nextStep === PurchaseSubscriptionWizardStep.PaymentSuccess) {
         const verb =
           newSubscriptionType === "EnhancedExceptionalFriendship" ||
@@ -243,9 +250,7 @@ export default function PurchaseSubscriptionWizard({
         setPaymentResponseMessage(message ?? "");
       }
 
-      setCurrentStep(
-        nextStep ?? PurchaseSubscriptionWizardStep.CompletingTransaction
-      );
+      setCurrentStep(nextStep);
     },
     [newSubscriptionType, refreshPlayerData]
   );
@@ -290,7 +295,7 @@ export default function PurchaseSubscriptionWizard({
       }
 
       case PurchaseSubscriptionWizardStep.ProvidePaymentDetails:
-        if (braintreePlan && braintreePlan.clientRequestToken) {
+        if (braintreePlan?.clientRequestToken) {
           return (
             <ProvidePaymentDetails
               braintreePlan={braintreePlan}
@@ -317,14 +322,20 @@ export default function PurchaseSubscriptionWizard({
         );
 
       case PurchaseSubscriptionWizardStep.ConfirmNewPlan:
-        return (
-          <ConfirmNewPlan
-            addOnPrice={addOnPrice}
-            newSubscriptionType={newSubscriptionType}
-            onGoBack={onGoBackFromConfirmNewPlan}
-            onSubmit={onDidConfirmNewPlan}
-          />
-        );
+        if (braintreePlan?.clientRequestToken) {
+          return (
+            <ConfirmNewPlan
+              addOnPrice={addOnPrice}
+              braintreePlan={braintreePlan}
+              newSubscriptionType={newSubscriptionType}
+              onGoBack={onGoBackFromConfirmNewPlan}
+              onSubmit={onDidConfirmNewPlan}
+            />
+          );
+        }
+
+        // Return null? Or an error page? We shouldn't be in this situation
+        return null;
 
       case PurchaseSubscriptionWizardStep.SelectCurrency:
       default:

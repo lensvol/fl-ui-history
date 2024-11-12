@@ -1,9 +1,10 @@
-import { buildTooltipData } from "components/SidebarQualities/utils";
 import React from "react";
-import { IQuality } from "types/qualities";
 
-import DisplayQualityMdUp from "./DisplayQualityMdUp";
-import DisplayQualitySmDown from "./DisplayQualitySmDown";
+import DisplayQualityMdUp from "components/Myself/DisplayQuality/DisplayQualityMdUp";
+import DisplayQualitySmDown from "components/Myself/DisplayQuality/DisplayQualitySmDown";
+import { buildTooltipData } from "components/SidebarQualities/utils";
+
+import { IQuality } from "types/qualities";
 
 type Props = {
   isChanging: boolean;

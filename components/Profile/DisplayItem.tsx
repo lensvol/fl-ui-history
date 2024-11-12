@@ -1,14 +1,19 @@
-import classnames from "classnames";
-import Image from "components/Image";
-import { buildTooltipData } from "components/SidebarQualities/utils";
-import { useAppDispatch, useAppSelector } from "features/app/store";
 import React, { Fragment, useCallback, useState } from "react";
 
+import classnames from "classnames";
+
 import { chooseNewMantelpiece, chooseNewScrapbook } from "actions/myself";
+
+import Image from "components/Image";
+import QualityPicker from "components/QualityPicker";
+import { buildTooltipData } from "components/SidebarQualities/utils";
+
+import { useAppDispatch, useAppSelector } from "features/app/store";
 import { fetchProfile } from "features/profile";
 
-import QualityPicker from "components/QualityPicker";
 import { IQuality } from "types/qualities";
+
+import shouldRenderQualityName from "utils/shouldRenderQualityName";
 
 const labelToQualityPickerHeader = (label: "Mantelpiece" | "Scrapbook") =>
   ({
@@ -41,7 +46,9 @@ export default function DisplayItem(props: OwnProps) {
     async (newQuality: IQuality) => {
       const action =
         nature === "Thing" ? chooseNewMantelpiece : chooseNewScrapbook;
+
       await dispatch(action(newQuality));
+
       if (profileCharacter) {
         dispatch(fetchProfile({ characterName: profileCharacter.name }));
       }
@@ -68,6 +75,8 @@ export default function DisplayItem(props: OwnProps) {
   };
 
   const { effectiveLevel, image, nameAndLevel, levelDescription } = quality;
+
+  const shouldRenderNameAndLevel = shouldRenderQualityName(nameAndLevel);
 
   return (
     <Fragment>
@@ -98,13 +107,21 @@ export default function DisplayItem(props: OwnProps) {
             {quality.nature === "Thing" ? (
               <>
                 <div className="js-item-name item__name profile__display-item-description">
-                  {nameAndLevel}
+                  {shouldRenderNameAndLevel ? (
+                    <span dangerouslySetInnerHTML={{ __html: nameAndLevel }} />
+                  ) : (
+                    nameAndLevel
+                  )}
                 </div>
               </>
             ) : (
               <>
                 <div className="js-item-name item__name profile__display-item-description">
-                  {quality.name}
+                  {shouldRenderNameAndLevel ? (
+                    <span dangerouslySetInnerHTML={{ __html: quality.name }} />
+                  ) : (
+                    quality.name
+                  )}
                 </div>
                 <div
                   className="js-item-name item__name profile__display-item-description"

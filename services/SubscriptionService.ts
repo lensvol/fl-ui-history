@@ -1,7 +1,4 @@
-import {
-  ISubscriptionService,
-  PremiumSubscriptionType,
-} from "types/subscription";
+import { ISubscriptionService, ModifyOptions } from "types/subscription";
 import BaseService from "./BaseService";
 
 export default class SubscriptionService
@@ -24,12 +21,15 @@ export default class SubscriptionService
    * Modify braintree subscription
    * @type {Object}
    */
-  modifyBraintreeSubscription = (subscriptionType: PremiumSubscriptionType) => {
+  modifyBraintreeSubscription = (options: ModifyOptions) => {
     const config = {
       url: "/nex/modifybraintreesubscription",
       method: "post",
       data: {
-        subscriptionType,
+        deviceData: options.deviceData,
+        nonce: options.nonce,
+        paymentType: options.paymentType,
+        subscriptionType: options.subscriptionType,
       },
     };
 

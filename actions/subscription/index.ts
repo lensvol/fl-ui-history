@@ -16,7 +16,7 @@ import {
   FetchSubscriptionResponse,
   IModifySubscriptionSuccessData,
   ISubscriptionService,
-  PremiumSubscriptionType,
+  ModifyOptions,
 } from "types/subscription";
 
 const service: ISubscriptionService = new SubscriptionService();
@@ -28,11 +28,6 @@ export type FetchSubscriptionSuccess = {
 
 type FetchOptions = {
   fetchInBackground?: boolean;
-};
-
-type ModifyOptions = {
-  modifyInBackground?: boolean;
-  subscriptionType: PremiumSubscriptionType;
 };
 
 export const fetchSubscriptionRequested = () => ({ type: FETCH_REQUESTED });
@@ -86,9 +81,7 @@ export const modifyBraintreeSubscription =
     }
 
     try {
-      const { data } = await service.modifyBraintreeSubscription(
-        options.subscriptionType
-      );
+      const { data } = await service.modifyBraintreeSubscription(options);
 
       dispatch(modifyBraintreeSubscriptionSuccess(data));
 

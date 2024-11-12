@@ -1,7 +1,12 @@
 import React, { useCallback, useState } from "react";
+
 import classnames from "classnames";
+
+import QualityItemExpansionToggle from "components/Myself/QualityItemExpansionToggle";
+
 import { IQuality } from "types/qualities";
-import QualityItemExpansionToggle from "./QualityItemExpansionToggle";
+
+import shouldRenderQualityName from "utils/shouldRenderQualityName";
 
 type Props = Pick<
   IQuality,
@@ -17,13 +22,7 @@ export default function QualityItemNameAndDescription({
 
   const toggleExpanded = useCallback(() => setExpanded(!expanded), [expanded]);
 
-  const shouldRenderNameAndLevel =
-    nameAndLevel
-      .replaceAll("<i>", "")
-      .replaceAll("</i>", "")
-      .replaceAll("<em>", "")
-      .replaceAll("</em>", "")
-      .indexOf("<") === -1;
+  const shouldRenderNameAndLevel = shouldRenderQualityName(nameAndLevel);
 
   return (
     <div className="quality-item__body">

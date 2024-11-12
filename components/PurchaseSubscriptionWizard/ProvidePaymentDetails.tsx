@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
+
 import { Dropin, PaymentMethodRequestablePayload } from "braintree-web-drop-in";
+
 import { Formik, Form } from "formik";
 
 import {
@@ -9,16 +11,15 @@ import {
   PaymentStuffProps,
   PersonalDetails,
 } from "components/Payment/PaymentStuff";
-import BraintreeDropIn, {
-  BraintreeWebDropInOptions,
-} from "components/Payment/BraintreeWebDropIn";
-import Config from "configuration";
+import BraintreeDropIn from "components/Payment/BraintreeWebDropIn";
+import getSubscriptionBraintreeOptions from "components/Payment/getSubscriptionBraintreeOptions";
+import Header from "components/PurchaseSubscriptionWizard/Header";
+
 import {
   IBraintreePlanWithClientRequestToken,
   PaymentMethodType,
+  ThreeDSecureParameters,
 } from "types/payment";
-import Header from "./Header";
-
 import { PremiumSubscriptionType } from "types/subscription";
 
 interface Props {
@@ -28,6 +29,8 @@ interface Props {
   onThreeDSecureComplete: PaymentStuffProps<{
     nonce: string;
     recaptchaResponse: string | null;
+    deviceData?: string;
+    paymentType?: string;
   }>["onThreeDSComplete"];
   renewDate?: string;
   subscriptionType?: PremiumSubscriptionType;
@@ -65,60 +68,13 @@ export default function ProvidePaymentDetails({
 
   const authorization = useMemo(() => clientRequestToken, [clientRequestToken]);
 
-  const options: BraintreeWebDropInOptions = useMemo(
-    () => ({
+  const options = useMemo(() => {
+    return getSubscriptionBraintreeOptions({
       authorization,
-      locale: "en_GB",
-      threeDSecure: true,
-      version: 2,
-      paypal: {
-        flow: "vault",
-      },
-      applePay: {
-        buttonStyle: "black",
-        displayName: "Failbetter Games",
-        paymentRequest: {
-          total: {
-            type: "final",
-            label: "Failbetter Games",
-            amount: (price + addOnPrice).toFixed(2),
-            paymentTiming: "recurring",
-          },
-          currencyCode: currencyIsoCode,
-        },
-      },
-      googlePay: {
-        merchantId: Config.googleMerchantId,
-        googlePayVersion: 2,
-        transactionInfo: {
-          currencyCode: currencyIsoCode,
-          totalPrice: (price + addOnPrice).toFixed(2),
-          totalPriceStatus: "FINAL",
-        },
-        button: {
-          onClick: (_event: Event) => {
-            // custom event handler when user clicks Google Pay button
-            // no-op for now
-          },
-          buttonType: "subscribe", // "Subscribe with G Pay"
-          buttonSizeMode: "fill",
-          allowedPaymentMethods: [
-            {
-              type: "CARD", // Cannot use Google Pay + PayPal for subscriptions
-              parameters: {
-                allowedAuthMethods: [
-                  "CRYPTOGRAM_3DS", // ThreeDSecure
-                ],
-                allowedCardNetworks: ["DISCOVER", "MASTERCARD", "VISA"],
-                allowPrepaidCards: false, // avoid for subscriptions
-              },
-            },
-          ],
-        },
-      },
-    }),
-    [addOnPrice, authorization, currencyIsoCode, price]
-  );
+      currencyIsoCode,
+      price: price + addOnPrice,
+    });
+  }, [addOnPrice, authorization, currencyIsoCode, price]);
 
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<
     PaymentMethodType | undefined
@@ -150,34 +106,48 @@ export default function ProvidePaymentDetails({
     async (values, _helpers) => {
       if (dropInInstance === undefined) {
         console.error("Trying to submit without a Braintree instance");
+
         return;
       }
 
-      const payload = await dropInInstance.requestPaymentMethod({
+      const requestPaymentMethodPayload: {
+        threeDSecure: ThreeDSecureParameters;
+      } = {
         threeDSecure: {
           amount: (price + addOnPrice).toFixed(2),
           billingAddress: formValuesToBillingAddress(values),
+          collectDeviceData: true,
+          email: values.email,
         },
-      });
+      };
+
+      const payload = await dropInInstance.requestPaymentMethod(
+        requestPaymentMethodPayload
+      );
 
       if (payload.type === "CreditCard") {
         if (!payload.threeDSecureInfo?.liabilityShifted) {
           console.error(
             "Liability did not shift as a result of 3DS authentication"
           );
+
           onThreeDSecureComplete({
             isSuccess: false,
             message: GENERIC_THREE_D_SECURE_FAILURE_MESSAGE,
           });
+
           return;
         }
       }
 
-      const { nonce } = payload;
+      const { nonce, deviceData, type: paymentType } = payload;
+
       onThreeDSecureComplete({
         isSuccess: true,
         payload: {
           nonce,
+          deviceData,
+          paymentType,
           recaptchaResponse: null,
         },
       });
@@ -211,13 +181,13 @@ export default function ProvidePaymentDetails({
             style={{
               paddingTop: "2rem",
               paddingBottom:
-                currentPaymentMethod === "CreditCard" ? ".5rem" : 0,
+                currentPaymentMethod === "CreditCard" ? "0.5rem" : 0,
             }}
           >
             <button
-              type="button"
               className="button button--primary"
               onClick={onGoBack}
+              type="button"
             >
               Go back
             </button>
