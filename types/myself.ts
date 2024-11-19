@@ -1,7 +1,8 @@
 import { AxiosResponse } from "axios";
+
 import { ISetting } from "types/map";
-import { IQuality } from "types/qualities";
 import { IOutfit } from "types/outfit";
+import { IQuality } from "types/qualities";
 
 export enum UIRestriction {
   None,
@@ -35,6 +36,7 @@ export interface IMyselfState {
     name: string;
     categories: string[];
     qualities: number[];
+    image?: string;
   }[];
   uiRestrictions?: UIRestriction[];
 }
@@ -62,8 +64,11 @@ export interface IFetchMyselfResponseData {
     categories: string[];
     name: string;
     possessions: IQuality[];
+    image?: string;
   }[];
   restrictedUserInterfaceElements?: string[];
 }
 
-export type IScrapbookMantelpieceResponse = { data: IQuality };
+export type IScrapbookMantelpieceResponse = {
+  data: IQuality;
+};

@@ -2,25 +2,39 @@ import React from "react";
 
 import classnames from "classnames";
 
-import PropTypes from "prop-types";
+import Image from "components/Image";
 
-export default function EmptySlot({ isChanging }: { isChanging: boolean }) {
+import { useAppSelector } from "features/app/store";
+
+import { OutfitSlotName } from "types/outfit";
+
+export default function EmptySlot({ isChanging, name }: Props) {
+  const image = useAppSelector(
+    (state) =>
+      state.myself.categories.find(
+        (category) => category.name.replace(/ /g, "") === name
+      )?.image
+  );
+
   return (
     <div
       className={classnames(
         "equipment__empty-slot",
-        isChanging && "equipment__empty-slot--is-changing"
+        isChanging && "equipment-slot--is-changing"
       )}
-      style={{
-        width: "40px",
-        height: "40px",
-      }}
-    />
+    >
+      {image && (
+        <>
+          <Image key={image} type="small-icon" icon={image} alt="" />
+        </>
+      )}
+    </div>
   );
 }
 
 EmptySlot.displayName = "EmptySlot";
 
-EmptySlot.propTypes = {
-  isChanging: PropTypes.bool.isRequired,
+type Props = {
+  isChanging: boolean;
+  name: OutfitSlotName;
 };

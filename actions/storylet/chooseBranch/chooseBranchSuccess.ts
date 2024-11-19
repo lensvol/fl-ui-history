@@ -1,7 +1,8 @@
 import * as StoryletActionTypes from "actiontypes/storylet";
+
 import {
-  IApiStoryletResponseData,
   ApiCharacterFriend,
+  IApiStoryletResponseData,
 } from "services/StoryletService";
 
 export type ChooseBranchSuccessAction = {
@@ -42,6 +43,7 @@ export default function chooseBranchSuccess(
     messages,
     setting,
   } = data;
+
   return {
     type: StoryletActionTypes.CHOOSE_BRANCH_SUCCESS,
     payload: {

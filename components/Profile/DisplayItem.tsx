@@ -78,6 +78,12 @@ export default function DisplayItem(props: OwnProps) {
 
   const shouldRenderNameAndLevel = shouldRenderQualityName(nameAndLevel);
 
+  const levelDescriptionNoItalics = (levelDescription ?? "")
+    .replaceAll("<i>", "")
+    .replaceAll("</i>", "")
+    .replaceAll("<em>", "")
+    .replaceAll("</em>", "");
+
   return (
     <Fragment>
       <div className="profile__display-item-container">
@@ -129,7 +135,7 @@ export default function DisplayItem(props: OwnProps) {
                     fontStyle: "italic",
                   }}
                 >
-                  {levelDescription}
+                  {levelDescriptionNoItalics}
                 </div>
               </>
             )}

@@ -1,8 +1,10 @@
 // @ts-ignore
 import querystring from "query-string";
+
+import BaseService, { Either } from "services/BaseMonadicService";
+
 import { AreaWithNestedJsonInfo } from "types/map";
 import { IQuality } from "types/qualities";
-import BaseService, { Either } from "./BaseMonadicService";
 
 export type DeleteEntryResponse = {
   message: string;
@@ -13,7 +15,9 @@ export type FetchProfileResponse = {
   characterName: string;
   currentArea: AreaWithNestedJsonInfo;
   profileCharacter: IProfileCharacter;
-  standardEquippedPossessions: { possessions: IQuality[] };
+  standardEquippedPossessions: {
+    possessions: IQuality[];
+  };
   profileName?: string;
   profileDescription?: string;
   profileBanner?: string;
@@ -97,7 +101,8 @@ export interface IProfileService {
 
 class ProfileService extends BaseService implements IProfileService {
   fetchProfile = (characterName: string, fromEchoId?: string | number) => {
-    let url = `/profile?characterName=${characterName ?? ""}`;
+    let url = `/profile?characterName=${encodeURIComponent(characterName ?? "")}`;
+
     if (fromEchoId) {
       url += `/${fromEchoId}`;
     }
@@ -106,6 +111,7 @@ class ProfileService extends BaseService implements IProfileService {
       method: "get",
       url,
     };
+
     return this.doRequest<FetchProfileResponse>(config);
   };
 
@@ -113,8 +119,11 @@ class ProfileService extends BaseService implements IProfileService {
     const config = {
       method: "post",
       url: "/profile/delete",
-      data: { entryId },
+      data: {
+        entryId,
+      },
     };
+
     return this.doRequest<DeleteEntryResponse>(config);
   };
 
@@ -128,15 +137,20 @@ class ProfileService extends BaseService implements IProfileService {
       date,
       fromId,
     });
+
     const config = {
       method: "get",
       url: `/profile/shares?${qs}`,
     };
+
     return this.doRequest<FetchSharedContentResponse>(config);
   };
 
   fetchSharedContentByUrl = (url: string) => {
-    const config = { url };
+    const config = {
+      url,
+    };
+
     return this.doRequest<FetchSharedContentResponse>(config);
   };
 
@@ -144,7 +158,9 @@ class ProfileService extends BaseService implements IProfileService {
     const config = {
       method: "post",
       url: "/profile/toggleFavourite",
-      data: { id },
+      data: {
+        id,
+      },
     };
 
     return this.doRequest<ShareResponse>(config);
@@ -154,13 +170,17 @@ class ProfileService extends BaseService implements IProfileService {
     const config = {
       method: "post",
       url: "/profile/update",
-      data: { newDescription },
+      data: {
+        newDescription,
+      },
     };
+
     return this.doRequest<UpdateDescriptionResponse>(config);
   };
 
   share = (request: ShareContentRequest) => {
     const { contentClass, contentKey, image, message } = request;
+
     const config = {
       method: "post",
       url: "/profile/share",
@@ -171,6 +191,7 @@ class ProfileService extends BaseService implements IProfileService {
         contentKey,
       },
     };
+
     return this.doRequest<ShareResponse>(config);
   };
 }

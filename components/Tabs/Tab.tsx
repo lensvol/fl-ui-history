@@ -26,9 +26,9 @@ type Props = OwnProps &
   RouteComponentProps;
 
 export function Tab({
-  id,
   children,
   history,
+  id,
   messagesChanged,
   name,
   to,
@@ -54,7 +54,7 @@ export function Tab({
   const tabClass = classnames({
     nav__item: true,
     active: activeLabel === id,
-    notifying: isNotifying,
+    notifying: isNotifying && activeLabel !== id,
   });
 
   return (

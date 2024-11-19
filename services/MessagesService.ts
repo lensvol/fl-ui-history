@@ -1,5 +1,6 @@
+import BaseService, { Either } from "services/BaseMonadicService";
+
 import { IMessages } from "types/app/messages";
-import BaseService, { Either } from "./BaseMonadicService";
 
 export type Message = {
   type: string;
@@ -46,12 +47,16 @@ export interface IMessagesService {
   ) => Promise<Either<RejectInvitationResponse>>;
 }
 
-class MessagesService extends BaseService implements IMessagesService {
+export default class MessagesService
+  extends BaseService
+  implements IMessagesService
+{
   acceptInvitation = (invitationId: number) => {
     const config = {
       method: "post",
       url: `/messages/acceptinvitation/${invitationId}`,
     };
+
     return this.doRequest<AcceptInvitationResponse>(config);
   };
 
@@ -60,6 +65,7 @@ class MessagesService extends BaseService implements IMessagesService {
       url: `/messages/deletemessage/${messageId}`,
       method: "post",
     };
+
     return this.doRequest<DeleteMessageResponse>(config);
   };
 
@@ -113,8 +119,7 @@ class MessagesService extends BaseService implements IMessagesService {
       method: "post",
       url: `/messages/cancelinvitation/${invitationId}`,
     };
+
     return this.doRequest<RejectInvitationResponse>(config);
   };
 }
-
-export { MessagesService as default };

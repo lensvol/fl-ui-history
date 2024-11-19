@@ -4,12 +4,14 @@ type CreateCategoriesArg = {
   name: string;
   categories: string[];
   possessions: IQuality[];
+  image?: string;
 }[];
 
 type CreateCategoriesReturnType = {
   name: string;
   qualities: number[];
   categories: string[];
+  image?: string;
 }[];
 
 export default function createCategories(
@@ -19,5 +21,6 @@ export default function createCategories(
     categories: category.categories,
     name: category.name,
     qualities: category.possessions.map(({ id }) => id),
+    image: category.image,
   }));
 }

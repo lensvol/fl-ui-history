@@ -2,46 +2,42 @@ import React from "react";
 
 import { Route, Router, Switch } from "react-router-dom";
 
+import ReactGA from "react-ga4";
+
 import { useFeature } from "flagged";
-import { FEATURE_CREDITS } from "features/feature-flags";
 
 import Config from "configuration";
-// This is a component wrapper to ensure a user can only access it when logged in.
-// import PrivateRoute from 'components/PrivateRoute';
-import RequireCharacter from "components/RequireCharacter";
-import RequireNoCharacter from "components/RequireNoCharacter";
-import RequireUnauthenticated from "components/RequireUnauthenticated";
-
-import Timer from "components/Timer";
-
-// Our shared history object
-import history from "shared/history";
-
-import ErrorBoundary from "components/ErrorBoundary";
-import VersionMismatchModal from "components/VersionMismatchModal";
 
 import AccessCode, {
   AccessCodeChallengeDialog,
   AccessCodeResultDialog,
 } from "components/AccessCode";
 
+import ErrorBoundary from "components/ErrorBoundary";
+import VersionMismatchModal from "components/VersionMismatchModal";
+
+// These components ensure a user can only access certain areas when logged in.
+import RequireCharacter from "components/RequireCharacter";
+import RequireNoCharacter from "components/RequireNoCharacter";
+import RequireUnauthenticated from "components/RequireUnauthenticated";
+
+import Timer from "components/Timer";
+
 // Containers (These are essentially used like 'pages')
-import StoryTabContent from "components/StoryTabContent";
-
+import AccountPage from "components/AccountPage";
 import CreateCharacter from "components/CreateCharacter";
-import LoginContainer from "components/Login";
-
-import ProfilePage from "components/ProfilePage";
-import MessagesTab from "components/MessagesTab";
-import PossessionsTab from "components/PossessionsTab";
+import CreditsPage from "components/Credits";
 import ExchangeTab from "components/ExchangeTab";
 import FateTab from "components/FateTab";
-import AccountPage from "components/AccountPage";
 import HelpPage from "components/HelpPage";
-import PrivacyPage from "components/PrivacyPage";
-import TermsPage from "components/TermsPage";
-import CreditsPage from "components/Credits";
+import LoginContainer from "components/Login";
+import MessagesTab from "components/MessagesTab";
 import MyProfileTab from "components/MyProfileTab";
+import PossessionsTab from "components/PossessionsTab";
+import PrivacyPage from "components/PrivacyPage";
+import ProfilePage from "components/ProfilePage";
+import StoryTabContent from "components/StoryTabContent";
+import TermsPage from "components/TermsPage";
 
 import ErrorThrower from "components/ErrorThrower";
 import MyselfTab from "components/MyselfTab";
@@ -58,7 +54,10 @@ import UnsubscribeContainer from "components/Messages/UnsubscribeContainer";
 // 404 Route
 import NotFound from "components/NotFound";
 
-import ReactGA from "react-ga4";
+import { FEATURE_CREDITS } from "features/feature-flags";
+
+// Our shared history object
+import history from "shared/history";
 
 import { UIRestriction } from "types/myself";
 
@@ -84,7 +83,7 @@ export default function App() {
             render={({ location }) => (
               <Switch location={location}>
                 {/* Unrestricted routes */}
-                {/* <Route path="*" component={maintenance} /> */}
+                {/* <Route path='*' component={maintenance} /> */}
                 <Route path="/a/:accessCodeName" exact component={AccessCode} />
                 <Route
                   path="/profile/:profileName/:fromEchoId?"

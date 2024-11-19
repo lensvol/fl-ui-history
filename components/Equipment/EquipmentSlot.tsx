@@ -50,7 +50,7 @@ function EquipmentSlot(props: Props) {
     );
   }
 
-  return <EmptySlot isChanging={isChanging} />;
+  return <EmptySlot isChanging={isChanging} name={props.name} />;
 }
 
 EquipmentSlot.displayName = "EquipmentSlot";

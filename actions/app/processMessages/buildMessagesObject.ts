@@ -1,4 +1,5 @@
 import findOutfitGrantedMessage from "actions/app/processMessages/findOutfitGrantedMessage";
+
 import {
   ACTIONS_REFRESHED_MESSAGE,
   AREA_CHANGE_MESSAGE,
@@ -9,6 +10,7 @@ import {
   FATE_POINT_CHANGE_MESSAGE,
   STORE_ITEM_CURRENCY_USED_MESSAGE,
 } from "constants/message-types";
+
 import {
   ActionsRefreshedMessage,
   ApiResultMessageQualityEffect,
@@ -31,6 +33,7 @@ export default function buildMessagesObject(
         messages.areaMessage ?? findAreaMessage(messages.defaultMessages),
     };
   }
+
   return {
     actionMessage: findActionMessage(messages),
     areaMessage: findAreaMessage(messages),
@@ -53,9 +56,11 @@ export function excludeSpecialMessages(
 
 export function findActionMessage(messages: ApiResultMessageQualityEffect[]) {
   const actionMessage = messages.find(isActionsRefreshedMessage);
+
   if (actionMessage) {
     return actionMessage as ActionsRefreshedMessage;
   }
+
   return undefined;
 }
 
@@ -67,9 +72,11 @@ export function findDifficultyMessages(
 
 export function findAreaMessage(messages: ApiResultMessageQualityEffect[]) {
   const areaMessage = messages.find(isAreaChangeMessage);
+
   if (areaMessage) {
     return areaMessage as AreaChangeMessage;
   }
+
   return undefined;
 }
 
@@ -77,17 +84,21 @@ export function findDeckRefreshedMessage(
   messages: ApiResultMessageQualityEffect[]
 ) {
   const deckRefreshedMessage = messages.find(isDeckRefreshedMessage);
+
   if (deckRefreshedMessage) {
     return deckRefreshedMessage as DeckRefreshedMessage;
   }
+
   return deckRefreshedMessage;
 }
 
 export function findFateMessage(messages: ApiResultMessageQualityEffect[]) {
   const fateMessage = messages.find(isFateMessage);
+
   if (fateMessage) {
     return fateMessage as FateMessage;
   }
+
   return undefined;
 }
 

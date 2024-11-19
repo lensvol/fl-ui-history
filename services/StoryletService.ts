@@ -1,15 +1,15 @@
+import BaseService from "services/BaseService";
+
 import { IMessages } from "types/app/messages";
+import { ISetting } from "types/map";
 import {
   ApiAvailableStorylet,
+  BeginSocialEventResponse,
   IBranch,
   IEndStorylet,
   IInStorylet,
   StoryletPhase,
-  BeginSocialEventResponse,
 } from "types/storylet";
-import BaseService from "./BaseService";
-
-import { ISetting } from "types/map";
 
 type ApiExternalSocialActResponse = {
   branch: IBranch;
@@ -139,15 +139,19 @@ export default class StoryletService
         username: data.username,
       },
     };
+
     return this.doRequest(config);
   };
 
   begin = (eventId: number) => {
     const config = {
-      data: { eventId },
+      data: {
+        eventId,
+      },
       method: "post",
       url: "/storylet/begin",
     };
+
     return this.doRequest<IApiStoryletResponseData>(config);
   };
 
@@ -156,6 +160,7 @@ export default class StoryletService
       method: "post",
       url: `/storylet/beginsocialevent/${invitationId}`,
     };
+
     return this.doRequest<BeginSocialEventResponse>(config);
   };
 
@@ -168,6 +173,7 @@ export default class StoryletService
         secondChanceIds: data.secondChanceIds,
       },
     };
+
     return this.doRequest<IApiStoryletResponseData>(config);
   };
 
@@ -176,6 +182,7 @@ export default class StoryletService
       method: "post",
       url: "/storylet",
     };
+
     return this.doRequest<IApiStoryletResponseData>(config);
   };
 
@@ -183,8 +190,11 @@ export default class StoryletService
     const config = {
       method: "post",
       url: "/storylet/ineligiblecontacts",
-      data: { branchId },
+      data: {
+        branchId,
+      },
     };
+
     return this.doRequest<FetchIneligibleContactsResponse>(config);
   };
 
@@ -193,6 +203,7 @@ export default class StoryletService
       method: "post",
       url: "/storylet/goback",
     };
+
     return this.doRequest<IApiStoryletResponseData>(config);
   };
 
@@ -206,6 +217,7 @@ export default class StoryletService
         name: data.name,
       },
     };
+
     return this.doRequest(config);
   };
 
@@ -219,6 +231,7 @@ export default class StoryletService
         targetCharacterId: data.targetCharacterId,
       },
     };
+
     return this.doRequest<IApiStoryletResponseData>(config);
   };
 
@@ -228,6 +241,7 @@ export default class StoryletService
       url: "/storylet/sendexternalsocialact",
       data,
     };
+
     return this.doRequest(config);
   };
 
@@ -236,6 +250,7 @@ export default class StoryletService
       method: "get",
       url: `/storylet/suggest?branchid=${branchId}`,
     };
+
     return this.doRequest(config);
   };
 
@@ -243,8 +258,11 @@ export default class StoryletService
     const config = {
       method: "post",
       url: "/storylet/usequality",
-      data: { qualityId },
+      data: {
+        qualityId,
+      },
     };
+
     return this.doRequest(config);
   };
 }

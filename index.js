@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export, no-underscore-dangle */
-import "react-app-polyfill/ie11";
 // react
 import React from "react";
 import ReactDOM from "react-dom";

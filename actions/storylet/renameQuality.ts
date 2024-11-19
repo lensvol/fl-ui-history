@@ -1,5 +1,7 @@
 import { handleVersionMismatch } from "actions/versionSync";
+
 import * as StoryletActionTypes from "actiontypes/storylet";
+
 import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
   IApiStoryletResponseData,
@@ -32,13 +34,16 @@ export default renameQuality(new StoryletService());
 export function renameQuality(service: IStoryletService) {
   return (stuff: any) => async (dispatch: Function) => {
     dispatch(renameQualityRequested());
+
     try {
       const { data } = await service.renameQuality(stuff);
+
       dispatch(renameQualitySuccess(data));
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
       }
+
       dispatch(renameQualityFailure());
     }
   };

@@ -1,9 +1,8 @@
 import { showAccountLinkReminder } from "actions/accountLinkReminder";
-
 import { fetchActions } from "actions/actions";
+import { fetch as fetchCards } from "actions/cards";
 import extractImages from "actions/app/extractImages";
 import preloadImages from "actions/app/preloadImages";
-import { fetch as fetchCards } from "actions/cards";
 import { fetchExchange } from "actions/exchange";
 import { fetch as fetchFate } from "actions/fate";
 import { getSupportingData } from "actions/infoBar";
@@ -21,8 +20,10 @@ import { fetch as fetchSettings } from "actions/settings";
 import fetchAuthMethods from "actions/settings/fetchAuthMethods";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 import { fetchUser, loginSuccess } from "actions/user";
+
 import { Either, Failure, Success } from "services/BaseMonadicService";
 import { FetchUserResponse } from "services/UserService";
+
 import { IAppState } from "types/app";
 import { IFetchMyselfResponseData } from "types/myself";
 
@@ -48,6 +49,7 @@ export default function performInitialRequests(options = {}) {
   return async (dispatch: Function, _getState: () => IAppState) => {
     // Have we got a JWT with a character ID?
     const { characterId } = destructureJwt();
+
     // If not, then just return.
     if (!characterId) {
       return;
@@ -56,9 +58,11 @@ export default function performInitialRequests(options = {}) {
     // Fetch myself qualities and optionally prefetch quality images
     const fetchMyselfResult: Success<IFetchMyselfResponseData> | Failure =
       await dispatch(fetchMyself());
+
     // No need to await images
     if (fetchMyselfResult instanceof Success && FLAG_PREFETCH_NON_MAP_IMAGES) {
       const images = extractImages();
+
       preloadImages(
         images.map((image) => getImagePath({ icon: image, type: "small-icon" }))
       );
@@ -90,6 +94,7 @@ export default function performInitialRequests(options = {}) {
     // Get the user data, which we need for a few things
     {
       const userResult: Either<FetchUserResponse> = await dispatch(fetchUser());
+
       if (userResult instanceof Success) {
         // Now that we have user data, fetch the other stuff we need to load up
         const { data } = userResult;
@@ -120,16 +125,19 @@ export default function performInitialRequests(options = {}) {
     // new character --- so we need to account for it
     // Fetch the map. This will also load map sprites, so can take a while
     const mapData = await dispatch(fetchMap(options));
+
     if (mapData?.currentArea) {
       dispatch(setCurrentArea(mapData.currentArea));
     }
 
     // Fetch bazaar data and optionally fetch images
     const exchangeData: any = await fetchExchange();
+
     if (exchangeData?.exchange?.shops && FLAG_PREFETCH_NON_MAP_IMAGES) {
       const {
         exchange: { shops },
       } = exchangeData;
+
       preloadImages(
         shops
           .map((s: any) => s.image)

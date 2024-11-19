@@ -1,5 +1,6 @@
-import OutfitService from "services/OutfitService";
 import changeEquipped from "actions/outfit/changeEquipped";
+
+import OutfitService from "services/OutfitService";
 
 const service = new OutfitService();
 

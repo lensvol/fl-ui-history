@@ -1,43 +1,43 @@
 import { combineReducers } from "redux";
 
-import timeTheHealer from "features/timeTheHealer/timeTheHealerSlice";
 import { reducer as contacts } from "features/contacts";
 import { reducer as profile } from "features/profile";
+import timeTheHealer from "features/timeTheHealer/timeTheHealerSlice";
 
-import accountLinkReminder from "./accountLinkReminder";
-import actions from "./actions";
-import app from "./app";
-import branches from "./branches";
-import user from "./user";
-import storylet from "./storylet";
-import cards from "./cards";
-import equipment from "./equipment";
-import messages from "./messages";
-import myself from "./myself";
-import exchange from "./exchange";
-import fate from "./fate";
-import mapAdmin from "./mapAdmin";
-import plans from "./plans";
-import registration from "./registration";
-import map from "./map";
-import modalTooltip from "./modalTooltip";
-import mysteries from "./mysteries";
-import outfit from "./outfit";
-import phase from "./phase";
-import timer from "./timer";
-import scrollToComponent from "./scrollToComponent";
-import spriteLoader from "./spriteLoader";
-import subscription from "./subscription";
-import payment from "./payment";
-import screen from "./screen";
-import settings from "./settings";
-import sidebar from "./sidebar";
-import socialAct from "./socialAct";
-import subtabs from "./subtabs";
-import news from "./news";
-import infoBar from "./infoBar";
-import accessCodes from "./accessCodes";
-import versionSync from "./versionSync";
+import accessCodes from "reducers/accessCodes";
+import accountLinkReminder from "reducers/accountLinkReminder";
+import actions from "reducers/actions";
+import app from "reducers/app";
+import branches from "reducers/branches";
+import cards from "reducers/cards";
+import equipment from "reducers/equipment";
+import exchange from "reducers/exchange";
+import fate from "reducers/fate";
+import infoBar from "reducers/infoBar";
+import map from "reducers/map";
+import mapAdmin from "reducers/mapAdmin";
+import messages from "reducers/messages";
+import modalTooltip from "reducers/modalTooltip";
+import myself from "reducers/myself";
+import mysteries from "reducers/mysteries";
+import news from "reducers/news";
+import outfit from "reducers/outfit";
+import payment from "reducers/payment";
+import phase from "reducers/phase";
+import plans from "reducers/plans";
+import registration from "reducers/registration";
+import screen from "reducers/screen";
+import scrollToComponent from "reducers/scrollToComponent";
+import settings from "reducers/settings";
+import sidebar from "reducers/sidebar";
+import socialAct from "reducers/socialAct";
+import spriteLoader from "reducers/spriteLoader";
+import storylet from "reducers/storylet";
+import subscription from "reducers/subscription";
+import subtabs from "reducers/subtabs";
+import timer from "reducers/timer";
+import user from "reducers/user";
+import versionSync from "reducers/versionSync";
 
 /**
  * Application reducer
@@ -47,25 +47,29 @@ import versionSync from "./versionSync";
  * @type {Function}
  */
 const appReducer = combineReducers({
+  accessCodes,
   accountLinkReminder,
   actions,
   app,
   branches,
   cards,
-  myself,
   contacts,
   equipment,
   exchange,
   fate,
+  infoBar,
   map,
   mapAdmin,
   messages,
   modalTooltip,
+  myself,
   mysteries,
+  news,
   outfit,
   payment,
   phase,
   plans,
+  profile,
   registration,
   screen,
   scrollToComponent,
@@ -76,13 +80,9 @@ const appReducer = combineReducers({
   storylet,
   subscription,
   subtabs,
-  timeTheHealer,
   timer,
+  timeTheHealer,
   user,
-  news,
-  infoBar,
-  accessCodes,
-  profile,
   versionSync,
 });
 

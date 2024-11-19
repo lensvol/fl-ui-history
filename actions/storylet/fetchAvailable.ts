@@ -1,12 +1,15 @@
+import { ActionCreator } from "redux";
+
+import { processMessages } from "actions/app";
 import { handleVersionMismatch } from "actions/versionSync";
+
 import {
   FETCH_AVAILABLE_IN_BACKGROUND_REQUESTED,
   FETCH_AVAILABLE_FAILURE,
   FETCH_AVAILABLE_REQUESTED,
   FETCH_AVAILABLE_SUCCESS,
 } from "actiontypes/storylet";
-import { processMessages } from "actions/app";
-import { ActionCreator } from "redux";
+
 import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
   IApiStoryletResponseData,
@@ -87,17 +90,23 @@ export default function fetchAvailable({ setIsFetching = true } = {}) {
     try {
       const { data }: { data: IApiStoryletResponseData } =
         await service.fetchAvailable();
+
       dispatch(fetchAvailableSuccess(data));
+
       const { messages } = data;
+
       if (messages) {
         dispatch(processMessages(messages));
       }
+
       return data; // Return obj for chaining
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
       }
+
       dispatch(fetchAvailableFailure(error));
+
       return error;
     }
   };

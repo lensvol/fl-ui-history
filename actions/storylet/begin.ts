@@ -1,18 +1,21 @@
+import { ActionCreator } from "redux";
+
+import { processMessages } from "actions/app";
+import { hideMap } from "actions/map";
 import { handleVersionMismatch } from "actions/versionSync";
+
 import {
   CHOOSE_STORYLET_FAILURE,
   CHOOSE_STORYLET_REQUESTED,
   CHOOSE_STORYLET_SUCCESS,
 } from "actiontypes/storylet";
-import { ActionCreator } from "redux";
+
 import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
   IApiStoryletResponseData,
   IStoryletService,
 } from "services/StoryletService";
 
-import { hideMap } from "actions/map";
-import { processMessages } from "actions/app";
 import { IAppState } from "types/app";
 
 export type BeginFailureAction = {
@@ -83,6 +86,7 @@ export default function begin(eventId: number) {
     const {
       storylet: { isChoosing },
     } = getState();
+
     if (isChoosing) {
       return {};
     }
@@ -91,13 +95,13 @@ export default function begin(eventId: number) {
 
     try {
       const { data } = await service.begin(eventId);
+
       dispatch(beginSuccess(data));
 
       // Close the map
       dispatch(hideMap());
 
-      // If we have some messages to process (e.g. we have been Must-ed into a new area)
-      // process them now.
+      // If we have some messages to process (e.g. we have been Must-ed into a new area) process them now.
       if (data.messages) {
         dispatch(processMessages(data.messages));
       }
@@ -107,7 +111,9 @@ export default function begin(eventId: number) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
       }
+
       dispatch(beginFailure(error));
+
       return error;
     }
   };

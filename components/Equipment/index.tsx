@@ -1,23 +1,30 @@
-import UseOrEquipModal from "components/Possessions/UseOrEquipModal";
 import React, { useCallback, useMemo, useState } from "react";
+
 import { connect, useDispatch } from "react-redux";
+
+import { withRouter, RouteComponentProps } from "react-router-dom";
+
+import { Feature } from "flagged";
 
 import { equipQuality, renameOutfit, unequipQuality } from "actions/outfit";
 import { useQuality as _useQuality } from "actions/storylet";
 
-import findSelectedOutfit from "selectors/outfits/findSelectedOutfit";
+import EquipmentContext from "components/Equipment/EquipmentContext";
 import EquipmentGroup from "components/Equipment/EquipmentGroup";
+import OutfitControls from "components/Equipment/OutfitControls";
+import PossessionsContext from "components/Possessions/PossessionsContext";
 import RenameOutfitModal from "components/Possessions/RenameOutfitModal";
+import UseOrEquipModal from "components/Possessions/UseOrEquipModal";
+
+import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
+
+import findSelectedOutfit from "selectors/outfits/findSelectedOutfit";
+
 import { Success } from "services/BaseMonadicService";
+
 import { IAppState } from "types/app";
 import { OutfitSlotName } from "types/outfit";
-import { Feature } from "flagged";
-import EquipmentContext from "components/Equipment/EquipmentContext";
-import OutfitControls from "components/Equipment/OutfitControls";
-import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
 import { IQuality } from "types/qualities";
-import PossessionsContext from "components/Possessions/PossessionsContext";
-import { withRouter, RouteComponentProps } from "react-router-dom";
 
 export function Equipment({ history, outfit, outfitState }: Props) {
   const dispatch = useDispatch();

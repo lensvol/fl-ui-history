@@ -1,94 +1,102 @@
-import { EquipmentContextValue } from "components/Equipment/EquipmentContext";
 import React, { Fragment, useCallback, useMemo } from "react";
-import classnames from "classnames";
-import { connect, useDispatch } from "react-redux";
+
+import { useDispatch } from "react-redux";
+
 import { RouteComponentProps, withRouter } from "react-router-dom";
+
+import classnames from "classnames";
 
 import { equipQuality } from "actions/outfit";
 import { useQuality as _useQuality } from "actions/storylet";
+
+import { EquipmentContextValue } from "components/Equipment/EquipmentContext";
+import Image from "components/Image";
+
+import { useAppSelector } from "features/app/store";
+
 import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
 import getIsEquipped from "selectors/possessions/getIsEquipped";
-import { IAppState } from "types/app";
+
 import { IEnhancement } from "types/qualities";
-import Image from "components/Image";
+
 import { createEquipmentQualityAltText } from "utils";
 
 function AvailableItem(props: Props) {
   const {
-    canChangeOutfit,
     currentlyInStorylet,
     description,
     enhancements,
     history,
     id,
     image,
-    isChanging,
-    isEquipped,
-    itemsUsableHere,
     level,
     name,
     openUseOrEquipModal,
-    setting,
     useEventId,
   } = props;
 
+  const canChangeOutfit = useAppSelector((state) =>
+    getCanUserChangeOutfit(state, props)
+  );
+  const isChanging = useAppSelector((state) => state.outfit.isChanging);
+  const isEquipped = useAppSelector((state) => getIsEquipped(state, props));
+  const itemsUsableHere = useAppSelector(
+    (state) => state.map.setting?.itemsUsableHere
+  );
+
   const dispatch = useDispatch();
 
+  const isLocked = level <= 0;
+  const unequippedCount = level - (isEquipped ? 1 : 0);
+
+  const isEquippable = canChangeOutfit && !isLocked && !isEquipped;
+
   const canPlayerUseItems = useMemo(() => {
-    return (setting?.itemsUsableHere ?? false) && !currentlyInStorylet;
-  }, [currentlyInStorylet, setting]);
+    return (
+      (itemsUsableHere ?? false) &&
+      !currentlyInStorylet &&
+      useEventId !== undefined
+    );
+  }, [currentlyInStorylet, itemsUsableHere, useEventId]);
 
   const handleEquip = useCallback(() => {
-    if (isChanging) {
+    if (isChanging || !isEquippable) {
       return;
     }
 
     dispatch(equipQuality(id));
-  }, [dispatch, id, isChanging]);
+  }, [dispatch, id, isChanging, isEquippable]);
 
   const handleUse = useCallback(() => {
     _useQuality(id, history)(dispatch);
   }, [dispatch, history, id]);
 
   const handleClick = useCallback(() => {
-    // No use event ID associated with this item; just equip it
-    if (useEventId === undefined) {
-      if (!canChangeOutfit) {
-        return;
-      }
-
-      handleEquip();
-
+    // Player can't do anything with this item
+    if (!canPlayerUseItems && !isEquippable) {
       return;
     }
 
-    // Player can't use items right now, so just equip it
-    if (!canPlayerUseItems) {
-      if (!canChangeOutfit) {
-        return;
-      }
-
+    if (canPlayerUseItems) {
+      // Open the modal to ask what we want to do about it
+      openUseOrEquipModal({ id, name, image }, false);
+    } else {
+      // Player can't use items right now, so just equip it
       handleEquip();
-
-      return;
     }
-
-    // Open the modal to ask what we want to do about it
-    openUseOrEquipModal({ id, name, image }, false);
   }, [
-    canChangeOutfit,
     canPlayerUseItems,
     handleEquip,
     id,
     image,
+    isEquippable,
     name,
     openUseOrEquipModal,
-    useEventId,
   ]);
 
   const smallButtons = useMemo(() => {
     // Items might be equippable
-    const buttons = canChangeOutfit
+    const buttons = isEquippable
       ? [
           {
             label: "Equip",
@@ -98,7 +106,7 @@ function AvailableItem(props: Props) {
       : [];
 
     // Sometimes they're also usable
-    if (!!useEventId && !currentlyInStorylet) {
+    if (canPlayerUseItems) {
       const useButton = {
         label: "Use",
         action: handleUse,
@@ -108,13 +116,7 @@ function AvailableItem(props: Props) {
     }
 
     return buttons;
-  }, [
-    canChangeOutfit,
-    currentlyInStorylet,
-    handleEquip,
-    handleUse,
-    useEventId,
-  ]);
+  }, [canPlayerUseItems, handleEquip, handleUse, isEquippable]);
 
   const itemUsabilityStateClassName = useMemo(() => {
     if (!useEventId) {
@@ -133,11 +135,7 @@ function AvailableItem(props: Props) {
   }, [currentlyInStorylet, itemsUsableHere, useEventId]);
 
   const secondaryDescription = useMemo(() => {
-    if (!useEventId) {
-      return undefined;
-    }
-
-    if (currentlyInStorylet) {
+    if (useEventId && currentlyInStorylet) {
       return (
         "<span class='item-use-warning'>" +
         "You're in a storylet at the moment - you must finish it before you can use this item." +
@@ -188,16 +186,19 @@ function AvailableItem(props: Props) {
         data-quality-id={id}
       >
         <Image
-          className={classnames("equipped-group__available-item")}
+          className={classnames(
+            "equipped-group__available-item",
+            isLocked && "icon--locked"
+          )}
           icon={image}
           alt={altText}
           type="small-icon"
           onClick={handleClick}
           tooltipData={tooltipData}
-          defaultCursor={!canChangeOutfit}
+          defaultCursor={!canPlayerUseItems && !isEquippable}
         />
         <span className="js-item-value icon__value">
-          {(isEquipped ? level - 1 : level).toLocaleString("en-GB")}
+          {unequippedCount.toLocaleString("en-GB")}
         </span>
       </div>
     </Fragment>
@@ -218,19 +219,8 @@ type OwnProps = {
   useEventId?: number;
 };
 
-const mapStateToProps = (state: IAppState, props: OwnProps) => ({
-  canChangeOutfit: getCanUserChangeOutfit(state, props),
-  isChanging: state.outfit.isChanging,
-  isEquipped: getIsEquipped(state, props),
-  itemsUsableHere: state.map.setting?.itemsUsableHere,
-  setting: state.map.setting,
-});
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-
 type Props = OwnProps &
-  StateProps &
   RouteComponentProps &
   Pick<EquipmentContextValue, "openUseOrEquipModal">;
 
-export default connect(mapStateToProps)(withRouter(AvailableItem));
+export default withRouter(AvailableItem);

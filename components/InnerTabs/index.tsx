@@ -1,20 +1,32 @@
 import React, { useCallback, useMemo } from "react";
-import classnames from "classnames";
+
 import { connect, DispatchProp } from "react-redux";
+
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
+import classnames from "classnames";
+
 import { setTab } from "actions/subtabs";
+
 import { IAppState } from "types/app";
 import { UIRestriction } from "types/myself";
 
-function InnerTabs({ dispatch, history, subtab, showPossessionsUI }: Props) {
+function InnerTabs({ dispatch, history, showPossessionsUI, subtab }: Props) {
   const goToMyself = useCallback(() => {
-    setTab({ tab: "myself", subtab: "myself" })(dispatch);
+    setTab({
+      tab: "myself",
+      subtab: "myself",
+    })(dispatch);
+
     history.push("/myself");
   }, [dispatch, history]);
 
   const goToPossessions = useCallback(() => {
-    setTab({ tab: "myself", subtab: "possessions" })(dispatch);
+    setTab({
+      tab: "myself",
+      subtab: "possessions",
+    })(dispatch);
+
     history.push("/possessions");
   }, [dispatch, history]);
 
@@ -67,13 +79,13 @@ function InnerTabs({ dispatch, history, subtab, showPossessionsUI }: Props) {
 }
 
 const mapStateToProps = ({
-  subtabs: { myself: subtab },
   myself: { uiRestrictions },
+  subtabs: { myself: subtab },
 }: IAppState) => ({
-  subtab,
   showPossessionsUI: !uiRestrictions?.find(
     (restriction) => restriction === UIRestriction.Possessions
   ),
+  subtab,
 });
 
 type Props = DispatchProp &
