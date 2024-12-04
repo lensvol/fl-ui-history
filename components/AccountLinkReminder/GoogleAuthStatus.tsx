@@ -16,9 +16,7 @@ export function GoogleAuthStatus({ authMethods, onLinkSuccess }: Props) {
   return (
     <>
       <i className="fa fa-fw fa-check" />
-      Linked to <strong>
-        {method.displayName}
-      </strong>.
+      Linked to <strong>{method.displayName}</strong>.
     </>
   );
 }
