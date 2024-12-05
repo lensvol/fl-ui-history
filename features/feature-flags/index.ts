@@ -1,28 +1,10 @@
 import Config from "configuration";
 
-export const FILTER_ENHANCEMENTS = "filter-enhancements";
-export const OPTIMIZE_MYSELF_QUALITIES = "optimize-myself-qualities";
-export const SHOW_EQUIPMENT_SEARCH = "show-equipment-search";
-
-export const FEATURE_ACCOUNT_LINK_REMINDER = "feature/account-link-reminder";
-export const FEATURE_CREDITS = "feature/credits";
-export const FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS =
-  "feature/does-storylet-state-lock-outfits";
-export const FEATURE_PERSISTENT_DECK = "feature/persistent-deck";
-export const FEATURE_POSSESSIONS_TAB_AVATAR = "feature/possessions-tab-avatar";
 export const FEATURE_SHOW_VAT_BREAKDOWN = "feature/show-vat-breakdown";
 
 export const FEATURE_FLAGS: {
   [key: string]: boolean;
 } = {
-  [FILTER_ENHANCEMENTS]: true,
-  [OPTIMIZE_MYSELF_QUALITIES]: true,
-  [SHOW_EQUIPMENT_SEARCH]: true,
-  [FEATURE_ACCOUNT_LINK_REMINDER]: true,
-  [FEATURE_CREDITS]: true,
-  [FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS]: true,
-  [FEATURE_PERSISTENT_DECK]: true,
-  [FEATURE_POSSESSIONS_TAB_AVATAR]: true,
   [FEATURE_SHOW_VAT_BREAKDOWN]: false,
 };
 

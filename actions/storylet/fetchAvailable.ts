@@ -41,6 +41,7 @@ export type FetchAvailableSuccessAction = {
     | "actions"
     | "canChangeOutfit"
     | "endStorylet"
+    | "maxHandSize"
     | "phase"
     | "storylets"
     | "storylet"
@@ -69,6 +70,7 @@ export const fetchAvailableSuccess: ActionCreator<
     storylets: data.storylets,
     storylet: data.storylet,
     messages: data.messages,
+    maxHandSize: data.maxHandSize,
   },
 });
 

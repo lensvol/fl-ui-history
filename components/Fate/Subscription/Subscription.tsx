@@ -1,22 +1,32 @@
 import React, { useCallback } from "react";
-import { connect } from "react-redux";
+
+import { useDispatch } from "react-redux";
+
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
+import { isDowngradedSubscription } from "actions/fate/subscriptions";
 import { openDialog } from "actions/payment";
 
 import Loading from "components/Loading";
-import { IAppState } from "types/app";
+
+import { useAppSelector } from "features/app/store";
+
 import { PremiumSubscriptionType } from "types/subscription";
-import { isDowngradedSubscription } from "actions/fate/subscriptions";
 
 export function Subscription({
-  hasSubscription,
-  showButtonOnly,
-  subscriptionType,
-  dispatch,
-  history,
   onClick: onParentClick,
+  showButtonOnly,
 }: Props) {
+  const dispatch = useDispatch();
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const subscriptionType = useAppSelector((state) =>
+    state.subscription.data
+      ? state.settings.subscriptions.subscriptionType
+      : undefined
+  );
+
   const onClick = useCallback(() => {
     if (onParentClick) {
       onParentClick();
@@ -129,19 +139,9 @@ export function Subscription({
 Subscription.displayName = "Subscription";
 
 interface Props extends RouteComponentProps {
-  hasSubscription: boolean;
   showButtonOnly?: boolean;
   subscriptionType?: PremiumSubscriptionType;
-  dispatch: Function; // eslint-disable-line
-  history: any;
   onClick?: () => void;
 }
 
-const mapStateToProps = (state: IAppState) => ({
-  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
-  subscriptionType: state.subscription.data
-    ? state.settings.subscriptions.subscriptionType
-    : undefined,
-});
-
-export default withRouter(connect(mapStateToProps)(Subscription));
+export default withRouter(Subscription);

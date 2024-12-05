@@ -80,6 +80,7 @@ export interface IApiStoryletResponseData {
   storylet?: IInStorylet;
   setting?: ISetting;
   hasUpdatedCharacter?: boolean;
+  maxHandSize?: number;
 }
 
 export interface ApiAddContactRequest {

@@ -1,15 +1,16 @@
-import React, { Fragment, useMemo } from "react"; // eslint-disable-line no-unused-vars
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
-import CardTimer from "../CardTimer";
+import React, { Fragment, useMemo } from "react";
 
-export function SmallCardCount({
-  cardsCount,
-  displayCards,
-  deckSize,
-  handSize,
-}: Props) {
-  const isHandFull = displayCards.length === handSize;
+import CardTimer from "components/Cards/components/CardTimer";
+import { useHandFull } from "components/Cards/hooks";
+
+import { useAppSelector } from "features/app/store";
+
+export default function SmallCardCount() {
+  const cardsCount = useAppSelector((state) => state.cards.cardsCount);
+  const displayCards = useAppSelector((state) => state.cards.displayCards);
+  const deckSize = useAppSelector((state) => state.cards.deckSize);
+  const handSize = useAppSelector((state) => state.cards.handSize);
+  const isHandFull = useHandFull(displayCards, handSize);
 
   const handFullFragment = useMemo(
     () => (
@@ -34,6 +35,7 @@ export function SmallCardCount({
       </Fragment>
     );
   }
+
   if (cardsCount === 1) {
     return (
       <Fragment>
@@ -44,6 +46,7 @@ export function SmallCardCount({
       </Fragment>
     );
   }
+
   return (
     <>
       <p>
@@ -56,16 +59,3 @@ export function SmallCardCount({
 }
 
 SmallCardCount.displayName = "SmallCardCount";
-
-const mapStateToProps = ({
-  cards: { cardsCount, displayCards, deckSize, handSize },
-}: IAppState) => ({
-  cardsCount,
-  deckSize,
-  displayCards,
-  handSize,
-});
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(SmallCardCount);

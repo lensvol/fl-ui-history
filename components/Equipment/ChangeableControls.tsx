@@ -1,28 +1,33 @@
-import saveCurrentOutfit from "actions/outfit/saveCurrentOutfit";
 import React, { useCallback, useMemo, useState } from "react";
-import { connect, useDispatch } from "react-redux";
-import { Feature } from "flagged";
 
-import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
-import { Success } from "services/BaseMonadicService";
-import { IOutfit } from "types/outfit";
-import { IAppState } from "types/app";
+import { useDispatch } from "react-redux";
+
 import renameOutfit from "actions/outfit/renameOutfit";
+import saveCurrentOutfit from "actions/outfit/saveCurrentOutfit";
 import toggleFavouriteOutfit from "actions/outfit/toggleFavouriteOutfit";
-import OutfitDropdown from "./OutfitDropdown";
-import OutfitEditButtons from "./OutfitEditButtons";
-import OutfitRenameForm from "./OutfitRenameForm";
 
-export function ChangeableControls({
-  dirty,
-  isFavourite,
-  outfits,
+import OutfitDropdown from "components/Equipment/OutfitDropdown";
+import OutfitEditButtons from "components/Equipment/OutfitEditButtons";
+import OutfitRenameForm from "components/Equipment/OutfitRenameForm";
+
+import { useAppSelector } from "features/app/store";
+
+import { Success } from "services/BaseMonadicService";
+
+import { IOutfit } from "types/outfit";
+
+export default function ChangeableControls({
   onSaveOutfitSuccess,
   onSelectOutfit,
 }: Props) {
+  const dirty = useAppSelector((state) => state.outfit.dirty);
+  const isFavourite = useAppSelector((state) => state.outfit.isFavourite);
+  const outfits = useAppSelector((state) => state.myself.character.outfits);
+
   const dispatch = useDispatch();
 
   const [isEditing, setIsEditing] = useState(false);
+
   const selectedOutfit: IOutfit | undefined = useMemo(
     () => outfits.find((o) => o.selected),
     [outfits]
@@ -79,16 +84,9 @@ export function ChangeableControls({
           onCancel={onCancel}
         />
       ) : (
-        <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
-          {(doesStoryletStateLockOutfits: boolean) => (
-            <OutfitDropdown
-              doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
-              onChange={onSelectOutfit}
-            />
-          )}
-        </Feature>
+        <OutfitDropdown onChange={onSelectOutfit} />
       )}
-      {isEditing ? null : (
+      {!isEditing && (
         <OutfitEditButtons
           dirty={dirty}
           isFavourite={isFavourite}
@@ -101,17 +99,9 @@ export function ChangeableControls({
   );
 }
 
-const mapStateToProps = (state: IAppState) => ({
-  dirty: state.outfit.dirty,
-  isFavourite: state.outfit.isFavourite,
-  outfits: state.myself.character.outfits,
-});
+ChangeableControls.displayName = "ChangeableControls";
 
-type OwnProps = {
+type Props = {
   onSelectOutfit: (...args: any) => void;
   onSaveOutfitSuccess: (message?: string) => void;
 };
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(ChangeableControls);

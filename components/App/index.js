@@ -4,8 +4,6 @@ import { Route, Router, Switch } from "react-router-dom";
 
 import ReactGA from "react-ga4";
 
-import { useFeature } from "flagged";
-
 import Config from "configuration";
 
 import AccessCode, {
@@ -54,8 +52,6 @@ import UnsubscribeContainer from "components/Messages/UnsubscribeContainer";
 // 404 Route
 import NotFound from "components/NotFound";
 
-import { FEATURE_CREDITS } from "features/feature-flags";
-
 // Our shared history object
 import history from "shared/history";
 
@@ -65,8 +61,6 @@ export default function App() {
   console.log("current version: ", Config.version); // eslint-disable-line no-console
   ReactGA.initialize("G-7ZBF3LYSFQ");
   // const maintenance = function (){ return (<h1>Fallen London is in Maintenance Mode</h1>)};
-
-  const hasCredits = useFeature(FEATURE_CREDITS);
 
   return (
     <ErrorBoundary>
@@ -94,9 +88,7 @@ export default function App() {
                 <Route path="/privacy" exact component={PrivacyPage} />
                 <Route path="/terms" exact component={TermsPage} />
                 <Route path="/account" exact component={AccountPage} />
-                {!!hasCredits && (
-                  <Route path="/credits" exact component={CreditsPage} />
-                )}
+                <Route path="/credits" exact component={CreditsPage} />
                 <Route path="/500" exact component={ErrorThrower} />
                 <Route
                   path="/email/:token"

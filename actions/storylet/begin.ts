@@ -37,6 +37,7 @@ export type BeginSuccessAction = {
     | "phase"
     | "storylets"
     | "storylet"
+    | "maxHandSize"
     | "endStorylet"
     | "messages"
   >;
@@ -65,6 +66,7 @@ const beginSuccess: ActionCreator<BeginSuccessAction> = (
     storylet: data.storylet,
     endStorylet: data.endStorylet,
     messages: data.messages,
+    maxHandSize: data.maxHandSize,
   },
 });
 

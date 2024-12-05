@@ -1,28 +1,45 @@
 import React, { useCallback, useMemo, useState } from "react";
+
+import { useDispatch } from "react-redux";
+
+import Select from "react-select";
+
 import { fetch as fetchCards } from "actions/cards";
 import { changeOutfit } from "actions/outfit";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
+
 import * as DropdownStyles from "components/Equipment/dropdown-styles";
 import { compareOutfits } from "components/Equipment/util";
+import SidebarOutfitSelectorDisabled from "components/SidebarOutfitSelector/SidebarOutfitSelectorDisabled";
+import Title from "components/SidebarOutfitSelector/Title";
 
 import { OUTFIT_TYPE_EXCEPTIONAL } from "constants/outfits";
-import { connect } from "react-redux";
-import Select from "react-select";
+
+import { useAppSelector } from "features/app/store";
+
 import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
 import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
-import { IAppState } from "types/app";
 
-import SidebarOutfitSelectorDisabled from "./SidebarOutfitSelectorDisabled";
-import Title from "./Title";
 import { UIRestriction } from "types/myself";
 
-function SidebarOutfitSelector({
-  canUserChangeOutfit,
-  dispatch,
-  isExceptionalFriend,
-  outfits,
-  showPossessionsUI,
-}: Props) {
+export default function SidebarOutfitSelector() {
+  const dispatch = useDispatch();
+
+  const canUserChangeOutfit = useAppSelector((state) =>
+    getCanUserChangeOutfit(state)
+  );
+  const isExceptionalFriend = useAppSelector(
+    (state) => state.fate.isExceptionalFriend
+  );
+  const outfits = useAppSelector((state) => getOrderedOutfits(state));
+
+  const showPossessionsUI = useAppSelector(
+    (state) =>
+      !state.myself.uiRestrictions?.find(
+        (restriction) => restriction === UIRestriction.Possessions
+      )
+  );
+
   const [isChanging, setIsChanging] = useState(false);
 
   const selectedOutfit = useMemo(
@@ -89,7 +106,11 @@ function SidebarOutfitSelector({
   }
 
   return (
-    <div style={{ marginRight: "-8px" }}>
+    <div
+      style={{
+        marginRight: "-8px",
+      }}
+    >
       <Title />
       <Select
         aria-hidden="true"
@@ -114,25 +135,4 @@ function SidebarOutfitSelector({
   );
 }
 
-interface OwnProps {
-  /// These props are sent to getCanUserChangeOutfit(state, props) but are linted as unused here
-  /* eslint-disable react/no-unused-prop-types */
-  doesStoryletStateLockOutfits: boolean;
-}
-
-const mapStateToProps = (state: IAppState, props: OwnProps) => ({
-  canUserChangeOutfit: getCanUserChangeOutfit(state, props),
-  isChanging: state.outfit.isChanging,
-  isExceptionalFriend: state.fate.isExceptionalFriend,
-  outfits: getOrderedOutfits(state),
-  showPossessionsUI: !state.myself.uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Possessions
-  ),
-});
-
-type Props = ReturnType<typeof mapStateToProps> &
-  OwnProps & {
-    dispatch: Function; // eslint-disable-line
-  };
-
-export default connect(mapStateToProps)(SidebarOutfitSelector);
+SidebarOutfitSelector.displayName = "SidebarOutfitSelector";

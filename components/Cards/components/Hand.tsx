@@ -1,21 +1,26 @@
 import React, { useMemo } from "react";
-import { connect } from "react-redux";
+
 import classnames from "classnames";
 
-import { IAppState } from "types/app";
-import CardContainer from "./CardContainer";
-import Tile from "./Tile";
+import CardContainer from "components/Cards/components/CardContainer";
+import Tile from "components/Cards/components/Tile";
 
-type Props = ReturnType<typeof mapStateToProps>;
+import { useAppSelector } from "features/app/store";
 
-export function Hand({ displayCards, handSize, isFetching }: Props) {
+export default function Hand() {
+  const displayCards = useAppSelector((state) => state.cards.displayCards);
+  const handSize = useAppSelector((state) => state.cards.handSize);
+  const isFetching = useAppSelector((state) => state.cards.isFetching);
+
   const cards = useMemo(() => {
     const components = [];
 
     // Add the cards
-    displayCards.slice(0, handSize).forEach((card) => {
-      components.push(<CardContainer key={card.eventId} data={card} />);
-    });
+    displayCards
+      .slice(0, Math.max(handSize, displayCards.length))
+      .forEach((card) => {
+        components.push(<CardContainer key={card.eventId} data={card} />);
+      });
 
     // Add an empty tile for each empty spot in the player's hand
     for (let i = 0; i < Math.max(handSize - displayCards.length, 0); i += 1) {
@@ -33,15 +38,3 @@ export function Hand({ displayCards, handSize, isFetching }: Props) {
 }
 
 Hand.displayName = "Hand";
-
-function mapStateToProps({
-  cards: { displayCards, handSize, isFetching },
-}: IAppState) {
-  return {
-    displayCards,
-    handSize,
-    isFetching,
-  };
-}
-
-export default connect(mapStateToProps)(Hand);

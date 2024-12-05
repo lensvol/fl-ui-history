@@ -1,23 +1,25 @@
-import { OUTFIT_TYPE_EXCEPTIONAL } from "constants/outfits";
 import React, { ChangeEvent, useCallback, useMemo } from "react";
-import { connect } from "react-redux";
+
 import Select from "react-select";
+
+import * as DropdownStyles from "components/Equipment/dropdown-styles";
+import EquipmentContext from "components/Equipment/EquipmentContext";
+import { useSelectedOutfit } from "components/Equipment/hooks";
+import { compareOutfits } from "components/Equipment/util";
+
+import { OUTFIT_TYPE_EXCEPTIONAL } from "constants/outfits";
+
+import { useAppSelector } from "features/app/store";
+
 import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
-import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
-import { IAppState } from "types/app";
 
-import { useSelectedOutfit } from "./hooks";
-import { compareOutfits } from "./util";
-import * as DropdownStyles from "./dropdown-styles";
-import EquipmentContext from "./EquipmentContext";
-
-export function OutfitDropdown({
-  isChanging,
-  isExceptionalFriend,
-  maxOutfits,
-  onChange,
-  outfits,
-}: Props) {
+export default function OutfitDropdown({ onChange }: Props) {
+  const isChanging = useAppSelector((state) => state.outfit.isChanging);
+  const isExceptionalFriend = useAppSelector(
+    (state) => state.fate.isExceptionalFriend
+  );
+  const maxOutfits = useAppSelector((state) => state.outfit.maxOutfits);
+  const outfits = useAppSelector((state) => getOrderedOutfits(state));
   const selectedOutfit = useSelectedOutfit(outfits);
 
   const handleBlurOrChangeFromNativeSelect = useCallback(
@@ -26,6 +28,7 @@ export function OutfitDropdown({
       if (selectedOutfit?.id.toString() === e.target.value) {
         return;
       }
+
       onChange(e.target.value);
     },
     [onChange, selectedOutfit]
@@ -34,6 +37,7 @@ export function OutfitDropdown({
   const handleChange = useCallback(
     (arg: any) => {
       const { value } = arg as { label: string; value: number | string };
+
       onChange(value);
     },
     [onChange]
@@ -41,7 +45,6 @@ export function OutfitDropdown({
 
   const choices = useMemo(() => {
     const sortedOutfits = [...outfits].sort(compareOutfits);
-
     const purchasedOutfits = outfits.filter((a) => a.type === "Purchased");
 
     // We can't buy any more outfits; just return what the player has
@@ -144,19 +147,8 @@ export function OutfitDropdown({
   );
 }
 
-type OwnProps = {
-  doesStoryletStateLockOutfits: boolean;
+OutfitDropdown.displayName = "OutfitDropdown";
+
+type Props = {
   onChange: (id: string | number) => void;
 };
-
-const mapStateToProps = (state: IAppState, props: OwnProps) => ({
-  canChangeOutfit: getCanUserChangeOutfit(state, props),
-  isChanging: state.outfit.isChanging,
-  isExceptionalFriend: state.fate.isExceptionalFriend,
-  maxOutfits: state.outfit.maxOutfits,
-  outfits: getOrderedOutfits(state),
-});
-
-type Props = ReturnType<typeof mapStateToProps> & OwnProps;
-
-export default connect(mapStateToProps)(OutfitDropdown);

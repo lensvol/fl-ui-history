@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 
 import { draw } from "actions/cards";
+
 import { ICard } from "types/cards";
 
 // eslint-disable-next-line
@@ -9,7 +10,7 @@ export const useDrawCards = (dispatch: Function) =>
 
 export function useHandFull(displayCards: ICard[], handSize: number) {
   return useMemo(
-    () => displayCards && displayCards.length === handSize,
+    () => displayCards && displayCards.length >= handSize,
     [displayCards, handSize]
   );
 }
@@ -39,9 +40,11 @@ export function useOnClickDeck({
     if (isFetching) {
       return;
     }
+
     // If our deck is empty, allow the player to top up
     if (noCards) {
       topUpCards();
+
       return;
     }
 

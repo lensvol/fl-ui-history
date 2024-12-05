@@ -1,8 +1,12 @@
-import { FEATURE_SHOW_VAT_BREAKDOWN } from "features/feature-flags";
 import React, { useMemo } from "react";
+
 import classnames from "classnames";
+
+import { useFeature } from "flagged";
+
+import { FEATURE_SHOW_VAT_BREAKDOWN } from "features/feature-flags";
+
 import { NexQuantity } from "types/payment";
-import { Feature } from "flagged";
 
 type Props = {
   data: NexQuantity;
@@ -13,17 +17,20 @@ type Props = {
 };
 
 export default function FateOption({
-  onSelect,
+  data,
   id,
   isBreakdownVisible,
   isSelected,
-  data,
+  onSelect,
 }: Props) {
   const {
     currency: { code: currencyCode },
     currencyAmount,
     valueAddedTax,
   } = data;
+
+  const showVatBreakdown = useFeature(FEATURE_SHOW_VAT_BREAKDOWN);
+
   const total = useMemo(
     () => currencyAmount + valueAddedTax,
     [currencyAmount, valueAddedTax]
@@ -59,23 +66,16 @@ export default function FateOption({
         {data.quantity} FATE{" "}
         <span className="my-price">
           {formatter.format(total)}
-          <Feature name={FEATURE_SHOW_VAT_BREAKDOWN}>
-            {(enabled: boolean) => {
-              if (!enabled) {
-                return null;
-              }
-              return (
-                <>
-                  <br />
-                  <small>
-                    Cost {data.currency.sign}
-                    {data.currencyAmount.toFixed(2)} VAT {data.currency.sign}
-                    {data.valueAddedTax.toFixed(2)}
-                  </small>
-                </>
-              );
-            }}
-          </Feature>
+          {showVatBreakdown && (
+            <>
+              <br />
+              <small>
+                Cost {data.currency.sign}
+                {data.currencyAmount.toFixed(2)} VAT {data.currency.sign}
+                {data.valueAddedTax.toFixed(2)}
+              </small>
+            </>
+          )}
         </span>
       </label>
     </li>

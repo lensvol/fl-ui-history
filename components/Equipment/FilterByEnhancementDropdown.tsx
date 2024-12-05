@@ -1,15 +1,17 @@
 import React, { useCallback, useMemo } from "react";
-import { connect } from "react-redux";
-import { withFeature } from "flagged";
+
 import Select from "react-select";
 
-import { FILTER_ENHANCEMENTS } from "features/feature-flags";
-import { ThunkDispatch } from "redux-thunk";
-import getEnhancements from "selectors/possessions/getFilterableEnhancements";
-import { IAppState } from "types/app";
+import { useDispatch } from "react-redux";
+
 import { selectedEnhancementQualityChanged } from "actions/equipment";
+
 import { QUALITY_ID_DUMMY_SHOW_ALL_ITEMS } from "components/Equipment/constants";
-import * as DropdownStyles from "./dropdown-styles";
+import * as DropdownStyles from "components/Equipment/dropdown-styles";
+
+import { useAppSelector } from "features/app/store";
+
+import getEnhancements from "selectors/possessions/getFilterableEnhancements";
 
 const OPTION_SHOW_ALL = {
   qualityId: QUALITY_ID_DUMMY_SHOW_ALL_ITEMS,
@@ -18,17 +20,21 @@ const OPTION_SHOW_ALL = {
   level: 0,
 };
 
-function FilterByEnhancementDropDown({
-  dispatch,
-  enhancements,
-  selectedEnhancementQualityId,
-}: Props) {
+export default function FilterByEnhancementDropDown() {
+  const dispatch = useDispatch();
+  const enhancements = useAppSelector((state) => getEnhancements(state));
+  const selectedEnhancementQualityId = useAppSelector(
+    (state) => state.equipment.selectedEnhancementQualityId
+  );
+
   const onChange = useCallback(
     ({ qualityId }) => {
       if (Number.isNaN(qualityId)) {
         console.error(`Tried to filter on enhancement ID '${qualityId}'`);
+
         return;
       }
+
       dispatch(selectedEnhancementQualityChanged(qualityId));
     },
     [dispatch]
@@ -56,10 +62,15 @@ function FilterByEnhancementDropDown({
   // type requirements)
   const selectedOption = useMemo(() => {
     const e = options.find((o) => o.qualityId === selectedEnhancementQualityId);
+
     if (e === undefined) {
       return undefined;
     }
-    return { ...e, needsSeparator: false };
+
+    return {
+      ...e,
+      needsSeparator: false,
+    };
   }, [options, selectedEnhancementQualityId]);
 
   // Add separators at category boundaries
@@ -74,7 +85,11 @@ function FilterByEnhancementDropDown({
             e.category !== src[idx - 1].category &&
             (idx > 1 ||
               selectedEnhancementQualityId !== QUALITY_ID_DUMMY_SHOW_ALL_ITEMS);
-          return { ...e, needsSeparator };
+
+          return {
+            ...e,
+            needsSeparator,
+          };
         }),
     [options, selectedEnhancementQualityId]
   );
@@ -94,16 +109,3 @@ function FilterByEnhancementDropDown({
     />
   );
 }
-
-const mapStateToProps = (state: IAppState) => ({
-  enhancements: getEnhancements(state),
-  selectedEnhancementQualityId: state.equipment.selectedEnhancementQualityId,
-});
-
-interface Props extends ReturnType<typeof mapStateToProps> {
-  dispatch: ThunkDispatch<any, any, any>;
-}
-
-export default withFeature(FILTER_ENHANCEMENTS)(
-  connect(mapStateToProps)(FilterByEnhancementDropDown)
-);

@@ -1,26 +1,28 @@
-import Act from "components/Act";
-import Loading from "components/Loading";
-import SecondChance from "components/SecondChance";
-import StoryletEnd from "components/StoryletEnd/StoryletEndContainer";
-import StoryletIn from "components/StoryletIn/StoryletInContainer";
-import StoryletsAvailable from "components/StoryletsAvailable";
-import * as phases from "constants/phases";
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import { fetch as fetchMap } from "actions/map";
 import { fetch as fetchSettings } from "actions/settings";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 
+import Act from "components/Act";
 import DomManipulationContext from "components/DomManipulationContext";
 import ExceptionalFriendModal from "components/ExceptionalFriendModal";
-import GeneralContainer from "components/GeneralContainer";
-import Map from "components/Map";
-import { IAppState } from "types/app";
-import UniqueActPending from "components/UniqueActPending";
-import Rename from "components/Rename";
 import ExternalAct from "components/ExternalAct";
+import GeneralContainer from "components/GeneralContainer";
+import Loading from "components/Loading";
+import Map from "components/Map";
+import Rename from "components/Rename";
+import SecondChance from "components/SecondChance";
+import StoryletEnd from "components/StoryletEnd/StoryletEndContainer";
+import StoryletIn from "components/StoryletIn/StoryletInContainer";
+import StoryletsAvailable from "components/StoryletsAvailable";
+import UniqueActPending from "components/UniqueActPending";
+
+import * as phases from "constants/phases";
+
+import { IAppState } from "types/app";
 
 class StoryTabContentContainer extends React.Component<Props, State> {
   static displayName = "StoryTabContentContainer";
@@ -52,8 +54,12 @@ class StoryTabContentContainer extends React.Component<Props, State> {
   };
 
   handleRequestCloseSubscriptionModal = (didUserSubscribe: boolean) => {
-    this.setState({ isExceptionalFriendModalOpen: false });
+    this.setState({
+      isExceptionalFriendModalOpen: false,
+    });
+
     const { dispatch } = this.props;
+
     // If the user subscribed, we need to update storylet and map state
     if (didUserSubscribe) {
       dispatch(fetchAvailableStorylets());
@@ -71,21 +77,29 @@ class StoryTabContentContainer extends React.Component<Props, State> {
     switch (phase) {
       case phases.ACT:
         return <Act />;
+
       case phases.END:
         return <StoryletEnd />;
+
       case phases.EXTERNAL_ACT:
         return <ExternalAct />;
+
       case phases.IN: // fall-through; these are the same for slet rendering
       case phases.IN_ITEM_USE:
         return <StoryletIn />;
+
       case phases.RENAME:
         return <Rename />;
+
       case phases.SECOND_CHANCE:
         return <SecondChance />;
+
       case phases.AVAILABLE:
         return <StoryletsAvailable />;
+
       case phases.UNIQUE_ACT_PENDING:
         return <UniqueActPending />;
+
       default: // We don't know what to show
         return null;
     }
@@ -97,7 +111,9 @@ class StoryTabContentContainer extends React.Component<Props, State> {
    */
   render() {
     const { setting } = this.props;
+
     const { isExceptionalFriendModalOpen } = this.state;
+
     return (
       <Fragment>
         <DomManipulationContext.Provider
@@ -118,13 +134,10 @@ class StoryTabContentContainer extends React.Component<Props, State> {
 }
 
 const mapStateToProps = ({
-  cards: { handSize },
-  map: { setting, showOps },
+  map: { setting },
   storylet: { isFetching, phase, socialAct, storylet, storylets },
 }: IAppState) => ({
-  handSize,
   setting,
-  showOps,
   isFetching,
   phase,
   socialAct,

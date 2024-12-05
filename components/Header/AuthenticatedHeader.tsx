@@ -1,14 +1,12 @@
-import { FEATURE_CREDITS } from "features/feature-flags";
-import { useFeature } from "flagged";
 import React, { Fragment, useMemo } from "react";
-import classnames from "classnames";
-import { connect } from "react-redux";
+
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import { IAppState } from "types/app";
 
-// import AccountOrGameLink from './AccountOrGameLink';
+import classnames from "classnames";
 
-export enum CurrentLocation {
+import { useAppSelector } from "features/app/store";
+
+enum CurrentLocation {
   Account,
   Help,
   Privacy,
@@ -17,30 +15,33 @@ export enum CurrentLocation {
   SomewhereElse,
 }
 
-export function AuthenticatedHeader(props: Props) {
+function AuthenticatedHeader(props: Props) {
   const {
     onLogout,
     onToggleFullScreen,
-    screen,
-    user,
     location: { pathname },
   } = props;
 
-  const hasCredits = useFeature(FEATURE_CREDITS);
+  const screen = useAppSelector((state) => state.screen);
+  const user = useAppSelector((state) => state.user);
 
   const currentLocation = useMemo(() => {
     if (pathname.startsWith("/account")) {
       return CurrentLocation.Account;
     }
+
     if (pathname.startsWith("/help")) {
       return CurrentLocation.Help;
     }
+
     if (pathname.startsWith("/privacy")) {
       return CurrentLocation.Privacy;
     }
+
     if (pathname.startsWith("/terms")) {
       return CurrentLocation.Terms;
     }
+
     if (pathname.startsWith("/credits")) {
       return CurrentLocation.Credits;
     }
@@ -85,7 +86,7 @@ export function AuthenticatedHeader(props: Props) {
           </li>
         )}
 
-        {hasCredits && currentLocation !== CurrentLocation.Credits && (
+        {currentLocation !== CurrentLocation.Credits && (
           <li className="list-item--separated">
             <Link to="/credits">Credits</Link>
           </li>
@@ -107,12 +108,9 @@ export function AuthenticatedHeader(props: Props) {
 
 AuthenticatedHeader.displayName = "AuthenticatedHeader";
 
-const mapStateToProps = ({ screen, user }: IAppState) => ({ screen, user });
+type Props = RouteComponentProps & {
+  onLogout: () => void;
+  onToggleFullScreen: () => void;
+};
 
-type Props = RouteComponentProps &
-  ReturnType<typeof mapStateToProps> & {
-    onLogout: () => void;
-    onToggleFullScreen: () => void;
-  };
-
-export default withRouter(connect(mapStateToProps)(AuthenticatedHeader));
+export default withRouter(AuthenticatedHeader);

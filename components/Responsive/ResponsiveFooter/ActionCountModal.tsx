@@ -1,26 +1,35 @@
-import classnames from "classnames";
-import moment from "moment";
 import React, { Fragment, useMemo } from "react";
+
 import ReactModal from "react-modal";
-import { connect } from "react-redux";
+
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import { IAppState } from "types/app";
+
+import classnames from "classnames";
+
+import moment from "moment";
+
+import { useAppSelector } from "features/app/store";
+
 import { UIRestriction } from "types/myself";
 
-export function ActionCountModal(props: Props) {
-  const {
-    actions,
-    actionBankSize,
-    cardsCount,
-    deckSize,
-    handSize,
-    isOpen,
-    onRequestClose,
-    remainingTime,
-    currentFate,
-    setting,
-    showFateUI,
-  } = props;
+export function ActionCountModal({ isOpen, onRequestClose }: Props) {
+  const actions = useAppSelector((state) => state.actions.actions);
+  const actionBankSize = useAppSelector(
+    (state) => state.actions.actionBankSize
+  );
+  const cardsCount = useAppSelector((state) => state.cards.cardsCount);
+  const deckSize = useAppSelector((state) => state.cards.deckSize);
+  const handSize = useAppSelector((state) => state.cards.handSize);
+  const remainingTime = useAppSelector((state) => state.timer.remainingTime);
+  const setting = useAppSelector((state) => state.map.setting);
+  const currentFate = useAppSelector((state) => state.fate.data.currentFate);
+
+  const showFateUI = useAppSelector(
+    (state) =>
+      !state.myself.uiRestrictions?.find(
+        (restriction) => restriction === UIRestriction.Fate
+      )
+  );
 
   // @ts-ignore
   const duration = moment
@@ -53,7 +62,12 @@ export function ActionCountModal(props: Props) {
     >
       <Fragment>
         <div>
-          <h1 className="heading heading--1" style={{ textAlign: "center" }}>
+          <h1
+            className="heading heading--1"
+            style={{
+              textAlign: "center",
+            }}
+          >
             Actions and opportunity cards
           </h1>
           <div>
@@ -100,31 +114,9 @@ export function ActionCountModal(props: Props) {
   );
 }
 
-const mapStateToProps = ({
-  actions: { actions, actionBankSize },
-  cards: { cardsCount, deckSize, handSize },
-  map: { setting },
-  timer: { remainingTime },
-  fate,
-  myself: { uiRestrictions },
-}: IAppState) => ({
-  actions,
-  actionBankSize,
-  cardsCount,
-  deckSize,
-  handSize,
-  remainingTime,
-  setting,
-  currentFate: fate.data.currentFate,
-  showFateUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Fate
-  ),
-});
+type Props = RouteComponentProps & {
+  isOpen: boolean;
+  onRequestClose: () => void;
+};
 
-type Props = ReturnType<typeof mapStateToProps> &
-  RouteComponentProps & {
-    isOpen: boolean;
-    onRequestClose: () => void;
-  };
-
-export default withRouter(connect(mapStateToProps)(ActionCountModal));
+export default withRouter(ActionCountModal);

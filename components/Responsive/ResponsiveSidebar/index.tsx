@@ -1,30 +1,41 @@
-import ResponsiveSidebarOverlay from "components/Responsive/ResponsiveSidebar/ResponsiveSidebarOverlay";
-import { FEATURE_CREDITS } from "features/feature-flags";
-import { useFeature } from "flagged";
 import React, { useCallback } from "react";
-import { connect, useDispatch } from "react-redux";
-import classnames from "classnames";
+
+import { useDispatch } from "react-redux";
+
 import { withRouter, RouteComponentProps } from "react-router-dom";
+
+import classnames from "classnames";
 
 import { enterFullScreen, exitFullScreen } from "actions/screen";
 import { closeSidebar } from "actions/sidebar";
 import { logoutUser } from "actions/user";
 
 import PlayerStats from "components/PlayerStats";
+import NavItem from "components/Responsive/ResponsiveSidebar/NavItem";
+import ResponsiveSidebarOverlay from "components/Responsive/ResponsiveSidebar/ResponsiveSidebarOverlay";
+import SidebarOutfitSelector from "components/SidebarOutfitSelector/SidebarOutfitSelector";
 import Qualities from "components/SidebarQualities";
-import SidebarOutfitSelector from "components/SidebarOutfitSelector";
+
 import Config from "configuration";
-import { IAppState } from "types/app";
+
+import { useAppSelector } from "features/app/store";
+
 import { UIRestriction } from "types/myself";
 
-import NavItem from "./NavItem";
-
 function ResponsiveSidebar(props: Props) {
-  const { history, isOpen, name, screen, showFateUI } = props;
+  const { history } = props;
+
+  const isOpen = useAppSelector((state) => state.sidebar.isOpen);
+  const name = useAppSelector((state) => state.myself.character.name);
+  const screen = useAppSelector((state) => state.screen);
+  const showFateUI = useAppSelector(
+    (state) =>
+      !state.myself.uiRestrictions?.find(
+        (restriction) => restriction === UIRestriction.Fate
+      )
+  );
 
   const dispatch = useDispatch();
-
-  const hasCredits = useFeature(FEATURE_CREDITS);
 
   const onCloseSidebar = useCallback(() => {
     dispatch(closeSidebar());
@@ -38,6 +49,7 @@ function ResponsiveSidebar(props: Props) {
     (location: string) => {
       // Close the sidebar
       dispatch(closeSidebar());
+
       // Take us to the new location
       history.push(location);
     },
@@ -51,11 +63,13 @@ function ResponsiveSidebar(props: Props) {
 
   const toggleFullScreen = useCallback(() => {
     dispatch(closeSidebar());
+
     if (screen.full) {
       return dispatch(exitFullScreen());
     }
+
     return dispatch(enterFullScreen());
-  }, [dispatch, screen.full]);
+  }, [dispatch, screen]);
 
   return (
     <div className="sidemenu-container">
@@ -98,11 +112,9 @@ function ResponsiveSidebar(props: Props) {
             >
               {screen.full ? "Exit fullscreen" : "Go fullscreen"}
             </NavItem>
-            {!!hasCredits && (
-              <NavItem icon="list" onClick={makeHandler("credits")}>
-                Credits
-              </NavItem>
-            )}
+            <NavItem icon="list" onClick={makeHandler("credits")}>
+              Credits
+            </NavItem>
             <NavItem icon="sign-out" onClick={onLogoutUser}>
               Log out
             </NavItem>
@@ -114,22 +126,6 @@ function ResponsiveSidebar(props: Props) {
   );
 }
 
-const mapStateToProps = ({
-  screen,
-  sidebar,
-  myself: {
-    character: { name },
-    uiRestrictions,
-  },
-}: IAppState) => ({
-  ...sidebar,
-  screen,
-  name,
-  showFateUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Fate
-  ),
-});
+type Props = RouteComponentProps;
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;
-
-export default withRouter(connect(mapStateToProps)(ResponsiveSidebar));
+export default withRouter(ResponsiveSidebar);

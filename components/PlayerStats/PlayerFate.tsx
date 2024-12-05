@@ -1,54 +1,44 @@
-import TippyWrapper from "components/TippyWrapper";
 import React, { useCallback } from "react";
+
+import { useDispatch } from "react-redux";
+
 import { withRouter, Link, RouteComponentProps } from "react-router-dom";
-import { connect, useDispatch } from "react-redux";
 
 import { openPurchaseDialog } from "actions/fate";
-import { closeSidebar } from "actions/sidebar";
-import Image from "components/Image";
-import getPremiumDaysRemaining from "selectors/fate/getPremiumDaysRemaining";
-import { IAppState } from "types/app";
-import { UIRestriction } from "types/myself";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
+import { closeSidebar } from "actions/sidebar";
 
-const mapStateToProps = (state: IAppState) => {
-  const {
-    actions: { actions },
-    fate: {
-      data: { currentFate, fateCards },
-    },
-    myself: { uiRestrictions },
-    settings: {
-      subscriptions: { hasBraintreeSubscription, subscriptionType },
-    },
-  } = state;
+import Image from "components/Image";
+import TippyWrapper from "components/TippyWrapper";
 
-  return {
-    actions,
-    currentFate,
-    fateCards,
-    hasSubscription: hasBraintreeSubscription,
-    premiumDaysRemaining: Math.max(getPremiumDaysRemaining(state), 0),
-    showFateUI: !uiRestrictions?.find(
-      (restriction) => restriction === UIRestriction.Fate
-    ),
-    subscriptionType,
-  };
-};
+import { useAppSelector } from "features/app/store";
 
-type Props = ReturnType<typeof mapStateToProps> & RouteComponentProps;
+import getPremiumDaysRemaining from "selectors/fate/getPremiumDaysRemaining";
 
-function PlayerFate({
-  actions,
-  currentFate,
-  fateCards,
-  hasSubscription,
-  history,
-  premiumDaysRemaining,
-  showFateUI,
-  subscriptionType,
-}: Props) {
+import { UIRestriction } from "types/myself";
+
+type Props = RouteComponentProps;
+
+function PlayerFate({ history }: Props) {
   const dispatch = useDispatch();
+  const actions = useAppSelector((state) => state.actions.actions);
+  const currentFate = useAppSelector((state) => state.fate.data.currentFate);
+  const fateCards = useAppSelector((state) => state.fate.data.fateCards);
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const premiumDaysRemaining = useAppSelector((state) =>
+    Math.max(getPremiumDaysRemaining(state), 0)
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
+  );
+  const showFateUI = useAppSelector(
+    (state) =>
+      !state.myself.uiRestrictions?.find(
+        (restriction) => restriction === UIRestriction.Fate
+      )
+  );
 
   const handleClick = useCallback(() => {
     const actionsRemaining = actions;
@@ -136,11 +126,17 @@ function PlayerFate({
 
   return (
     <li className="item">
-      <TippyWrapper tooltipData={{ description: "Open the Fate tab" }}>
+      <TippyWrapper
+        tooltipData={{
+          description: "Open the Fate tab",
+        }}
+      >
         <button
           className="icon--currency sidebar__fate-button sidebar__button--has-focus-outline"
           onClick={handleClick}
-          style={{ padding: 0 }}
+          style={{
+            padding: 0,
+          }}
           tabIndex={0}
           type="button"
         >
@@ -151,7 +147,9 @@ function PlayerFate({
             type="currencies"
             width={60}
             height={78}
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+            }}
           />
           <span className="u-visually-hidden">Open the Fate tab</span>
         </button>
@@ -168,4 +166,4 @@ function PlayerFate({
 
 PlayerFate.displayName = "PlayerFate";
 
-export default withRouter(connect(mapStateToProps)(PlayerFate));
+export default withRouter(PlayerFate);

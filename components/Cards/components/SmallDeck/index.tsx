@@ -1,7 +1,9 @@
 import React from "react";
+
+import { useDispatch } from "react-redux";
+
 import classnames from "classnames";
-import { connect, useDispatch } from "react-redux";
-import { IAppState } from "types/app";
+
 import {
   useDrawCards,
   useHandFull,
@@ -9,45 +11,28 @@ import {
   useOnClickDeck,
 } from "components/Cards/hooks";
 
-const mapStateToProps = ({
-  cards: { cardsCount, displayCards, handSize, isFetching },
-  fate: { data: fateData },
-}: IAppState) => ({
-  cardsCount,
-  displayCards,
-  fateData,
-  handSize,
-  isFetching,
-});
+import { useAppSelector } from "features/app/store";
 
-type OwnProps = {
+type Props = {
   onOpenDeckRefreshModal: () => void;
 };
 
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-function SmallDeckContainer(props: Props) {
-  const {
-    cardsCount,
-    displayCards,
-    isFetching,
-    handSize,
-    onOpenDeckRefreshModal,
-  } = props;
+export default function SmallDeckContainer({ onOpenDeckRefreshModal }: Props) {
+  const cardsCount = useAppSelector((state) => state.cards.cardsCount);
+  const displayCards = useAppSelector((state) => state.cards.displayCards);
+  const handSize = useAppSelector((state) => state.cards.handSize);
+  const isFetching = useAppSelector((state) => state.cards.isFetching);
 
   const dispatch = useDispatch();
-
   const drawCards = useDrawCards(dispatch);
-
   const handFull = useHandFull(displayCards, handSize);
-
   const noCards = useNoCards(cardsCount, isFetching);
 
   const onClick = useOnClickDeck({
     drawCards,
+    handFull,
     isFetching,
     noCards,
-    handFull,
     topUpCards: onOpenDeckRefreshModal,
   });
 
@@ -69,5 +54,3 @@ function SmallDeckContainer(props: Props) {
 }
 
 SmallDeckContainer.displayName = "SmallDeckContainer";
-
-export default connect(mapStateToProps)(SmallDeckContainer);

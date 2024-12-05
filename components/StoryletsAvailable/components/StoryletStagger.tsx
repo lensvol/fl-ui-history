@@ -1,15 +1,18 @@
 import React, { Fragment } from "react";
-import { connect } from "react-redux";
-import Storylet from "components/Storylet";
-import getNeedsProminentTravelButton from "selectors/map/getNeedsProminentTravelButton";
-import { IAppState } from "types/app";
-import TravelButton from "components/TravelButton";
-import PersistentStoryletContainer from "components/StoryletsAvailable/components/PersistentStoryletContainer";
-import { useFeature } from "flagged";
-import { FEATURE_PERSISTENT_DECK } from "features/feature-flags";
 
-function StoryletStagger({ needsProminentTravelButton, storylets }: Props) {
-  const isPersistentDeckEnabled = useFeature(FEATURE_PERSISTENT_DECK);
+import Storylet from "components/Storylet";
+import PersistentStoryletContainer from "components/StoryletsAvailable/components/PersistentStoryletContainer";
+import TravelButton from "components/TravelButton";
+
+import { useAppSelector } from "features/app/store";
+
+import getNeedsProminentTravelButton from "selectors/map/getNeedsProminentTravelButton";
+
+export default function StoryletStagger() {
+  const storylets = useAppSelector((state) => state.storylet.storylets);
+  const needsProminentTravelButton = useAppSelector((state) =>
+    getNeedsProminentTravelButton(state)
+  );
 
   if (storylets === null) {
     return null;
@@ -29,12 +32,10 @@ function StoryletStagger({ needsProminentTravelButton, storylets }: Props) {
         </div>
       )}
 
-      {isPersistentDeckEnabled && <PersistentStoryletContainer />}
+      <PersistentStoryletContainer />
 
       {storylets
-        .filter(
-          (slet) => !isPersistentDeckEnabled || slet.deckType !== "Persistent"
-        )
+        .filter((slet) => slet.deckType !== "Persistent")
         .map((storylet) => (
           <Storylet key={storylet.id} data={storylet} />
         ))}
@@ -43,16 +44,3 @@ function StoryletStagger({ needsProminentTravelButton, storylets }: Props) {
 }
 
 StoryletStagger.displayName = "StoryletStagger";
-
-const mapStateToProps = (state: IAppState) => {
-  const { storylet } = state;
-
-  return {
-    needsProminentTravelButton: getNeedsProminentTravelButton(state),
-    storylets: storylet.storylets,
-  };
-};
-
-export type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(StoryletStagger);

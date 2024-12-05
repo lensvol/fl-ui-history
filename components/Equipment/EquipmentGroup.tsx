@@ -1,38 +1,46 @@
-import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
 import React, { useMemo } from "react";
-import { useIsChangeable, useIsEffect } from "components/Equipment/hooks";
-import LockedSlotIcon from "components/Equipment/LockedSlotIcon";
-import { connect } from "react-redux";
+
 import classnames from "classnames";
-import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
-import { OutfitSlotName } from "types/outfit";
+
 import AvailableItem from "components/Equipment/AvailableItem";
 import EffectItem from "components/Equipment/EffectItem";
+import EquipmentContext, {
+  EquipmentContextValue,
+} from "components/Equipment/EquipmentContext";
 import EquipmentSlot from "components/Equipment/EquipmentSlot";
+import { useIsChangeable, useIsEffect } from "components/Equipment/hooks";
+import LockedSlotIcon from "components/Equipment/LockedSlotIcon";
 import PossessionsContext from "components/Possessions/PossessionsContext";
 
-import getQualityBySlotName from "selectors/possessions/getQualityBySlotName";
+import { useAppSelector } from "features/app/store";
+
 import getAvailableQualitiesForSlot from "selectors/possessions/getAvailableQualitiesForSlot";
+import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
+import getQualityBySlotName from "selectors/possessions/getQualityBySlotName";
+
+import { OutfitSlotName } from "types/outfit";
+
 import categoryNameToHumanReadableCategoryName from "utils/categoryNameToHumanReadableCategoryName";
-
-import { IAppState } from "types/app";
-import { Feature } from "flagged";
 import { normalize } from "utils/stringFunctions";
-import EquipmentContext, { EquipmentContextValue } from "./EquipmentContext";
 
-function EquipmentGroup(props: Props) {
-  const {
-    availableQualities,
-    canChangeOutfits,
-    equippedQuality,
-    isChanging,
-    name,
-    outfit,
-  } = props;
+export default function EquipmentGroup(props: Props) {
+  const { name } = props;
+
+  const availableQualities = useAppSelector((state) =>
+    getAvailableQualitiesForSlot(state, props)
+  );
+  const canChangeOutfits = useAppSelector((state) =>
+    getCanUserChangeOutfit(state)
+  );
+  const equippedQuality = useAppSelector((state) =>
+    getQualityBySlotName(state, props)
+  );
+  const isChanging = useAppSelector((state) => state.outfit.isChanging);
+  const outfit = useAppSelector((state) => state.outfit);
 
   const isAvailableItemsEmpty = useMemo(
     () => availableQualities.length <= 0,
-    [availableQualities.length]
+    [availableQualities]
   );
 
   const isChangeable = useIsChangeable(name, outfit);
@@ -70,6 +78,7 @@ function EquipmentGroup(props: Props) {
                   ) {
                     return null;
                   }
+
                   return (
                     <li className="effect-item-list__item" key={quality.id}>
                       <EffectItem
@@ -112,25 +121,17 @@ function EquipmentGroup(props: Props) {
                   ) {
                     return null;
                   }
+
                   return (
                     <li className="available-item-list__item" key={quality.id}>
                       <PossessionsContext.Consumer>
                         {({ currentlyInStorylet }) => (
-                          <Feature
-                            name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}
-                          >
-                            {(doesStoryletStateLockOutfits: boolean) => (
-                              <AvailableItem
-                                {...quality}
-                                key={quality.id}
-                                doesStoryletStateLockOutfits={
-                                  doesStoryletStateLockOutfits
-                                }
-                                currentlyInStorylet={currentlyInStorylet}
-                                openUseOrEquipModal={openUseOrEquipModal}
-                              />
-                            )}
-                          </Feature>
+                          <AvailableItem
+                            {...quality}
+                            key={quality.id}
+                            currentlyInStorylet={currentlyInStorylet}
+                            openUseOrEquipModal={openUseOrEquipModal}
+                          />
                         )}
                       </PossessionsContext.Consumer>
                     </li>
@@ -148,20 +149,7 @@ function EquipmentGroup(props: Props) {
 EquipmentGroup.displayName = "EquippedGroup";
 
 type OwnProps = {
-  doesStoryletStateLockOutfits: boolean;
   name: OutfitSlotName;
 };
 
-const mapStateToProps = (state: IAppState, props: OwnProps) => ({
-  availableQualities: getAvailableQualitiesForSlot(state, props),
-  canChangeOutfits: getCanUserChangeOutfit(state, props),
-  equippedQuality: getQualityBySlotName(state, props),
-  isChanging: state.outfit.isChanging,
-  outfit: state.outfit,
-});
-
-type Props = Pick<EquipmentContextValue, "filterString"> &
-  OwnProps &
-  ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(EquipmentGroup);
+type Props = Pick<EquipmentContextValue, "filterString"> & OwnProps;

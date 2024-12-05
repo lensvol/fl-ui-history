@@ -1,20 +1,26 @@
 import { CardsActions } from "actions/cards";
 import { OutfitActions } from "actions/outfit";
 import { BeginStoryletActions } from "actions/storylet/begin";
+import { ChooseBranchAction } from "actions/storylet/chooseBranch";
+import { FetchAvailableSuccessAction } from "actions/storylet/fetchAvailable";
+
 import * as CardActionTypes from "actiontypes/cards";
 import {
   EQUIP_QUALITY_SUCCESS,
   CHANGE_OUTFIT_SUCCESS,
 } from "actiontypes/myself";
 import {
+  CHOOSE_BRANCH_SUCCESS,
+  CHOOSE_STORYLET_FAILURE,
   CHOOSE_STORYLET_REQUESTED,
   CHOOSE_STORYLET_SUCCESS,
-  CHOOSE_STORYLET_FAILURE,
+  FETCH_AVAILABLE_SUCCESS,
 } from "actiontypes/storylet";
 
+import formatPayload from "reducers/cards/formatPayload";
+import reverseCards from "reducers/cards/reverseCards";
+
 import { ICardsState } from "types/cards";
-import formatPayload from "./formatPayload";
-import reverseCards from "./reverseCards";
 
 /**
  * Initial state
@@ -34,7 +40,12 @@ const INITIAL_STATE: ICardsState = {
 
 export default function reducer(
   state = INITIAL_STATE,
-  action: CardsActions | BeginStoryletActions | OutfitActions
+  action:
+    | CardsActions
+    | BeginStoryletActions
+    | OutfitActions
+    | ChooseBranchAction
+    | FetchAvailableSuccessAction
 ): ICardsState {
   switch (action.type) {
     case CardActionTypes.CARDS_SHOULD_FETCH:
@@ -45,7 +56,10 @@ export default function reducer(
 
     case CardActionTypes.CLEAR_CACHE:
       // We are resetting the initial state, but we now have empty card data; we need to fetch cards
-      return { ...INITIAL_STATE, shouldFetch: true };
+      return {
+        ...INITIAL_STATE,
+        shouldFetch: true,
+      };
 
     case CardActionTypes.BACKGROUND_FETCH_CARDS_REQUESTED:
       return {
@@ -71,6 +85,7 @@ export default function reducer(
 
     case CardActionTypes.FETCH_CARDS_SUCCESS: {
       const payload = formatPayload(action.payload);
+
       return {
         ...state,
         ...payload,
@@ -100,6 +115,7 @@ export default function reducer(
 
     case CardActionTypes.DISCARD_CARDS_SUCCESS: {
       const payload = formatPayload(action.payload);
+
       return {
         ...state,
         ...payload,
@@ -124,6 +140,7 @@ export default function reducer(
 
     case CardActionTypes.DRAW_CARDS_SUCCESS: {
       const payload = formatPayload(action.payload);
+
       return {
         ...state,
         ...payload,
@@ -134,15 +151,32 @@ export default function reducer(
     }
 
     case CHOOSE_STORYLET_REQUESTED:
-      return { ...state, isPlaying: true };
+      return {
+        ...state,
+        isPlaying: true,
+      };
 
     case CHOOSE_STORYLET_SUCCESS:
+    case CHOOSE_BRANCH_SUCCESS:
+    case FETCH_AVAILABLE_SUCCESS:
+      return {
+        ...state,
+        isPlaying: false,
+        handSize: action.payload.maxHandSize ?? state.handSize,
+      };
+
     case CHOOSE_STORYLET_FAILURE:
-      return { ...state, isPlaying: false };
+      return {
+        ...state,
+        isPlaying: false,
+      };
 
     case EQUIP_QUALITY_SUCCESS:
     case CHANGE_OUTFIT_SUCCESS:
-      return { ...state, wasInvalidatedByEquipmentChange: true };
+      return {
+        ...state,
+        wasInvalidatedByEquipmentChange: true,
+      };
 
     default:
       return state;

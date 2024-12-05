@@ -1,10 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { withRouter, RouteComponentProps } from "react-router-dom";
-
-import { Feature } from "flagged";
 
 import { equipQuality, renameOutfit, unequipQuality } from "actions/outfit";
 import { useQuality as _useQuality } from "actions/storylet";
@@ -16,17 +14,19 @@ import PossessionsContext from "components/Possessions/PossessionsContext";
 import RenameOutfitModal from "components/Possessions/RenameOutfitModal";
 import UseOrEquipModal from "components/Possessions/UseOrEquipModal";
 
-import { FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS } from "features/feature-flags";
+import { useAppSelector } from "features/app/store";
 
 import findSelectedOutfit from "selectors/outfits/findSelectedOutfit";
 
 import { Success } from "services/BaseMonadicService";
 
-import { IAppState } from "types/app";
 import { OutfitSlotName } from "types/outfit";
 import { IQuality } from "types/qualities";
 
-export function Equipment({ history, outfit, outfitState }: Props) {
+function Equipment({ history }: Props) {
+  const outfit = useAppSelector((state) => findSelectedOutfit(state));
+  const outfitState = useAppSelector((state) => state.outfit);
+
   const dispatch = useDispatch();
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -132,39 +132,24 @@ export function Equipment({ history, outfit, outfitState }: Props) {
             },
           }}
         >
-          <>
-            <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
-              {(doesStoryletStateLockOutfits: boolean) => (
-                <OutfitControls
-                  doesStoryletStateLockOutfits={doesStoryletStateLockOutfits}
+          <OutfitControls />
+          <ul className="equipment-group-list">
+            {groups.map(({ name }: { name: OutfitSlotName }) => (
+              <li className="equipment-group-list__item" key={name}>
+                <EquipmentGroup
+                  filterString={filterString}
+                  key={name}
+                  name={name}
                 />
-              )}
-            </Feature>
-            <ul className="equipment-group-list">
-              {groups.map(({ name }: { name: OutfitSlotName }) => (
-                <li className="equipment-group-list__item" key={name}>
-                  <Feature name={FEATURE_DOES_STORYLET_STATE_LOCK_OUTFITS}>
-                    {(doesStoryletStateLockOutfits: boolean) => (
-                      <EquipmentGroup
-                        doesStoryletStateLockOutfits={
-                          doesStoryletStateLockOutfits
-                        }
-                        filterString={filterString}
-                        key={name}
-                        name={name}
-                      />
-                    )}
-                  </Feature>
-                </li>
-              ))}
-            </ul>
-            <RenameOutfitModal
-              errorMessage={errorMessage}
-              isOpen={isRenameModalOpen}
-              onRequestClose={() => setIsRenameModalOpen(false)}
-              onSubmit={onSubmit}
-            />
-          </>
+              </li>
+            ))}
+          </ul>
+          <RenameOutfitModal
+            errorMessage={errorMessage}
+            isOpen={isRenameModalOpen}
+            onRequestClose={() => setIsRenameModalOpen(false)}
+            onSubmit={onSubmit}
+          />
           {qualityBeingUsedOrEquipped && (
             <UseOrEquipModal
               currentlyInStorylet={currentlyInStorylet}
@@ -184,11 +169,6 @@ export function Equipment({ history, outfit, outfitState }: Props) {
 
 Equipment.displayName = "Equipment";
 
-const mapStateToProps = (state: IAppState) => ({
-  outfit: findSelectedOutfit(state),
-  outfitState: state.outfit,
-});
+type Props = RouteComponentProps;
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;
-
-export default withRouter(connect(mapStateToProps)(Equipment));
+export default withRouter(Equipment);

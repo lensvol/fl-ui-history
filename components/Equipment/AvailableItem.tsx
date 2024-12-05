@@ -36,7 +36,7 @@ function AvailableItem(props: Props) {
   } = props;
 
   const canChangeOutfit = useAppSelector((state) =>
-    getCanUserChangeOutfit(state, props)
+    getCanUserChangeOutfit(state)
   );
   const isChanging = useAppSelector((state) => state.outfit.isChanging);
   const isEquipped = useAppSelector((state) => getIsEquipped(state, props));
@@ -210,7 +210,6 @@ AvailableItem.displayName = "AvailableItem";
 type OwnProps = {
   currentlyInStorylet: boolean;
   description: string;
-  doesStoryletStateLockOutfits: boolean;
   enhancements?: IEnhancement[];
   id: number;
   image: string;

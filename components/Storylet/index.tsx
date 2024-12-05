@@ -1,12 +1,3 @@
-import { begin } from "actions/storylet";
-import classnames from "classnames";
-import StoryletCard from "components/common/StoryletCard";
-import QualityRequirement from "components/QualityRequirement";
-import MediaSmUp from "components/Responsive/MediaSmUp";
-import MediaXsDown from "components/Responsive/MediaXsDown";
-import { qreqsNeedClear } from "components/utils";
-import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
-import { COMMAND_MAP } from "features/content-behaviour-integration/integration";
 import React, {
   useCallback,
   useEffect,
@@ -14,28 +5,38 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
-import { ApiAvailableStorylet } from "types/storylet";
-import getBorderColour from "utils/getBorderColour";
 
-import { withRouter, RouteComponentProps } from "react-router-dom";
-import StoryletBodySmUp from "./components/StoryletBodySmUp";
-import StoryletBodyXsDown from "./components/StoryletBodyXsDown";
-import { useFeature } from "flagged";
-import { FEATURE_PERSISTENT_DECK } from "features/feature-flags";
+import { useDispatch } from "react-redux";
+
+import { RouteComponentProps, withRouter } from "react-router-dom";
+
+import classnames from "classnames";
+
+import { begin } from "actions/storylet";
+
+import StoryletCard from "components/common/StoryletCard";
 import Image from "components/Image";
 import { ImageProps } from "components/Image/props";
+import QualityRequirement from "components/QualityRequirement";
+import MediaSmUp from "components/Responsive/MediaSmUp";
+import MediaXsDown from "components/Responsive/MediaXsDown";
+import StoryletBodySmUp from "components/Storylet/components/StoryletBodySmUp";
+import StoryletBodyXsDown from "components/Storylet/components/StoryletBodyXsDown";
+import { qreqsNeedClear } from "components/utils";
 
-function StoryletContainer({
-  dispatch,
-  data,
-  history,
-  isChoosing,
-  badge,
-  beforeHandleClick,
-}: Props) {
+import { useAppSelector } from "features/app/store";
+import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
+import { COMMAND_MAP } from "features/content-behaviour-integration/integration";
+
+import { ApiAvailableStorylet } from "types/storylet";
+
+import getBorderColour from "utils/getBorderColour";
+
+function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
   const { id, image, name, teaser, deckType } = data;
+
+  const dispatch = useDispatch();
+  const isChoosing = useAppSelector((state) => state.storylet.isChoosing);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -48,6 +49,7 @@ function StoryletContainer({
 
     if ((uiTriggerMatches?.length ?? 0) > 1) {
       const commandMatch = uiTriggerMatches?.[1];
+
       if (commandMatch !== undefined) {
         return COMMAND_MAP[commandMatch];
       }
@@ -89,7 +91,9 @@ function StoryletContainer({
 
   useEffect(() => {
     window.addEventListener("resize", onResize);
+
     onResize();
+
     return () => {
       window.removeEventListener("resize", onResize);
     };
@@ -97,11 +101,7 @@ function StoryletContainer({
 
   const onCardClick = handleChoose;
   const forceClearQreqs = shouldClearQReqs;
-  const isPersistentDeckEnabled = useFeature(FEATURE_PERSISTENT_DECK);
-  const storyletStyle =
-    isPersistentDeckEnabled && deckType === "Persistent"
-      ? "persistent"
-      : "storylet";
+  const storyletStyle = deckType === "Persistent" ? "persistent" : "storylet";
 
   return (
     <div
@@ -151,18 +151,11 @@ function StoryletContainer({
 StoryletContainer.displayName = "StoryletContainer";
 
 interface OwnProps {
-  dispatch: Function; // eslint-disable-line
   data: ApiAvailableStorylet;
   badge?: ImageProps;
   beforeHandleClick?: (storyletId: number) => void;
 }
 
-const mapStateToProps = (state: IAppState) => ({
-  isChoosing: state.storylet.isChoosing,
-});
+export type Props = RouteComponentProps & OwnProps;
 
-export type Props = RouteComponentProps &
-  OwnProps &
-  ReturnType<typeof mapStateToProps>;
-
-export default withRouter(connect(mapStateToProps)(StoryletContainer));
+export default withRouter(StoryletContainer);
