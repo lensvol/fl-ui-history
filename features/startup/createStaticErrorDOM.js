@@ -28,7 +28,7 @@ export default function createStaticErrorDOM(document) {
 
   const fourthParagraph = document.createElement("p");
   fourthParagraph.classList.add("error-boundary__p--link");
-  fourthParagraph.innerHTML = `<a href="mailto:fallenlondonredesign@failbettergames.com">fallenlondonredesign@failbettergames.com</a>`;
+  fourthParagraph.innerHTML = `<a href="mailto:support@failbettergames.com">support@failbettergames.com</a>`;
 
   const fifthParagraph = document.createElement("p");
   fifthParagraph.innerHTML = `You're using version <b>${Config.version}</b> of Fallen London.`;

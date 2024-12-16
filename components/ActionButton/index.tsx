@@ -1,14 +1,18 @@
 import React, { Component, Fragment } from "react";
+
 import { connect } from "react-redux";
+
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import MainButton from "./components/MainButton";
-
+import ButtonLabel from "components/ActionButton/components/ButtonLabel";
+import FateRefreshButton from "components/ActionButton/components/FateRefreshButton";
+import MainButton from "components/ActionButton/components/MainButton";
 import ActionRefreshContext from "components/ActionRefreshContext";
-import FateRefreshButton from "./components/FateRefreshButton";
-import ButtonLabel from "./components/ButtonLabel";
-import { IAppState } from "types/app";
 import { IActionRefreshContextValues } from "components/ActionRefreshContext/ActionRefreshContext";
+
+import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
+
+import { IAppState } from "types/app";
 
 class ActionButton extends Component<Props & RouteComponentProps> {
   static displayName = "ActionButton";
@@ -22,15 +26,18 @@ class ActionButton extends Component<Props & RouteComponentProps> {
 
   handleClick = () => {
     const { onClick } = this.props;
+
     if (this.isDisabled()) {
       return null;
     }
+
     return onClick();
   };
 
   isActionLocked = () => {
     // We're action-locked if we don't have enough actions for this option
     const { actions, data } = this.props;
+
     return data.actionCost > actions;
   };
 
@@ -40,7 +47,9 @@ class ActionButton extends Component<Props & RouteComponentProps> {
       data: { actionCost, currencyLocked, qualityLocked },
       disabled: propDisabled,
     } = this.props;
+
     const actionLocked = actions < actionCost;
+
     return propDisabled || actionLocked || currencyLocked || qualityLocked;
   };
 
@@ -60,6 +69,10 @@ class ActionButton extends Component<Props & RouteComponentProps> {
     const hasEnoughFate = (currentFate || 0) >= 4;
     const hasActionRefreshes = (remainingActionRefreshes || 0) !== 0;
 
+    const uiTriggerMatches = data.description?.match(UI_INTEGRATION_REGEX);
+    const target =
+      (uiTriggerMatches?.length ?? 0) > 4 ? uiTriggerMatches?.[4] : undefined;
+
     return (
       <Fragment>
         <MainButton
@@ -69,6 +82,7 @@ class ActionButton extends Component<Props & RouteComponentProps> {
           go={go}
           onClick={this.handleClick}
           classNames={data.buttonClassNames}
+          target={target}
         >
           <ButtonLabel actions={actions} data={data} isWorking={isWorking}>
             {children}

@@ -1,16 +1,21 @@
 /* eslint-disable no-param-reassign, no-useless-concat */
 import React from "react";
-import PropTypes from "prop-types";
+
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import Config from "configuration";
+
+import PropTypes from "prop-types";
+
 import getAirbrakeClient from "shared/airbrake/getClient";
 
 function stringifyError(err, filter, space) {
   const plainObject = {};
+
   Object.getOwnPropertyNames(err).forEach((key) => {
     plainObject[key] = err[key];
   });
+
   return JSON.stringify(plainObject, filter, space);
 }
 
@@ -23,6 +28,7 @@ class ErrorBoundary extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = { hasError: false };
   }
 
@@ -40,6 +46,7 @@ class ErrorBoundary extends React.Component {
     // Filter and send to Airbrake --- if we error here, then silently discard it
     try {
       const airbrake = getAirbrakeClient();
+
       airbrake.notify({
         error: stringifyError(error, null, "\t"),
         params: { info },
@@ -49,9 +56,11 @@ class ErrorBoundary extends React.Component {
 
   createMessage = (error, info) => {
     let message = "Version: " + Config.version + "\n\n";
+
     if (window.isSecureContext) {
       message += "User-Agent: " + window.navigator.userAgent + "\n\n";
     }
+
     message +=
       "Error stack:\n\n" +
       error.stack +
@@ -59,11 +68,13 @@ class ErrorBoundary extends React.Component {
       "Component stack" +
       "\n\n" +
       info.componentStack;
+
     return message;
   };
 
   render() {
     const { children } = this.props;
+
     const { error, copied, hasError, info } = this.state;
 
     if (hasError) {
@@ -89,13 +100,14 @@ class ErrorBoundary extends React.Component {
             </p>
             <p>
               If the problem persists, do let us know as much information as
-              possible — username, browser and what you were trying to do — at:
+              possible &mdash; username, browser and what you were trying to do
+              &mdash; at:
             </p>
             <p className="error-boundary__p--link">
               <a
-                href={`mailto:fallenlondonredesign@failbettergames.com?subject=${subject}&body=${body}`}
+                href={`mailto:support@failbettergames.com?subject=${subject}&body=${body}`}
               >
-                fallenlondonredesign@failbettergames.com
+                support@failbettergames.com
               </a>
               .
             </p>
@@ -129,6 +141,7 @@ class ErrorBoundary extends React.Component {
         </div>
       );
     }
+
     return children;
   }
 }
