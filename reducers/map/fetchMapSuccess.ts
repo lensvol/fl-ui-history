@@ -1,5 +1,7 @@
 import { FetchMapSuccess } from "actions/map/fetch";
+
 import asStateAwareArea from "features/mapping/asStateAwareArea";
+
 import { AreaWithNestedJsonInfo, IMappableSetting, IMapState } from "types/map";
 
 export default function fetchMapSuccess(
@@ -44,6 +46,7 @@ function flattenAreas(
     if (a.childAreas && a.childAreas.length) {
       return [a, ...flattenAreas(a.childAreas)];
     }
+
     return [a];
   });
 }

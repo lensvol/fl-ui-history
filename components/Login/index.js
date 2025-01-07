@@ -19,15 +19,18 @@ export default class LoginContainer extends Component {
 
   possibleClassNames = [
     "ambassador",
-    // 'astrologer',
+    "astrologer",
     "aunt",
     "boatman",
+    "deputy",
     "edward",
-    // 'magician',
-    // 'master',
-    // 'november',
-    // 'plenty',
-    // 'surveyor',
+    "madamex1",
+    "magician",
+    "master",
+    "mystic",
+    "november",
+    "plenty",
+    "surveyor",
   ];
 
   state = {

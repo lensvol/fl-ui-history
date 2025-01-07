@@ -1,9 +1,21 @@
 import React from "react";
 
-export default function ItsYou({ name }: { name: string }) {
+type Props = {
+  name: string;
+};
+
+export default function ItsYou({ name }: Props) {
   return (
     <span>
-      It's <span dangerouslySetInnerHTML={{ __html: name }} />!
+      It's{" "}
+      <a
+        href={`/profile/${encodeURIComponent(name)}`}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <span dangerouslySetInnerHTML={{ __html: name }} />
+      </a>
+      !
     </span>
   );
 }

@@ -1,22 +1,33 @@
 import React from "react";
-import { connect } from "react-redux";
+
 import moment from "moment";
 
-import getSidebarQualities from "selectors/myself/getSidebarQualities";
-import getEchoes from "selectors/myself/getEchoes";
-import { IAppState } from "types/app";
-import AccessibleMapMenu from "./AccessibleMapMenu";
-import AccessibleNavigationTabs from "./AccessibleNavigationTabs";
+import AccessibleMapMenu from "components/AccessibleSidebar/AccessibleMapMenu";
+import AccessibleNavigationTabs from "components/AccessibleSidebar/AccessibleNavigationTabs";
+import ItsYou from "components/Infobar/ItsYou";
 
-export function AccessibleSidebar({
-  actionBankSize,
-  actions,
-  currentAreaName,
-  echoes,
-  name,
-  nextActionAt,
-  sidebarQualities,
-}: Props) {
+import { useAppSelector } from "features/app/store";
+
+import getEchoes from "selectors/myself/getEchoes";
+import getSidebarQualities from "selectors/myself/getSidebarQualities";
+
+export default function AccessibleSidebar() {
+  const actions = useAppSelector((state) => state.actions.actions);
+  const actionBankSize = useAppSelector(
+    (state) => state.actions.actionBankSize
+  );
+  const currentAreaName = useAppSelector(
+    (state) => state.map.currentArea?.name
+  );
+  const echoes = useAppSelector((state) => getEchoes(state));
+  const name = useAppSelector((state) => state.myself.character.name);
+  const nextActionAt = useAppSelector(
+    (state) => state.timer.timeNextActionIsAvailable
+  );
+  const sidebarQualities = useAppSelector((state) =>
+    getSidebarQualities(state)
+  );
+
   const fetching = [
     actionBankSize,
     currentAreaName,
@@ -24,6 +35,7 @@ export function AccessibleSidebar({
     name,
     nextActionAt,
   ].some((x) => !x);
+
   if (fetching) {
     return (
       <div className="accessible-sidebar u-visually-hidden">
@@ -33,6 +45,7 @@ export function AccessibleSidebar({
   }
 
   const formattedNextActionAt = moment(new Date(nextActionAt)).format("hh:mm");
+
   const formattedEchoes = echoes.toLocaleString("en-GB", {
     style: "decimal",
     minimumFractionDigits: 2,
@@ -45,7 +58,8 @@ export function AccessibleSidebar({
       className="accessible-sidebar u-visually-hidden"
     >
       <h1 className="welcome">
-        {`It's ${name}!`} {`Welcome to ${currentAreaName}, delicious friend!`}
+        <ItsYou name={name} />{" "}
+        {`Welcome to ${currentAreaName}, delicious friend!`}
       </h1>
       <section className="accessible-map">
         <AccessibleMapMenu />
@@ -74,35 +88,3 @@ export function AccessibleSidebar({
 }
 
 AccessibleSidebar.displayName = "AccessibleSidebar";
-
-interface Props {
-  actions: number;
-  actionBankSize: number;
-  currentAreaName?: string;
-  echoes: number;
-  name?: string;
-  nextActionAt: any;
-  sidebarQualities: any[];
-}
-
-const mapStateToProps = (state: IAppState) => {
-  const {
-    actions: { actions, actionBankSize },
-    map: { currentArea },
-    myself: {
-      character: { name },
-    },
-    timer: { timeNextActionIsAvailable: nextActionAt },
-  } = state;
-  return {
-    actions,
-    actionBankSize,
-    currentAreaName: currentArea?.name,
-    name,
-    nextActionAt,
-    echoes: getEchoes(state),
-    sidebarQualities: getSidebarQualities(state),
-  };
-};
-
-export default connect(mapStateToProps)(AccessibleSidebar);

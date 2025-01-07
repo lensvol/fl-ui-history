@@ -1,19 +1,26 @@
-import HasSubscriptionContent from "components/Account/Subscriptions/HasSubscriptionContent";
 import React, { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+
+import { useDispatch } from "react-redux";
 
 import { fetch as fetchSettings } from "actions/settings";
 
+import HasSubscriptionContent from "components/Account/Subscriptions/HasSubscriptionContent";
 import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
 
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
 
-function Subscriptions({
-  data,
-  hasBraintreeSubscription,
-  renewDate,
-  subscriptionType,
-}: Props) {
+export default function Subscriptions() {
+  const data = useAppSelector((state) => state.settings.data);
+  const hasBraintreeSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const renewDate = useAppSelector(
+    (state) => state.subscription.data?.renewDate
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
+  );
+
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -43,19 +50,4 @@ function Subscriptions({
   );
 }
 
-const mapStateToProps = ({
-  settings: {
-    data,
-    subscriptions: { hasBraintreeSubscription, subscriptionType },
-  },
-  subscription: { data: subscriptionData },
-}: IAppState) => ({
-  data,
-  hasBraintreeSubscription,
-  renewDate: subscriptionData?.renewDate,
-  subscriptionType,
-});
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(Subscriptions);
+Subscriptions.displayName = "Subscriptions";

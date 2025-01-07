@@ -1,23 +1,20 @@
 import React from "react";
-import { connect } from "react-redux";
 
 import ActionButton from "components/ActionButton";
+import QualityRequirements from "components/Branch/QualityRequirements";
 import Loading from "components/Loading";
 
-import QualityRequirements from "components/Branch/QualityRequirements";
 import { ApiQualityRequirement, IBranch } from "types/storylet";
 
-interface OwnProps {
+export type Props = {
   branch: IBranch;
   disabled: boolean;
   isWorking: boolean;
   onChooseBranch: () => void;
   qualityRequirements: ApiQualityRequirement[];
-}
+};
 
-export type Props = OwnProps;
-
-export function BranchButtons(props: Props) {
+export default function BranchButtons(props: Props) {
   const { branch, disabled, isWorking, onChooseBranch, qualityRequirements } =
     props;
 
@@ -39,5 +36,3 @@ export function BranchButtons(props: Props) {
 }
 
 BranchButtons.displayName = "BranchButtons";
-
-export default connect()(BranchButtons);

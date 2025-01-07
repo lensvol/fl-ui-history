@@ -1,7 +1,10 @@
 import React from "react";
-import classnames from "classnames";
-import Config from "configuration";
+
 import { Link } from "react-router-dom";
+
+import classnames from "classnames";
+
+import Config from "configuration";
 
 interface Props {
   className?: string;
@@ -10,16 +13,21 @@ interface Props {
 export default function FooterContent({ className }: Props) {
   return (
     <div className={classnames("footer-content", className)}>
-      <div className="">
+      <div>
         <p>
-          © <a href="https://www.failbettergames.com/">Failbetter Games</a>{" "}
-          2010–2025{" "}
-          <span style={{ fontWeight: "bold", marginLeft: "1em" }}>
+          &copy; <a href="https://www.failbettergames.com/">Failbetter Games</a>{" "}
+          2010&ndash;2025{" "}
+          <span
+            style={{
+              fontWeight: "bold",
+              marginLeft: "1em",
+            }}
+          >
             Version {Config.version}
           </span>
         </p>
       </div>
-      <div className="">
+      <div>
         <ul className="list--horizontal">
           <li className="list-item--separated">
             <Link to="/help">Help</Link>

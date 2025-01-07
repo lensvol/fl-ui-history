@@ -1,17 +1,26 @@
 import React, { useCallback } from "react";
-import { connect, useDispatch } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+
+import { useDispatch } from "react-redux";
+
+import { useHistory } from "react-router-dom";
+
 import TwitterLogin from "@failbetter/react-twitter-auth";
 
 import { twitterLogin, twitterLoginFailure } from "actions/user";
 
 import Config from "configuration";
 
-import redirectAfterLogin from "./redirectAfterLogin";
+import redirectAfterLogin from "components/Registration/components/redirectAfterLogin";
+
 import { useAppSelector } from "features/app/store";
 
-export function TwitterLoginContainer({ history, label }: Props) {
+type Props = {
+  label: string;
+};
+
+export default function TwitterLoginContainer({ label }: Props) {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleFailure = useCallback(
     (error) => {
@@ -50,13 +59,14 @@ export function TwitterLoginContainer({ history, label }: Props) {
     <>
       <TwitterLogin
         loginUrl={`${apiUrl}twitter/login`}
-        className="button button--big-blue-bird-from-san-francisco"
+        className="button--link button--link-inverse"
         text={label}
         onFailure={handleFailure}
         onSuccess={handleSuccess}
         requestTokenUrl={`${apiUrl}twitter/requesttoken`}
         credentials="include"
-        showIcon
+        showIcon={false}
+        tag="a"
       />
       <p>
         {isTwitterNagScreenOpen
@@ -67,7 +77,4 @@ export function TwitterLoginContainer({ history, label }: Props) {
   );
 }
 
-type OwnProps = { label: string };
-type Props = OwnProps & RouteComponentProps;
-
-export default withRouter(connect()(TwitterLoginContainer));
+TwitterLoginContainer.displayName = "TwitterLoginContainer";

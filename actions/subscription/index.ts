@@ -1,4 +1,9 @@
+import { Dispatch } from "redux";
+
+import { ThunkDispatch } from "redux-thunk";
+
 import { handleVersionMismatch } from "actions/versionSync";
+
 import {
   FETCH_FAILURE,
   FETCH_REQUESTED,
@@ -7,11 +12,10 @@ import {
   MODIFY_BRAINTREE_SUBSCRIPTION_REQUESTED,
   MODIFY_BRAINTREE_SUBSCRIPTION_SUCCESS,
 } from "actiontypes/subscription";
-import { ThunkDispatch } from "redux-thunk";
-import { VersionMismatch } from "services/BaseService";
 
+import { VersionMismatch } from "services/BaseService";
 import SubscriptionService from "services/SubscriptionService";
-import { Dispatch } from "redux";
+
 import {
   FetchSubscriptionResponse,
   IModifySubscriptionSuccessData,
@@ -30,7 +34,9 @@ type FetchOptions = {
   fetchInBackground?: boolean;
 };
 
-export const fetchSubscriptionRequested = () => ({ type: FETCH_REQUESTED });
+export const fetchSubscriptionRequested = () => ({
+  type: FETCH_REQUESTED,
+});
 
 export const fetchSubscriptionSuccess = (data: FetchSubscriptionResponse) => ({
   type: FETCH_SUCCESS,

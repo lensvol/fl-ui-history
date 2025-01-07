@@ -17,9 +17,14 @@ export default function Login() {
           <FacebookLoginContainer label="Log in with Facebook" />
         </p>
         <p className="u-text-center">or</p>
-        <TwitterLoginContainer label="Log in with Twitter" />
-        <p className="u-text-center">or</p>
         <GoogleLoginContainer label="Log in with Google" />
+        <div
+          style={{
+            marginTop: "2rem",
+          }}
+        >
+          <TwitterLoginContainer label="Recover a Twitter Log In (Legacy)" />
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 
-const logo = "/img/FL_logo_white.png";
+const logo = "/img/15th/FL_logo_white.png";
 
 export default function TitleBar() {
   return (

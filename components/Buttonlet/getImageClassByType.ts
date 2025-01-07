@@ -25,6 +25,8 @@ export default function getImageClassByType(type: string): string | null {
       return "fa-facebook";
     case "twitter":
       return "fa-twitter";
+    case "bsky":
+      return "fbg-bsky";
     case "lock":
     case "padlock":
       return "fa-lock";

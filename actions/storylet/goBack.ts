@@ -1,15 +1,17 @@
-import { handleVersionMismatch } from "actions/versionSync";
-import * as StoryletActionTypes from "actiontypes/storylet";
 import { ActionCreator } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+
+import { processMessages } from "actions/app";
+import { fetch as fetchCards } from "actions/cards";
+import { fetchAvailableSuccess } from "actions/storylet/fetchAvailable";
+import { handleVersionMismatch } from "actions/versionSync";
+
+import * as StoryletActionTypes from "actiontypes/storylet";
+
 import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
   IApiStoryletResponseData,
 } from "services/StoryletService";
-
-import { processMessages } from "actions/app";
-import { fetch as fetchCards } from "actions/cards";
-import { fetchAvailableSuccess } from "./fetchAvailable";
 
 export type GoBackFailureAction = {
   type: typeof StoryletActionTypes.GOBACK_FAILURE;
@@ -89,6 +91,7 @@ export default function goBack({ fetchOpportunityCards }: GoBackOptions = {}) {
       if (messages) {
         dispatch(processMessages(messages));
       }
+
       // Dispatch the success event
       dispatch(goBackSuccess(data));
 
@@ -98,6 +101,7 @@ export default function goBack({ fetchOpportunityCards }: GoBackOptions = {}) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
       }
+
       dispatch(goBackFailure(error));
     }
   };

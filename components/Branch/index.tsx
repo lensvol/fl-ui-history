@@ -1,5 +1,3 @@
-import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
-import { COMMAND_MAP } from "features/content-behaviour-integration/integration";
 import React, {
   useCallback,
   useEffect,
@@ -7,24 +5,33 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { connect } from "react-redux";
+
+import { useDispatch } from "react-redux";
+
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import classnames from "classnames";
-import { qreqsNeedClear } from "components/utils";
-import { chooseBranch } from "actions/storylet";
+
 import { shouldFetch as shouldUpdateOpportunities } from "actions/cards";
-import useIsMounted from "hooks/useIsMounted";
+import { chooseBranch } from "actions/storylet";
+
+import BranchButtons from "components/Branch/BranchButtons";
+import Challenges from "components/Branch/Challenges";
+import PlanButtonlet from "components/Branch/PlanButtonlet";
 import {
   StoryletCard,
   StoryletDescription as Description,
   StoryletTitle as Title,
 } from "components/common";
+import { qreqsNeedClear } from "components/utils";
+
+import { useAppSelector } from "features/app/store";
+import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
+import { COMMAND_MAP } from "features/content-behaviour-integration/integration";
+
+import useIsMounted from "hooks/useIsMounted";
+
 import { DeckType, IBranch } from "types/storylet";
-import { IAppState } from "types/app";
-import BranchButtons from "./BranchButtons";
-import Challenges from "./Challenges";
-import PlanButtonlet from "./PlanButtonlet";
 
 const MAX_ACTIVE_PLANS = 20;
 
@@ -34,13 +41,9 @@ export interface State {
 }
 
 export function Branch({
-  actions,
-  activePlans,
   branch,
   defaultCursor,
-  dispatch,
   history,
-  isChoosing,
   isGoingBack,
   onChooseBranch,
   storyletDeckType,
@@ -58,6 +61,11 @@ export function Branch({
     qualityRequirements,
   } = branch;
 
+  const actions = useAppSelector((state) => state.actions.actions);
+  const activePlans = useAppSelector((state) => state.plans.activePlans);
+  const isChoosing = useAppSelector((state) => state.storylet.isChoosing);
+  const dispatch = useDispatch();
+
   const ref = useRef<HTMLDivElement>(null);
   const [forceClearQreqs, setForceClearQreqs] = useState(false);
   const [isWorking, setIsWorking] = useState(false);
@@ -73,7 +81,9 @@ export function Branch({
 
   useEffect(() => {
     window.addEventListener("resize", onResize);
+
     onResize();
+
     return () => {
       window.removeEventListener("resize", onResize);
     };
@@ -139,9 +149,12 @@ export function Branch({
     (checked: boolean, secondChanceId: number) => {
       if (checked) {
         setSecondChanceIds([...secondChanceIds, secondChanceId]);
+
         return;
       }
+
       const newIds = secondChanceIds.filter((e) => e !== secondChanceId);
+
       setSecondChanceIds(newIds);
     },
     [secondChanceIds]
@@ -229,7 +242,9 @@ export function Branch({
       {forceClearQreqs && (
         <div
           className="storylet__buttons--force-clear"
-          style={{ width: "100%" }}
+          style={{
+            width: "100%",
+          }}
         >
           {branchButtons}
         </div>
@@ -243,24 +258,11 @@ Branch.displayName = "Branch";
 type OwnProps = {
   branch: IBranch;
   defaultCursor?: boolean;
-  dispatch: Function; // eslint-disable-line
   isGoingBack?: boolean;
   onChooseBranch?: (_: any) => Promise<void>;
   storyletDeckType?: DeckType;
 };
 
-const mapStateToProps = ({
-  actions: { actions },
-  plans: { activePlans },
-  storylet: { isChoosing },
-}: IAppState) => ({
-  actions,
-  activePlans,
-  isChoosing,
-});
+type Props = RouteComponentProps & OwnProps;
 
-type Props = ReturnType<typeof mapStateToProps> &
-  RouteComponentProps &
-  OwnProps;
-
-export default withRouter(connect(mapStateToProps)(Branch));
+export default withRouter(Branch);

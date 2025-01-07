@@ -1,21 +1,22 @@
 import React, { Fragment } from "react";
-import { connect } from "react-redux";
 
-import TravelButton from "components/TravelButton";
 import ItsYou from "components/Infobar/ItsYou";
-import getNeedsProminentTravelButton from "selectors/map/getNeedsProminentTravelButton";
-import { IAppState } from "types/app";
+import TravelButton from "components/TravelButton";
 
-type OwnProps = {
-  name: string;
+import { useAppSelector } from "features/app/store";
+
+import getNeedsProminentTravelButton from "selectors/map/getNeedsProminentTravelButton";
+
+type Props = {
   currentAreaName: string;
+  name: string;
 };
 
-export function Welcome({
-  currentAreaName,
-  name,
-  needsProminentTravelButton,
-}: Props) {
+export default function Welcome({ currentAreaName, name }: Props) {
+  const needsProminentTravelButton = useAppSelector((state) =>
+    getNeedsProminentTravelButton(state)
+  );
+
   return (
     <Fragment>
       <p className="heading heading--3">
@@ -35,11 +36,3 @@ export function Welcome({
 }
 
 Welcome.displayName = "Welcome";
-
-const mapStateToProps = (state: IAppState) => ({
-  needsProminentTravelButton: getNeedsProminentTravelButton(state),
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(Welcome);

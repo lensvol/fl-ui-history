@@ -6,4 +6,4 @@ export const CANDLE_RIGHT =
 export const CANDLE_TOP =
   "https://images.fallenlondon.com/css_img/candleTop.png";
 export const CANDLE_SNUFFED =
-  "//images.fallenlondon.com/css_img/candleSnuffed.png";
+  "https://images.fallenlondon.com/css_img/candleSnuffed.png";

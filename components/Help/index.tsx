@@ -1,16 +1,23 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
+import { connect } from "react-redux";
+
+import { RouteComponentProps, withRouter } from "react-router-dom";
+
+import { Sticky, StickyContainer } from "react-sticky";
+
+import { ThunkDispatch } from "redux-thunk";
+
 import { fetchPage } from "actions/pages";
+
 import Buttonlet from "components/Buttonlet";
 import MediaLgUp from "components/Responsive/MediaLgUp";
 import ScrollNav from "components/ScrollNav";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Sticky, StickyContainer } from "react-sticky";
-import { ThunkDispatch } from "redux-thunk";
+import Loading from "components/Loading";
 
 import { Success } from "services/BaseMonadicService";
+
 import scrollToComponent from "utils/scrollToComponent";
-import Loading from "components/Loading";
 
 function Help(
   props: RouteComponentProps & { dispatch: ThunkDispatch<any, any, any> }
@@ -37,6 +44,7 @@ function Help(
     async function asyncUseEffect() {
       const startTime = new Date();
       const response = await dispatch(fetchPage("help"));
+
       if (response instanceof Success) {
         const duration = new Date().valueOf() - startTime.valueOf();
 
@@ -46,14 +54,19 @@ function Help(
               data: { text },
             } = response;
             const el = document.createElement("div");
+
             el.innerHTML = text;
 
             // Parse the HTML for headers and create sticky nav items
             el.querySelectorAll("h1").forEach((node, i) => {
               node.setAttribute("data-section-name", node.innerHTML.trim());
+
               setNavItems((prevState) => [
                 ...prevState,
-                { id: i, name: node.innerText },
+                {
+                  id: i,
+                  name: node.innerText,
+                },
               ]);
             });
 
@@ -66,10 +79,12 @@ function Help(
   }, [dispatch]);
 
   const activeItem = 0;
+
   const gotoItem = useCallback((navItem) => {
     const sectionHeader = contentRef.current?.querySelector(
       `[data-section-name="${navItem.name.trim()}"]`
     );
+
     if (sectionHeader) {
       scrollToComponent(sectionHeader, { offset: 0, align: "top" });
     }
@@ -114,7 +129,12 @@ function Help(
 function StaticContent({ history }: RouteComponentProps) {
   return (
     <>
-      <h1 className="heading heading--1" style={{ marginTop: 5 }}>
+      <h1
+        className="heading heading--1"
+        style={{
+          marginTop: 5,
+        }}
+      >
         <button
           className="button--link"
           onClick={() => {
@@ -132,8 +152,8 @@ function StaticContent({ history }: RouteComponentProps) {
       <h2 className="heading heading--2">Welcome to Fallen London!</h2>
       <div>
         <p>
-          You may be disoriented by the shock of your arrival. We’re here to
-          help.{" "}
+          You may be disoriented by the shock of your arrival. We&rsquo;re here
+          to help.{" "}
           <a
             href="https://community.failbettergames.com"
             target="_blank"
@@ -164,10 +184,13 @@ function StaticContent({ history }: RouteComponentProps) {
           }
         />
         <Buttonlet
-          type="twitter"
-          title="Twitter"
+          type="bsky"
+          title="Bluesky"
           onClick={() =>
-            window.open("https://twitter.com/failbettergames", "_blank")
+            window.open(
+              "https://bsky.app/profile/failbettergames.bsky.social",
+              "_blank"
+            )
           }
         />
         <Buttonlet
