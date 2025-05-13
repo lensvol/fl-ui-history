@@ -1,9 +1,10 @@
-import WorldQualityDescription from "components/Tooltip/WorldQualityDescription";
-import React, { Fragment } from "react";
-import { IEnhancement } from "types/qualities";
-import EnhancementDescription from "./EnhancementDescription";
+import React from "react";
 
-import LevelDescription from "./LevelDescription";
+import EnhancementDescription from "components/Tooltip/EnhancementDescription";
+import LevelDescription from "components/Tooltip/LevelDescription";
+import WorldQualityDescription from "components/Tooltip/WorldQualityDescription";
+
+import { IEnhancement } from "types/qualities";
 
 interface Props {
   description?: string;
@@ -24,7 +25,7 @@ export default function TooltipDescription(props: Props) {
   } = props;
 
   return (
-    <Fragment>
+    <>
       <LevelDescription {...props} />
       <p>
         <span dangerouslySetInnerHTML={{ __html: description ?? "" }} />
@@ -37,6 +38,8 @@ export default function TooltipDescription(props: Props) {
         dangerouslySetInnerHTML={{ __html: secondaryDescription ?? "" }}
       />
       {needsWorldQualityDescription && <WorldQualityDescription />}
-    </Fragment>
+    </>
   );
 }
+
+TooltipDescription.displayName = "TooltipDescription";

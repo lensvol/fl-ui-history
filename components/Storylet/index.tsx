@@ -18,6 +18,8 @@ import StoryletCard from "components/common/StoryletCard";
 import Image from "components/Image";
 import { ImageProps } from "components/Image/props";
 import QualityRequirement from "components/QualityRequirement";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import MediaSmDown from "components/Responsive/MediaSmDown";
 import MediaSmUp from "components/Responsive/MediaSmUp";
 import MediaXsDown from "components/Responsive/MediaXsDown";
 import StoryletBodySmUp from "components/Storylet/components/StoryletBodySmUp";
@@ -33,7 +35,7 @@ import { ApiAvailableStorylet } from "types/storylet";
 import getBorderColour from "utils/getBorderColour";
 
 function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
-  const { id, image, name, teaser, deckType } = data;
+  const { id, image, name, teaser, mobileTeaser, deckType } = data;
 
   const dispatch = useDispatch();
   const isChoosing = useAppSelector((state) => state.storylet.isChoosing);
@@ -129,19 +131,32 @@ function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
           name={name}
           onChoose={handleChoose}
           qualityRequirements={qualityRequirements}
-          teaser={teaser ?? ""}
+          teaser={mobileTeaser ?? teaser ?? ""}
         />
       </MediaXsDown>
       <MediaSmUp>
-        <StoryletBodySmUp
-          data={data}
-          forceClearQreqs={forceClearQreqs}
-          isWorking={isWorking}
-          name={name}
-          onChoose={handleChoose}
-          qualityRequirements={qualityRequirements}
-          teaser={teaser ?? ""}
-        />
+        <MediaSmDown>
+          <StoryletBodySmUp
+            data={data}
+            forceClearQreqs={forceClearQreqs}
+            isWorking={isWorking}
+            name={name}
+            onChoose={handleChoose}
+            qualityRequirements={qualityRequirements}
+            teaser={mobileTeaser ?? teaser ?? ""}
+          />
+        </MediaSmDown>
+        <MediaMdUp>
+          <StoryletBodySmUp
+            data={data}
+            forceClearQreqs={forceClearQreqs}
+            isWorking={isWorking}
+            name={name}
+            onChoose={handleChoose}
+            qualityRequirements={qualityRequirements}
+            teaser={teaser ?? ""}
+          />
+        </MediaMdUp>
       </MediaSmUp>
       {badge && <Image {...badge} />}
     </div>

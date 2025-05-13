@@ -1,17 +1,17 @@
 import React from "react";
 
-export default function LockedSlotIcon() {
+import classnames from "classnames";
+
+type Props = {
+  classNames?: string;
+};
+
+export default function LockedSlotIcon(props: Props) {
   return (
     <img
       alt="Locked"
       src="/img/icons/ico_slot_locked.png"
-      height={25}
-      width={25}
-      style={{
-        position: "absolute",
-        top: -4,
-        right: -4,
-      }}
+      className={classnames(props.classNames)}
     />
   );
 }

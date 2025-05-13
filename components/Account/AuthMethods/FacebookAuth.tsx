@@ -1,21 +1,24 @@
 import React, { useCallback } from "react";
-import classnames from "classnames";
-import { connect, useDispatch } from "react-redux";
 import FacebookLogin, {
   ReactFacebookLoginInfo,
   ReactFacebookFailureResponse,
 } from "react-facebook-login";
+import { useDispatch } from "react-redux";
+
+import classnames from "classnames";
 
 import { linkFacebook, unlinkSocialAccount } from "actions/settings";
-import { IAppState } from "types/app";
+
 import Config from "configuration";
 
-export function FacebookAuth(props: Props) {
-  const {
-    buttonClassName,
-    data: { facebookAuth },
-    onLinkSuccess,
-  } = props;
+import { useAppSelector } from "features/app/store";
+
+export default function FacebookAuth(props: Props) {
+  const { buttonClassName, onLinkSuccess } = props;
+
+  const facebookAuth = useAppSelector(
+    (state) => state.settings.data.facebookAuth
+  );
 
   const dispatch = useDispatch();
 
@@ -61,7 +64,7 @@ export function FacebookAuth(props: Props) {
         cssClass={classnames("button--link", buttonClassName)}
         textButton="Link Facebook to this account"
         autoLoad={false}
-        fields="name,email,picture"
+        fields="name,email"
         callback={onLoginSuccess}
         onFailure={onLoginFailure}
       />
@@ -69,15 +72,9 @@ export function FacebookAuth(props: Props) {
   );
 }
 
-type OwnProps = {
+type Props = {
   buttonClassName?: string;
   onLinkSuccess?: () => void;
 };
 
-const mapStateToProps = (state: IAppState) => ({
-  data: state.settings.data,
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(FacebookAuth);
+FacebookAuth.displayName = "FacebookAuth";

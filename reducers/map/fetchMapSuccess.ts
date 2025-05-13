@@ -13,7 +13,10 @@ export default function fetchMapSuccess(
   const flattenedAreas = flattenAreas(areas);
 
   const flattenedStateAwareAreas = flattenedAreas
-    .map((area) => ({ ...area, ...area.jsonInfo }))
+    .map((area) => ({
+      ...area,
+      ...area.jsonInfo,
+    }))
     .map((a) =>
       asStateAwareArea(
         a,

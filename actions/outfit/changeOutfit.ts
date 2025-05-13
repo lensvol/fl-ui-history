@@ -1,20 +1,22 @@
+import { ActionCreator } from "redux";
+
+import { clearCache as clearCardCache } from "actions/cards";
+import fetchMyself from "actions/myself/fetchMyself";
+import { fetchPlans } from "actions/plans";
+import { clearCache as clearStoryletCache } from "actions/storylet";
 import { handleVersionMismatch } from "actions/versionSync";
+
 import {
   CHANGE_OUTFIT_REQUESTED,
   CHANGE_OUTFIT_SUCCESS,
 } from "actiontypes/myself";
-import { clearCache as clearCardCache } from "actions/cards";
-import { clearCache as clearStoryletCache } from "actions/storylet";
-import { fetchPlans } from "actions/plans";
-import { ActionCreator } from "redux";
+
 import { Either, Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
 import OutfitService, {
   IOutfitService,
   FetchOutfitResponse,
 } from "services/OutfitService";
-
-import fetchMyself from "actions/myself/fetchMyself";
 
 export type ChangeOutfitOptions = {
   clearCacheImmediately: boolean;
@@ -70,6 +72,7 @@ export default function changeOutfit(
 
     try {
       const result = await service.changeOutfit(outfitId);
+
       if (result instanceof Success) {
         // We've changed outfits
         dispatch(changeOutfitSuccess(result.data));
@@ -79,12 +82,15 @@ export default function changeOutfit(
         dispatch(fetchMyself());
         dispatch(fetchPlans());
       }
+
       return result;
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
+
         return error;
       }
+
       throw error;
     }
   };

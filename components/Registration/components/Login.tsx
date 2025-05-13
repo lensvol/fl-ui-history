@@ -14,10 +14,10 @@ export default function Login() {
         <hr />
         <p className="u-text-center">or</p>
         <p className="fb-root">
-          <FacebookLoginContainer label="Log in with Facebook" />
+          <FacebookLoginContainer label="Sign in with Facebook" />
         </p>
         <p className="u-text-center">or</p>
-        <GoogleLoginContainer label="Log in with Google" />
+        <GoogleLoginContainer />
         <div
           style={{
             marginTop: "2rem",

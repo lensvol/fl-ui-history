@@ -4,6 +4,7 @@ import { Props as ReactModalProps } from "react-modal";
 
 import { useDispatch } from "react-redux";
 
+import { isDowngradedSubscription } from "actions/fate/subscriptions";
 import { changeOutfit } from "actions/outfit";
 
 import ChangeableControls from "components/Equipment/ChangeableControls";
@@ -17,7 +18,9 @@ import MediaSmUp from "components/Responsive/MediaSmUp";
 import SearchField from "components/SearchField";
 
 import {
+  MESSAGE_LAPSED_ENHANCED_EXCEPTIONAL_OUTFIT,
   MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT,
+  OUTFIT_TYPE_ENHANCED_EXCEPTIONAL,
   OUTFIT_TYPE_EXCEPTIONAL,
 } from "constants/outfits";
 
@@ -38,8 +41,11 @@ export default function OutfitControls() {
   const avatarImage = useAppSelector(
     (state) => state.myself.character.avatarImage
   );
-  const isExceptionalFriend = useAppSelector(
-    (state) => state.fate.isExceptionalFriend
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
   );
   const canChangeOutfit = useAppSelector((state) =>
     getCanUserChangeOutfit(state)
@@ -81,20 +87,36 @@ export default function OutfitControls() {
       // Check whether this is an Exceptional outfit
       const newlySelectedOutfit = outfits.find((o) => o.id === id);
 
-      if (newlySelectedOutfit?.type === OUTFIT_TYPE_EXCEPTIONAL) {
-        if (!isExceptionalFriend) {
-          setOutfitChangeErrorMessage(MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT);
-          setIsOutfitChangeErrorModalOpen(true);
+      const newlySelectedOutfitIsExceptional =
+        newlySelectedOutfit?.type === OUTFIT_TYPE_EXCEPTIONAL;
+      const newlySelectedOutfitIsEnhanced =
+        newlySelectedOutfit?.type === OUTFIT_TYPE_ENHANCED_EXCEPTIONAL;
+      const isExceptionalFriend =
+        subscriptionType === "ExceptionalFriendship" ||
+        isDowngradedSubscription(hasSubscription, subscriptionType);
+      const isEnhancedExceptionalFriend =
+        subscriptionType === "EnhancedExceptionalFriendship";
+      const isNewSelectionInvalid =
+        !isEnhancedExceptionalFriend &&
+        (newlySelectedOutfitIsEnhanced ||
+          (!isExceptionalFriend && newlySelectedOutfitIsExceptional));
 
-          return;
-        }
+      if (isNewSelectionInvalid) {
+        const errorMessage = newlySelectedOutfitIsExceptional
+          ? MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT
+          : MESSAGE_LAPSED_ENHANCED_EXCEPTIONAL_OUTFIT;
+
+        setOutfitChangeErrorMessage(errorMessage);
+        setIsOutfitChangeErrorModalOpen(true);
+
+        return;
       }
 
       setIsChanging(true);
       await dispatch(changeOutfit(id));
       setIsChanging(false);
     },
-    [dispatch, isChanging, isExceptionalFriend, outfits]
+    [dispatch, hasSubscription, isChanging, outfits, subscriptionType]
   );
 
   const onRequestClosePurchaseOutfitModalSlot = useCallback(() => {

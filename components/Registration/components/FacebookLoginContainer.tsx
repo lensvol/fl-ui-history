@@ -2,7 +2,9 @@ import React, { useCallback } from "react";
 import { connect, useDispatch } from "react-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import FacebookLogin from "react-facebook-login";
+import FacebookLogin, {
+  ReactFacebookFailureResponse,
+} from "react-facebook-login";
 
 import { facebookLogin } from "actions/user";
 
@@ -23,15 +25,23 @@ function FacebookLoginContainer({ history, label }: Props) {
     [dispatch, history]
   );
 
+  const handleFailure = useCallback(
+    async (res: ReactFacebookFailureResponse) => {
+      console.error(res.status);
+    },
+    []
+  );
+
   return (
     <FacebookLogin
       appId={`${facebookAppId}`}
       autoLoad={false}
       callback={handleCallback}
-      cssClass="button button--menlo-park-panopticon"
+      cssClass="button--menlo-park-panopticon"
       disableMobileRedirect
-      fields="name,email,picture"
-      icon={<i className="fa fa-facebook-official fa-2x" />}
+      fields="name,email"
+      icon={<i className="fa fa-facebook" />}
+      onFailure={handleFailure}
       textButton={label}
       version="3.1"
     />

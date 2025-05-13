@@ -1,5 +1,6 @@
 import { ThunkDispatch } from "redux-thunk";
 
+import fetchAgents from "actions/agents/fetchAgents";
 import { processMessages } from "actions/app";
 import { fetchMyself } from "actions/myself";
 import { fetchOutfit } from "actions/outfit";
@@ -51,6 +52,7 @@ export function chooseBranch(service: IStoryletService) {
         if (data.hasUpdatedCharacter) {
           dispatch(fetchMyself());
           dispatch(fetchOutfit());
+          dispatch(fetchAgents());
         }
 
         const { messages } = data;

@@ -1,7 +1,8 @@
-import WorldQualityDescription from "components/Tooltip/WorldQualityDescription";
 import React from "react";
+
 import { ITooltipData } from "components/ModalTooltip/types";
 import EnhancementDescription from "components/Tooltip/EnhancementDescription";
+import WorldQualityDescription from "components/Tooltip/WorldQualityDescription";
 
 export default function ModalTooltipComponent(props: ITooltipData) {
   // Destructure tooltipData
@@ -24,14 +25,16 @@ export default function ModalTooltipComponent(props: ITooltipData) {
   return (
     <div
       className="tooltip--item-modal"
-      style={{ touchAction: disableTouchEvents ? "none" : undefined }}
+      style={{
+        touchAction: disableTouchEvents ? "none" : undefined,
+      }}
     >
       {image && (
         <div className="icon icon--circular tooltip__icon">
           <img alt={alt} src={imagePath} />
         </div>
       )}
-      <div className={Image ? "tooltip__desc" : "tooltip__desc__noImage"}>
+      <div className={image ? "tooltip__desc" : "tooltip__desc__noImage"}>
         <span
           className="item__name"
           dangerouslySetInnerHTML={{ __html: name ?? "" }}

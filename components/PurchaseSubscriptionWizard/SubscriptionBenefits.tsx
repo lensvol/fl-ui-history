@@ -23,7 +23,7 @@ export default function SubscriptionBenefits({ orientation }: Props) {
           </li>
           <li>A second candle (up to 40 actions at once)</li>
           <li>An expanded opportunity deck: ten cards instead of six</li>
-          <li>Three additional outfit slots</li>
+          <li>Four additional outfit slots</li>
           <li>
             Access to the House of Chimes including monthly gameplay perks
           </li>
@@ -41,6 +41,7 @@ export default function SubscriptionBenefits({ orientation }: Props) {
           </li>
           <li>Memories of a Tale from every past story or reset</li>
           <li>Extra monthly perks in the House of Chimes</li>
+          <li>Another two outfit slots</li>
           <li>Three seven-action refreshes per month</li>
         </ul>
       </div>

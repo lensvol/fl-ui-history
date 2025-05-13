@@ -1,5 +1,6 @@
-import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
 import React from "react";
+
+import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
 
 export interface Props {
   text: string;
@@ -11,7 +12,7 @@ export default function StoryletDescription({ text }: Props) {
     <div
       className="storylet__description-container"
       dangerouslySetInnerHTML={{
-        __html: text.replace(UI_INTEGRATION_REGEX, "").trim(),
+        __html: text?.replace(UI_INTEGRATION_REGEX, "").trim(),
       }}
     />
   );

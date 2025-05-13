@@ -5,6 +5,7 @@ export const DIFFICULTY_ROLL_FAILURE_MESSAGE = "DifficultyRollFailureMessage";
 export const DIFFICULTY_ROLL_SUCCESS_MESSAGE = "DifficultyRollSuccessMessage";
 export const FATE_BRANCH_CURRENCY_USED_MESSAGE =
   "FateBranchCurrencyUsedMessage";
+export const FATE_PLOT_CURRENCY_USED_MESSAGE = "FatePlotCurrencyUsedMessage";
 export const FATE_POINT_CHANGE_MESSAGE = "FatePointChangeMessage";
 export const MAP_SHOULD_UPDATE_MESSAGE = "MapShouldUpdateMessage";
 export const OUTFIT_GRANTED_MESSAGE = "OutfitGrantedMessage";

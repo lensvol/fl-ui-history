@@ -1,36 +1,44 @@
+import { ActionCreator } from "redux";
+
 import { handleVersionMismatch } from "actions/versionSync";
+
 import {
   FETCH_ALL_FAILURE,
   FETCH_ALL_REQUESTED,
   FETCH_ALL_SUCCESS,
   FETCH_QUEUED,
 } from "actiontypes/messages";
-import * as MessagesActionTypes from "actiontypes/messages";
-import { ActionCreator } from "redux";
+
 import { Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
-import MessageService, {
+import MessagesService, {
   FetchAllMessagesResponse,
   IMessagesService,
 } from "services/MessagesService";
 
-export type FetchAllFailure = { type: typeof FETCH_ALL_FAILURE };
+export type FetchAllFailure = {
+  type: typeof FETCH_ALL_FAILURE;
+};
 
-export type FetchAllRequested = { type: typeof FETCH_ALL_REQUESTED };
+export type FetchAllRequested = {
+  type: typeof FETCH_ALL_REQUESTED;
+};
 
 export type FetchAllSuccess = {
   type: typeof FETCH_ALL_SUCCESS;
   payload: FetchAllMessagesResponse;
 };
 
-export type FetchQueued = { type: typeof FETCH_QUEUED };
+export type FetchQueued = {
+  type: typeof FETCH_QUEUED;
+};
 
 export type FetchAllAction =
   | FetchAllFailure
   | FetchAllRequested
   | FetchAllSuccess;
 
-const messagesService: IMessagesService = new MessageService();
+const messagesService: IMessagesService = new MessagesService();
 
 /** ----------------------------------------------------------------------------
  * FETCH ALL MESSAGES
@@ -57,6 +65,7 @@ export default function fetch() {
       } else {
         dispatch(fetchFailure(result.message));
       }
+
       return result;
     } catch (e) {
       if (e instanceof VersionMismatch) {
@@ -70,12 +79,14 @@ export default function fetch() {
 }
 
 export const fetchRequested: ActionCreator<FetchAllRequested> = () => {
-  return { type: MessagesActionTypes.FETCH_ALL_REQUESTED };
+  return {
+    type: FETCH_ALL_REQUESTED,
+  };
 };
 
 export const fetchSuccess: ActionCreator<FetchAllSuccess> = (
   data: any,
-  type = MessagesActionTypes.FETCH_ALL_SUCCESS
+  type = FETCH_ALL_SUCCESS
 ) => ({
   type,
   payload: {
@@ -85,10 +96,10 @@ export const fetchSuccess: ActionCreator<FetchAllSuccess> = (
 });
 
 export const fetchFailure = (error: any) => ({
-  type: MessagesActionTypes.FETCH_ALL_FAILURE,
+  type: FETCH_ALL_FAILURE,
   status: error.response?.status,
 });
 
 const fetchQueued: ActionCreator<FetchQueued> = () => ({
-  type: MessagesActionTypes.FETCH_QUEUED,
+  type: FETCH_QUEUED,
 });

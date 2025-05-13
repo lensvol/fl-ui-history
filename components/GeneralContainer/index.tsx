@@ -1,50 +1,41 @@
-import CurrentAreaBanner from "components/GeneralContainer/CurrentAreaBanner";
-import PurchaseFateModal from "components/PurchaseFateModal";
 import React, { useCallback, useState } from "react";
-import { connect } from "react-redux";
+
 import classnames from "classnames";
-
-import ActionRefreshContext from "components/ActionRefreshContext";
-import Header from "components/Header";
-import Tabs from "components/Tabs";
-import Sidebar from "components/Sidebar";
-import DeckRefreshContext from "components/DeckRefreshContext";
-
-import AccessibleSidebar from "components/AccessibleSidebar";
-import Infobar from "components/Infobar";
-import Footer from "components/Footer";
-import LoadingScreen from "components/LoadingScreen";
-import News from "components/News";
-
-import MediaLgDown from "components/Responsive/MediaLgDown";
-import MediaMdUp from "components/Responsive/MediaMdUp";
-import MediaMdDown from "components/Responsive/MediaMdDown";
-import MediaSmDown from "components/Responsive/MediaSmDown";
-import MediaXlUp from "components/Responsive/MediaXlUp";
-import ResponsiveSidebar from "components/Responsive/ResponsiveSidebar/index";
-
-import ResponsiveMenu from "components/ResponsiveMenu";
 
 import ReactCSSTransitionReplace from "react-css-transition-replace";
 
-import { IAppState } from "types/app";
-import { NAV_ITEMS } from "./constants";
-import RefreshActionsModal from "./RefreshActionsModal";
-import RefillOpportunityDeckModal from "./RefillOpportunityDeckModal";
-import PurchaseFateContext from "./PurchaseFateContext";
-import EnhancedRefreshModal from "./EnhancedRefreshModal";
+import AccessibleSidebar from "components/AccessibleSidebar";
+import ActionRefreshContext from "components/ActionRefreshContext";
+import Alert from "components/Alert";
+import DeckRefreshContext from "components/DeckRefreshContext";
+import Footer from "components/Footer";
+import { NAV_ITEMS } from "components/GeneralContainer/constants";
+import CurrentAreaBanner from "components/GeneralContainer/CurrentAreaBanner";
+import EnhancedRefreshModal from "components/GeneralContainer/EnhancedRefreshModal";
+import PurchaseFateContext from "components/GeneralContainer/PurchaseFateContext";
+import RefillOpportunityDeckModal from "components/GeneralContainer/RefillOpportunityDeckModal";
+import RefreshActionsModal from "components/GeneralContainer/RefreshActionsModal";
+import Header from "components/Header";
+import Infobar from "components/Infobar";
+import LoadingScreen from "components/LoadingScreen";
+import PurchaseFateModal from "components/PurchaseFateModal";
+import MediaLgDown from "components/Responsive/MediaLgDown";
+import MediaMdDown from "components/Responsive/MediaMdDown";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+import MediaXlUp from "components/Responsive/MediaXlUp";
+import ResponsiveSidebar from "components/Responsive/ResponsiveSidebar/index";
+import ResponsiveMenu from "components/ResponsiveMenu";
+import Sidebar from "components/Sidebar";
+import Tabs from "components/Tabs";
+
+import { useAppSelector } from "features/app/store";
 
 /**
  * This is a wrapper that contains the general app layout
  * The 'view' is passed in as a child
  */
-export function GeneralContainer({
-  children,
-  currentArea,
-  fateData,
-  sectionName,
-  uiRestrictions,
-}: Props) {
+export default function GeneralContainer({ children, sectionName }: Props) {
   const [isActionRefreshModalOpen, setIsActionRefreshModalOpen] =
     useState(false);
   const [isDeckRefreshModalOpen, setIsDeckRefreshModalOpen] = useState(false);
@@ -84,6 +75,10 @@ export function GeneralContainer({
     () => setIsEnhancedRefreshModalOpen(false),
     []
   );
+
+  const fateData = useAppSelector((state) => state.fate.data);
+  const currentArea = useAppSelector((state) => state.map.currentArea);
+  const uiRestrictions = useAppSelector((state) => state.myself.uiRestrictions);
 
   // This is an arbitrary "have we loaded" canary
   if (!fateData.fateCards.length) {
@@ -156,7 +151,7 @@ export function GeneralContainer({
                   <Infobar />
                 </div>
               </div>
-              <News />
+              <Alert />
               <MediaXlUp>
                 <Footer />
               </MediaXlUp>
@@ -192,23 +187,7 @@ export function GeneralContainer({
 
 GeneralContainer.displayName = "GeneralContainer";
 
-const mapStateToProps = ({
-  actions: { actionBankSize },
-  fate: { data: fateData },
-  map: { currentArea },
-  myself: { uiRestrictions },
-}: IAppState) => ({
-  actionBankSize, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
-  fateData, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
-  currentArea, // eslint-disable-line react/no-unused-prop-types, react/require-default-props
-  uiRestrictions,
-});
-
-type OwnProps = {
+type Props = {
   children: React.ReactNode;
   sectionName?: string; // eslint-disable-line react/no-unused-prop-types, react/require-default-props
 };
-
-interface Props extends OwnProps, ReturnType<typeof mapStateToProps> {}
-
-export default connect(mapStateToProps)(GeneralContainer);

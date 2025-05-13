@@ -1,5 +1,5 @@
 export type MessagesActiveTab = "feedMessages" | "interactions";
-export type MyselfActiveTab = "myself" | "possessions";
+export type MyselfActiveTab = "myself" | "possessions" | "agents";
 export type StoryletActiveTab = "always" | "sometimes";
 
 export const ALWAYS = "always";

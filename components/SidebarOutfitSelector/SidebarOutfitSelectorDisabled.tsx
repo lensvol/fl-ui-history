@@ -1,17 +1,18 @@
-import { openModalTooltip } from "actions/modalTooltip";
 import React, { SyntheticEvent, useCallback, useMemo } from "react";
 import Interactive, { State as ReactInteractiveState } from "react-interactive";
-import TippyWrapper from "components/TippyWrapper";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
+import { openModalTooltip } from "actions/modalTooltip";
+
 import { DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT } from "components/Equipment/constants";
-import { IAppState } from "types/app";
+import Title from "components/SidebarOutfitSelector/Title";
+import TippyWrapper from "components/TippyWrapper";
 
-import Title from "./Title";
+import { useAppSelector } from "features/app/store";
 
-export function SidebarOutfitSelectorDisabled({ outfits }: Props) {
+export default function SidebarOutfitSelectorDisabled() {
   const dispatch = useDispatch();
+  const outfits = useAppSelector((state) => state.myself.character.outfits);
 
   const selectedOutfit = useMemo(
     () => outfits.find((o) => o.selected),
@@ -34,6 +35,7 @@ export function SidebarOutfitSelectorDisabled({ outfits }: Props) {
       event: SyntheticEvent<Element, Event>;
     }) => {
       event.preventDefault();
+
       if (/touch/.test(nextState.iState)) {
         dispatch(openModalTooltip(tooltipData));
       }
@@ -60,10 +62,4 @@ export function SidebarOutfitSelectorDisabled({ outfits }: Props) {
   );
 }
 
-const mapStateToProps = (state: IAppState) => ({
-  outfits: getOrderedOutfits(state),
-});
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(SidebarOutfitSelectorDisabled);
+SidebarOutfitSelectorDisabled.displayName = "SidebarOutfitSelectorDisabled";

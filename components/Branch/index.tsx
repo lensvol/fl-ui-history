@@ -32,6 +32,8 @@ import { COMMAND_MAP } from "features/content-behaviour-integration/integration"
 import useIsMounted from "hooks/useIsMounted";
 
 import { DeckType, IBranch } from "types/storylet";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import MediaSmDown from "components/Responsive/MediaSmDown";
 
 const MAX_ACTIVE_PLANS = 20;
 
@@ -56,6 +58,7 @@ export function Branch({
     description,
     id,
     image,
+    mobileDescription,
     name,
     qualityLocked,
     qualityRequirements,
@@ -217,7 +220,12 @@ export function Branch({
             />
           </div>
           <Title name={name} className="branch__title" />
-          <Description text={description} />
+          <MediaSmDown>
+            <Description text={mobileDescription ?? description} />
+          </MediaSmDown>
+          <MediaMdUp>
+            <Description text={description} />
+          </MediaMdUp>
         </div>
         {currencyCost > 0 && (
           <div>

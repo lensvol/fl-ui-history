@@ -1,14 +1,15 @@
-import { useAppDispatch, useAppSelector } from "features/app/store";
 import React, { useCallback, useMemo } from "react";
 import { withRouter } from "react-router-dom";
 
-import Image from "components/Image";
-import Loading from "components/Loading";
-import Buttonlet from "components/Buttonlet";
+import moment from "moment";
 
 import { dismissNewsItem } from "actions/news";
 
-import moment from "moment";
+import Buttonlet from "components/Buttonlet";
+import Image from "components/Image";
+import Loading from "components/Loading";
+
+import { useAppDispatch, useAppSelector } from "features/app/store";
 
 function News() {
   const newsItem = useAppSelector((state) => state.news.newsItem);
@@ -20,6 +21,7 @@ function News() {
     if (!newsItem) {
       return;
     }
+
     dispatch(dismissNewsItem(newsItem.id));
   }, [dispatch, newsItem]);
 
@@ -27,6 +29,7 @@ function News() {
     if (!newsItem) {
       return "";
     }
+
     return moment(newsItem.atDateTime).format("DD MMMM YYYY");
   }, [newsItem]);
 
@@ -49,8 +52,8 @@ function News() {
           classNames={{
             containerClassName: "news__close-button",
           }}
-          type="close"
           onClick={dismiss}
+          type="close"
         />
         <div
           style={{
@@ -80,5 +83,7 @@ function News() {
     </div>
   );
 }
+
+News.displayName = "News";
 
 export default withRouter(News);

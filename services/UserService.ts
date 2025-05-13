@@ -1,6 +1,8 @@
+import BaseService, { Either } from "services/BaseMonadicService";
+
+import { BaseResponse } from "types/app";
 import { AreaWithNestedJsonInfo, ISetting } from "types/map";
 import { PrivilegeLevel } from "types/user";
-import BaseService, { Either } from "./BaseMonadicService";
 
 export interface ILoginCredentials {
   emailAddress: string;
@@ -16,7 +18,10 @@ export type LoginResponseUser = {
 };
 
 export type LoginResponse = {
-  accessCodeResult?: { message: string; isSuccess: boolean };
+  accessCodeResult?: {
+    message: string;
+    isSuccess: boolean;
+  };
   area?: AreaWithNestedJsonInfo;
   hasCharacter: boolean;
   jwt?: string;
@@ -72,9 +77,10 @@ export interface IUserService {
       /* empty response expected */
     }>
   >;
+  facebookData: (confirmationCode?: string) => Promise<Either<BaseResponse>>;
 }
 
-class UserService extends BaseService implements IUserService {
+export default class UserService extends BaseService implements IUserService {
   constructor() {
     super();
 
@@ -94,6 +100,7 @@ class UserService extends BaseService implements IUserService {
         password: creds.password,
       },
     };
+
     return this.doRequest<LoginResponse>(config);
   };
 
@@ -102,6 +109,7 @@ class UserService extends BaseService implements IUserService {
       url: "/login/user",
       method: "get",
     };
+
     return this.doRequest(config);
   };
 
@@ -111,18 +119,20 @@ class UserService extends BaseService implements IUserService {
       url: "/facebook/processsignedrequest",
       data,
     };
+
     return this.doRequest(config);
   };
 
   googleLogin = (token: any) => {
     const config = {
       method: "post",
-      url: "/google/callback",
+      url: "/google/fedcmcallback",
       data: {
         accessCodeName: token?.accessCodeName,
-        token: token?.token?.access_token,
+        token: token?.token?.credential,
       },
     };
+
     return this.doRequest<LoginResponse>(config);
   };
 
@@ -131,8 +141,16 @@ class UserService extends BaseService implements IUserService {
       method: "post",
       url: "/login/logout",
     };
+
+    return this.doRequest(config);
+  };
+
+  facebookData = (confirmationCode?: string) => {
+    const config = {
+      method: "get",
+      url: `/facebook/dataconfirmation/${confirmationCode}`,
+    };
+
     return this.doRequest(config);
   };
 }
-
-export { UserService as default };

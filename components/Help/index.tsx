@@ -188,7 +188,7 @@ function StaticContent({ history }: RouteComponentProps) {
           title="Bluesky"
           onClick={() =>
             window.open(
-              "https://bsky.app/profile/failbettergames.bsky.social",
+              "https://bsky.app/profile/failbettergames.com",
               "_blank"
             )
           }

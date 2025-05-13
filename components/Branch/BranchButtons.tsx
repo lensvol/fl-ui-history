@@ -9,14 +9,21 @@ import { ApiQualityRequirement, IBranch } from "types/storylet";
 export type Props = {
   branch: IBranch;
   disabled: boolean;
+  isPlotReport?: boolean;
   isWorking: boolean;
   onChooseBranch: () => void;
   qualityRequirements: ApiQualityRequirement[];
 };
 
 export default function BranchButtons(props: Props) {
-  const { branch, disabled, isWorking, onChooseBranch, qualityRequirements } =
-    props;
+  const {
+    branch,
+    disabled,
+    isPlotReport,
+    isWorking,
+    onChooseBranch,
+    qualityRequirements,
+  } = props;
 
   return (
     <div className="buttons storylet__buttons">
@@ -25,7 +32,10 @@ export default function BranchButtons(props: Props) {
         go
         disabled={disabled}
         isWorking={isWorking}
-        data={branch}
+        data={{
+          ...branch,
+          isPlotReport: isPlotReport ?? false,
+        }}
         onClick={onChooseBranch}
       >
         {isWorking && <Loading spinner small />}

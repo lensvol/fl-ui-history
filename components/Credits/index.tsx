@@ -1,8 +1,11 @@
-import { CmsContent } from "components/CmsContent";
-import { useAppDispatch } from "features/app/store";
 import React, { Fragment, useCallback } from "react";
-import Header from "components/Header";
 import { useHistory } from "react-router-dom";
+
+import { CmsContent } from "components/CmsContent";
+import Footer from "components/Footer";
+import Header from "components/Header";
+
+import { useAppDispatch } from "features/app/store";
 
 export default function Credits() {
   const dispatch = useAppDispatch();
@@ -31,6 +34,9 @@ export default function Credits() {
         </h1>
         <CmsContent dispatch={dispatch} pageName="credits" />
       </div>
+      <Footer />
     </Fragment>
   );
 }
+
+Credits.displayName = "Credits";

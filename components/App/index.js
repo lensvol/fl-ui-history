@@ -23,9 +23,11 @@ import Timer from "components/Timer";
 
 // Containers (These are essentially used like 'pages')
 import AccountPage from "components/AccountPage";
+import AgentsTab from "components/Agents/AgentsTab";
 import CreateCharacter from "components/CreateCharacter";
 import CreditsPage from "components/Credits";
 import ExchangeTab from "components/ExchangeTab";
+import FacebookDataPage from "components/FacebookData";
 import FateTab from "components/FateTab";
 import HelpPage from "components/HelpPage";
 import LoginContainer from "components/Login";
@@ -100,6 +102,11 @@ export default function App() {
                   exact
                   component={UnsubscribeContainer}
                 />
+                <Route
+                  path="/fbdata/:token?"
+                  exact
+                  component={FacebookDataPage}
+                />
 
                 {/* Routes that only logged-out users can visit */}
                 <RequireUnauthenticated
@@ -149,6 +156,12 @@ export default function App() {
                   component={ProfilePage}
                 />
                 <RequireCharacter path="/" exact component={StoryTabContent} />
+                <RequireCharacter
+                  path="/agents"
+                  exact
+                  component={AgentsTab}
+                  uiRestriction={UIRestriction.Agents}
+                />
 
                 {/* Also unrestricted but, it's the catch-all, so it lives at the end */}
                 <Route path="*" component={NotFound} />

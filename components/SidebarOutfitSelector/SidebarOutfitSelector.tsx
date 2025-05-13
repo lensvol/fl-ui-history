@@ -5,15 +5,18 @@ import { useDispatch } from "react-redux";
 import Select from "react-select";
 
 import { fetch as fetchCards } from "actions/cards";
+import { isDowngradedSubscription } from "actions/fate/subscriptions";
 import { changeOutfit } from "actions/outfit";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 
 import * as DropdownStyles from "components/Equipment/dropdown-styles";
-import { compareOutfits } from "components/Equipment/util";
 import SidebarOutfitSelectorDisabled from "components/SidebarOutfitSelector/SidebarOutfitSelectorDisabled";
 import Title from "components/SidebarOutfitSelector/Title";
 
-import { OUTFIT_TYPE_EXCEPTIONAL } from "constants/outfits";
+import {
+  OUTFIT_TYPE_ENHANCED_EXCEPTIONAL,
+  OUTFIT_TYPE_EXCEPTIONAL,
+} from "constants/outfits";
 
 import { useAppSelector } from "features/app/store";
 
@@ -28,10 +31,18 @@ export default function SidebarOutfitSelector() {
   const canUserChangeOutfit = useAppSelector((state) =>
     getCanUserChangeOutfit(state)
   );
-  const isExceptionalFriend = useAppSelector(
-    (state) => state.fate.isExceptionalFriend
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
   );
   const outfits = useAppSelector((state) => getOrderedOutfits(state));
+  const isExceptionalFriend =
+    subscriptionType === "ExceptionalFriendship" ||
+    isDowngradedSubscription(hasSubscription, subscriptionType);
+  const isEnhancedExceptionalFriend =
+    subscriptionType === "EnhancedExceptionalFriendship";
 
   const showPossessionsUI = useAppSelector(
     (state) =>
@@ -66,18 +77,18 @@ export default function SidebarOutfitSelector() {
     [canUserChangeOutfit, dispatch]
   );
 
-  const choices = useMemo(() => [...outfits].sort(compareOutfits), [outfits]);
-
   const options = useMemo(
     () =>
-      [...choices]
+      [...outfits]
         .filter((c) => c.id !== selectedOutfitId)
         .map((c) => ({
           label: c.name,
           type: c.type,
           value: c.id,
           isDisabled:
-            c.type === OUTFIT_TYPE_EXCEPTIONAL && !isExceptionalFriend,
+            !isEnhancedExceptionalFriend &&
+            (c.type === OUTFIT_TYPE_ENHANCED_EXCEPTIONAL ||
+              (!isExceptionalFriend && c.type === OUTFIT_TYPE_EXCEPTIONAL)),
         }))
         .sort((a, b) => {
           if (a.isDisabled === b.isDisabled) {
@@ -90,7 +101,12 @@ export default function SidebarOutfitSelector() {
 
           return -1;
         }),
-    [choices, isExceptionalFriend, selectedOutfitId]
+    [
+      isEnhancedExceptionalFriend,
+      isExceptionalFriend,
+      outfits,
+      selectedOutfitId,
+    ]
   );
 
   if (!showPossessionsUI) {

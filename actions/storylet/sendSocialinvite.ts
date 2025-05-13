@@ -27,7 +27,7 @@ export type SendSocialInviteSuccessAction = {
   type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_SUCCESS;
   payload: Pick<
     IApiStoryletResponseData,
-    "phase" | "endStorylet" | "externalSocialAct" | "messages"
+    "phase" | "endStorylet" | "elapsed" | "externalSocialAct" | "messages"
   >;
 };
 
@@ -46,6 +46,7 @@ export const sendSocialInviteSuccess = (data: any) => ({
   type: StoryletActionTypes.SEND_SOCIAL_INVITATION_SUCCESS,
   payload: {
     phase: data.phase,
+    elapsed: data.elapsed,
     endStorylet: data.endStorylet,
     externalSocialAct: data.externalSocialAct,
     messages: data.messages,

@@ -7,6 +7,7 @@ import timeTheHealer from "features/timeTheHealer/timeTheHealerSlice";
 import accessCodes from "reducers/accessCodes";
 import accountLinkReminder from "reducers/accountLinkReminder";
 import actions from "reducers/actions";
+import agents from "reducers/agents";
 import app from "reducers/app";
 import branches from "reducers/branches";
 import cards from "reducers/cards";
@@ -50,6 +51,7 @@ const appReducer = combineReducers({
   accessCodes,
   accountLinkReminder,
   actions,
+  agents,
   app,
   branches,
   cards,

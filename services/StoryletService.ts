@@ -81,6 +81,7 @@ export interface IApiStoryletResponseData {
   setting?: ISetting;
   hasUpdatedCharacter?: boolean;
   maxHandSize?: number;
+  elapsed?: number;
 }
 
 export interface ApiAddContactRequest {

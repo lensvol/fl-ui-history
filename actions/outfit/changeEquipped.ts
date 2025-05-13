@@ -2,6 +2,7 @@ import { ActionCreator } from "redux";
 
 import { ThunkDispatch } from "redux-thunk";
 
+import fetchAgents from "actions/agents/fetchAgents";
 import { clearCache as clearCardCache } from "actions/cards";
 import { fetchMyself } from "actions/myself";
 import { fetchPlans } from "actions/plans";
@@ -53,7 +54,7 @@ type EquipmentChangeAction = (
 ) => Promise<Either<ChangeEquipmentResponse>>;
 
 export default function changeEquipped(action: EquipmentChangeAction) {
-  return (qualityId: number) =>
+  return (qualityId: number, shouldFetchAgents: boolean) =>
     async (
       dispatch: ThunkDispatch<
         Either<ChangeEquipmentResponse> | VersionMismatch,
@@ -77,6 +78,10 @@ export default function changeEquipped(action: EquipmentChangeAction) {
           dispatch(fetchPlans());
           // Re-fetch /myself so that modified qualities are synced
           dispatch(fetchMyself());
+
+          if (shouldFetchAgents) {
+            dispatch(fetchAgents());
+          }
         } else {
           dispatch(equipQualityFailure());
         }

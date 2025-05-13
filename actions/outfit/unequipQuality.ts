@@ -8,5 +8,5 @@ const service = new OutfitService();
  * UNEQUIP QUALITY
  -----------------------------------------------------------------------------*/
 export default function unequipQuality(qualityId: number) {
-  return changeEquipped(service.unequipQuality)(qualityId);
+  return changeEquipped(service.unequipQuality)(qualityId, false);
 }

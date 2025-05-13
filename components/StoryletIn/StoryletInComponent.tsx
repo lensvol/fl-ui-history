@@ -1,8 +1,9 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 import StoryletRoot from "components/StoryletRoot";
 import Branch from "components/Branch";
 import GoBack from "components/StoryletIn/GoBack";
+
 import { IBranch, IStorylet } from "types/storylet";
 
 interface Props {
@@ -27,30 +28,33 @@ export default function StoryletInComponent({
   }
 
   return (
-    <Fragment>
+    <>
       <StoryletRoot
         data={storylet}
-        shareData={storylet}
         rootEventId={storylet.id}
+        shareData={storylet}
+        onGoBack={onGoBack}
       />
+
       {branches.map((branch) => (
         <Branch
           key={branch.id}
           branch={branch}
-          storyletDeckType={storylet.deckType}
-          isGoingBack={isGoingBack}
           defaultCursor
+          isGoingBack={isGoingBack}
+          storyletDeckType={storylet.deckType}
         />
       ))}
+
       <div className="buttons buttons--left buttons--storylet-exit-options">
         <GoBack
           disabled={isChoosing}
+          isGoingBack={isGoingBack}
           onClick={onGoBack}
           storylet={storylet}
-          isGoingBack={isGoingBack}
         />
       </div>
-    </Fragment>
+    </>
   );
 }
 

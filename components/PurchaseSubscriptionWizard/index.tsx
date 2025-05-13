@@ -1,7 +1,25 @@
-import { fetchActions } from "actions/actions";
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+
+import { fetchActions } from "actions/actions";
+import { fetch as fetchFate } from "actions/fate";
+import { fetch as fetchMap } from "actions/map";
+import { fetchMyself } from "actions/myself";
+import { fetchOutfit } from "actions/outfit";
+import { fetch as fetchSettings } from "actions/settings";
+import { fetch as fetchSubscription } from "actions/subscription";
+
+import CompletingTransaction from "components/PurchaseSubscriptionWizard/CompletingTransaction";
+import ConfirmNewPlan from "components/PurchaseSubscriptionWizard/ConfirmNewPlan";
+import PaymentFailure from "components/PurchaseSubscriptionWizard/PaymentFailure";
+import PaymentSuccess from "components/PurchaseSubscriptionWizard/PaymentSuccess";
+import ProvidePaymentDetails from "components/PurchaseSubscriptionWizard/ProvidePaymentDetails";
+import SelectCurrency from "components/PurchaseSubscriptionWizard/SelectCurrency";
+import SelectNewPlan from "components/PurchaseSubscriptionWizard/SelectNewPlan";
+import ServerErrorMessage from "components/PurchaseSubscriptionWizard/ServerErrorMessage";
+
 import PaymentService from "services/PaymentService";
+
 import {
   IBraintreeAddOn,
   IBraintreePlan,
@@ -10,21 +28,6 @@ import {
   IPaymentService,
   ThreeDSecureCompleteResult,
 } from "types/payment";
-import { fetchMyself } from "actions/myself";
-import { fetch as fetchSubscription } from "actions/subscription";
-import { fetch as fetchFate } from "actions/fate";
-import { fetch as fetchMap } from "actions/map";
-import { fetch as fetchSettings } from "actions/settings";
-
-import CompletingTransaction from "./CompletingTransaction";
-import ConfirmNewPlan from "./ConfirmNewPlan";
-import PaymentFailure from "./PaymentFailure";
-import PaymentSuccess from "./PaymentSuccess";
-import ProvidePaymentDetails from "./ProvidePaymentDetails";
-import SelectCurrency from "./SelectCurrency";
-import SelectNewPlan from "./SelectNewPlan";
-import ServerErrorMessage from "./ServerErrorMessage";
-
 import { PremiumSubscriptionType } from "types/subscription";
 
 export enum PurchaseSubscriptionWizardStep {
@@ -90,10 +93,9 @@ export default function PurchaseSubscriptionWizard({
     setSuccessTitle("Success!");
   }, [firstStep, onClickToClose]);
 
-  const onCloseAfterFailure = useCallback(
-    () => onClickToClose(false),
-    [onClickToClose]
-  );
+  const onCloseAfterFailure = useCallback(() => {
+    onClickToClose(false);
+  }, [onClickToClose]);
 
   const onCloseAfterSuccess = useCallback(() => {
     onClickToClose(true); // we completed the subscription process
@@ -145,6 +147,7 @@ export default function PurchaseSubscriptionWizard({
     dispatch(fetchActions()); // Update action bank
     dispatch(fetchFate()); // Update isExceptional state
     dispatch(fetchMap()); // Update map area availability
+    dispatch(fetchOutfit()); // Update exceptional outfits
 
     // wait for this one, so users can't dismiss the modal before the UI reflects the sub they just paid for
     await dispatch(fetchSettings());
@@ -168,6 +171,7 @@ export default function PurchaseSubscriptionWizard({
       if (!result.isSuccess) {
         setPaymentResponseMessage(result.message);
         setCurrentStep(PurchaseSubscriptionWizardStep.PaymentFailure);
+
         return;
       }
 
@@ -187,6 +191,7 @@ export default function PurchaseSubscriptionWizard({
 
       let isSuccess = false;
       let message: string = UNKNOWN_ERROR_MESSAGE;
+
       try {
         const response = await new PaymentService().purchasePlan(
           purchaseRequest
@@ -208,6 +213,7 @@ export default function PurchaseSubscriptionWizard({
         await refreshPlayerData();
 
         setCurrentStep(PurchaseSubscriptionWizardStep.PaymentSuccess);
+
         return;
       }
 

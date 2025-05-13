@@ -135,12 +135,14 @@ function HasSubscriptionContent({
           </p>
           <p>
             By downgrading to an Exceptional Friendship, you will continue to
-            have a second action candle, expanded opportunity deck, additional
-            outfits, and access to the House of Chimes. You will continue to
-            receive a new Exceptional Story every month, but you will no longer
-            have access to the menu of returning stories. You will no longer
-            receive free action refreshes each month. You will still be able to
-            spend Memories of a Tale in Mr Chimes' Lost &amp; Found.
+            have a second action candle, expanded opportunity deck, most of your
+            additional outfits, and access to the House of Chimes. You will
+            continue to receive a new Exceptional Story every month, but you
+            will no longer have access to the menu of returning stories. You
+            will no longer receive free action refreshes each month. You will no
+            longer have access to your Enhanced Exceptional outfits. You will
+            still be able to spend Memories of a Tale in Mr Chimes' Lost &amp;
+            Found.
           </p>
         </>
       )}

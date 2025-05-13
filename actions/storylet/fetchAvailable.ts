@@ -40,6 +40,7 @@ export type FetchAvailableSuccessAction = {
     IApiStoryletResponseData,
     | "actions"
     | "canChangeOutfit"
+    | "elapsed"
     | "endStorylet"
     | "maxHandSize"
     | "phase"
@@ -70,6 +71,7 @@ export const fetchAvailableSuccess: ActionCreator<
     storylets: data.storylets,
     storylet: data.storylet,
     messages: data.messages,
+    elapsed: data.elapsed,
     maxHandSize: data.maxHandSize,
   },
 });

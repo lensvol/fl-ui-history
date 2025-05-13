@@ -2,12 +2,16 @@ import React, { ChangeEvent, useCallback, useMemo } from "react";
 
 import Select from "react-select";
 
+import { isDowngradedSubscription } from "actions/fate/subscriptions";
+
 import * as DropdownStyles from "components/Equipment/dropdown-styles";
 import EquipmentContext from "components/Equipment/EquipmentContext";
 import { useSelectedOutfit } from "components/Equipment/hooks";
-import { compareOutfits } from "components/Equipment/util";
 
-import { OUTFIT_TYPE_EXCEPTIONAL } from "constants/outfits";
+import {
+  OUTFIT_TYPE_ENHANCED_EXCEPTIONAL,
+  OUTFIT_TYPE_EXCEPTIONAL,
+} from "constants/outfits";
 
 import { useAppSelector } from "features/app/store";
 
@@ -15,12 +19,20 @@ import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
 
 export default function OutfitDropdown({ onChange }: Props) {
   const isChanging = useAppSelector((state) => state.outfit.isChanging);
-  const isExceptionalFriend = useAppSelector(
-    (state) => state.fate.isExceptionalFriend
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
   );
   const maxOutfits = useAppSelector((state) => state.outfit.maxOutfits);
   const outfits = useAppSelector((state) => getOrderedOutfits(state));
   const selectedOutfit = useSelectedOutfit(outfits);
+  const isExceptionalFriend =
+    subscriptionType === "ExceptionalFriendship" ||
+    isDowngradedSubscription(hasSubscription, subscriptionType);
+  const isEnhancedExceptionalFriend =
+    subscriptionType === "EnhancedExceptionalFriendship";
 
   const handleBlurOrChangeFromNativeSelect = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -44,17 +56,16 @@ export default function OutfitDropdown({ onChange }: Props) {
   );
 
   const choices = useMemo(() => {
-    const sortedOutfits = [...outfits].sort(compareOutfits);
     const purchasedOutfits = outfits.filter((a) => a.type === "Purchased");
 
     // We can't buy any more outfits; just return what the player has
     if (purchasedOutfits.length >= maxOutfits) {
-      return sortedOutfits;
+      return outfits;
     }
 
     // Return what the player has plus the option to purchase
     return [
-      ...sortedOutfits,
+      ...outfits,
       {
         id: "buy-new-outfit",
         name: "Unlock another outfit...",
@@ -72,18 +83,22 @@ export default function OutfitDropdown({ onChange }: Props) {
           type: c.type,
           value: c.id,
           isDisabled:
-            c.type === OUTFIT_TYPE_EXCEPTIONAL && !isExceptionalFriend,
+            !isEnhancedExceptionalFriend &&
+            (c.type === OUTFIT_TYPE_ENHANCED_EXCEPTIONAL ||
+              (!isExceptionalFriend && c.type === OUTFIT_TYPE_EXCEPTIONAL)),
         }))
         .sort((a, b) => {
           if (a.isDisabled === b.isDisabled) {
             return 0;
           }
+
           if (a.isDisabled) {
             return 1;
           }
+
           return -1;
         }),
-    [choices, isExceptionalFriend, selectedOutfit.id]
+    [choices, isEnhancedExceptionalFriend, isExceptionalFriend, selectedOutfit]
   );
 
   return (

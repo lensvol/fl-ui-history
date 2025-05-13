@@ -16,6 +16,7 @@ type BaseInvitationResponse = {
   actions: number;
   messages: IMessages;
   content: Message;
+  elapsed?: number;
 };
 
 export type AcceptInvitationResponse = BaseInvitationResponse;

@@ -1,26 +1,37 @@
 import React from "react";
+
 import classnames from "classnames";
+
 import Image from "components/Image";
 import MaybeSecondChance from "components/Branch/MaybeSecondChance";
+
 import { IChallenge } from "types/storylet";
 
 export interface Props {
   data: IChallenge;
+  isAgent: boolean;
   locked: boolean;
   toggleSecondChance: (_: boolean, __: number) => void;
 }
 
-export default function Challenge({ data, locked, toggleSecondChance }: Props) {
+export default function Challenge({
+  data,
+  isAgent,
+  locked,
+  toggleSecondChance,
+}: Props) {
   const { description, baseDescription, image, name, targetNumber, bonuses } =
     data;
 
-  var hasBonus = bonuses && bonuses.length;
-  var challengeName = hasBonus
+  const hasBonus = bonuses && bonuses.length;
+  const challengeName = hasBonus
     ? [name, ...bonuses.map((b) => b.name)].join(" + ")
     : name;
-  var quality = hasBonus ? "qualities" : "quality";
-  var gives = hasBonus ? "give" : "gives";
-  var challengeDescription = `Your ${challengeName} ${quality} ${gives} you a ${targetNumber}% chance of success.`;
+  const quality = hasBonus ? "qualities" : "quality";
+  const gives = hasBonus ? "give" : "gives";
+  const you = isAgent ? "them" : "you";
+  const your = isAgent ? "Your agent's" : "Your";
+  const challengeDescription = `${your} ${challengeName} ${quality} ${gives} ${you} a ${targetNumber}% chance of success.`;
 
   return (
     <div className="challenge-and-second-chance">

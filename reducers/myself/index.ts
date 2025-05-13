@@ -1,38 +1,41 @@
-import {
-  FETCH_MYSELF_REQUESTED,
-  FETCH_MYSELF_SUCCESS,
-  MYSELF_CHANGED,
-  NAME_CHANGED,
-  CHOOSE_NEW_MANTELPIECE_SUCCESS,
-  CHOOSE_NEW_SCRAPBOOK_SUCCESS,
-  RENAME_OUTFIT_SUCCESS,
-  NEW_AVATAR_IMAGE,
-  SET_JOURNAL_PRIVACY_SUCCESS,
-  SET_JOURNAL_PRIVACY_REQUESTED,
-  SET_CAN_CHANGE_OUTFIT,
-  CHANGE_OUTFIT_REQUESTED,
-} from "actiontypes/myself";
-
+import { TransactionAction } from "actions/exchange/makeTransaction";
+import { MyselfActions } from "actions/myself";
 import {
   SetJournalPrivacyRequested,
   SetJournalPrivacySuccess,
 } from "actions/myself/setJournalPrivacy";
-import { TransactionAction } from "actions/exchange/makeTransaction";
-import { MyselfActions } from "actions/myself";
 import { OutfitActions } from "actions/outfit";
+import { FetchOutfitSuccessAction } from "actions/outfit/fetchOutfit";
 import { ChooseBranchSuccessAction } from "actions/storylet/chooseBranch/chooseBranchSuccess";
 
 import { BUY_ITEMS_SUCCESS, SELL_ITEMS_SUCCESS } from "actiontypes/exchange";
+import {
+  CHANGE_OUTFIT_REQUESTED,
+  CHOOSE_NEW_MANTELPIECE_SUCCESS,
+  CHOOSE_NEW_SCRAPBOOK_SUCCESS,
+  FETCH_MYSELF_REQUESTED,
+  FETCH_MYSELF_SUCCESS,
+  FETCH_OUTFIT_SUCCESS,
+  MYSELF_CHANGED,
+  NAME_CHANGED,
+  NEW_AVATAR_IMAGE,
+  RENAME_OUTFIT_SUCCESS,
+  SET_CAN_CHANGE_OUTFIT,
+  SET_JOURNAL_PRIVACY_REQUESTED,
+  SET_JOURNAL_PRIVACY_SUCCESS,
+} from "actiontypes/myself";
 import { CHOOSE_BRANCH_SUCCESS } from "actiontypes/storylet";
+
 import changeOutfitRequested from "reducers/myself/changeOutfitRequested";
+import chooseNewDisplayQualitySuccess from "reducers/myself/chooseNewDisplayQualitySuccess";
+import exchangeTransactionSuccess from "reducers/myself/exchangeTransactionSuccess";
+import fetchMyselfSuccess from "reducers/myself/fetchMyselfSuccess";
+import myselfChanged from "reducers/myself/myselfChanged";
+import nameChanged from "reducers/myself/nameChanged";
 import renameOutfitSuccess from "reducers/myself/renameOutfitSuccess";
 
 import { IMyselfState } from "types/myself";
-import chooseNewDisplayQualitySuccess from "./chooseNewDisplayQualitySuccess";
-import exchangeTransactionSuccess from "./exchangeTransactionSuccess";
-import fetchMyselfSuccess from "./fetchMyselfSuccess";
-import myselfChanged from "./myselfChanged";
-import nameChanged from "./nameChanged";
+import { IQuality } from "types/qualities";
 
 // This is the expected state structure; we're explicitly setting
 // things as undefined so that we have a record of how we expect it to look
@@ -69,6 +72,7 @@ export default function reducer(
     | OutfitActions
     | TransactionAction
     | ChooseBranchSuccessAction
+    | FetchOutfitSuccessAction
 ): IMyselfState {
   switch (action.type) {
     case FETCH_MYSELF_REQUESTED:
@@ -158,6 +162,24 @@ export default function reducer(
         },
       };
     }
+
+    case FETCH_OUTFIT_SUCCESS:
+      return {
+        ...state,
+        qualities: [
+          ...state.qualities.map(
+            (q) =>
+              ({
+                ...q,
+                isOutfit:
+                  action.payload.slots.find((s) => s.qualityId === q.id) ===
+                  undefined
+                    ? q.isOutfit
+                    : true,
+              }) as IQuality
+          ),
+        ],
+      };
 
     default:
       return state;

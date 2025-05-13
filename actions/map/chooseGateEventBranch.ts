@@ -1,5 +1,6 @@
 import { ThunkDispatch } from "redux-thunk";
 
+import fetchAgents from "actions/agents/fetchAgents";
 import { fetchMyself } from "actions/myself";
 import { fetchOutfit } from "actions/outfit";
 import { handleVersionMismatch } from "actions/versionSync";
@@ -31,6 +32,7 @@ export default function chooseGateEventBranch(
       if (data.hasUpdatedCharacter) {
         dispatch(fetchMyself());
         dispatch(fetchOutfit());
+        dispatch(fetchAgents());
       }
 
       return data;

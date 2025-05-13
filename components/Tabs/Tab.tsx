@@ -6,11 +6,13 @@ import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 
 import classnames from "classnames";
 
+import { clearAgentsNotification } from "actions/agents/fetchAgents";
 import * as MessageActions from "actions/messages";
 
 import { IAppState } from "types/app";
 
-const mapStateToProps = ({ messages }: IAppState) => ({
+const mapStateToProps = ({ agents, messages }: IAppState) => ({
+  agentsChanged: agents.hasNotification,
   messagesChanged: messages.isChanged,
 });
 
@@ -26,6 +28,7 @@ type Props = OwnProps &
   RouteComponentProps;
 
 export function Tab({
+  agentsChanged,
   children,
   history,
   id,
@@ -39,15 +42,26 @@ export function Tab({
     location: { pathname },
   } = history;
 
-  const isNotifying = name === "messages" && messagesChanged;
+  const isNotifying =
+    (name === "messages" && messagesChanged) ||
+    (name === "agents" && agentsChanged);
 
   const clearMessages = () => {
     dispatch(MessageActions.clearNotification());
   };
 
+  const clearAgentsNotifying = () => {
+    dispatch(clearAgentsNotification());
+  };
+
   const noOp = () => {};
 
-  const onSelect = name === "messages" ? clearMessages : noOp;
+  const onSelect =
+    name === "messages"
+      ? clearMessages
+      : name === "agents"
+        ? clearAgentsNotifying
+        : noOp;
 
   const activeLabel = pathname === "/" ? "/" : pathname.replace("/", "");
 

@@ -16,6 +16,7 @@ export type ChooseBranchSuccessAction = {
     | "storylet"
     | "rename"
     | "maxHandSize"
+    | "elapsed"
     | "endStorylet"
     | "socialAct"
     | "externalSocialAct"
@@ -43,6 +44,7 @@ export default function chooseBranchSuccess(
     secondChance,
     messages,
     setting,
+    elapsed,
     maxHandSize,
   } = data;
 
@@ -62,6 +64,7 @@ export default function chooseBranchSuccess(
       messages,
       eligibleFriends: socialAct?.inviteeData.eligibleFriends,
       setting,
+      elapsed,
       maxHandSize,
     },
   };

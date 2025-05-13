@@ -1,8 +1,10 @@
-import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
 import React, { useEffect, useRef } from "react";
+
 import DomManipulationContext, {
   DomManipulationContextValue,
 } from "components/DomManipulationContext";
+
+import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
 
 interface Props {
   text: string;
@@ -10,8 +12,8 @@ interface Props {
 }
 
 export default function StoryletDescription({
-  text,
   containerClassName,
+  text,
 }: Props) {
   return (
     <DomManipulationContext.Consumer>
@@ -40,10 +42,12 @@ function StoryletDescriptionInner({
       '[data-purpose="open-subscription-modal"]'
     ) as HTMLElement;
     smo?.addEventListener("click", onOpenSubscriptionModal);
+
     if (smo) {
       smo.classList.add("link--inverse");
       smo.style.cursor = "pointer";
     }
+
     return () => {
       smo?.removeEventListener("click", onOpenSubscriptionModal);
     };
@@ -54,7 +58,7 @@ function StoryletDescriptionInner({
       className={containerClassName}
       ref={ref}
       dangerouslySetInnerHTML={{
-        __html: text.replace(UI_INTEGRATION_REGEX, "").trim(),
+        __html: text?.replace(UI_INTEGRATION_REGEX, "").trim(),
       }}
     />
   );

@@ -1,22 +1,28 @@
 import React, { useCallback, useMemo, useState } from "react";
+
+import { useDispatch } from "react-redux";
+
 import classnames from "classnames";
-import { connect, useDispatch } from "react-redux";
-import { IAppState } from "types/app";
-import Loading from "components/Loading";
-import { Success } from "services/BaseMonadicService";
-import { useGoogleLogin } from "@react-oauth/google";
+
 import { unlinkSocialAccount } from "actions/settings";
 import fetchAuthMethods from "actions/settings/fetchAuthMethods";
 import { linkGoogle } from "actions/settings/linkSocialAccount";
 
-export function GoogleAuthComponent({
-  authMethods,
+import Loading from "components/Loading";
+import GoogleLoginButton from "components/Registration/components/GoogleLoginContainer/GoogleLoginButton";
+
+import { useAppSelector } from "features/app/store";
+
+import { Success } from "services/BaseMonadicService";
+
+export default function GoogleAuthComponent({
   inverse,
   onLinkFailure,
   onUnlinkFailure,
   onLinkSuccess,
 }: Props) {
   const dispatch = useDispatch();
+  const authMethods = useAppSelector((state) => state.settings.authMethods);
 
   const hasGoogleAuth = useMemo(
     () => !!authMethods?.find((m) => m.type === "Google"),
@@ -28,11 +34,15 @@ export function GoogleAuthComponent({
 
   const onClickToUnlink = useCallback(async () => {
     setIsUnlinking(true);
+
     const result = await unlinkSocialAccount("google")(dispatch);
+
     await fetchAuthMethods()(dispatch);
+
     if (!(result instanceof Success)) {
       onUnlinkFailure?.(result.message);
     }
+
     setIsUnlinking(false);
   }, [dispatch, onUnlinkFailure]);
 
@@ -40,8 +50,13 @@ export function GoogleAuthComponent({
     async (authResponse) => {
       if (authResponse) {
         setIsLinking(true);
-        const request = { token: authResponse.access_token };
+
+        const request = {
+          token: authResponse.credential,
+        };
+
         const result = await linkGoogle(request)(dispatch);
+
         if (result instanceof Success) {
           onLinkSuccess?.();
 
@@ -49,21 +64,12 @@ export function GoogleAuthComponent({
         } else {
           onLinkFailure?.(result.message);
         }
+
         setIsLinking(false);
       }
     },
     [dispatch, onLinkFailure, onLinkSuccess]
   );
-
-  const onLoginFailure = useCallback((..._args) => {
-    // TODO: handle Google auth failure gracefully. This is called when the
-    //   user does not authenticate with Google (not if linking fails)
-  }, []);
-
-  const doGoogleAuth = useGoogleLogin({
-    onSuccess: onLoginSuccess,
-    onError: onLoginFailure,
-  });
 
   if (isLinking || isUnlinking) {
     return (
@@ -90,7 +96,7 @@ export function GoogleAuthComponent({
             inverse && "button--link-inverse"
           )}
         >
-          <span>Unlink Google</span>
+          Unlink Google
         </button>
       </>
     );
@@ -98,32 +104,25 @@ export function GoogleAuthComponent({
 
   return (
     <>
-      <i className="fa fa-fw fa-google" />{" "}
-      <button
-        className={classnames(
-          "button--link",
-          inverse && "button--link-inverse"
-        )}
-        onClick={() => doGoogleAuth()}
-        type="button"
-      >
-        Link Google to this account
-      </button>
+      {!inverse && (
+        <>
+          <i className="fa fa-fw fa-google" />{" "}
+          <span className="header--google-link">
+            Link Google to this account:
+          </span>
+        </>
+      )}
+      <GoogleLoginButton
+        className={inverse ? "" : "button--google-link"}
+        handleSuccess={onLoginSuccess}
+      />
     </>
   );
 }
 
-type OwnProps = {
+type Props = {
   inverse?: boolean;
   onLinkFailure?: (message: string) => void;
-  onUnlinkFailure?: (message: string) => void;
   onLinkSuccess?: () => void;
+  onUnlinkFailure?: (message: string) => void;
 };
-
-const mapStateToProps = (state: IAppState) => ({
-  authMethods: state.settings.authMethods,
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(GoogleAuthComponent);

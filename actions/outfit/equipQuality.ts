@@ -8,6 +8,9 @@ const service = new OutfitService();
  * EQUIP QUALITY
  -----------------------------------------------------------------------------*/
 
-export default function equipQuality(qualityId: number) {
-  return changeEquipped(service.equipQuality)(qualityId);
+export default function equipQuality(
+  qualityId: number,
+  shouldFetchAgents: boolean
+) {
+  return changeEquipped(service.equipQuality)(qualityId, shouldFetchAgents);
 }

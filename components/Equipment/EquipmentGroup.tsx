@@ -107,7 +107,9 @@ export default function EquipmentGroup(props: Props) {
                 )}
               >
                 <EquipmentSlot name={name} />
-                {isChangeable && !canChangeOutfits && <LockedSlotIcon />}
+                {isChangeable && !canChangeOutfits && (
+                  <LockedSlotIcon classNames="equipment-group__equipment-slot-container--lock-item" />
+                )}
               </div>
               <ul
                 className={classnames(

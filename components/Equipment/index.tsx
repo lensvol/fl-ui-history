@@ -59,7 +59,7 @@ function Equipment({ history }: Props) {
       if (equipped) {
         dispatch(unequipQuality(id));
       } else {
-        dispatch(equipQuality(id));
+        dispatch(equipQuality(id, true));
       }
     }
   }, [dispatch, qualityBeingUsedOrEquipped]);

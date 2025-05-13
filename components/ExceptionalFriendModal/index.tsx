@@ -1,35 +1,41 @@
 /* eslint-disable no-console */
 import React, { useCallback, useMemo, useState } from "react";
-import { connect } from "react-redux";
-import { Props as ReactModalProps } from "react-modal";
-import Modal from "components/Modal";
-import { ThunkDispatch } from "redux-thunk";
-import { IAppState } from "types/app";
-import { ExceptionalFriendWizardStep } from "types/fate";
-import Blurb from "components/ExceptionalFriendModal/Blurb";
+import { useDispatch } from "react-redux";
+
 import { fetch as fetchMap } from "actions/map";
 import { fetchAvailable } from "actions/storylet";
-import PurchaseSubscriptionWizard from "components/PurchaseSubscriptionWizard";
-import { PremiumSubscriptionType } from "types/subscription";
 
-export interface Props extends ReactModalProps {
+import Blurb from "components/ExceptionalFriendModal/Blurb";
+import Modal from "components/Modal";
+import PurchaseSubscriptionWizard from "components/PurchaseSubscriptionWizard";
+
+import { useAppSelector } from "features/app/store";
+
+import { ExceptionalFriendWizardStep } from "types/fate";
+
+export interface Props {
   disableTouchEvents?: boolean;
-  dispatch: ThunkDispatch<any, any, any>;
-  hasSubscription: boolean;
+  isOpen: boolean;
   onRequestClose: (_?: any) => void;
-  renewDate?: string;
-  subscriptionType?: PremiumSubscriptionType;
 }
 
-export function ExceptionalFriendModal({
+export default function ExceptionalFriendModal({
   disableTouchEvents,
-  dispatch,
-  hasSubscription,
   isOpen,
   onRequestClose,
-  renewDate,
-  subscriptionType,
 }: Props) {
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const renewDate = useAppSelector(
+    (state) => state.subscription.data?.renewDate
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
+  );
+
+  const dispatch = useDispatch();
+
   const [wizardStep, setWizardStep] = useState(
     ExceptionalFriendWizardStep.Blurb
   );
@@ -54,10 +60,14 @@ export function ExceptionalFriendModal({
       switch (wizardStep) {
         case ExceptionalFriendWizardStep.Blurb:
           setWizardStep(ExceptionalFriendWizardStep.Payment);
+
           return;
+
         case ExceptionalFriendWizardStep.Payment:
           onNextFromSubscriptionSuccess();
+
           return; // eslint-disable-line no-useless-return
+
         case ExceptionalFriendWizardStep.Success:
         case ExceptionalFriendWizardStep.Error:
         default:
@@ -71,8 +81,10 @@ export function ExceptionalFriendModal({
     (didUserCompleteSubscription: boolean | undefined) => {
       if (didUserCompleteSubscription) {
         onNext();
+
         return;
       }
+
       onRequestClose();
     },
     [onNext, onRequestClose]
@@ -112,12 +124,12 @@ export function ExceptionalFriendModal({
 
   return (
     <Modal
+      className="modal--map-exceptional-friend-modal__content"
+      disableTouchEvents={disableTouchEvents}
       isOpen={isOpen}
       onAfterClose={handleAfterClose}
       onRequestClose={handleRequestClose}
       overlayClassName="modal--map-exceptional-friend-modal__overlay"
-      className="modal--map-exceptional-friend-modal__content"
-      disableTouchEvents={disableTouchEvents}
     >
       {content}
     </Modal>
@@ -125,12 +137,3 @@ export function ExceptionalFriendModal({
 }
 
 ExceptionalFriendModal.displayName = "ExceptionalFriendModal";
-
-const mapStateToProps = (state: IAppState) => ({
-  data: state.fate.data,
-  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
-  renewDate: state.subscription.data?.renewDate,
-  subscriptionType: state.settings.subscriptions.subscriptionType,
-});
-
-export default connect(mapStateToProps)(ExceptionalFriendModal);

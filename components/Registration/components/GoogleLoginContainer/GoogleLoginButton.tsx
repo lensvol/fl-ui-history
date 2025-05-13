@@ -1,54 +1,26 @@
-import google from "assets/img/google.png";
-import TippyWrapper from "components/TippyWrapper";
-import Tooltip from "components/Tooltip";
-import React, { useMemo } from "react";
+import React from "react";
+
+import { GoogleLogin } from "@react-oauth/google";
 
 interface GoogleLoginButtonProps {
-  didScriptLoadingFail: boolean;
-  disabled?: boolean | undefined;
-  onClick: () => void;
-  label: string;
+  className?: string;
+  handleSuccess: (googleAccessToken: any) => Promise<void>;
+  isSignUp?: boolean;
 }
 
 export default function GoogleLoginButton(props: GoogleLoginButtonProps) {
-  const { didScriptLoadingFail, disabled, onClick, label } = props;
+  const { className, handleSuccess, isSignUp } = props;
 
-  const button = useMemo(
-    () => (
-      <button
-        className="button button--google"
-        disabled={disabled}
-        onClick={onClick}
-        type="button"
-      >
-        <span>
-          <img src={google} alt="Google" /> {label}
-        </span>
-      </button>
-    ),
-    [disabled, label, onClick]
-  );
-
-  if (didScriptLoadingFail) {
-    return (
-      <TippyWrapper content={<ScriptLoadingFailedTooltip />}>
-        <div>{button}</div>
-      </TippyWrapper>
-    );
-  }
-
-  return button;
-}
-
-function ScriptLoadingFailedTooltip() {
-  const message =
-    "Google authentication is disabled because the Google Login API script failed to load." +
-    " Check that your adblocker isn't preventing this and try refreshing the page.";
   return (
-    <Tooltip
-      data={{
-        secondaryDescription: message,
+    <GoogleLogin
+      containerProps={{
+        className: className,
       }}
+      onSuccess={handleSuccess}
+      text={isSignUp ? "signup_with" : "signin_with"}
+      use_fedcm_for_prompt
+      width="204"
+      ux_mode="popup"
     />
   );
 }

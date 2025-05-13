@@ -12,6 +12,7 @@ export enum UIRestriction {
   Messages,
   Possessions,
   Travel,
+  Agents,
 }
 
 export interface IMyselfState {

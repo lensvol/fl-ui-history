@@ -1,5 +1,6 @@
-import createCategories from "./createCategories";
-import createQualities from "./createQualities";
+import createCategories from "reducers/myself/createCategories";
+import createQualities from "reducers/myself/createQualities";
+
 import {
   IFetchMyselfResponseData,
   IMyselfState,
@@ -26,7 +27,7 @@ export default function fetchMyselfSuccess(
       scrapbookStatusId,
     },
     categories: createCategories(possessions),
-    qualities: createQualities(possessions),
+    qualities: createQualities(state.qualities, possessions),
     uiRestrictions: restrictedUserInterfaceElements?.map(
       (restriction) => UIRestriction[restriction as keyof typeof UIRestriction]
     ),

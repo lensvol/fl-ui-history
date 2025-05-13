@@ -62,6 +62,7 @@ const renameQualitySuccess = (data: any) => ({
     phase: data.phase,
     endStorylet: data.endStorylet,
     messages: data.messages,
+    elapsed: data.elapsed,
   },
 });
 

@@ -1,20 +1,28 @@
 import React, { useCallback, useRef, useState } from "react";
+
 import { connect } from "react-redux";
+
+import classnames from "classnames";
 
 import Config from "configuration";
 
+import Buttonlet from "components/Buttonlet";
+import { StoryletDescription } from "components/common";
+import Image from "components/Image";
+import Loading from "components/Loading";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+import ShareDialog from "components/ShareDialog";
+import FrequencyButtonlet from "components/StoryletRoot/FrequencyButtonlet";
+import TippyWrapper from "components/TippyWrapper";
+
 import { shareContent } from "features/profile";
+
+import { IAppState } from "types/app";
+import { StoryletRootData } from "types/storylet";
+
 import getBorderColour from "utils/getBorderColour";
 import { stripHtml } from "utils/stringFunctions";
-
-import Buttonlet from "components/Buttonlet";
-import Image from "components/Image";
-import ShareDialog from "components/ShareDialog";
-
-import { StoryletRootData } from "types/storylet";
-import { IAppState } from "types/app";
-import { StoryletDescription } from "components/common";
-import FrequencyButtonlet from "./FrequencyButtonlet";
 
 export function StoryletRoot(props: Props) {
   const {
@@ -22,6 +30,7 @@ export function StoryletRoot(props: Props) {
     dispatch,
     isChoosing,
     isGoingBack,
+    onGoBack,
     privilegeLevel,
     rootEventId,
     shareData,
@@ -74,9 +83,39 @@ export function StoryletRoot(props: Props) {
   return (
     <div
       className="media media--root"
-      style={{ marginBottom: "18px" }}
+      style={{
+        marginBottom: "18px",
+      }}
       ref={element}
     >
+      {shareData?.canGoBack && onGoBack && (
+        <div className="go-back-wrapper">
+          <div className="go-back-subtle">
+            <TippyWrapper
+              tooltipData={{
+                description: "Perhaps Not",
+              }}
+            >
+              <button
+                className={classnames(
+                  "button button--primary",
+                  (isChoosing || isGoingBack) && "button--disabled"
+                )}
+                disabled={isChoosing || isGoingBack}
+                onClick={onGoBack}
+                type="button"
+              >
+                {isGoingBack ? (
+                  <Loading spinner small />
+                ) : (
+                  <i className="fa fa-arrow-left" />
+                )}
+              </button>
+            </TippyWrapper>
+          </div>
+        </div>
+      )}
+
       <div className="media__left">
         <div className="storylet-root__card">
           <Image
@@ -94,6 +133,7 @@ export function StoryletRoot(props: Props) {
           {shareData && (
             <Buttonlet
               type="edit"
+              title="Save this to your journal"
               onClick={openShareDialog}
               disabled={isChoosing || isGoingBack}
             />
@@ -108,10 +148,18 @@ export function StoryletRoot(props: Props) {
           className="media__heading heading heading--2 storylet-root__heading"
           dangerouslySetInnerHTML={{ __html: data.name }}
         />
-        <StoryletDescription
-          containerClassName="storylet-root__description-container"
-          text={data.description}
-        />
+        <MediaSmDown>
+          <StoryletDescription
+            containerClassName="storylet-root__description-container"
+            text={data.mobileDescription ?? data.description}
+          />
+        </MediaSmDown>
+        <MediaMdUp>
+          <StoryletDescription
+            containerClassName="storylet-root__description-container"
+            text={data.description}
+          />
+        </MediaMdUp>
         {privilegeLevel === "Admin" && (
           <a
             className="button button--primary"
@@ -122,6 +170,7 @@ export function StoryletRoot(props: Props) {
             Edit this storylet
           </a>
         )}
+
         {shareData && (
           <ShareDialog
             shareMessageResponse={shareMessageResponse}
@@ -142,6 +191,7 @@ StoryletRoot.displayName = "StoryletRoot";
 export interface OwnProps {
   data: StoryletRootData;
   dispatch: Function; // eslint-disable-line
+  onGoBack?: () => void;
   rootEventId?: number | string | undefined;
   shareData?: any;
 }

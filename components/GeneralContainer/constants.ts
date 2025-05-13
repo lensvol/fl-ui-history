@@ -25,6 +25,11 @@ export const NAV_ITEMS: {
     uiRestriction: UIRestriction.Possessions,
   },
   {
+    label: "Agents",
+    value: "agents",
+    uiRestriction: UIRestriction.Agents,
+  },
+  {
     label: "Bazaar",
     value: "bazaar",
     uiRestriction: UIRestriction.EchoBazaar,

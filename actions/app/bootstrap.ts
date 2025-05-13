@@ -1,5 +1,6 @@
 import { showAccountLinkReminder } from "actions/accountLinkReminder";
 import { fetchActions } from "actions/actions";
+import fetchAgents from "actions/agents/fetchAgents";
 import { fetch as fetchCards } from "actions/cards";
 import extractImages from "actions/app/extractImages";
 import preloadImages from "actions/app/preloadImages";
@@ -160,5 +161,8 @@ export default function performInitialRequests(options = {}) {
 
     // Fetch fate data
     dispatch(fetchFate());
+
+    // Fetch agent data
+    dispatch(fetchAgents());
   };
 }

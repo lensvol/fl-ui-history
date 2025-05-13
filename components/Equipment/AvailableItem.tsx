@@ -9,6 +9,7 @@ import classnames from "classnames";
 import { equipQuality } from "actions/outfit";
 import { useQuality as _useQuality } from "actions/storylet";
 
+import getAgentNames from "components/Agents/getAgentNames";
 import { EquipmentContextValue } from "components/Equipment/EquipmentContext";
 import Image from "components/Image";
 
@@ -44,9 +45,17 @@ function AvailableItem(props: Props) {
     (state) => state.map.setting?.itemsUsableHere
   );
 
+  const agents = useAppSelector((state) => state.agents.agents);
+  const borrowers = agents.filter((a) =>
+    a.inventory.map((i) => i.id).includes(id)
+  );
+
   const dispatch = useDispatch();
 
-  const isLocked = level <= 0;
+  // these agents are away on a plot
+  const workingAgents = borrowers.filter((b) => b.plot);
+
+  const isLocked = level <= workingAgents.length;
   const unequippedCount = level - (isEquipped ? 1 : 0);
 
   const isEquippable = canChangeOutfit && !isLocked && !isEquipped;
@@ -64,8 +73,8 @@ function AvailableItem(props: Props) {
       return;
     }
 
-    dispatch(equipQuality(id));
-  }, [dispatch, id, isChanging, isEquippable]);
+    dispatch(equipQuality(id, level <= borrowers.length));
+  }, [borrowers, dispatch, id, isChanging, isEquippable, level]);
 
   const handleUse = useCallback(() => {
     _useQuality(id, history)(dispatch);
@@ -143,8 +152,46 @@ function AvailableItem(props: Props) {
       );
     }
 
-    return undefined;
-  }, [currentlyInStorylet, useEventId]);
+    if (useEventId || isEquipped || level === 0) {
+      // use by agents is irrelevant
+      return undefined;
+    }
+
+    // we can equip an item without affecting anyone else's inventory
+    if (level > borrowers.length) {
+      return undefined;
+    }
+
+    if (isLocked) {
+      // all copies are off-limits
+      return `You cannot equip this item because it is currently equipped by ${getAgentNames(workingAgents)}.`;
+    }
+
+    // eqiupping this item means taking it away from someone else
+    const freeAgents = borrowers.filter((b) => !b.plot);
+
+    if (freeAgents.length === 0) {
+      // should be unreachable: previous checks eliminate this possibility
+      return "You do not have this item.";
+    }
+
+    const freeAgent = freeAgents[0];
+    const resortedAgents = [
+      freeAgent,
+      ...borrowers.filter((b) => b.id !== freeAgent.id),
+    ];
+
+    // you've loaned out all copies of this item to your agents
+    return `This item is currently equipped by ${getAgentNames(resortedAgents)}.`;
+  }, [
+    borrowers,
+    currentlyInStorylet,
+    isEquipped,
+    isLocked,
+    level,
+    useEventId,
+    workingAgents,
+  ]);
 
   // Build the tooltip data, including the buttons
   const tooltipData = {

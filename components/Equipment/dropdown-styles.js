@@ -1,4 +1,7 @@
-import { MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT } from "constants/outfits";
+import {
+  MESSAGE_LAPSED_ENHANCED_EXCEPTIONAL_OUTFIT,
+  MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT,
+} from "constants/outfits";
 
 // eslint-disable-next-line no-shadow
 export function theme(theme) {
@@ -74,20 +77,24 @@ export const styles = {
     const { data } = state;
 
     const separatorStyles = data.needsSeparator
-      ? {
-          borderTop: "solid 1px #00000040",
-        }
+      ? { borderTop: "solid 1px #00000040" }
       : {};
+    const isExceptional = data.type === "Exceptional";
 
-    if (data.type === "Exceptional") {
-      // const color = data.isDisabled ? '#fc4c00' : '#fcac00';
+    if (isExceptional || data.type === "EnhancedExceptional") {
       const backgroundColor = data.isDisabled
         ? "#555"
         : provided.backgroundColor;
       const color = "#fcac00";
+
       const content = data.isDisabled
-        ? MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT
-        : "Exceptional";
+        ? isExceptional
+          ? MESSAGE_LAPSED_EXCEPTIONAL_OUTFIT
+          : MESSAGE_LAPSED_ENHANCED_EXCEPTIONAL_OUTFIT
+        : isExceptional
+          ? "Exceptional"
+          : "Enhanced Exceptional";
+
       return {
         ...provided,
         ...separatorStyles,

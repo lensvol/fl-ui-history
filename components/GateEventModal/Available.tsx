@@ -1,6 +1,10 @@
 import React from "react";
-import { IGateEvent } from "types/map";
+
 import Image from "components/Image/index";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+
+import { IGateEvent } from "types/map";
 
 interface Props {
   gateEvent: IGateEvent;
@@ -10,7 +14,11 @@ interface Props {
 export default function Available({ gateEvent, onClick }: Props) {
   return (
     <div className="gate-event">
-      <div style={{ display: "flex" }}>
+      <div
+        style={{
+          display: "flex",
+        }}
+      >
         <Image
           className="gate-event__image"
           icon={gateEvent.image}
@@ -21,10 +29,20 @@ export default function Available({ gateEvent, onClick }: Props) {
             className="gate-event__title"
             dangerouslySetInnerHTML={{ __html: gateEvent.name }}
           />
-          <div
-            className="gate-event__teaser"
-            dangerouslySetInnerHTML={{ __html: gateEvent.teaser }}
-          />
+          <MediaSmDown>
+            <div
+              className="gate-event__teaser"
+              dangerouslySetInnerHTML={{
+                __html: gateEvent.mobileTeaser ?? gateEvent.teaser,
+              }}
+            />
+          </MediaSmDown>
+          <MediaMdUp>
+            <div
+              className="gate-event__teaser"
+              dangerouslySetInnerHTML={{ __html: gateEvent.teaser }}
+            />
+          </MediaMdUp>
           <div className="gate-event__buttons">
             <button
               className="button button--primary button--sm gate-event__unlock-button"
@@ -39,3 +57,5 @@ export default function Available({ gateEvent, onClick }: Props) {
     </div>
   );
 }
+
+Available.displayName = "Available";

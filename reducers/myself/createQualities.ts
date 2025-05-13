@@ -4,10 +4,19 @@ interface IQualityGroup {
   possessions: IQuality[];
 }
 
-export default function createQualities(qualityGroups: IQualityGroup[]) {
-  return qualityGroups.reduce(reduceFn, []);
-
-  function reduceFn(acc: IQuality[], { possessions }: IQualityGroup) {
-    return [...acc, ...possessions];
-  }
+export default function createQualities(
+  stateQualities: IQuality[],
+  qualityGroups: IQualityGroup[]
+) {
+  return [
+    ...qualityGroups
+      .flatMap((group) => group.possessions)
+      .map((quality) => ({
+        ...quality,
+        isOutfit:
+          quality.isOutfit === undefined
+            ? stateQualities.find((q) => q.id === quality.id)?.isOutfit
+            : quality.isOutfit,
+      })),
+  ];
 }

@@ -1,8 +1,10 @@
 /* eslint-disable camelcase */
 import { ReactFacebookLoginInfo } from "react-facebook-login";
+
+import BaseService, { Either } from "services/BaseMonadicService";
+
 import { IQuality } from "types/qualities";
 import { MessagePreferences } from "types/settings";
-import BaseService, { Either } from "./BaseMonadicService";
 import { PremiumSubscriptionType } from "types/subscription";
 
 export type MessageVia =
@@ -65,9 +67,13 @@ export interface ISettingsService {
   ) => Promise<Either<UnsubscribeResponse>>;
 }
 
-export type ChangeUsernameResponse = { message: string };
+export type ChangeUsernameResponse = {
+  message: string;
+};
 
-export type DeactivateAccountResponse = { message: string };
+export type DeactivateAccountResponse = {
+  message: string;
+};
 
 export type FacebookPayload = ReactFacebookLoginInfo & {
   expiresIn?: number;
@@ -107,12 +113,16 @@ export type LinkEmailResponse = {
   message: string;
 };
 
-export type LinkFacebookResponse = { message: string };
+export type LinkFacebookResponse = {
+  message: string;
+};
 
-export type LinkGoogleRequest = { token: string };
+export type LinkGoogleRequest = {
+  token: string;
+};
 
 export type LinkGoogleResponse = {
-  /* empty response on success */
+  // empty response on success
 };
 
 export type MessagesViaResponse = {
@@ -190,6 +200,7 @@ export default class SettingsService
       method: "get",
       url: "/settings",
     };
+
     return this.doRequest<FetchSettingsResponse>(config);
   };
 
@@ -198,6 +209,7 @@ export default class SettingsService
       method: "get",
       url: "/settings/authmethods",
     };
+
     return this.doRequest<FetchAuthMethodsResponse>(config);
   };
 
@@ -206,6 +218,7 @@ export default class SettingsService
       method: "get",
       url: "/settings/timethehealer",
     };
+
     return this.doRequest<FetchTimeTheHealerResponse>(config);
   };
 
@@ -215,36 +228,42 @@ export default class SettingsService
       url: "/settings/messagesettings",
       data: messagePreferences,
     };
+
     return this.doRequest<SaveMessagePreferencesResponse>(config);
   };
 
   requestPasswordReset = (emailAddress: string) => {
-    const data: RequestPasswordResetRequest = { emailAddress };
+    const data: RequestPasswordResetRequest = {
+      emailAddress,
+    };
+
     const config = {
-      data,
       method: "post",
       url: "/settings/requestpasswordreset",
+      data,
     };
+
     return this.doRequest<RequestPasswordResetResponse>(config);
   };
 
   resetPassword = (data: ResetPasswordRequest) => {
     const config = {
-      data,
       method: "post",
       url: "/settings/resetpassword",
+      data,
     };
+
     return this.doRequest<ResetPasswordResponse>(config);
   };
 
   changeUsername = (username: string) => {
     const config = {
-      data: username,
       method: "post",
-      url: "/settings/username",
       headers: {
         "Content-Type": "text/plain",
       },
+      url: "/settings/username",
+      data: username,
     };
 
     return this.doRequest<ChangeUsernameResponse>(config);
@@ -255,6 +274,7 @@ export default class SettingsService
       method: "post",
       url: `/settings/messagevia/${type}`,
     };
+
     return this.doRequest<MessagesViaResponse>(config);
   };
 
@@ -263,6 +283,7 @@ export default class SettingsService
       method: "post",
       url: "/settings/deactivate",
     };
+
     return this.doRequest<DeactivateAccountResponse>(config);
   };
 
@@ -272,16 +293,21 @@ export default class SettingsService
       url: "/settings/linkemail",
       data,
     };
+
     return this.doRequest<LinkEmailResponse>(config);
   };
 
   updateEmailAddress = (emailAddress: string) => {
-    const data: UpdateEmailRequest = { emailAddress };
+    const data: UpdateEmailRequest = {
+      emailAddress,
+    };
+
     const config = {
-      data,
       method: "post",
       url: "/settings/updateemail",
+      data,
     };
+
     return this.doRequest<UpdateEmailResponse>(config);
   };
 
@@ -290,6 +316,7 @@ export default class SettingsService
       method: "post",
       url: "/twitter/unlink",
     };
+
     return this.doRequest<UnlinkTwitterResponse>(config);
   };
 
@@ -298,6 +325,7 @@ export default class SettingsService
       method: "post",
       url: "/facebook/unlink",
     };
+
     return this.doRequest<UnlinkFacebookResponse>(config);
   };
 
@@ -306,24 +334,27 @@ export default class SettingsService
       method: "post",
       url: "/google/unlink",
     };
+
     return this.doRequest<UnlinkGoogleResponse>(config);
   };
 
   linkFacebook = (data: FacebookPayload) => {
     const config = {
-      data,
-      url: "/facebook/link",
       method: "post",
+      url: "/facebook/link",
+      data,
     };
+
     return this.doRequest(config);
   };
 
   linkGoogle = (data: LinkGoogleRequest) => {
     const config = {
-      data,
-      url: "/google/link",
       method: "post",
+      url: "/google/fedcmlink",
+      data,
     };
+
     return this.doRequest<LinkGoogleResponse>(config);
   };
 
