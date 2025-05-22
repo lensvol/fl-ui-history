@@ -18,6 +18,7 @@ interface Props {
 export type LoanableItem = IQuality & {
   borrowers: Agent[];
   isWorn: boolean;
+  isOutfitLocked: boolean;
 };
 
 export default function AgentInventoryItemPickerEntry({
@@ -101,12 +102,21 @@ function isAgentBorrowingItem(agent: Agent, item: LoanableItem) {
 }
 
 function isItemLoanable(agent: Agent, item: LoanableItem) {
+  if (item.isLoanable === false) {
+    // you can't loan this out
+    return false;
+  }
+
   if (isAgentBorrowingItem(agent, item)) {
     // this agent already has this item
     return false;
   }
 
-  return item.borrowers.filter((b) => b.plot).length < item.level;
+  const availableCount =
+    item.level - (item.isWorn && item.isOutfitLocked ? 1 : 0);
+  const alreadyInUseCount = item.borrowers.filter((b) => b.plot).length;
+
+  return alreadyInUseCount < availableCount;
 }
 
 function getSecondaryDescription(agent: Agent, item: LoanableItem) {
@@ -149,6 +159,14 @@ function getSecondaryDescriptionParts(
     return {
       className: AlertStyle,
       message: "You do not own this item.",
+    };
+  }
+
+  if (item.isLoanable === false) {
+    // you can't loan this out
+    return {
+      className: AlertStyle,
+      message: "You cannot loan out this item.",
     };
   }
 
@@ -211,43 +229,67 @@ function getSecondaryDescriptionParts(
   }
 
   // loaning out this item means taking it away from someone else
+
+  // no instances of this item are currently being borrowed, so you must be wearing it
   if (item.borrowers.length === 0) {
-    if (item.isWorn) {
-      // you're wearing the only instance of this item
+    if (!item.isWorn) {
+      // should be unreachable: all items are 'claimed', but nobody has one?
       return {
-        className: WornStyle,
-        message: "This item is currently equipped by you.",
+        className: AlertStyle,
+        message: "You do not own this item.",
       };
     }
 
-    // should be unreachable: item is in your inventory, but you don't have any of it
+    if (item.isOutfitLocked) {
+      // your only instance of this item is outfit-locked at the moment
+      return {
+        className: AlertStyle,
+        message:
+          "You cannot loan out this item because you cannot change outfits.",
+      };
+    }
+
+    // you're wearing the only instance of this item
     return {
-      className: AlertStyle,
-      message: "You do not own this item.",
+      className: WornStyle,
+      message: "This item is currently equipped by you.",
     };
   }
 
   const freeAgents = item.borrowers.filter((b) => !b.plot);
 
+  // all agents borrowing this item are out on a plot
   if (freeAgents.length === 0) {
-    if (item.isWorn) {
-      // agents have taken your items out on a plot, but you're also wearing one
+    if (!item.isWorn) {
+      // should be unreachable: previous checks eliminate this possibility
       return {
-        className: BorrowedStyle,
-        message:
-          "This item is currently equipped by you, as well as " +
-          getAgentNames(item.borrowers) +
-          ".",
+        className: AlertStyle,
+        message: "You do not have this item.",
       };
     }
 
-    // should be unreachable: previous checks eliminate this possibility
+    if (item.isOutfitLocked) {
+      // all instances are either plot-locked or outfit-locked
+      return {
+        className: AlertStyle,
+        message:
+          "You cannot loan out this item because it is currently equipped by " +
+          getAgentNames(item.borrowers) +
+          ", as well as yourself; and you cannot change outfits.",
+      };
+    }
+
+    // agents have taken your items out on a plot, but you're also wearing one
     return {
-      className: AlertStyle,
-      message: "You do not have this item.",
+      className: BorrowedStyle,
+      message:
+        "This item is currently equipped by you, as well as " +
+        getAgentNames(item.borrowers) +
+        ".",
     };
   }
 
+  // you can take this item from another agent
   const freeAgent = freeAgents[0];
   const resortedAgents = [
     freeAgent,

@@ -1,4 +1,5 @@
 import React from "react";
+
 import ToolTip from "components/Tooltip";
 
 interface Props {
@@ -8,8 +9,9 @@ interface Props {
 export default function ActionCostTooltip({ cost }: Props) {
   const data = {
     image: "actions",
-    secondaryDescription: `This will cost you ${cost > 0 ? cost : "no "} actions`,
+    secondaryDescription: `This will cost you ${cost > 0 ? cost : "no "} action${cost === 1 ? "" : "s"}`,
   };
+
   return <ToolTip data={data} />;
 }
 

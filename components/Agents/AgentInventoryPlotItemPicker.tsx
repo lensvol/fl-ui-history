@@ -11,6 +11,8 @@ import { MAIN_ATTRIBUTES } from "constants/attributes";
 
 import { useAppSelector } from "features/app/store";
 
+import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
+
 import { Agent, PlotHint } from "types/agents";
 import { IEnhancement, IQuality } from "types/qualities";
 
@@ -44,6 +46,11 @@ export default function AgentInventoryPlotItemPicker({
   // quality id of the item in this category that the *player* is currently wearing (if any)
   const wornItemId = useAppSelector(
     (state) => state.outfit.slots[category]?.id
+  );
+
+  // indicates whether the player's outfit is locked
+  const canChangeOutfit = useAppSelector((state) =>
+    getCanUserChangeOutfit(state)
   );
 
   // indicates whether this agent has already been given an item for this category
@@ -159,6 +166,7 @@ export default function AgentInventoryPlotItemPicker({
                             a.inventory.map((i) => i.id).includes(q.id)
                           ),
                           isWorn: q.id === wornItemId,
+                          isOutfitLocked: !canChangeOutfit,
                         }) as LoanableItem
                     )
                     .map((item) => (

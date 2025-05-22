@@ -70,7 +70,7 @@ export default function AccessibleSidebar() {
       <section className="player-actions">
         {`Actions: ${actions} of ${actionBankSize}`}{" "}
         <time dateTime={formattedNextActionAt}>
-          {`Next actions at ${formattedNextActionAt}`}
+          {`Next action at ${formattedNextActionAt}`}
         </time>
       </section>
       <section className="player-echoes">

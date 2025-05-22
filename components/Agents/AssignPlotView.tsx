@@ -168,7 +168,8 @@ export default function AssignPlotView({
             />
           </div>
           <div className="plot__duration">
-            Your agent will return in {plot.duration} actions.
+            Your agent will return in {plot.duration} action
+            {plot.duration === 1 ? "" : "s"}.
           </div>
           {isPresentingTutorial && (
             <div className="plot__tutorial-alert">

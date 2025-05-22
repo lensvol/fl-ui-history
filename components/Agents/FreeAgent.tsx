@@ -57,7 +57,7 @@ export default function FreeAgent({
     (level) => level.category === "BasicAbility"
   );
   const otherLevels = agent.levels.filter(
-    (level) => level.category !== "BasicAbility"
+    (level) => level.category !== "BasicAbility" && level.category !== "Hidden"
   );
   const firstOtherLevel = otherLevels.find(() => true);
   const remainingLevels = otherLevels.slice(1);

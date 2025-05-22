@@ -109,7 +109,8 @@ export default function WorkingAgent({ agent }: Props) {
           </div>
           <div className="working-agent-elapsed-actions">
             {elapsedActions}/{totalActions}: {totalActions - elapsedActions}{" "}
-            actions before your agent returns
+            action{totalActions - elapsedActions === 1 ? "" : "s"} before your
+            agent returns
           </div>
         </div>
       )}
