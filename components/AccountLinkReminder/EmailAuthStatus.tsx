@@ -1,9 +1,12 @@
-import EmailAuth from "components/Account/AuthMethods/EmailAuth";
 import React, { useMemo } from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
 
-export function EmailAuthStatus({ authMethods, onLinkSuccess }: Props) {
+import EmailAuth from "components/Account/AuthMethods/EmailAuth";
+
+import { useAppSelector } from "features/app/store";
+
+export default function EmailAuthStatus() {
+  const authMethods = useAppSelector((state) => state.settings.authMethods);
+
   const emailAuthMethod = useMemo(
     () => authMethods?.find((method) => method.type === "Email"),
     [authMethods]
@@ -18,22 +21,7 @@ export function EmailAuthStatus({ authMethods, onLinkSuccess }: Props) {
     );
   }
 
-  return (
-    <EmailAuth
-      buttonClassName="button--link-inverse"
-      onLinkSuccess={onLinkSuccess}
-    />
-  );
+  return <EmailAuth buttonClassName="button--link-inverse" />;
 }
 
-type OwnProps = {
-  onLinkSuccess: () => void;
-};
-
-const mapStateToProps = ({ settings: { authMethods } }: IAppState) => ({
-  authMethods,
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(EmailAuthStatus);
+EmailAuthStatus.displayName = "EmailAuthStatus";

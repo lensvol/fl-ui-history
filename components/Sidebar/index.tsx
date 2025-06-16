@@ -4,12 +4,12 @@ import { useDispatch } from "react-redux";
 
 import Config from "configuration";
 
-import { fetchActions } from "actions/actions";
+import { fetchActions, toggleChronograph } from "actions/actions";
 
+import ActionCandles from "components/ActionCandles";
 import PlayerStats from "components/PlayerStats";
 import SidebarOutfitSelector from "components/SidebarOutfitSelector/SidebarOutfitSelector";
 import SidebarQualities from "components/SidebarQualities";
-import ActionCandles from "components/ActionCandles";
 
 import { useAppSelector } from "features/app/store";
 
@@ -25,9 +25,15 @@ export default function Sidebar() {
       )
   );
 
+  const isLive =
+    Config.environment !== "local" && Config.environment !== "staging";
+  const isAdmin = useAppSelector(
+    (state) => state.user.privilegeLevel === "Admin"
+  );
+
   return (
     <div className="col-secondary sidebar">
-      {(Config.environment === "local" || Config.environment === "staging") && (
+      {!isLive && (
         <button
           className="button--link"
           style={{
@@ -42,6 +48,22 @@ export default function Sidebar() {
           <span className="u-visually-hidden">
             Forcibly refresh current actions
           </span>
+        </button>
+      )}
+      {(isAdmin || !isLive) && (
+        <button
+          className="button--link"
+          style={{
+            left: "1rem",
+            position: "absolute",
+            top: "-1rem",
+            zIndex: 10,
+          }}
+          onClick={() => dispatch(toggleChronograph())}
+          type="button"
+        >
+          <i className="fa fa-clock-o" />
+          <span className="u-visually-hidden">Toggle choronograph</span>
         </button>
       )}
       <ActionCandles />

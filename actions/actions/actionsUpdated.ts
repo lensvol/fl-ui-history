@@ -2,7 +2,9 @@ import { ACTIONS_UPDATED } from "actiontypes/actions";
 
 export type ActionsUpdated = {
   type: typeof ACTIONS_UPDATED;
-  payload: { actions: number };
+  payload: {
+    actions: number;
+  };
 };
 
 export default function actionsUpdated({
@@ -12,6 +14,8 @@ export default function actionsUpdated({
 }): ActionsUpdated {
   return {
     type: ACTIONS_UPDATED,
-    payload: { actions },
+    payload: {
+      actions,
+    },
   };
 }

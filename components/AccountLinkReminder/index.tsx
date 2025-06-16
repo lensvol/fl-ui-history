@@ -23,9 +23,6 @@ export default function AccountLinkReminder() {
   const isOpen = useAppSelector(
     (state) => state.accountLinkReminder.isModalOpen
   );
-  const twitterAuth = useAppSelector(
-    (state) => state.settings.data.twitterAuth
-  );
 
   const isFetching = useMemo(
     () => isFetchingAuthMethods || isFetchingSettings,
@@ -64,7 +61,7 @@ export default function AccountLinkReminder() {
     localStorage.getItem(STORAGE_KEY_ACCOUNT_LINK_REMINDER_NEVER_NAG) ?? "false"
   );
 
-  if (userPrefersAuthNagSuppression && !twitterAuth) {
+  if (userPrefersAuthNagSuppression) {
     return null;
   }
 

@@ -1,26 +1,47 @@
-import React, { Fragment, useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
+
 import ReactModal from "react-modal";
 
 import Buttonlet from "components/Buttonlet";
-import MediaXlUp from "components/Responsive/MediaXlUp";
 import MediaLgDown from "components/Responsive/MediaLgDown";
-import { Distribution } from "types/storylet";
+import MediaXlUp from "components/Responsive/MediaXlUp";
+
+import { Distribution, Urgency } from "types/storylet";
 
 type Props = {
-  frequency: Distribution;
+  frequency?: Distribution;
+  urgency?: Urgency;
 };
 
-export default function FrequencyButtonlet({ frequency }: Props) {
+export default function FrequencyButtonlet({ frequency, urgency }: Props) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const handleRequestClose = useCallback(() => {
     setModalIsOpen(false);
   }, []);
+
   const showModal = useCallback(() => {
     setModalIsOpen(true);
   }, []);
 
+  const tooltipText = useMemo(() => {
+    if (urgency === "High") {
+      return `This card has ${urgency} urgency`;
+    }
+
+    if (!frequency) {
+      return undefined;
+    }
+
+    return `This card appears with ${humanize(frequency)} frequency`;
+  }, [frequency, urgency]);
+
+  if (!tooltipText) {
+    return null;
+  }
+
   return (
-    <Fragment>
+    <>
       <MediaLgDown>
         <Buttonlet type="frequency" onClick={showModal} />
         <ReactModal
@@ -29,7 +50,7 @@ export default function FrequencyButtonlet({ frequency }: Props) {
           isOpen={modalIsOpen}
           onRequestClose={handleRequestClose}
         >
-          {`This card appears with ${humanize(frequency)} frequency.`}
+          {tooltipText}
         </ReactModal>
       </MediaLgDown>
       <MediaXlUp>
@@ -39,11 +60,11 @@ export default function FrequencyButtonlet({ frequency }: Props) {
             /* This no-op is necessary so that the Buttonlet component doesn't self-disable */
           }}
           tooltipData={{
-            description: `This card appears with ${humanize(frequency)} frequency`,
+            description: tooltipText,
           }}
         />
       </MediaXlUp>
-    </Fragment>
+    </>
   );
 }
 
@@ -51,6 +72,7 @@ function humanize(distribution: Distribution): string {
   switch (distribution.toString()) {
     case "VeryInfrequent":
       return "Very Infrequent";
+
     default:
       return distribution;
   }

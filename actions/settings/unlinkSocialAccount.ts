@@ -1,10 +1,13 @@
-import { handleVersionMismatch } from "actions/versionSync";
-import * as SettingsActionTypes from "actiontypes/settings";
 import { ActionCreator } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+
+import { handleVersionMismatch } from "actions/versionSync";
+
+import * as SettingsActionTypes from "actiontypes/settings";
+
+import { Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
 import SettingsService, { ISettingsService } from "services/SettingsService";
-import { ThunkDispatch } from "redux-thunk";
-import { Success } from "services/BaseMonadicService";
 
 const service: ISettingsService = new SettingsService();
 
@@ -18,7 +21,9 @@ export type UnlinkSocialAccountFailure = {
 
 export type UnlinkSocialAccountSuccess = {
   type: typeof SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_SUCCESS;
-  payload: { accountType: "twitter" | "facebook" | "google" };
+  payload: {
+    accountType: "facebook" | "google";
+  };
 };
 
 export type UnlinkSocialAccountActions =
@@ -33,7 +38,7 @@ export const unlinkSocialAccountRequested = () => ({
 
 export const unlinkSocialAccountSuccess: ActionCreator<
   UnlinkSocialAccountSuccess
-> = (_response: any, account: "twitter" | "facebook" | "google") => ({
+> = (_response: any, account: "facebook" | "google") => ({
   type: SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_SUCCESS,
   payload: {
     accountType: account,
@@ -42,7 +47,7 @@ export const unlinkSocialAccountSuccess: ActionCreator<
 
 export const unlinkSocialAccountFailure = (
   error: any,
-  _account: "twitter" | "facebook" | "google"
+  _account: "facebook" | "google"
 ) => ({
   type: SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_FAILURE,
   isUnlinking: false,
@@ -50,9 +55,7 @@ export const unlinkSocialAccountFailure = (
   status: error.response && error.response.status,
 });
 
-export default function unlinkSocialAccount(
-  account: "twitter" | "facebook" | "google"
-) {
+export default function unlinkSocialAccount(account: "facebook" | "google") {
   return async (dispatch: ThunkDispatch<any, any, any>) => {
     dispatch(unlinkSocialAccountRequested());
 
@@ -60,10 +63,10 @@ export default function unlinkSocialAccount(
       switch (account) {
         case "facebook":
           return service.unlinkFacebook;
+
         case "google":
           return service.unlinkGoogle;
-        case "twitter":
-          return service.unlinkTwitter;
+
         default:
           return undefined;
       }
@@ -86,8 +89,10 @@ export default function unlinkSocialAccount(
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
+
         return error;
       }
+
       throw error;
     }
   };

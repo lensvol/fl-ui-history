@@ -1,5 +1,10 @@
-import { IActionsService, FetchActionsResponse } from "types/actions";
-import BaseService, { Either } from "./BaseMonadicService";
+import BaseService, { Either } from "services/BaseMonadicService";
+
+import {
+  IActionsService,
+  FetchActionsResponse,
+  ResetChronographResponse,
+} from "types/actions";
 
 export default class ActionsService
   extends BaseService
@@ -10,6 +15,16 @@ export default class ActionsService
       method: "get",
       url: "/character/actions",
     };
+
     return this.doRequest<FetchActionsResponse>(config);
+  };
+
+  resetChronograph: () => Promise<Either<ResetChronographResponse>> = () => {
+    const config = {
+      method: "get",
+      url: "/character/resetchrono",
+    };
+
+    return this.doRequest<ResetChronographResponse>(config);
   };
 }

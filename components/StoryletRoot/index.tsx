@@ -139,11 +139,15 @@ export function StoryletRoot(props: Props) {
             />
           )}
         </div>
-        {data.deckType === "Sometimes" && data.distribution !== undefined && (
-          <div className="storylet-root__frequency">
-            <FrequencyButtonlet frequency={data.distribution} />
-          </div>
-        )}
+        {data.deckType === "Sometimes" &&
+          (data.distribution !== undefined || data.urgency === "High") && (
+            <div className="storylet-root__frequency">
+              <FrequencyButtonlet
+                frequency={data.distribution}
+                urgency={data.urgency}
+              />
+            </div>
+          )}
         <h1
           className="media__heading heading heading--2 storylet-root__heading"
           dangerouslySetInnerHTML={{ __html: data.name }}

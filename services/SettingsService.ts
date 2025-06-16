@@ -8,12 +8,12 @@ import { MessagePreferences } from "types/settings";
 import { PremiumSubscriptionType } from "types/subscription";
 
 export type MessageVia =
-  | "None"
-  | "Twitter"
-  | "Facebook"
+  | "All"
   | "Email"
+  | "Facebook"
   | "Google"
-  | "All";
+  | "None"
+  | "Twitter";
 
 export type AuthMethod = {
   type: MessageVia;
@@ -54,7 +54,6 @@ export interface ISettingsService {
   updateEmailAddress: (
     emailAddress: string
   ) => Promise<Either<UpdateEmailResponse>>;
-  unlinkTwitter: () => Promise<Either<UnlinkTwitterResponse>>;
   unlinkFacebook: () => Promise<Either<UnlinkFacebookResponse>>;
   unlinkGoogle: () => Promise<Either<UnlinkGoogleResponse>>;
   linkFacebook: (
@@ -83,7 +82,6 @@ export type FacebookPayload = ReactFacebookLoginInfo & {
 
 export type FetchSettingsResponse = {
   qualitiesPossessedList: IQuality[];
-  twitterAuth: boolean;
   facebookAuth: boolean;
   googleAuth: boolean;
   emailAuth: boolean;
@@ -162,10 +160,6 @@ export type UnlinkFacebookResponse = {
 
 export type UnlinkGoogleResponse = {
   // empty response on success
-};
-
-export type UnlinkTwitterResponse = {
-  message: string;
 };
 
 export type UpdateEmailRequest = {
@@ -309,15 +303,6 @@ export default class SettingsService
     };
 
     return this.doRequest<UpdateEmailResponse>(config);
-  };
-
-  unlinkTwitter = () => {
-    const config = {
-      method: "post",
-      url: "/twitter/unlink",
-    };
-
-    return this.doRequest<UnlinkTwitterResponse>(config);
   };
 
   unlinkFacebook = () => {

@@ -25,6 +25,10 @@ export default function SubscriptionBenefits({ orientation }: Props) {
           <li>An expanded opportunity deck: ten cards instead of six</li>
           <li>Four additional outfit slots</li>
           <li>
+            The ability to run an additional concurrent plot, once Agents are
+            unlocked
+          </li>
+          <li>
             Access to the House of Chimes including monthly gameplay perks
           </li>
         </ul>

@@ -1,12 +1,14 @@
 import { SignUpActions } from "actions/registration/signUp";
+import { SettingsActions } from "actions/settings";
 import { UserActions } from "actions/user";
+
 import { SIGNUP_SUCCESS } from "actiontypes/registration";
 import * as UserActionTypes from "actiontypes/user";
-import { IUserState } from "services/UserService";
 import { CHANGE_USERNAME_SUCCESS } from "actiontypes/settings";
-import { SettingsActions } from "actions/settings";
 
-import signupSuccess from "./signupSuccess";
+import signupSuccess from "reducers/user/signupSuccess";
+
+import { IUserState } from "services/UserService";
 
 /**
  * Initial state
@@ -16,15 +18,14 @@ const initialState: IUserState = {
   hasCharacter: false,
   loggedIn: false,
   isFetching: false,
-  isTwitterNagScreenOpen: false,
   user: undefined,
   privilegeLevel: undefined,
 };
 
 /**
  * User Reducer
- * @param {Object} state
- * @param {[Object]} action
+ * @param {IUserState} state
+ * @param {UserActions | SignUpActions | SettingsActions} action
  */
 const User = (
   state = initialState,
@@ -54,7 +55,6 @@ const User = (
       return signupSuccess(state, action);
     }
 
-    case UserActionTypes.TWITTER_LOGIN_SUCCESS:
     case UserActionTypes.GOOGLE_LOGIN_SUCCESS:
     case UserActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
@@ -76,15 +76,6 @@ const User = (
         ...state,
         loggedIn: false,
         isFetching: false,
-      };
-    }
-
-    case UserActionTypes.TWITTER_LOGIN_FAILURE: {
-      return {
-        ...state,
-        isFetching: false,
-        loggedIn: false,
-        isTwitterNagScreenOpen: true,
       };
     }
 

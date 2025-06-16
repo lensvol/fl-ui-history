@@ -51,17 +51,14 @@ export interface FetchUserResponse {
 export interface IUserState {
   hasCharacter: boolean;
   isFetching: boolean;
-  isTwitterNagScreenOpen: boolean;
   loggedIn: boolean;
-  privilegeLevel: PrivilegeLevel | undefined;
-  user:
-    | {
-        createdAt: string | undefined;
-        name: string | undefined;
-        id: number | undefined;
-        hasMessagingEmail: boolean;
-      }
-    | undefined;
+  privilegeLevel?: PrivilegeLevel;
+  user?: {
+    createdAt?: string;
+    name?: string;
+    id?: number;
+    hasMessagingEmail: boolean;
+  };
 }
 
 export interface IUserService {

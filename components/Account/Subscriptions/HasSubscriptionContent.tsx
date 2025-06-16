@@ -127,7 +127,8 @@ function HasSubscriptionContent({
           <p>
             You can cancel or downgrade your subscription at any time. By
             cancelling, you will no longer have a second action candle, expanded
-            opportunity deck, additional outfits, or access to the House of
+            opportunity deck, additional outfits, the ability to run an
+            additional concurrent plot with Agents, or access to the House of
             Chimes. You will no longer receive a new Exceptional Story every
             month, nor have access to the menu of returning stories. You will no
             longer receive free action refreshes each month. You will still be
@@ -135,8 +136,9 @@ function HasSubscriptionContent({
           </p>
           <p>
             By downgrading to an Exceptional Friendship, you will continue to
-            have a second action candle, expanded opportunity deck, most of your
-            additional outfits, and access to the House of Chimes. You will
+            have a second action candle, expanded opportunity deck, your
+            Exceptional outfits, the ability to run an additional concurrent
+            plot with Agents, and access to the House of Chimes. You will
             continue to receive a new Exceptional Story every month, but you
             will no longer have access to the menu of returning stories. You
             will no longer receive free action refreshes each month. You will no
@@ -151,8 +153,9 @@ function HasSubscriptionContent({
           <p>
             You can cancel your subscription at any time. By cancelling, you
             will no longer have a second action candle, expanded opportunity
-            deck, additional outfits, or access to the House of Chimes. You will
-            no longer receive a new Exceptional Story every month. You will
+            deck, additional outfits, the ability to run an additional
+            concurrent plot with Agents, or access to the House of Chimes. You
+            will no longer receive a new Exceptional Story every month. You will
             still be able to spend Memories of a Tale in Mr Chimes' Lost &amp;
             Found.
           </p>

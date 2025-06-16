@@ -2,7 +2,10 @@ import { IActionsState } from "types/actions";
 
 export default function fetchActionsSuccess(
   state: IActionsState,
-  payload: { actions: number; actionBankSize: number }
+  payload: {
+    actions: number;
+    actionBankSize: number;
+  }
 ) {
   return {
     ...state,

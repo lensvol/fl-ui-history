@@ -1,21 +1,24 @@
+import { FetchEnhancedActionsSuccess } from "actions/actions/fetchActions";
 import { SettingsActions } from "actions/settings";
 import { FetchSettingsSuccess } from "actions/settings/fetch";
 import { FetchSubscriptionSuccess } from "actions/subscription";
+
+import { FETCH_ENHANCED_ACTIONS_SUCCESS } from "actiontypes/actions";
+import * as SettingsActionTypes from "actiontypes/settings";
 import * as SubscriptionActionTypes from "actiontypes/subscription";
+
 import {
   AuthMethod,
   FetchSettingsResponse,
   MessageVia,
 } from "services/SettingsService";
+
 import { IQuality } from "types/qualities";
 import { MessagePreferences } from "types/settings";
-import * as SettingsActionTypes from "../actiontypes/settings";
 import { PremiumSubscriptionType } from "types/subscription";
-import { FETCH_ENHANCED_ACTIONS_SUCCESS } from "actiontypes/actions";
-import { FetchEnhancedActionsSuccess } from "actions/actions/fetchActions";
 
 export type ISettingsState = {
-  authMethods: AuthMethod[] | undefined;
+  authMethods?: AuthMethod[];
   isFetching: boolean;
   isFetchingAuthMethods: boolean;
   isSaving: boolean;
@@ -34,13 +37,12 @@ export type ISettingsState = {
   isLinkingEmail: boolean;
   isDeactivating: boolean;
   data: {
-    name: string | undefined;
-    emailAddress: string | undefined;
+    name?: string;
+    emailAddress?: string;
     emailAuth: boolean;
     facebookAuth: boolean;
-    messageViaNetwork: MessageVia | undefined;
+    messageViaNetwork?: MessageVia;
     qualitiesPossessedList: IQuality[];
-    twitterAuth: boolean;
     googleAuth: boolean;
     emailVerified: boolean;
     socialActsAvailable: boolean;
@@ -95,7 +97,6 @@ const INITIAL_STATE: ISettingsState = {
     messageViaNetwork: undefined,
     name: undefined,
     qualitiesPossessedList: [],
-    twitterAuth: false,
     googleAuth: false,
     emailVerified: false,
     socialActsAvailable: false,
@@ -157,6 +158,7 @@ export default function reducer(
         remainingActionRefreshes,
         remainingStoryUnlocks,
       }: FetchSettingsResponse = (action as FetchSettingsSuccess).payload;
+
       return {
         ...state,
         isFetching: false,
@@ -223,17 +225,9 @@ export default function reducer(
       };
 
     case SettingsActionTypes.REQUEST_PASSWORD_RESET_REQUESTED:
-      return state;
-
     case SettingsActionTypes.REQUEST_PASSWORD_RESET_FAILURE:
-      return {
-        ...state,
-      };
-
     case SettingsActionTypes.REQUEST_PASSWORD_RESET_SUCCESS:
-      return {
-        ...state,
-      };
+      return state;
 
     case SettingsActionTypes.CHANGE_USERNAME_REQUESTED:
       return {
@@ -264,11 +258,6 @@ export default function reducer(
       };
 
     case SettingsActionTypes.SAVE_MESSAGES_VIA_FAILURE:
-      return {
-        ...state,
-        isChangingVia: false,
-      };
-
     case SettingsActionTypes.SAVE_MESSAGES_VIA_SUCCESS:
       return {
         ...state,
@@ -282,11 +271,6 @@ export default function reducer(
       };
 
     case SettingsActionTypes.DEACTIVATE_ACCOUNT_FAILURE:
-      return {
-        ...state,
-        isDeactivating: false,
-      };
-
     case SettingsActionTypes.DEACTIVATE_ACCOUNT_SUCCESS:
       return {
         ...state,
@@ -300,11 +284,6 @@ export default function reducer(
       };
 
     case SettingsActionTypes.LINK_EMAIL_TO_ACCOUNT_FAILURE:
-      return {
-        ...state,
-        isLinkingEmail: false,
-      };
-
     case SettingsActionTypes.LINK_EMAIL_TO_ACCOUNT_SUCCESS:
       return {
         ...state,
@@ -365,10 +344,6 @@ export default function reducer(
         data: {
           ...state.data,
           // Which account did we just unlink?
-          twitterAuth:
-            action.payload.accountType === "twitter"
-              ? false
-              : state.data.twitterAuth,
           facebookAuth:
             action.payload.accountType === "facebook"
               ? false
@@ -385,10 +360,6 @@ export default function reducer(
         ...state,
         data: {
           ...state.data,
-          twitterAuth:
-            action.payload.accountType === "twitter"
-              ? true
-              : state.data.twitterAuth,
           facebookAuth:
             action.payload.accountType === "facebook"
               ? true
@@ -407,11 +378,6 @@ export default function reducer(
       };
 
     case SettingsActionTypes.PASSWORD_RESET_FAILURE:
-      return {
-        ...state,
-        isResetting: false,
-      };
-
     case SettingsActionTypes.PASSWORD_RESET_SUCCESS:
       return {
         ...state,

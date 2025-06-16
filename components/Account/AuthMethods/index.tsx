@@ -1,9 +1,8 @@
 import React from "react";
 
-import EmailAuth from "./EmailAuth";
-import FacebookAuth from "./FacebookAuth";
-import TwitterAuth from "./TwitterAuth";
-import GoogleAuth from "./GoogleAuth";
+import EmailAuth from "components/Account/AuthMethods/EmailAuth";
+import FacebookAuth from "components/Account/AuthMethods/FacebookAuth";
+import GoogleAuth from "components/Account/AuthMethods/GoogleAuth";
 
 export default function AuthMethods() {
   return (
@@ -18,9 +17,6 @@ export default function AuthMethods() {
         </li>
         <li>
           <GoogleAuth />
-        </li>
-        <li>
-          <TwitterAuth />
         </li>
       </ul>
     </div>
