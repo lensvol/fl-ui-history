@@ -7,13 +7,7 @@ import { IQuality } from "types/qualities";
 import { MessagePreferences } from "types/settings";
 import { PremiumSubscriptionType } from "types/subscription";
 
-export type MessageVia =
-  | "All"
-  | "Email"
-  | "Facebook"
-  | "Google"
-  | "None"
-  | "Twitter";
+export type MessageVia = "All" | "Email" | "Facebook" | "Google" | "None";
 
 export type AuthMethod = {
   type: MessageVia;

@@ -1,11 +1,20 @@
 import { MapActions } from "actions/map";
 import { FetchMyselfSuccess } from "actions/myself/fetchMyself";
+
 import * as MapActionTypes from "actiontypes/map";
 import * as MyselfActionTypes from "actiontypes/myself";
+
+import { MD } from "components/Responsive/breakpoints";
+
+import fetchMapSuccess from "reducers/map/fetchMapSuccess";
+import setCurrentArea from "reducers/map/setCurrentArea";
+import setCurrentSetting from "reducers/map/setCurrentSetting";
+
 import { IMapState } from "types/map";
-import fetchMapSuccess from "./fetchMapSuccess";
-import setCurrentArea from "./setCurrentArea";
-import setCurrentSetting from "./setCurrentSetting";
+
+const isMobile =
+  window.matchMedia("(hover: none)").matches ||
+  window.matchMedia(`(max-width: ${MD - 1}px)`).matches;
 
 /**
  * Initial state
@@ -14,8 +23,7 @@ import setCurrentSetting from "./setCurrentSetting";
 const INITIAL_STATE: IMapState = {
   areas: [],
   currentArea: undefined,
-  fallbackMapPreferred: false,
-  // itemsUsableHere: false,
+  fallbackMapPreferred: isMobile,
   isFetching: false,
   isMoving: false,
   isVisible: false,
@@ -45,13 +53,22 @@ export default function reducer(
       };
 
     case MapActionTypes.FALLBACK_MAP_PREFERRED:
-      return { ...state, fallbackMapPreferred: action.payload.value };
+      return {
+        ...state,
+        fallbackMapPreferred: action.payload.value,
+      };
 
     case MapActionTypes.FETCH_MAP_REQUESTED:
-      return { ...state, isFetching: true };
+      return {
+        ...state,
+        isFetching: true,
+      };
 
     case MapActionTypes.FETCH_MAP_FAILURE:
-      return { ...state, isFetching: false };
+      return {
+        ...state,
+        isFetching: false,
+      };
 
     case MapActionTypes.FETCH_MAP_SUCCESS:
       return fetchMapSuccess(state, action);

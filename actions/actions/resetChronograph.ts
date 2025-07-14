@@ -23,8 +23,6 @@ export default resetChronograph(new ActionsService());
 export function resetChronograph(service: IActionsService) {
   return () => async (dispatch: Function) => {
     try {
-      // dispatch(abandonPlotRequested());
-
       const result = await service.resetChronograph();
 
       if (result instanceof Success) {

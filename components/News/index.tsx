@@ -63,6 +63,7 @@ function News() {
           }}
         >
           <Image
+            className="bordered-alert-component"
             icon={newsItem.image}
             type="small-icon"
             height={40}

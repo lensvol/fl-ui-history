@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { Link } from "react-router-dom";
+
 import { hideAgentAlert } from "actions/agents/agentAlert";
 
 import Buttonlet from "components/Buttonlet";
@@ -58,11 +60,11 @@ export default function AgentAlert() {
   }
 
   return (
-    <div className="agent-alert">
-      <div className="agent-alert-body">
+    <div className="self-dismissing-alert-container">
+      <div className="alert-content">
         <Buttonlet
           classNames={{
-            containerClassName: "agent-alert-close-button",
+            containerClassName: "alert-close-button",
           }}
           onClick={dismiss}
           type="close"
@@ -74,7 +76,13 @@ export default function AgentAlert() {
             marginRight: "28px",
           }}
         >
-          <Image icon={agent.image} type="small-icon" height={40} width={40} />
+          <Image
+            className="bordered-alert-component"
+            icon={agent.image}
+            type="small-icon"
+            height={40}
+            width={40}
+          />
           <div>
             <div className="heading heading--2">
               {agent.name} has completed a Plot.
@@ -87,16 +95,16 @@ export default function AgentAlert() {
           }}
         >
           Their report awaits on the{" "}
-          <a href="/agents" onClick={dismiss}>
+          <Link onClick={dismiss} to="/agents" title="Agents">
             Agents
-          </a>{" "}
+          </Link>{" "}
           tab.
         </p>
       </div>
 
-      <div className="agent-alert-progress">
+      <div className="alert-progress">
         <div
-          className="agent-alert-progress-bar"
+          className="alert-progress-bar"
           style={{
             width: `${timerWidthPercent}%`,
           }}

@@ -1,11 +1,14 @@
-import React, { Fragment } from "react";
-import { connect } from "react-redux";
+import React from "react";
 
 import Image from "components/Image";
 import Loading from "components/Loading";
-import { IAppState } from "types/app";
 
-function LoginCopy({ accessCode, isFetching }: Props) {
+import { useAppSelector } from "features/app/store";
+
+export default function LoginCopy() {
+  const accessCode = useAppSelector((state) => state.accessCodes.accessCode);
+  const isFetching = useAppSelector((state) => state.accessCodes.isFetching);
+
   if (isFetching) {
     return <Loading />;
   }
@@ -34,53 +37,55 @@ function LoginCopy({ accessCode, isFetching }: Props) {
   }
 
   return (
-    <Fragment>
+    <>
       <h2 className="heading heading--2">
         Forty years ago, London was stolen by bats.
       </h2>
-      <p style={{ marginTop: ".5em" }}>
+      <p
+        style={{
+          marginTop: "0.5em",
+        }}
+      >
         Discover a dark and hilarious Gothic underworld where Hell is close,
-        immortality is cheap, and the screaming has largely stopped…
+        immortality is cheap, and the screaming has largely stopped&hellip;
       </p>
       <p>Welcome. Delicious friend.</p>
       <hr />
-      <p style={{ marginBottom: 0 }}>
-        “Fallen London [is] a free-to-play text-based browser game… an
-        open-world RPG that subsists mostly on the written word to spin bizarre
-        tales.”
+      <p
+        style={{
+          marginBottom: 0,
+        }}
+      >
+        &ldquo;[This] world will ease itself into your spare tabs, onto your
+        phone and behind your eyelids&hellip; It can provide, for you, regular
+        smatterings of whimsy, awe and delight&mdash;if only you&rsquo;ll let
+        yourself fall in.&rdquo;
       </p>
-      <p style={{ textAlign: "right", marginBottom: "1em" }}>
+      <p
+        style={{
+          marginBottom: "1em",
+          textAlign: "right",
+        }}
+      >
+        <em>PC Gamer</em>
+      </p>
+      <p
+        style={{
+          marginBottom: 0,
+        }}
+      >
+        &ldquo;Fallen London [is] a free-to-play text-based browser game&hellip;
+        an open-world RPG that subsists mostly on the written word to spin
+        bizarre tales.&rdquo;
+      </p>
+      <p
+        style={{
+          marginBottom: "1em",
+          textAlign: "right",
+        }}
+      >
         <em>Unwinnable</em>
       </p>
-      <p style={{ marginBottom: 0 }}>
-        “Far and away the best browser game of today. Why? Flavour and story.”
-      </p>
-      <p style={{ textAlign: "right", marginBottom: "1em" }}>
-        <em>The New Yorker</em>
-      </p>
-    </Fragment>
+    </>
   );
 }
-
-/*
-LoginCopy.propTypes = {
-  accessCode: PropTypes.shape({
-    image: PropTypes.string,
-    initialMessage: PropTypes.string,
-    name: PropTypes.string,
-  }).isRequired,
-  isFetching: PropTypes.bool.isRequired,
-};
-
- */
-
-const mapStateToProps = ({
-  accessCodes: { accessCode, isFetching },
-}: IAppState) => ({
-  accessCode,
-  isFetching,
-});
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(LoginCopy);

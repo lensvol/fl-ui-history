@@ -34,17 +34,23 @@ export default function Chronograph() {
   }
 
   return (
-    <div className="chronograph-container">
-      <div className="chronograph-content">
+    <div className="alert-container">
+      <div className="alert-content">
         <Buttonlet
           classNames={{
-            containerClassName: "chronograph-close-button",
+            containerClassName: "alert-close-button",
           }}
           onClick={dismiss}
           type="close"
         />
         <div className="chronograph-header">
-          <Image icon="clock2" type="small-icon" height={40} width={40} />
+          <Image
+            className="bordered-alert-component"
+            icon="clock2"
+            type="small-icon"
+            height={40}
+            width={40}
+          />
           <div className="heading heading--2">Action Counter</div>
         </div>
         <div className="chronograph-body">
