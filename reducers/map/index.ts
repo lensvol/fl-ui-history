@@ -4,17 +4,11 @@ import { FetchMyselfSuccess } from "actions/myself/fetchMyself";
 import * as MapActionTypes from "actiontypes/map";
 import * as MyselfActionTypes from "actiontypes/myself";
 
-import { MD } from "components/Responsive/breakpoints";
-
 import fetchMapSuccess from "reducers/map/fetchMapSuccess";
 import setCurrentArea from "reducers/map/setCurrentArea";
 import setCurrentSetting from "reducers/map/setCurrentSetting";
 
 import { IMapState } from "types/map";
-
-const isMobile =
-  window.matchMedia("(hover: none)").matches ||
-  window.matchMedia(`(max-width: ${MD - 1}px)`).matches;
 
 /**
  * Initial state
@@ -23,7 +17,7 @@ const isMobile =
 const INITIAL_STATE: IMapState = {
   areas: [],
   currentArea: undefined,
-  fallbackMapPreferred: isMobile,
+  fallbackMapPreferred: false,
   isFetching: false,
   isMoving: false,
   isVisible: false,
