@@ -5,3 +5,5 @@ import MapSettings from "components/Account/MapSettings";
 export default function Preferences() {
   return <MapSettings />;
 }
+
+Preferences.displayName = "Preferences";

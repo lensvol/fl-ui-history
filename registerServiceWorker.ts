@@ -9,14 +9,20 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
-const SERVICE_WORKER_URL = `${process.env.PUBLIC_URL}/service-worker.js`;
+import Config from "configuration";
 
-export default function register() {
-  if (process.env.NODE_ENV !== "production") {
+const SERVICE_WORKER_URL = "/service-worker.js";
+
+export default function registerServiceWorker() {
+  if (Config.environment === "local" && process.env.NODE_ENV !== "production") {
+    console.warn("Not in production mode");
+
     return;
   }
 
   if (!("serviceWorker" in navigator)) {
+    console.warn("This browser does not support service workers");
+
     return;
   }
 
@@ -24,6 +30,8 @@ export default function register() {
   const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
 
   if (publicUrl.origin !== window.location.origin) {
+    console.warn("Server error has disabled Service Worker");
+
     // Our service worker won't work if PUBLIC_URL is on a different origin
     // from what our page is served on. This might happen if a CDN is used to
     // serve assets; see https://github.com/facebookincubator/create-react-app/issues/2374
@@ -41,28 +49,38 @@ export default function register() {
   );
 
   window.addEventListener("load", () =>
-    isLocalhost ? checkValidServiceWorker() : registerValidSW()
+    isLocalhost ? checkValidServiceWorker() : registerValidServiceWorker()
   );
 }
 
-export function unregister() {
+export function unregisterServiceWorker() {
   if (window.isSecureContext && "serviceWorker" in navigator) {
+    console.debug("Removing Service Worker...");
+
     navigator.serviceWorker.ready.then((registration) =>
       registration.unregister()
+    );
+  } else {
+    console.debug(
+      "Cannot remove Service Worker as browser does not support it"
     );
   }
 }
 
-function registerValidSW() {
+function registerValidServiceWorker() {
+  console.debug("Registering Service Worker...");
+
   navigator.serviceWorker
     .register(SERVICE_WORKER_URL)
     .then(initializeUI)
     .catch((error) =>
-      console.error("Error during service worker registration:", error)
+      console.error("Error during service worker registration: ", error)
     );
 }
 
 function checkValidServiceWorker() {
+  console.debug("Validating Service Worker before installation...");
+
   // Check if the service worker can be found. If it can't reload the page.
   fetch(SERVICE_WORKER_URL)
     .then((response) => {
@@ -72,17 +90,23 @@ function checkValidServiceWorker() {
         (response.headers.get("content-type")?.indexOf("javascript") ?? -1) ===
           -1
       ) {
+        console.error("Service Worker not found");
+
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then((registration) => {
+          console.info("Removing existing Service Worker");
+
           registration.unregister().then(() => window.location.reload());
         });
       } else {
+        console.debug("Service Worker validated");
+
         // Service worker found. Proceed as normal.
-        registerValidSW();
+        registerValidServiceWorker();
       }
     })
     .catch(() =>
-      console.log(
+      console.info(
         "No internet connection found. App is running in offline mode."
       )
     );
@@ -90,14 +114,26 @@ function checkValidServiceWorker() {
 
 function initializeUI(registration: ServiceWorkerRegistration | null) {
   if (!registration) {
+    console.warn("Failed to register Service Worker");
+
     return;
   }
+
+  console.debug("Service Worker Registered");
+
+  navigator.serviceWorker.ready.then((_registration) => {
+    console.debug("Service Worker Ready");
+  });
 
   registration.onupdatefound = () => {
     const installingWorker = registration.installing;
 
-    installingWorker!.onstatechange = () => {
-      if (installingWorker!.state === "installed") {
+    if (!installingWorker) {
+      return;
+    }
+
+    installingWorker.onstatechange = () => {
+      if (installingWorker.state === "installed") {
         if (navigator.serviceWorker.controller) {
           // At this point, the old content will have been purged and
           // the fresh content will have been added to the cache.

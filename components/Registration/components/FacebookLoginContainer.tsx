@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import FacebookLogin, {
@@ -33,18 +33,20 @@ function FacebookLoginContainer({ history, label }: Props) {
   );
 
   return (
-    <FacebookLogin
-      appId={`${facebookAppId}`}
-      autoLoad={false}
-      callback={handleCallback}
-      cssClass="button--menlo-park-panopticon"
-      disableMobileRedirect
-      fields="name,email"
-      icon={<i className="fa fa-facebook" />}
-      onFailure={handleFailure}
-      textButton={label}
-      version="3.1"
-    />
+    <div className="fb-root">
+      <FacebookLogin
+        appId={`${facebookAppId}`}
+        autoLoad={false}
+        callback={handleCallback}
+        cssClass="button--menlo-park-panopticon"
+        disableMobileRedirect
+        fields="email"
+        icon={<i className="fa fa-facebook" />}
+        onFailure={handleFailure}
+        textButton={label}
+        version="3.1"
+      />
+    </div>
   );
 }
 
@@ -52,4 +54,4 @@ type Props = RouteComponentProps & {
   label?: string;
 };
 
-export default withRouter(connect()(FacebookLoginContainer));
+export default withRouter(FacebookLoginContainer);

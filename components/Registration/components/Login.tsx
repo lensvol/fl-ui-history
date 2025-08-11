@@ -11,12 +11,9 @@ export default function Login() {
       <EmailPasswordLoginForm />
       <hr />
       <p className="u-text-center">or</p>
-      <p className="fb-root">
-        <FacebookLoginContainer label="Sign in with Facebook" />
-      </p>
+      <FacebookLoginContainer label="Sign in with Facebook" />
       <p className="u-text-center">or</p>
       <GoogleLoginContainer />
-      <p></p>
     </div>
   );
 }

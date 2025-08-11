@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
@@ -38,4 +38,4 @@ type OwnProps = {
 
 type Props = OwnProps & RouteComponentProps;
 
-export default withRouter(connect()(GoogleLoginContainer));
+export default withRouter(GoogleLoginContainer);

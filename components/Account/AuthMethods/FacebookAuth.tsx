@@ -64,7 +64,7 @@ export default function FacebookAuth(props: Props) {
         cssClass={classnames("button--link", buttonClassName)}
         textButton="Link Facebook to this account"
         autoLoad={false}
-        fields="name,email"
+        fields="email"
         callback={onLoginSuccess}
         onFailure={onLoginFailure}
       />

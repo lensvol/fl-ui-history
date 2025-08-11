@@ -31,11 +31,14 @@ export default function AssignAgentView() {
   const concerns = allConcerns
     .filter((concern) => concern.id !== 0)
     .sort((concern) => concern.id);
+  const skipToConcernView = plots.length === 0 && concerns.length === 1;
   const [viewType, setViewType] = useState(
-    AgentAssignViewType.PlotsAndConcerns
+    skipToConcernView
+      ? AgentAssignViewType.Concern
+      : AgentAssignViewType.PlotsAndConcerns
   );
   const [selectedConcern, setSelectedConcern] = useState<Concern | undefined>(
-    undefined
+    skipToConcernView ? concerns[0] : undefined
   );
   const [selectedPlot, setSelectedPlot] = useState<Plot | undefined>(undefined);
 
@@ -49,9 +52,13 @@ export default function AssignAgentView() {
   }, []);
 
   const onDismissConcern = useCallback(() => {
-    setViewType(AgentAssignViewType.PlotsAndConcerns);
-    setSelectedConcern(undefined);
-  }, []);
+    if (skipToConcernView) {
+      onDismissAssign();
+    } else {
+      setViewType(AgentAssignViewType.PlotsAndConcerns);
+      setSelectedConcern(undefined);
+    }
+  }, [onDismissAssign, skipToConcernView]);
 
   const onSelectPlot = useCallback((plot: Plot) => {
     setViewType(AgentAssignViewType.Plot);

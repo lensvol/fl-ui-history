@@ -36,7 +36,6 @@ import { InMaintenance, VersionMismatch } from "services/BaseService";
 import getAirbrakeClient from "shared/airbrake/getClient";
 
 import destructureJwt from "utils/destructureJwt";
-import parseMaintenanceEndTime from "utils/parseMaintenanceEndTime";
 import unpackJwt from "utils/unpackJwt";
 
 // All css styles
@@ -44,7 +43,7 @@ import "assets/styles/main.scss";
 import "leaflet/dist/leaflet.css";
 
 // service worker
-import { unregister as unregisterServiceWorker } from "registerServiceWorker";
+import { unregisterServiceWorker } from "registerServiceWorker";
 
 // This import is how we set up moment to support formatting durations. Yes, it's weird!
 require("moment-duration-format");
@@ -53,11 +52,9 @@ runApp();
 
 function runApp() {
   const inMaintenance = process.env.REACT_APP_MAINTENANCE_MODE === "true";
-  const maintenanceEndTime = parseMaintenanceEndTime(
-    process.env.REACT_APP_MAINTENANCE_END_TIME
-  );
+  const maintenanceEndTime = process.env.REACT_APP_MAINTENANCE_END_TIME;
 
-  if (inMaintenance && maintenanceEndTime) {
+  if (inMaintenance) {
     const ctr = document.querySelector(APP_ROOT_SELECTOR).firstElementChild;
     ctr.removeChild(ctr.firstElementChild);
     ctr.appendChild(createMaintenanceModeDOM(document, maintenanceEndTime));

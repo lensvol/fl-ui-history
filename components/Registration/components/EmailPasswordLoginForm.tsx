@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
@@ -12,7 +12,7 @@ import Loading from "components/Loading";
 import RequestPasswordResetModal from "components/RequestPasswordResetModal";
 import PasswordField from "components/Registration/PasswordField";
 
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
 
 interface FormValues {
   emailAddress: string;
@@ -20,13 +20,10 @@ interface FormValues {
   rememberMe: boolean;
 }
 
-export function EmailPasswordLoginForm({
-  isFetching,
-  history,
-  location,
-}: Props) {
+function EmailPasswordLoginForm({ history, location }: Props) {
   const dispatch = useDispatch();
 
+  const isFetching = useAppSelector((state) => state.user.isFetching);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
     useState(false);
 
@@ -67,7 +64,7 @@ export function EmailPasswordLoginForm({
       {({ values, errors }) => (
         <>
           <Form>
-            <p className="form__group">
+            <div className="form__group">
               <label htmlFor="emailAddress">Email address</label>
               <Field
                 className="form__control"
@@ -76,16 +73,16 @@ export function EmailPasswordLoginForm({
                 type="email"
                 value={values.emailAddress}
               />
-            </p>
+            </div>
 
-            <p className="form__group">
+            <div className="form__group">
               <label htmlFor="password">Password</label>
               <PasswordField
                 className="form__control"
                 name="password"
                 value={values.password}
               />
-            </p>
+            </div>
 
             <div className="login__remember-me-and-submit">
               <span className="login__remember-me">
@@ -108,13 +105,15 @@ export function EmailPasswordLoginForm({
                 {isFetching ? <Loading spinner small /> : "Log in"}
               </button>
             </div>
+
             <p>{isFetching ? "Logging in..." : null}</p>
             <p>
               {errors.password
                 ? "We were not able to log you in with the credentials you supplied."
                 : null}
             </p>
-            <p>
+
+            <div>
               <button
                 className="button--link button--link-inverse"
                 onClick={() => setIsForgotPasswordModalOpen(true)}
@@ -122,7 +121,7 @@ export function EmailPasswordLoginForm({
               >
                 Forgotten your password?
               </button>
-            </p>
+            </div>
           </Form>
           <RequestPasswordResetModal
             isOpen={isForgotPasswordModalOpen}
@@ -136,10 +135,6 @@ export function EmailPasswordLoginForm({
 
 EmailPasswordLoginForm.displayName = "EmailPasswordLoginForm";
 
-const mapStateToProps = (state: IAppState) => ({
-  isFetching: state.user.isFetching,
-});
+type Props = RouteComponentProps;
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;
-
-export default withRouter(connect(mapStateToProps)(EmailPasswordLoginForm));
+export default withRouter(EmailPasswordLoginForm);

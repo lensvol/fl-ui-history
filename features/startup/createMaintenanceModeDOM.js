@@ -8,34 +8,15 @@ export default function createMaintenanceModeDOM(document, backAt) {
   header.style.marginBottom = "1rem";
   header.innerText = "Fallen London is undergoing scheduled maintenance";
 
-  const firstParagraph = document.createElement("p");
-  firstParagraph.innerHTML = `
-  We're making some changes. \
-  `;
-
   // We may not have been told when we're coming back
-  if (backAt) {
-    firstParagraph.innerHTML += `
-      Fallen London should be back by ${backAt} GMT. \
-  `;
-  } else {
-    firstParagraph.innerHTML += `
-      Fallen London should be back shortly. \
-  `;
-  }
+  const returnTime = backAt ? `by ${backAt}` : "shortly";
 
-  if (process.env.REACT_APP_MAINTENANCE_LINK_URL) {
-    firstParagraph.innerHTML += `
-  See <a href="${process.env.REACT_APP_MAINTENANCE_LINK_URL}" target="_blank">here</a> \
-  for more updates.
-  `;
-  }
+  const firstParagraph = document.createElement("p");
+  firstParagraph.innerHTML = `We&rsquo;re making some changes. Fallen London should be back ${returnTime}.`;
 
   const secondParagraph = document.createElement("p");
-  secondParagraph.innerText = `
-  Thank you for your patience, delicious friends. \
-  All shall be well.
-  `;
+  secondParagraph.innerText =
+    "Thank you for your patience, delicious friends. All shall be well.";
 
   container.appendChild(header);
   container.appendChild(firstParagraph);
