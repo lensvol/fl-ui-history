@@ -33,19 +33,24 @@ export function theme(theme) {
 }
 
 export const styles = {
-  container: (provided) => ({
+  container: (provided, state) => ({
     ...provided,
     borderColor: "#756b5a",
     color: "#ede3d2",
     flex: 1,
     fontSize: "16px",
-    height: "40px",
-    maxWidth: "16rem",
-    marginRight: "8px",
+    height: state.getValue()[0].type === "journal" ? "20px" : "40px",
+    ...(state.getValue()[0].type === "journal"
+      ? {}
+      : {
+          maxWidth: "16rem",
+          marginRight: "8px",
+        }),
   }),
   control: (provided, state) => ({
     ...provided,
     ...(state.isDisabled ? { backgroundColor: "transparent" } : {}),
+    ...(state.getValue()[0].type === "journal" ? { minHeight: "0" } : {}),
     borderColor: "#756b5a",
     ":active": {
       borderColor: "#7ebcc0",
@@ -64,6 +69,16 @@ export const styles = {
       boxShadow: "none",
     },
   }),
+  dropdownIndicator: (provided, state) => {
+    if (state.getValue()[0].type === "journal") {
+      return {
+        ...provided,
+        padding: "0 8px",
+      };
+    }
+
+    return provided;
+  },
   menu: (provided) => ({
     ...provided,
     fontSize: "16px",
@@ -120,6 +135,14 @@ export const styles = {
           backgroundColor: "#ba7f00",
           color: "white",
         },
+      };
+    }
+
+    if (data.type === "journal") {
+      return {
+        ...provided,
+        ...separatorStyles,
+        padding: "0 12px",
       };
     }
 

@@ -1,16 +1,20 @@
 import React from "react";
-import * as PropTypes from "prop-types";
-import { Formik, Form, Field } from "formik";
+
+import { Field, Form, Formik } from "formik";
+
+import Loading from "components/Loading";
 
 import { stripHtml } from "utils/stringFunctions";
-import Loading from "components/Loading";
 
 export default function ShareForm({ data, onSubmit, title }: Props) {
   return (
     <Formik
-      initialValues={{ title }}
+      initialValues={{
+        title,
+      }}
       onSubmit={onSubmit}
-      render={({ values, isSubmitting }) => (
+    >
+      {({ values, isSubmitting }) => (
         <Form>
           <p className="form__group">
             <Field
@@ -20,7 +24,11 @@ export default function ShareForm({ data, onSubmit, title }: Props) {
             />
           </p>
           <p className="descriptive">"{stripHtml(data.description)}"</p>
-          <div style={{ textAlign: "right" }}>
+          <div
+            style={{
+              textAlign: "right",
+            }}
+          >
             <button
               className="button button--primary"
               disabled={isSubmitting}
@@ -31,7 +39,7 @@ export default function ShareForm({ data, onSubmit, title }: Props) {
           </div>
         </Form>
       )}
-    />
+    </Formik>
   );
 }
 
@@ -43,12 +51,3 @@ interface Props {
   onSubmit: (...args: any) => void;
   title?: string;
 }
-
-ShareForm.propTypes = {
-  data: PropTypes.shape({
-    description: PropTypes.string,
-    name: PropTypes.string,
-  }).isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-};

@@ -27,7 +27,9 @@ export default function AgentLevelView({ className, level }: Props) {
     name: level.name,
     description: level.level + agentBonusToString(level),
     secondaryDescription:
-      level.category === "AgentStat" ? "Agent Quality" : undefined,
+      level.category === "AgentStat" || level.category === "ConcernStat"
+        ? "Agent Quality"
+        : undefined,
   };
 
   const handleClick = useCallback(

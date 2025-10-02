@@ -1,8 +1,15 @@
-import { handleVersionMismatch } from "actions/versionSync";
-import * as SettingsActionTypes from "actiontypes/settings";
+import { AppleAuthResponse } from "react-apple-signin-auth";
+
 import { ThunkDispatch } from "redux-thunk";
+
+import { handleVersionMismatch } from "actions/versionSync";
+
+import * as SettingsActionTypes from "actiontypes/settings";
+
 import { Success } from "services/BaseMonadicService";
+
 import { VersionMismatch } from "services/BaseService";
+
 import SettingsService, {
   FacebookPayload,
   ISettingsService,
@@ -10,7 +17,9 @@ import SettingsService, {
 
 export type LinkSocialAccountSuccess = {
   type: typeof SettingsActionTypes.LINK_SOCIAL_ACCOUNT_SUCCESS;
-  payload: { accountType: string };
+  payload: {
+    accountType: string;
+  };
 };
 
 export type LinkSocialAccountActions = LinkSocialAccountSuccess;
@@ -39,18 +48,23 @@ export const linkFacebook =
 
     try {
       const result = await service.linkFacebook(data);
+
       if (result instanceof Success) {
         dispatch(linkSocialAccountSuccess("facebook"));
       } else {
         dispatch(linkSocialAccountFailure());
       }
+
       return result;
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
+
         return error;
       }
+
       dispatch(linkSocialAccountFailure());
+
       throw error;
     }
   };
@@ -59,19 +73,50 @@ export const linkGoogle =
   (data: { token: string }) =>
   async (dispatch: ThunkDispatch<any, any, any>) => {
     const service: ISettingsService = new SettingsService();
+
     try {
       const result = await service.linkGoogle(data);
+
       if (result instanceof Success) {
         dispatch(linkSocialAccountSuccess("google"));
       } else {
         dispatch(linkSocialAccountFailure());
       }
+
       return result;
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
+
         return error;
       }
+
+      throw error;
+    }
+  };
+
+export const linkApple =
+  (appleAccessToken: AppleAuthResponse) =>
+  async (dispatch: ThunkDispatch<any, any, any>) => {
+    const service: ISettingsService = new SettingsService();
+
+    try {
+      const result = await service.linkApple(appleAccessToken);
+
+      if (result instanceof Success) {
+        dispatch(linkSocialAccountSuccess("apple"));
+      } else {
+        dispatch(linkSocialAccountFailure());
+      }
+
+      return result;
+    } catch (error) {
+      if (error instanceof VersionMismatch) {
+        dispatch(handleVersionMismatch(error));
+
+        return error;
+      }
+
       throw error;
     }
   };

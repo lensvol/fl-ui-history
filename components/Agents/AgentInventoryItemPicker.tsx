@@ -62,7 +62,9 @@ export default function AgentInventoryItemPicker({
     agent?.levels
       .filter(
         (level) =>
-          level.category !== "AgentStat" && level.category !== "AgentStatHidden"
+          level.category !== "AgentStat" &&
+          level.category !== "AgentStatHidden" &&
+          level.category !== "ConcernStat"
       )
       .filter((level) => level.level > 0)
       .map((level) => level.name) ?? [];

@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+import { AppleAuthResponse } from "react-apple-signin-auth";
+
 import { ReactFacebookLoginInfo } from "react-facebook-login";
 
 import BaseService, { Either } from "services/BaseMonadicService";
@@ -7,7 +9,13 @@ import { IQuality } from "types/qualities";
 import { MessagePreferences } from "types/settings";
 import { PremiumSubscriptionType } from "types/subscription";
 
-export type MessageVia = "All" | "Email" | "Facebook" | "Google" | "None";
+export type MessageVia =
+  | "All"
+  | "Apple"
+  | "Email"
+  | "Facebook"
+  | "Google"
+  | "None";
 
 export type AuthMethod = {
   type: MessageVia;
@@ -48,6 +56,10 @@ export interface ISettingsService {
   updateEmailAddress: (
     emailAddress: string
   ) => Promise<Either<UpdateEmailResponse>>;
+  linkApple: (
+    appleAccessToken: AppleAuthResponse
+  ) => Promise<Either<LinkAppleResponse>>;
+  unlinkApple: () => Promise<Either<UnlinkAppleResponse>>;
   unlinkFacebook: () => Promise<Either<UnlinkFacebookResponse>>;
   unlinkGoogle: () => Promise<Either<UnlinkGoogleResponse>>;
   linkFacebook: (
@@ -75,6 +87,7 @@ export type FacebookPayload = ReactFacebookLoginInfo & {
 };
 
 export type FetchSettingsResponse = {
+  appleAuth: boolean;
   qualitiesPossessedList: IQuality[];
   facebookAuth: boolean;
   googleAuth: boolean;
@@ -94,6 +107,10 @@ export type FetchSettingsResponse = {
   id: number;
   emailVerified: boolean;
   socialActsAvailable: boolean;
+};
+
+export type LinkAppleResponse = {
+  message: string;
 };
 
 export type LinkEmailRequest = {
@@ -150,6 +167,10 @@ export type SaveMessagePreferencesResponse = {
 
 export type UnlinkFacebookResponse = {
   message: string;
+};
+
+export type UnlinkAppleResponse = {
+  // empty response on success
 };
 
 export type UnlinkGoogleResponse = {
@@ -283,6 +304,25 @@ export default class SettingsService
     };
 
     return this.doRequest<LinkEmailResponse>(config);
+  };
+
+  linkApple = (appleAccessToken: AppleAuthResponse) => {
+    const config = {
+      method: "post",
+      url: "/apple/link",
+      data: appleAccessToken,
+    };
+
+    return this.doRequest<LinkAppleResponse>(config);
+  };
+
+  unlinkApple = () => {
+    const config = {
+      method: "post",
+      url: "/apple/unlink",
+    };
+
+    return this.doRequest<UnlinkAppleResponse>(config);
   };
 
   updateEmailAddress = (emailAddress: string) => {

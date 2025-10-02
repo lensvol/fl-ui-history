@@ -1,5 +1,6 @@
 import React from "react";
 
+import AppleAuthStatus from "components/AccountLinkReminder/AppleAuthStatus";
 import EmailAuthStatus from "components/AccountLinkReminder/EmailAuthStatus";
 import FacebookAuthStatus from "components/AccountLinkReminder/FacebookAuthStatus";
 import GoogleAuthStatus from "components/AccountLinkReminder/GoogleAuthStatus";
@@ -29,6 +30,14 @@ export default function AuthStatus({ method }: { method: MessageVia }) {
         <li key={method}>
           <h3 className="heading heading--3">{method}</h3>
           <GoogleAuthStatus />
+        </li>
+      );
+
+    case "Apple":
+      return (
+        <li key={method}>
+          <h3 className="heading heading--3">{method}</h3>
+          <AppleAuthStatus />
         </li>
       );
 

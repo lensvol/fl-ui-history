@@ -1,5 +1,6 @@
 import React from "react";
 
+import AppleLoginContainer from "components/Registration/components/AppleLoginContainer";
 import FacebookLoginContainer from "components/Registration/components/FacebookLoginContainer";
 import GoogleLoginContainer from "components/Registration/components/GoogleLoginContainer";
 import SignUpWithEmail from "components/Registration/components/SignUpWithEmail";
@@ -14,6 +15,14 @@ export default function Signup() {
         <FacebookLoginContainer label="Sign up with Facebook" />
         <p className="u-text-center">or</p>
         <GoogleLoginContainer isSignUp />
+        <p className="u-text-center">or</p>
+        <AppleLoginContainer
+          label="Sign up with Apple"
+          redirectURI="/create-character"
+          state={{
+            action: "signup",
+          }}
+        />
       </div>
     </div>
   );

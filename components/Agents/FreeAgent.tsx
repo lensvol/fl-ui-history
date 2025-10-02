@@ -79,7 +79,7 @@ export default function FreeAgent({
             />
           </div>
           <div>
-            {agent.description}
+            <span dangerouslySetInnerHTML={{ __html: agent.description }} />
             <div>
               <strong className="agent-stat-bonus">
                 {agent.levels

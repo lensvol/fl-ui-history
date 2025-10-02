@@ -1,5 +1,6 @@
 import React from "react";
 
+import AppleLoginContainer from "components/Registration/components/AppleLoginContainer";
 import EmailPasswordLoginForm from "components/Registration/components/EmailPasswordLoginForm";
 import FacebookLoginContainer from "components/Registration/components/FacebookLoginContainer";
 import GoogleLoginContainer from "components/Registration/components/GoogleLoginContainer";
@@ -14,6 +15,14 @@ export default function Login() {
       <FacebookLoginContainer label="Sign in with Facebook" />
       <p className="u-text-center">or</p>
       <GoogleLoginContainer />
+      <p className="u-text-center">or</p>
+      <AppleLoginContainer
+        label="Sign in with Apple"
+        redirectURI="" // intentionally blank
+        state={{
+          action: "login",
+        }}
+      />
     </div>
   );
 }

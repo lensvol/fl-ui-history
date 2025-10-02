@@ -13,7 +13,7 @@ export default function getAgentNames(agents: Agent[]) {
 
     default:
       return [
-        ...agents.slice(0, agents.length - 2).map((b) => b.name),
+        ...agents.slice(0, agents.length - 1).map((b) => b.name),
         "and " + agents[agents.length - 1].name,
       ].join(", ");
   }

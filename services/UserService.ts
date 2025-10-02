@@ -1,3 +1,5 @@
+import { AppleAuthResponse } from "react-apple-signin-auth";
+
 import BaseService, { Either } from "services/BaseMonadicService";
 
 import { BaseResponse } from "types/app";
@@ -62,6 +64,10 @@ export interface IUserState {
 }
 
 export interface IUserService {
+  appleLogin: (data: {
+    authResponse: AppleAuthResponse;
+    accessCodeName?: string;
+  }) => Promise<Either<LoginResponse>>;
   fetchUser: () => Promise<Either<FetchUserResponse>>;
   facebookLogin: (arg: any) => Promise<Either<LoginResponse>>;
   googleLogin: (arg: {
@@ -86,6 +92,19 @@ export default class UserService extends BaseService implements IUserService {
       method: "post",
     };
   }
+
+  appleLogin = (data: {
+    authResponse: AppleAuthResponse;
+    accessCodeName?: string;
+  }) => {
+    const config = {
+      method: "post",
+      url: "/apple/login",
+      data,
+    };
+
+    return this.doRequest<LoginResponse>(config);
+  };
 
   login = (creds: ILoginCredentials) => {
     const config = {

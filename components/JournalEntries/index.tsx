@@ -1,10 +1,17 @@
-import { useAppDispatch, useAppSelector } from "features/app/store";
-import { fetchSharedContent, fetchSharedContentByUrl } from "features/profile";
-import JournalEntry from "components/JournalEntry/JournalEntryContainer";
-import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
-import NavigationControls from "./NavigationControls";
+
+import { useLocation, useParams } from "react-router-dom";
+
+import moment from "moment";
+
+import fetchJournalFavorite from "actions/journal/fetchJournalFavorites";
+import fetchJournalPage from "actions/journal/fetchJournalPage";
+
+import NavigationControls from "components/JournalEntries/NavigationControls";
+import JournalEntry from "components/JournalEntry/JournalEntryContainer";
+import Modal from "components/Modal";
+
+import { useAppDispatch, useAppSelector } from "features/app/store";
 
 const qs = require("query-string"); // eslint-disable-line @typescript-eslint/no-var-requires
 
@@ -15,75 +22,79 @@ interface Params {
 
 export default function JournalEntriesContainer() {
   const dispatch = useAppDispatch();
-  const history = useHistory();
   const { search } = useLocation();
   const { profileName, fromEchoId } = useParams<Params>();
 
-  const next = useAppSelector((s) => s.profile.next);
-  const prev = useAppSelector((s) => s.profile.prev);
-  const sharedContent = useAppSelector((s) => s.profile.sharedContent);
+  const entries = useAppSelector((s) => s.journal.entries);
+  const favorites = useAppSelector((s) => s.journal.favorites);
+  const page = useAppSelector((s) => s.journal.page);
+  const previousPage = useAppSelector((state) => state.journal.previous);
+  const nextPage = useAppSelector((state) => state.journal.next);
 
-  const [fetchDirection, setFetchDirection] = useState<
-    "prev" | "next" | undefined
-  >(undefined);
   const [isFetching, setIsFetching] = useState(false);
   const [didLoad, setDidLoad] = useState(false);
-
-  const handleFetchDirection = useCallback(
-    async (direction: "prev" | "next") => {
-      const url = direction === "next" ? next : prev;
-
-      if (!url) {
-        return;
-      }
-
-      setFetchDirection(direction);
-      setIsFetching(true);
-
-      const response = await dispatch(
-        fetchSharedContentByUrl({ url })
-      ).unwrap();
-
-      setIsFetching(false);
-      setFetchDirection(undefined);
-
-      const { shares } = response;
-
-      if (shares.length > 0) {
-        history.replace(
-          `/profile/${encodeURIComponent(profileName)}/${shares[0].id}`
-        );
-      }
-    },
-    [dispatch, history, next, prev, profileName]
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalEntryId, setModalEntryId] = useState<number | undefined>(
+    undefined
   );
 
-  const handleNext = useCallback(
-    () => handleFetchDirection("next"),
-    [handleFetchDirection]
-  );
+  const hasNext = nextPage !== undefined;
+  const hasPrevious = previousPage !== undefined;
 
-  const handlePrev = useCallback(
-    () => handleFetchDirection("prev"),
-    [handleFetchDirection]
-  );
+  const handleNext = useCallback(async () => {
+    if (!nextPage) {
+      return;
+    }
+
+    if (nextPage === page) {
+      return;
+    }
+
+    setIsFetching(true);
+
+    await dispatch(
+      fetchJournalPage({
+        characterName: profileName,
+        page: nextPage,
+      })
+    );
+
+    setIsFetching(false);
+  }, [dispatch, nextPage, page, profileName, setIsFetching]);
+
+  const handlePrev = useCallback(async () => {
+    if (previousPage === undefined) {
+      return;
+    }
+
+    if (previousPage === page) {
+      return;
+    }
+
+    setIsFetching(true);
+
+    await dispatch(
+      fetchJournalPage({
+        characterName: profileName,
+        page: previousPage,
+      })
+    );
+
+    setIsFetching(false);
+  }, [dispatch, page, previousPage, profileName, setIsFetching]);
 
   const handleJumpToDate = useCallback(
     async (value: Date) => {
-      const characterName = profileName;
       const date = moment(value).format("YYYY-MM-DD");
-      const response = await dispatch(
-        fetchSharedContent({ characterName, date })
-      ).unwrap();
-      const { shares } = response;
 
-      if (shares.length > 0) {
-        history.replace(
-          `/profile/${encodeURIComponent(profileName)}/${shares[0].id}`
-        );
-      }
+      await dispatch(
+        fetchJournalPage({
+          characterName: profileName,
+          date,
+        })
+      );
     },
-    [dispatch, history, profileName]
+    [dispatch, profileName]
   );
 
   useEffect(() => {
@@ -91,62 +102,127 @@ export default function JournalEntriesContainer() {
       return;
     }
 
-    // For compatibility, accept either of the following paths:
-    // /profile/:profileName/:fromEchoId
-    // /profile/:profileName?fromEchoId=xxxxxxx
-    const fromId = fromEchoId ?? qs.parse(search)["fromEchoId"]; // eslint-disable-line dot-notation
+    asyncUseEffect();
 
-    dispatch(fetchSharedContent({ fromId, characterName: profileName }));
+    async function asyncUseEffect() {
+      setDidLoad(true);
 
-    setDidLoad(true);
+      // For compatibility, accept either of the following paths:
+      // /profile/:profileName/:fromEchoId
+      // /profile/:profileName?fromEchoId=xxxxxxx
+      const fromIdStr = fromEchoId ?? qs.parse(search)["fromEchoId"]; // eslint-disable-line dot-notation
+      const fromId =
+        fromIdStr != null &&
+        fromIdStr !== "" &&
+        !isNaN(Number(fromIdStr.toString()))
+          ? parseInt(fromIdStr, 10)
+          : undefined;
+
+      await dispatch(
+        fetchJournalPage({
+          characterName: profileName,
+          fromId,
+          page: fromId === undefined ? 0 : undefined,
+        })
+      );
+
+      if (fromId) {
+        setModalEntryId(fromId);
+        setIsModalOpen(true);
+      }
+
+      await dispatch(
+        fetchJournalFavorite({
+          characterName: profileName,
+          page: 0,
+        })
+      );
+    }
   }, [didLoad, dispatch, fromEchoId, profileName, search]);
 
+  const onRequestCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+    setModalEntryId(undefined);
+  }, []);
+
   return (
-    <div className="journal-entries-container">
-      <div className="journal-entries__header-and-controls">
-        <h1 className="heading heading--1 journal-entries__header">Journal</h1>
+    <>
+      <div className="journal-entries-container">
+        <div className="journal-entries__header-and-controls">
+          <h1 className="heading heading--1 journal-entries__header">
+            Journal
+          </h1>
+          <NavigationControls
+            hasNext={hasNext}
+            hasPrevious={hasPrevious}
+            isFetching={isFetching}
+            onJumpToDate={handleJumpToDate}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
+        </div>
+        <div>
+          {page === 0 &&
+            favorites &&
+            favorites.map((entry) => (
+              <JournalEntry
+                data={entry}
+                isFavorite
+                isFetching={isFetching}
+                key={entry.id}
+              />
+            ))}
+        </div>
+        <div>
+          {entries &&
+            entries.map((entry) => (
+              <JournalEntry
+                data={entry}
+                isFetching={isFetching}
+                key={entry.id}
+              />
+            ))}
+        </div>
         <NavigationControls
-          fetchDirection={fetchDirection}
+          hasNext={hasNext}
+          hasPrevious={hasPrevious}
           isFetching={isFetching}
-          next={next}
           onJumpToDate={handleJumpToDate}
           onNext={handleNext}
           onPrev={handlePrev}
-          prev={prev}
         />
       </div>
-      <div className="journal-entries">
-        {sharedContent &&
-          sharedContent
-            .filter((entry) => entry.isFavourite)
-            .map((entry) => (
+
+      <Modal isOpen={isModalOpen} onRequestClose={() => onRequestCloseModal()}>
+        {entries?.some((entry) => entry.id === modalEntryId) ? (
+          entries
+            .filter((entry) => entry.id === modalEntryId)
+            ?.map((entry) => (
               <JournalEntry
-                isFetching={isFetching}
-                key={entry.id}
                 data={entry}
-              />
-            ))}
-        {sharedContent &&
-          sharedContent
-            .filter((entry) => !entry.isFavourite)
-            .map((entry) => (
-              <JournalEntry
                 isFetching={isFetching}
-                key={entry.id}
-                data={entry}
+                key={modalEntryId}
               />
-            ))}
-      </div>
-      <NavigationControls
-        fetchDirection={fetchDirection}
-        isFetching={isFetching}
-        next={next}
-        onJumpToDate={handleJumpToDate}
-        onNext={handleNext}
-        onPrev={handlePrev}
-        prev={prev}
-      />
-    </div>
+            ))
+        ) : (
+          <div
+            className="journal-entry"
+            style={{
+              marginBottom: 16,
+            }}
+          >
+            <div className="media__body">
+              <h4 className="heading heading--2 heading--inverse journal-entry__title">
+                Entry Not Found
+              </h4>
+              <div className="journal-entry__body">
+                No entry available at this address.
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </>
   );
 }
 

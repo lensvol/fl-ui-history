@@ -1,4 +1,5 @@
 import React, { ChangeEvent, CSSProperties } from "react";
+
 import classnames from "classnames";
 
 export default function SearchField({
@@ -11,13 +12,13 @@ export default function SearchField({
 }: Props) {
   return (
     <input
-      type="text"
       className={classnames("form__control input--item-search", className)}
-      placeholder={placeholder ?? "Search"}
-      value={value}
-      onChange={onChange}
       id={id}
+      onChange={onChange}
+      placeholder={placeholder ?? "Search"}
       style={style}
+      type="text"
+      value={value}
     />
   );
 }

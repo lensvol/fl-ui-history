@@ -1,39 +1,53 @@
 import React from "react";
+
 import classnames from "classnames";
 
 import Loading from "components/Loading";
 
 interface Props {
-  direction: "next" | "prev" | undefined;
-  fetchDirection: "next" | "prev" | undefined;
+  classNames?: {
+    className?: string;
+    faClassName?: string;
+    innerClassName?: string;
+  };
+  isDisabled?: boolean;
   isFetching: boolean;
+  label: string;
   onClick: () => void;
 }
 
 export default function NavigationButton({
-  direction,
-  fetchDirection,
+  classNames,
+  isDisabled,
   isFetching,
+  label,
   onClick,
 }: Props) {
-  const faClassName = direction === "next" ? "fa-arrow-left" : "fa-arrow-right";
-  const label = direction === "next" ? "Older" : "Newer";
   return (
     <button
-      disabled={isFetching}
-      type="button"
-      onClick={onClick}
       className={classnames(
-        "button--link journal-entries__control",
-        isFetching && "journal-entries__control--disabled"
+        classNames?.className,
+        (isDisabled || isFetching) && "journal-entries__control--disabled"
       )}
+      disabled={isDisabled || isFetching}
+      onClick={onClick}
+      type="button"
     >
-      {fetchDirection === direction ? (
-        <Loading spinner small />
-      ) : (
-        <i className={classnames("fa", faClassName)} />
-      )}
+      <div
+        className={classnames(
+          classNames?.innerClassName,
+          (isDisabled || isFetching) && "button--disabled"
+        )}
+      >
+        {isFetching ? (
+          <Loading spinner small />
+        ) : (
+          <i className={classnames("fa", classNames?.faClassName)} />
+        )}
+      </div>
       <span className="u-visually-hidden">{label}</span>
     </button>
   );
 }
+
+NavigationButton.displayName = "NavigationButton";

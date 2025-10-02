@@ -1,9 +1,11 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
 
-export function ProfileLink({ name }: Props) {
+import { useAppSelector } from "features/app/store";
+
+export default function ProfileLink() {
+  const name = useAppSelector((state) => state.myself.character.name);
+
   return (
     <a
       href={`/profile/${encodeURIComponent(name)}`}
@@ -16,12 +18,4 @@ export function ProfileLink({ name }: Props) {
   );
 }
 
-const mapStateToProps = ({
-  myself: {
-    character: { name },
-  },
-}: IAppState) => ({ name });
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(ProfileLink);
+ProfileLink.displayName = "ProfileLink";

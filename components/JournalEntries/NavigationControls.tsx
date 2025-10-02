@@ -1,43 +1,53 @@
 import React from "react";
 
-import JournalDatePicker from "./JournalDatePicker";
-import NavigationButton from "./NavigationButton";
+import JournalDatePicker from "components/JournalEntries/JournalDatePicker";
+import NavigationButton from "components/JournalEntries/NavigationButton";
 
 interface Props {
-  fetchDirection: "next" | "prev" | undefined;
+  hasNext: boolean;
+  hasPrevious: boolean;
   isFetching: boolean;
-  next: string | null | undefined;
   onJumpToDate: (date: Date) => Promise<void>;
   onNext: () => void;
   onPrev: () => void;
-  prev: string | null | undefined;
 }
 
 export default function NavigationControls({
-  fetchDirection,
+  hasNext,
+  hasPrevious,
   isFetching,
-  next,
   onJumpToDate,
   onNext,
   onPrev,
-  prev,
 }: Props) {
   return (
     <div className="journal-entries__controls">
-      {next && (
+      {hasNext && (
         <NavigationButton
-          direction="next"
-          fetchDirection={fetchDirection}
+          classNames={{
+            className: "button--link",
+            faClassName: "fa-arrow-left",
+          }}
           isFetching={isFetching}
+          label="Older"
           onClick={onNext}
         />
       )}
-      <JournalDatePicker onChange={onJumpToDate} />
-      {prev && (
+      <JournalDatePicker
+        classNames={{
+          iconClassName: "link",
+        }}
+        isDisabled={isFetching}
+        onChange={onJumpToDate}
+      />
+      {hasPrevious && (
         <NavigationButton
-          direction="prev"
-          fetchDirection={fetchDirection}
+          classNames={{
+            className: "button--link",
+            faClassName: "fa-arrow-right",
+          }}
           isFetching={isFetching}
+          label="Newer"
           onClick={onPrev}
         />
       )}

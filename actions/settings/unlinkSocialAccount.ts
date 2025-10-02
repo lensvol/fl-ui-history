@@ -22,7 +22,7 @@ export type UnlinkSocialAccountFailure = {
 export type UnlinkSocialAccountSuccess = {
   type: typeof SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_SUCCESS;
   payload: {
-    accountType: "facebook" | "google";
+    accountType: "apple" | "facebook" | "google";
   };
 };
 
@@ -38,7 +38,7 @@ export const unlinkSocialAccountRequested = () => ({
 
 export const unlinkSocialAccountSuccess: ActionCreator<
   UnlinkSocialAccountSuccess
-> = (_response: any, account: "facebook" | "google") => ({
+> = (_response: any, account: "apple" | "facebook" | "google") => ({
   type: SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_SUCCESS,
   payload: {
     accountType: account,
@@ -47,7 +47,7 @@ export const unlinkSocialAccountSuccess: ActionCreator<
 
 export const unlinkSocialAccountFailure = (
   error: any,
-  _account: "facebook" | "google"
+  _account: "apple" | "facebook" | "google"
 ) => ({
   type: SettingsActionTypes.UNLINK_SOCIAL_ACCOUNT_FAILURE,
   isUnlinking: false,
@@ -55,12 +55,17 @@ export const unlinkSocialAccountFailure = (
   status: error.response && error.response.status,
 });
 
-export default function unlinkSocialAccount(account: "facebook" | "google") {
+export default function unlinkSocialAccount(
+  account: "apple" | "facebook" | "google"
+) {
   return async (dispatch: ThunkDispatch<any, any, any>) => {
     dispatch(unlinkSocialAccountRequested());
 
     const endpointMethod = (() => {
       switch (account) {
+        case "apple":
+          return service.unlinkApple;
+
         case "facebook":
           return service.unlinkFacebook;
 

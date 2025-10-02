@@ -1,7 +1,7 @@
 import React from "react";
 
 import Image from "components/Image";
-import ShareForm from "./ShareForm";
+import ShareForm from "components/ShareDialog/components/ShareForm";
 
 export default function ShareFormContent({
   borderColour,
@@ -14,6 +14,7 @@ export default function ShareFormContent({
       <h1 className="heading heading--1">
         Record This Snippet In Your Journal
       </h1>
+
       <div className="media">
         <div className="media__left">
           <div className="card card--sm">
@@ -30,7 +31,8 @@ export default function ShareFormContent({
         </div>
 
         <div className="media__body">
-          <p>Use this header — or write your own:</p>
+          <p>Use this header &mdash; or write your own:</p>
+
           <ShareForm data={data} title={title} onSubmit={onSubmit} />
         </div>
       </div>

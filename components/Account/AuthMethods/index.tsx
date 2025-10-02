@@ -1,5 +1,6 @@
 import React from "react";
 
+import AppleAuth from "components/Account/AuthMethods/AppleAuth";
 import EmailAuth from "components/Account/AuthMethods/EmailAuth";
 import FacebookAuth from "components/Account/AuthMethods/FacebookAuth";
 import GoogleAuth from "components/Account/AuthMethods/GoogleAuth";
@@ -17,6 +18,9 @@ export default function AuthMethods() {
         </li>
         <li>
           <GoogleAuth />
+        </li>
+        <li>
+          <AppleAuth />
         </li>
       </ul>
     </div>

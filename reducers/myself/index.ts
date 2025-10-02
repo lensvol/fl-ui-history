@@ -23,6 +23,7 @@ import {
   SET_CAN_CHANGE_OUTFIT,
   SET_JOURNAL_PRIVACY_REQUESTED,
   SET_JOURNAL_PRIVACY_SUCCESS,
+  TOGGLE_JOURNAL_VIEW,
 } from "actiontypes/myself";
 import { CHOOSE_BRANCH_SUCCESS } from "actiontypes/storylet";
 
@@ -63,6 +64,7 @@ const INITIAL_STATE: IMyselfState = {
   isFetching: false,
   isRequestingItemUse: false,
   qualities: [],
+  showJournalView: false,
 };
 
 export default function reducer(
@@ -179,6 +181,12 @@ export default function reducer(
               }) as IQuality
           ),
         ],
+      };
+
+    case TOGGLE_JOURNAL_VIEW:
+      return {
+        ...state,
+        showJournalView: !state.showJournalView,
       };
 
     default:

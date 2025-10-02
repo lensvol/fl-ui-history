@@ -39,6 +39,7 @@ export interface IMyselfState {
     qualities: number[];
     image?: string;
   }[];
+  showJournalView: boolean;
   uiRestrictions?: UIRestriction[];
 }
 

@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from "react";
-import Modal from "components/Modal";
-import GoogleAuthComponent from "./GoogleAuthComponent";
 
-export default function GoogleAuth({ inverse, onLinkSuccess }: Props) {
+import GoogleAuthComponent from "components/Account/AuthMethods/GoogleAuth/GoogleAuthComponent";
+import Modal from "components/Modal";
+
+export default function GoogleAuth({ inverse }: Props) {
   const [isResultModalOpen, setIsResultOpenModal] = useState(false);
   const [message, setMessage] = useState<string | undefined>(undefined);
 
@@ -17,41 +18,20 @@ export default function GoogleAuth({ inverse, onLinkSuccess }: Props) {
         inverse={inverse}
         onLinkFailure={handleFailure}
         onUnlinkFailure={handleFailure}
-        onLinkSuccess={onLinkSuccess}
       />
-      <ResultModal
+      <Modal
         isOpen={isResultModalOpen}
-        message={message}
         onAfterClose={() => setMessage(undefined)}
         onRequestClose={() => setIsResultOpenModal(false)}
-      />
+      >
+        {message}
+      </Modal>
     </>
   );
 }
 
+GoogleAuth.displayName = "GoogleAuth";
+
 type Props = {
   inverse?: boolean;
-  onLinkSuccess?: () => void;
 };
-
-function ResultModal({
-  isOpen,
-  message,
-  onAfterClose,
-  onRequestClose,
-}: {
-  isOpen: boolean;
-  message: string | undefined;
-  onAfterClose: () => void;
-  onRequestClose: () => void;
-}) {
-  return (
-    <Modal
-      isOpen={isOpen}
-      onAfterClose={onAfterClose}
-      onRequestClose={onRequestClose}
-    >
-      {message}
-    </Modal>
-  );
-}

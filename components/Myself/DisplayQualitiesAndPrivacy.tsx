@@ -1,32 +1,18 @@
-import { setJournalPrivacy } from "actions/myself";
-import React, { ChangeEvent, useCallback } from "react";
-import { connect } from "react-redux";
+import React from "react";
 
-import PossibleDisplayQuality from "./PossibleDisplayQuality";
-import ProfileLink from "./ProfileLink";
-import { IAppState } from "types/app";
+import JournalPrivacy from "components/Myself/JournalPrivacy";
+import OpenJournal from "components/Myself/OpenJournal";
+import PossibleDisplayQuality from "components/Myself/PossibleDisplayQuality";
+import ProfileLink from "components/Myself/ProfileLink";
 
-type OwnProps = {
-  // changeJournalPrivacy: (...args: any) => void,
-};
+import { useAppSelector } from "features/app/store";
 
-type Props = OwnProps &
-  ReturnType<typeof mapStateToProps> & {
-    dispatch: Function;
-  };
-
-export function DisplayQualitiesAndPrivacy({
-  dispatch,
-  mantelpieceItemId,
-  journalIsPrivate,
-  scrapbookStatusId,
-}: Props) {
-  const onChangeJournalPrivacy = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { checked } = e.target;
-      dispatch(setJournalPrivacy(checked));
-    },
-    [dispatch]
+export default function DisplayQualitiesAndPrivacy() {
+  const mantelpieceItemId = useAppSelector(
+    (state) => state.myself.character.mantelpieceItemId
+  );
+  const scrapbookStatusId = useAppSelector(
+    (state) => state.myself.character.scrapbookStatusId
   );
 
   return (
@@ -49,38 +35,13 @@ export function DisplayQualitiesAndPrivacy({
         </div>
       </div>
       <div className="myself-profile__view-and-set-private">
-        <ProfileLink />
-        <label>
-          <input
-            name="hideProfile"
-            type="checkbox"
-            checked={journalIsPrivate}
-            onChange={onChangeJournalPrivacy}
-          />
-          Private
-          <div
-            className="js-buttonlet-help buttonlet buttonlet--help fa-stack js-tt"
-            title="Checking this will prevent you from appearing as a suggested contact for social actions"
-            style={{ position: "relative" }}
-          >
-            <i className="fa fa-circle fa-stack-2x" />
-            <i className="fa fa-question fa-stack-1x fa-inverse" />
-            <span className="u-visually-hidden">Help</span>
-          </div>
-        </label>
+        <JournalPrivacy />
+        <div>
+          <OpenJournal /> <ProfileLink />
+        </div>
       </div>
     </div>
   );
 }
 
-const mapStateToProps = ({
-  myself: {
-    character: { journalIsPrivate, mantelpieceItemId, scrapbookStatusId },
-  },
-}: IAppState) => ({
-  journalIsPrivate,
-  mantelpieceItemId,
-  scrapbookStatusId,
-});
-
-export default connect(mapStateToProps)(DisplayQualitiesAndPrivacy);
+DisplayQualitiesAndPrivacy.displayName = "DisplayQualitiesAndPrivacy";

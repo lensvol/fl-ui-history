@@ -19,15 +19,13 @@ export default function GoogleAuthComponent({
   inverse,
   onLinkFailure,
   onUnlinkFailure,
-  onLinkSuccess,
 }: Props) {
   const dispatch = useDispatch();
   const authMethods = useAppSelector((state) => state.settings.authMethods);
 
-  const hasGoogleAuth = useMemo(
-    () => !!authMethods?.find((m) => m.type === "Google"),
-    [authMethods]
-  );
+  const hasGoogleAuth = useMemo(() => {
+    return !!authMethods?.find((m) => m.type === "Google");
+  }, [authMethods]);
 
   const [isLinking, setIsLinking] = useState(false);
   const [isUnlinking, setIsUnlinking] = useState(false);
@@ -58,8 +56,6 @@ export default function GoogleAuthComponent({
         const result = await linkGoogle(request)(dispatch);
 
         if (result instanceof Success) {
-          onLinkSuccess?.();
-
           await fetchAuthMethods()(dispatch);
         } else {
           onLinkFailure?.(result.message);
@@ -68,7 +64,7 @@ export default function GoogleAuthComponent({
         setIsLinking(false);
       }
     },
-    [dispatch, onLinkFailure, onLinkSuccess]
+    [dispatch, onLinkFailure]
   );
 
   if (isLinking || isUnlinking) {
@@ -120,9 +116,10 @@ export default function GoogleAuthComponent({
   );
 }
 
+GoogleAuthComponent.displayName = "GoogleAuthComponent";
+
 type Props = {
   inverse?: boolean;
   onLinkFailure?: (message: string) => void;
-  onLinkSuccess?: () => void;
   onUnlinkFailure?: (message: string) => void;
 };

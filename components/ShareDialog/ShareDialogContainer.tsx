@@ -1,8 +1,12 @@
-import React, { Component } from "react";
+import React, { useCallback, useState } from "react";
 
 import Modal from "components/Modal";
-import ShareDialogContent from "./ShareDialogContent";
-import { LOADING, READY, SHARE_COMPLETE } from "./constants";
+import {
+  LOADING,
+  READY,
+  SHARE_COMPLETE,
+} from "components/ShareDialog/constants";
+import ShareDialogContent from "components/ShareDialog/ShareDialogContent";
 
 interface Props {
   borderColour?: string;
@@ -15,89 +19,68 @@ interface Props {
   isSharing: boolean;
   onRequestClose: Function;
   onSubmit: Function;
+  shareErrorResponse?: string;
   shareMessageResponse?: string;
 }
 
-interface State {
-  currentStep: string;
-  title?: string;
-}
+export default function ShareDialogContainer({
+  borderColour,
+  data,
+  isOpen,
+  isSharing,
+  onRequestClose,
+  onSubmit,
+  shareErrorResponse,
+  shareMessageResponse,
+}: Props) {
+  const [currentStep, setCurrentStep] = useState(LOADING);
+  const [title, setTitle] = useState<string | undefined>(undefined);
 
-const INITIAL_STATE: State = {
-  currentStep: LOADING,
-  title: undefined,
-};
+  const handleAfterOpen = useCallback(() => {
+    setCurrentStep(READY);
+    setTitle(data && data.name ? data.name : "");
+  }, [data]);
 
-export class ShareDialogContainer extends Component<Props, State> {
-  static displayName = "ShareDialogContainer";
+  const handleChange = useCallback(() => {
+    // no-op
+  }, []);
 
-  mounted = false;
+  const handleRequestClose = useCallback(() => {
+    setCurrentStep(LOADING);
+    setTitle(undefined);
 
-  state = { ...INITIAL_STATE };
-
-  componentDidMount = () => {
-    this.mounted = true;
-  };
-
-  componentWillUnmount = () => {
-    this.mounted = false;
-  };
-
-  handleAfterOpen = () => {
-    const { data } = this.props;
-    this.setState({
-      currentStep: READY,
-      title: data && data.name ? data.name : "",
-    });
-  };
-
-  handleChange = () => {};
-
-  handleRequestClose = () => {
-    const { onRequestClose } = this.props;
-    this.setState({ ...INITIAL_STATE });
     onRequestClose();
-  };
+  }, [onRequestClose]);
 
-  handleSubmit = async ({ title }: any) => {
-    const { onSubmit } = this.props;
-    await onSubmit(title);
-    this.setStateIfMounted({ currentStep: SHARE_COMPLETE });
-  };
+  const handleSubmit = useCallback(
+    async ({ title }: any) => {
+      await onSubmit(title);
 
-  setStateIfMounted = (state: Partial<State>) => {
-    if (this.mounted) {
-      this.setState({ ...this.state, ...state });
-    }
-  };
+      setCurrentStep(SHARE_COMPLETE);
+    },
+    [onSubmit]
+  );
 
-  render = () => {
-    const { borderColour, data, isOpen, isSharing, shareMessageResponse } =
-      this.props;
-    const { currentStep, title } = this.state;
-
-    return (
-      <Modal
-        isOpen={isOpen}
-        onAfterOpen={this.handleAfterOpen}
-        onRequestClose={this.handleRequestClose}
-        overlayClassName="modal--share-dialog__overlay"
-      >
-        <ShareDialogContent
-          borderColour={borderColour}
-          data={data}
-          isSharing={isSharing}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-          shareMessageResponse={shareMessageResponse}
-          step={currentStep}
-          title={title}
-        />
-      </Modal>
-    );
-  };
+  return (
+    <Modal
+      isOpen={isOpen}
+      onAfterOpen={handleAfterOpen}
+      onRequestClose={handleRequestClose}
+      overlayClassName="modal--share-dialog__overlay"
+    >
+      <ShareDialogContent
+        borderColour={borderColour}
+        data={data}
+        isSharing={isSharing}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        shareErrorResponse={shareErrorResponse}
+        shareMessageResponse={shareMessageResponse}
+        step={currentStep}
+        title={title}
+      />
+    </Modal>
+  );
 }
 
 ShareDialogContainer.displayName = "ShareDialogContainer";
-
-export default ShareDialogContainer;

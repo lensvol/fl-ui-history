@@ -15,6 +15,7 @@ import equipment from "reducers/equipment";
 import exchange from "reducers/exchange";
 import fate from "reducers/fate";
 import infoBar from "reducers/infoBar";
+import journal from "reducers/journal";
 import map from "reducers/map";
 import mapAdmin from "reducers/mapAdmin";
 import messages from "reducers/messages";
@@ -60,6 +61,7 @@ const appReducer = combineReducers({
   exchange,
   fate,
   infoBar,
+  journal,
   map,
   mapAdmin,
   messages,

@@ -24,18 +24,16 @@ import { StoryletRootData } from "types/storylet";
 import getBorderColour from "utils/getBorderColour";
 import { stripHtml } from "utils/stringFunctions";
 
-export function StoryletRoot(props: Props) {
-  const {
-    data,
-    dispatch,
-    isChoosing,
-    isGoingBack,
-    onGoBack,
-    privilegeLevel,
-    rootEventId,
-    shareData,
-  } = props;
-
+export function StoryletRoot({
+  data,
+  dispatch,
+  isChoosing,
+  isGoingBack,
+  onGoBack,
+  privilegeLevel,
+  rootEventId,
+  shareData,
+}: Props) {
   const { category, isAutofire } = data;
 
   // We may not actually have any shareData to deal with
@@ -45,6 +43,9 @@ export function StoryletRoot(props: Props) {
   const [isSharing, setIsSharing] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [shareMessageResponse, setShareMessageResponse] = useState<
+    string | undefined
+  >();
+  const [shareErrorResponse, setShareErrorResponse] = useState<
     string | undefined
   >();
 
@@ -63,7 +64,8 @@ export function StoryletRoot(props: Props) {
         })
       );
 
-      setShareMessageResponse(result.payload.message);
+      setShareMessageResponse(result.payload?.message);
+      setShareErrorResponse(result.error?.message);
 
       setIsSharing(false);
 
@@ -177,6 +179,7 @@ export function StoryletRoot(props: Props) {
 
         {shareData && (
           <ShareDialog
+            shareErrorResponse={shareErrorResponse}
             shareMessageResponse={shareMessageResponse}
             data={shareData}
             isSharing={isSharing}

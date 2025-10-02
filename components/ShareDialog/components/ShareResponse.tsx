@@ -1,29 +1,48 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useMemo } from "react";
+
+import Image from "components/Image";
+
+import { useAppSelector } from "features/app/store";
 
 import { stripHtml } from "utils/stringFunctions";
-import Image from "components/Image";
-import { IAppState } from "types/app";
 
 interface Props {
   borderColour?: string;
-  characterName: string;
   data: {
     image: string;
     name: string;
   };
+  shareErrorResponse?: string;
   shareMessageResponse?: string;
 }
 
-export function ShareResponse({
+export default function ShareResponse({
   borderColour,
-  characterName,
   data,
+  shareErrorResponse,
   shareMessageResponse,
 }: Props) {
+  const characterName = useAppSelector((state) => state.myself.character.name);
+
+  const responseText = useMemo(() => {
+    if (shareErrorResponse) {
+      return shareErrorResponse;
+    }
+
+    if (shareMessageResponse) {
+      return `"${stripHtml(shareMessageResponse)}"`;
+    }
+
+    return undefined;
+  }, [shareErrorResponse, shareMessageResponse]);
+
+  const isError = responseText === shareErrorResponse;
+
+  const headerText = isError ? "Save Failed" : "Recorded for posterity!";
+
   return (
     <div>
-      <h1 className="heading heading--1">Recorded for posterity!</h1>
+      <h1 className="heading heading--1">{headerText}</h1>
       <div className="media" style={{ display: "flex" }}>
         <div className="media__left">
           <Image
@@ -38,30 +57,24 @@ export function ShareResponse({
         </div>
 
         <div className="media__body">
-          <p className="descriptive">
-            {shareMessageResponse
-              ? `"${stripHtml(shareMessageResponse)}"`
-              : null}
-          </p>
-          <p>View or delete it here</p>
-          <a
-            href={`/profile/${encodeURIComponent(characterName)}`}
-            className="link link--inverse"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Your Journal
-          </a>
+          <p className="descriptive">{responseText}</p>
+          {!isError && (
+            <>
+              <p>View or delete it here</p>
+              <a
+                href={`/profile/${encodeURIComponent(characterName)}`}
+                className="link link--inverse"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Your Journal
+              </a>
+            </>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-const mapStateToProps = ({
-  myself: {
-    character: { name: characterName },
-  },
-}: IAppState) => ({ characterName });
-
-export default connect(mapStateToProps)(ShareResponse);
+ShareResponse.displayName = "ShareResponse";

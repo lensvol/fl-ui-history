@@ -7,6 +7,7 @@ export enum AccountLinkReminderStep {
 }
 
 export const SUPPORTED_LINK_METHODS: MessageVia[] = [
+  "Apple",
   "Email",
   "Facebook",
   "Google",

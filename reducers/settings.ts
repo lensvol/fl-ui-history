@@ -37,6 +37,7 @@ export type ISettingsState = {
   isLinkingEmail: boolean;
   isDeactivating: boolean;
   data: {
+    appleAuth: boolean;
     name?: string;
     emailAddress?: string;
     emailAuth: boolean;
@@ -91,6 +92,7 @@ const INITIAL_STATE: ISettingsState = {
     remainingStoryUnlocks: undefined,
   },
   data: {
+    appleAuth: false,
     emailAddress: undefined,
     emailAuth: false,
     facebookAuth: false,
@@ -344,6 +346,10 @@ export default function reducer(
         data: {
           ...state.data,
           // Which account did we just unlink?
+          appleAuth:
+            action.payload.accountType === "apple"
+              ? false
+              : state.data.appleAuth,
           facebookAuth:
             action.payload.accountType === "facebook"
               ? false
@@ -360,6 +366,10 @@ export default function reducer(
         ...state,
         data: {
           ...state.data,
+          appleAuth:
+            action.payload.accountType === "apple"
+              ? false
+              : state.data.appleAuth,
           facebookAuth:
             action.payload.accountType === "facebook"
               ? true

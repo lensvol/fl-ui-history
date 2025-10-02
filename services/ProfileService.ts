@@ -1,14 +1,8 @@
-// @ts-ignore
-import querystring from "query-string";
-
 import BaseService, { Either } from "services/BaseMonadicService";
 
+import { JournalTagEntry } from "types/journal";
 import { AreaWithNestedJsonInfo } from "types/map";
 import { IQuality } from "types/qualities";
-
-export type DeleteEntryResponse = {
-  message: string;
-};
 
 export type FetchProfileResponse = {
   isLoggedInUsersProfile: boolean;
@@ -31,14 +25,8 @@ export interface ApiSharedContent {
   areaName: string;
   fallenLondonDateTime: string;
   playerMessage: string;
-  isFavourite: boolean;
+  tags?: JournalTagEntry[];
 }
-
-export type FetchSharedContentResponse = {
-  shares: ApiSharedContent[];
-  next?: string;
-  prev?: string;
-};
 
 export type UpdateDescriptionResponse = {
   message: string;
@@ -47,12 +35,6 @@ export type UpdateDescriptionResponse = {
 export type ShareResponse = {
   message: string;
 };
-
-export interface FetchSharedContentRequest {
-  characterName: string;
-  date?: any;
-  fromId?: any;
-}
 
 export interface IProfileCharacter {
   avatarImage: string;
@@ -81,19 +63,11 @@ export type ShareContentRequest = {
 };
 
 export interface IProfileService {
-  deleteEntry: (entryId: number) => Promise<Either<DeleteEntryResponse>>;
   fetchProfile: (
     characterName: string,
     fromEchoId?: string | number
   ) => Promise<Either<FetchProfileResponse>>;
-  fetchSharedContent: (
-    args: FetchSharedContentRequest
-  ) => Promise<Either<FetchSharedContentResponse>>;
-  fetchSharedContentByUrl: (
-    url: string
-  ) => Promise<Either<FetchSharedContentResponse>>;
   share: (req: ShareContentRequest) => Promise<Either<ShareResponse>>;
-  toggleFavouriteJournalEntry: (id: number) => Promise<Either<ShareResponse>>;
   updateDescription: (
     newDescription: string
   ) => Promise<Either<UpdateDescriptionResponse>>;
@@ -113,57 +87,6 @@ class ProfileService extends BaseService implements IProfileService {
     };
 
     return this.doRequest<FetchProfileResponse>(config);
-  };
-
-  deleteEntry = (entryId: number) => {
-    const config = {
-      method: "post",
-      url: "/profile/delete",
-      data: {
-        entryId,
-      },
-    };
-
-    return this.doRequest<DeleteEntryResponse>(config);
-  };
-
-  fetchSharedContent = ({
-    characterName,
-    date,
-    fromId,
-  }: FetchSharedContentRequest) => {
-    const qs = querystring.stringify({
-      characterName,
-      date,
-      fromId,
-    });
-
-    const config = {
-      method: "get",
-      url: `/profile/shares?${qs}`,
-    };
-
-    return this.doRequest<FetchSharedContentResponse>(config);
-  };
-
-  fetchSharedContentByUrl = (url: string) => {
-    const config = {
-      url,
-    };
-
-    return this.doRequest<FetchSharedContentResponse>(config);
-  };
-
-  toggleFavouriteJournalEntry = (id: number) => {
-    const config = {
-      method: "post",
-      url: "/profile/toggleFavourite",
-      data: {
-        id,
-      },
-    };
-
-    return this.doRequest<ShareResponse>(config);
   };
 
   updateDescription = (newDescription: string) => {
