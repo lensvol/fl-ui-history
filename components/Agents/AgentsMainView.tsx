@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { useDispatch } from "react-redux";
 
 import lendToAgent from "actions/agents/lendToAgent";
 import takeFromAgent from "actions/agents/takeFromAgent";
 
+import AgentFilter, { SHOW_ALL_AGENTS } from "components/Agents/AgentFilter";
 import AgentInventoryItemPicker from "components/Agents/AgentInventoryItemPicker";
 import FreeAgent from "components/Agents/FreeAgent";
 import WorkingAgent from "components/Agents/WorkingAgent";
@@ -20,9 +21,6 @@ export default function AgentsMainView() {
   const agents = useAppSelector((state) => state.agents.agents);
   const outfit = useAppSelector((state) => state.outfit);
 
-  const workingAgents = agents.filter((agent) => agent.plot);
-  const freeAgents = agents.filter((agent) => !agent.plot);
-
   const [inventoryAgent, setInventoryAgent] = useState<Agent | undefined>(
     undefined
   );
@@ -30,6 +28,25 @@ export default function AgentsMainView() {
   const [inventoryOptions, setInventoryOptions] = useState<IQuality[]>([]);
   const [isInventoryPickerOpen, setIsInventoryPickerOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
+  const [filterValue, setFilterValue] = useState(SHOW_ALL_AGENTS);
+
+  const workingAgents = useMemo(() => {
+    return agents.filter(
+      (agent) =>
+        agent.plot !== undefined &&
+        (filterValue === SHOW_ALL_AGENTS ||
+          agent.levels.some((l) => l.name === filterValue))
+    );
+  }, [agents, filterValue]);
+
+  const freeAgents = useMemo(() => {
+    return agents.filter(
+      (agent) =>
+        agent.plot === undefined &&
+        (filterValue === SHOW_ALL_AGENTS ||
+          agent.levels.some((l) => l.name === filterValue))
+    );
+  }, [agents, filterValue]);
 
   const handleRequestClose = useCallback(() => {
     setIsInventoryPickerOpen(false);
@@ -76,6 +93,11 @@ export default function AgentsMainView() {
 
   return (
     <>
+      <div className="agent-filter-group">
+        <span className="agent-filter-label">Show:</span>
+        <AgentFilter category={filterValue} setCategory={setFilterValue} />
+      </div>
+
       {workingAgents
         .sort((a, b) => {
           const aIsDone = (a.plot?.elapsed ?? 0) >= (a.plot?.duration ?? 0);

@@ -269,6 +269,8 @@ export default function OutfitControls() {
   );
 }
 
+OutfitControls.displayName = "OutfitControls";
+
 function OutfitChangeErrorModal(
   props: ReactModalProps & {
     message: string | undefined;
