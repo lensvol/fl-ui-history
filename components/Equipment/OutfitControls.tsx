@@ -24,6 +24,9 @@ import {
   OUTFIT_TYPE_EXCEPTIONAL,
 } from "constants/outfits";
 
+import EquipHighestControl from "components/Equipment/EquipHighestControl";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+
 import { useAppSelector } from "features/app/store";
 
 import useIsMounted from "hooks/useIsMounted";
@@ -177,25 +180,23 @@ export default function OutfitControls() {
             })}
           />
         </MediaSmUp>
-        <div className="outfit-controls__dropdown-container">
+
+        <div className="outfit-controls-container">
+          <EquipmentContext.Consumer>
+            {({ controlIds: { outfitDropdownId } }) => (
+              <label className="heading heading--3" htmlFor={outfitDropdownId}>
+                Wear:
+              </label>
+            )}
+          </EquipmentContext.Consumer>
           <div className="outfit-controls__dropdown-and-buttons">
             <div
               style={{
                 alignItems: "center",
                 display: "flex",
-                flex: "1",
+                flex: 1,
               }}
             >
-              <EquipmentContext.Consumer>
-                {({ controlIds: { outfitDropdownId } }) => (
-                  <label
-                    className="heading heading--3 outfit-controls__rubric"
-                    htmlFor={outfitDropdownId}
-                  >
-                    Wear:
-                  </label>
-                )}
-              </EquipmentContext.Consumer>
               {canChangeOutfit ? (
                 <ChangeableControls
                   onSaveOutfitSuccess={showSaveOutfitSuccessMessage}
@@ -204,25 +205,23 @@ export default function OutfitControls() {
               ) : (
                 <LockedOutfitControls selectedOutfit={selectedOutfit} />
               )}
-            </div>
-            {hasRecentlySaved && (
-              <SaveOutfitSuccessMessage
-                isHiding={isHidingSuccessMessage}
-                message={outfitSuccessMessage}
-              />
-            )}
-          </div>
-          <div className="outfit-controls__dropdown-and-buttons">
-            <EquipmentContext.Consumer>
-              {({ controlIds: { equipmentSearchId } }) => (
-                <label
-                  className="heading heading--3 outfit-controls__rubric"
-                  htmlFor={equipmentSearchId}
-                >
-                  Find:
-                </label>
+              {hasRecentlySaved && (
+                <SaveOutfitSuccessMessage
+                  isHiding={isHidingSuccessMessage}
+                  message={outfitSuccessMessage}
+                />
               )}
-            </EquipmentContext.Consumer>
+            </div>
+          </div>
+
+          <EquipmentContext.Consumer>
+            {({ controlIds: { equipmentSearchId } }) => (
+              <label className="heading heading--3" htmlFor={equipmentSearchId}>
+                Find:
+              </label>
+            )}
+          </EquipmentContext.Consumer>
+          <div className="outfit-controls__dropdown-and-buttons">
             <EquipmentContext.Consumer>
               {({
                 filterString,
@@ -238,27 +237,40 @@ export default function OutfitControls() {
               )}
             </EquipmentContext.Consumer>
           </div>
+
+          <span className="heading heading--3">Show:</span>
           <div className="outfit-controls__dropdown-and-buttons">
             <div
               style={{
                 alignItems: "center",
                 display: "flex",
-                flex: "1",
+                flex: 1,
               }}
             >
-              <span className="heading heading--3 outfit-controls__rubric">
-                Show:
-              </span>
-              <FilterByEnhancementDropDown />
-              <span className="heading heading--3">items</span>
+              <div
+                aria-hidden="true"
+                style={{
+                  alignItems: "baseline",
+                  display: "flex",
+                  flex: 1,
+                }}
+              >
+                <FilterByEnhancementDropDown />
+                <MediaMdUp>
+                  <span className="heading heading--3">items</span>
+                </MediaMdUp>
+              </div>
+              <EquipHighestControl />
             </div>
           </div>
         </div>
       </div>
+
       <PurchaseOutfitSlotModal
         isOpen={isPurchaseOutfitSlotModalOpen}
         onRequestClose={onRequestClosePurchaseOutfitModalSlot}
       />
+
       <OutfitChangeErrorModal
         isOpen={isOutfitChangeErrorModalOpen}
         message={outfitChangeErrorMessage}

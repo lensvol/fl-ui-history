@@ -20,7 +20,7 @@ import {
 
 import { useAppSelector } from "features/app/store";
 
-import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
+import getOrderedOutfits from "selectors/outfits/getOrderedOutfits";
 import getCanUserChangeOutfit from "selectors/possessions/getCanUserChangeOutfit";
 
 import { UIRestriction } from "types/myself";
@@ -38,9 +38,11 @@ export default function SidebarOutfitSelector() {
     (state) => state.settings.subscriptions.subscriptionType
   );
   const outfits = useAppSelector((state) => getOrderedOutfits(state));
+
   const isExceptionalFriend =
     subscriptionType === "ExceptionalFriendship" ||
     isDowngradedSubscription(hasSubscription, subscriptionType);
+
   const isEnhancedExceptionalFriend =
     subscriptionType === "EnhancedExceptionalFriendship";
 

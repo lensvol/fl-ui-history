@@ -1,134 +1,66 @@
 /* eslint-disable dot-notation */
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import { useDispatch } from "react-redux";
 
 import { buyItems, fetchAvailableItems, sellItems } from "actions/exchange";
-import { MAX_SELL_AMOUNT } from "components/Exchange/constants";
-import { ExchangeContextValue } from "components/Exchange/ExchangeContext";
 
+import ExchangeUI from "components/Exchange/components/ExchangeUI/ExchangeUIComponent";
+import { MAX_BUY_AMOUNT, MAX_SELL_AMOUNT } from "components/Exchange/constants";
 import { playerCanAffordTransaction } from "components/Exchange/utils";
-import React, { Component } from "react";
-import { connect } from "react-redux";
+
+import { useAppSelector } from "features/app/store";
 
 import getQuantities from "selectors/exchange/getQuantities";
+
 import { Success } from "services/BaseMonadicService";
-import { IAppState } from "types/app";
+
 import { IAvailability } from "types/exchange";
 import { IQuality } from "types/qualities";
 
-import ExchangeUI from "./ExchangeUIComponent";
-
 function isNewQuality(possession: IQuality, items: IAvailability[]) {
-  // If we've received some Echoes, then definitely return false; Echoes don't
-  // appear in any shop
+  // If we've received some Echoes, then definitely return false; Echoes don't appear in any shop
   if (possession.category === "Currency") {
     return false;
   }
+
   // If we don't already have an Availability with this Quality, return true
   return items.map((_) => _.availability.quality.id).indexOf(possession.id) < 0;
 }
 
-type State = {
-  disabled: boolean;
-  errorMessage?: string | null;
-  sellAmount: number;
-};
-
-type OwnProps = {
-  onRequestClose: () => void;
+type Props = {
+  activeItem: IAvailability | null;
   onTransactionComplete: (message: string, isSuccess: boolean) => void;
 };
 
-type Props = OwnProps &
-  Pick<ExchangeContextValue, "activeItem"> &
-  ReturnType<typeof mapStateToProps> & { dispatch: Function };
+export default function ExchangeUIContainer({
+  activeItem,
+  onTransactionComplete,
+}: Props) {
+  const dispatch: Function = useDispatch();
 
-class ExchangeUIContainer extends Component<Props, State> {
-  static displayName = "ExchangeUIContainer";
+  const shops = useAppSelector((state) => state.exchange.shops);
+  const quantities = useAppSelector((state) => getQuantities(state));
 
-  state: State = {
-    disabled: false,
-    sellAmount: 1,
-  };
+  const [disabled, setDisabled] = useState(false);
+  const [sellAmount, setSellAmount] = useState(1);
+  const [didLoad, setDidLoad] = useState(false);
 
-  componentDidMount = () => {
-    // Immediately set disabled if the player can't even afford to buy/sell 1 of this item
-    this.updateDisabledState();
-  };
-
-  handleIncrement = (amount: number) => {
-    const { sellAmount: oldSellAmount } = this.state;
-    const sellAmount = (+oldSellAmount || 0) + Number(amount);
-    // Update sell amount (clamping it to possible values) then update disabled state
-    this.setState(
-      { sellAmount: this.clampAmount(sellAmount) },
-      this.updateDisabledState
-    );
-  };
-
-  handleChange = (e: any) => {
-    const sellAmount = e.target.value;
-
-    // Update sell amount then update disabled state
-    this.setState({ sellAmount }, this.updateDisabledState);
-  };
-
-  handleSubmit = async (e: any) => {
-    const { activeItem, dispatch, onTransactionComplete, shops } = this.props;
-
-    e.preventDefault();
-
-    if (!activeItem) {
-      return;
-    }
-
-    const buying = activeItem.forSale;
-
-    const { sellAmount } = this.state;
-    const { quality, purchaseQuality } = activeItem.availability;
-
-    const transactionData = {
-      quality,
-      purchaseQuality,
-      availabilityId: activeItem.availability.id,
-      amount: Number(sellAmount),
-    };
-
-    // The action data are the same whether we're buying or selling;
-    // it's just the API connection that's different
-    const action = buying
-      ? buyItems(transactionData)
-      : sellItems(transactionData);
-
-    const result = await dispatch(action);
-    if (result instanceof Success) {
-      const { data } = result;
-      const { message: successMessage, possessionsChanged: changes } = data;
-      // We should update the UI to show the success message
-      onTransactionComplete(successMessage, true);
-
-      // Check whether, by buying or selling stuff, we have acquired something new
-      const myItems = shops["null"].items;
-      if (changes?.some((q: IQuality) => isNewQuality(q, myItems))) {
-        // Dispatch a full on re-fetch of sellable items
-        dispatch(fetchAvailableItems("null", { background: true }));
-      }
-    } else {
-      // We should update the UI to show the success message
-      onTransactionComplete(result.message, false);
-    }
-  };
-
-  clampAmount = (newSellAmount: number) => {
-    // We're clamping the sell amount to [0, max], where max is determined differently
-    // depending on whether we're buying or selling
-    const maxAmount = this.getMaxAmount();
-    return Math.max(0, Math.min(newSellAmount, maxAmount));
-  };
-
-  getMaxAmount = () => {
-    const { activeItem, quantities } = this.props;
+  const upperLimit = useMemo(() => {
     if (!activeItem) {
       return 0;
     }
+
+    const { forSale: buying } = activeItem;
+
+    return buying ? MAX_BUY_AMOUNT : MAX_SELL_AMOUNT;
+  }, [activeItem]);
+
+  const getMaxAmount = useCallback(() => {
+    if (!activeItem) {
+      return 0;
+    }
+
     const { forSale: buying } = activeItem;
 
     const { cost, purchaseQuality, quality } = activeItem.availability;
@@ -137,16 +69,26 @@ class ExchangeUIContainer extends Component<Props, State> {
     // that we can afford, given the purchase quality and how much of _that_ we have
     if (buying) {
       const playerCurrencyLevel = quantities[purchaseQuality.id] || 0;
+
       return Math.floor(playerCurrencyLevel / cost);
     }
+
     // Otherwise, we can sell up to as many of the item as we have in our inventory
     return quantities[quality.id];
-  };
+  }, [activeItem, quantities]);
 
-  updateDisabledState = () => {
-    const { activeItem } = this.props;
-    const { sellAmount } = this.state;
+  const clampAmount = useCallback(
+    (newSellAmount: number) => {
+      // We're clamping the sell amount to [0, max], where max is determined differently
+      // depending on whether we're buying or selling
+      const maxAmount = getMaxAmount();
 
+      return Math.max(0, Math.min(newSellAmount, maxAmount, upperLimit));
+    },
+    [getMaxAmount, upperLimit]
+  );
+
+  const updateDisabledState = useCallback(() => {
     if (!activeItem) {
       return;
     }
@@ -154,81 +96,142 @@ class ExchangeUIContainer extends Component<Props, State> {
     const { forSale: buying } = activeItem;
 
     if (Number.isNaN(parseInt(`${sellAmount}`, 10))) {
-      this.setState({ disabled: true });
+      setDisabled(true);
+
       return;
     }
 
     if (sellAmount === 0) {
-      this.setState({ disabled: true });
+      setDisabled(true);
+
       return;
     }
 
     // ... but if we *can* parse it as a value, then set an error message if
-    // the user is trying to sell too many at once
+    // the user is trying to buy or sell too many at once
+    const transactionLimit = buying ? MAX_BUY_AMOUNT : MAX_SELL_AMOUNT;
 
-    // if (parseInt(sellAmount, 10) > MAX_SELL_AMOUNT) {
-    if (sellAmount > MAX_SELL_AMOUNT) {
-      this.setState({ disabled: true });
+    if (sellAmount > transactionLimit) {
+      setDisabled(true);
+
       return;
     }
 
     // If the player can't afford this (buying or selling), then disable
     if (
       !playerCanAffordTransaction({
-        ...this.props,
-        ...this.state,
         activeItem,
         buying,
+        quantities,
+        sellAmount,
       })
     ) {
-      this.setState({ disabled: true, errorMessage: null });
+      setDisabled(true);
+
       return;
     }
 
-    this.setState({
-      errorMessage: null,
-      disabled: Number.isNaN(+sellAmount),
-    });
-  };
+    setDisabled(Number.isNaN(+sellAmount));
+  }, [activeItem, quantities, sellAmount]);
 
-  render() {
-    const { activeItem, quantities } = this.props;
+  const handleChange = useCallback(
+    (e: any) => {
+      // Update sell amount then update disabled state
+      setSellAmount(clampAmount(e.target.value));
+      updateDisabledState();
+    },
+    [clampAmount, updateDisabledState]
+  );
 
-    const { disabled, sellAmount } = this.state;
+  const handleIncrement = useCallback(
+    (amount: number) => {
+      const newSellAmount = (+sellAmount || 0) + Number(amount);
 
-    if (!activeItem) {
-      return null;
+      // Update sell amount (clamping it to possible values) then update disabled state
+      setSellAmount(clampAmount(newSellAmount));
+      updateDisabledState();
+    },
+    [clampAmount, sellAmount, updateDisabledState]
+  );
+
+  useEffect(() => {
+    if (didLoad) {
+      return;
     }
 
-    const buying = activeItem.forSale;
+    setDidLoad(true);
 
-    return (
-      <ExchangeUI
-        activeItem={activeItem}
-        buying={buying}
-        countCharacterAlreadyHas={
-          quantities[activeItem.availability.quality.id]
+    // Immediately set disabled if the player can't even afford to buy/sell 1 of this item
+    updateDisabledState();
+  }, [didLoad, updateDisabledState]);
+
+  const handleSubmit = useCallback(
+    async (e: any) => {
+      e.preventDefault();
+
+      if (!activeItem) {
+        return;
+      }
+
+      const buying = activeItem.forSale;
+
+      const { purchaseQuality, quality } = activeItem.availability;
+
+      const transactionData = {
+        amount: Number(sellAmount),
+        availabilityId: activeItem.availability.id,
+        purchaseQuality,
+        quality,
+      };
+
+      // The action data are the same whether we're buying or selling;
+      // it's just the API connection that's different
+      const action = buying
+        ? buyItems(transactionData)
+        : sellItems(transactionData);
+
+      const result = await dispatch(action);
+
+      if (result instanceof Success) {
+        const { data } = result;
+
+        const { message: successMessage, possessionsChanged: changes } = data;
+
+        // We should update the UI to show the success message
+        onTransactionComplete(successMessage, true);
+
+        // Check whether, by buying or selling stuff, we have acquired something new
+        const myItems = shops["null"].items;
+
+        if (changes?.some((q: IQuality) => isNewQuality(q, myItems))) {
+          // Dispatch a full on re-fetch of sellable items
+          dispatch(fetchAvailableItems("null", { background: true }));
         }
-        disabled={disabled}
-        maxAmount={this.getMaxAmount()}
-        onChange={this.handleChange}
-        onIncrement={this.handleIncrement}
-        onSubmit={this.handleSubmit}
-        sellAmount={sellAmount}
-      />
-    );
+      } else {
+        // We should update the UI to show the success message
+        onTransactionComplete(result.message, false);
+      }
+    },
+    [activeItem, dispatch, onTransactionComplete, sellAmount, shops]
+  );
+
+  if (!activeItem) {
+    return null;
   }
+
+  return (
+    <ExchangeUI
+      activeItem={activeItem}
+      buying={activeItem.forSale}
+      countCharacterAlreadyHas={quantities[activeItem.availability.quality.id]}
+      disabled={disabled}
+      maxAmount={getMaxAmount()}
+      onChange={handleChange}
+      onIncrement={handleIncrement}
+      onSubmit={handleSubmit}
+      sellAmount={sellAmount}
+    />
+  );
 }
 
-const mapStateToProps = (state: IAppState) => {
-  const {
-    exchange: { isFetchingSellItem, shops },
-  } = state;
-  return {
-    isFetchingSellItem,
-    shops,
-    quantities: getQuantities(state),
-  };
-};
-
-export default connect(mapStateToProps)(ExchangeUIContainer);
+ExchangeUIContainer.displayName = "ExchangeUIContainer";

@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+
 import { IAppState } from "types/app";
 import { IOutfit } from "types/outfit";
 

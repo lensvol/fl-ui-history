@@ -1,33 +1,35 @@
-import { DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT } from "components/Equipment/constants";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import React, { useCallback, useRef, useState } from "react";
+
+import { useDispatch } from "react-redux";
 
 import { openModalTooltip } from "actions/modalTooltip";
-import { IOutfit } from "types/outfit";
+
+import { DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT } from "components/Equipment/constants";
+import MediaMdUp from "components/Responsive/MediaMdUp";
 import TippyWrapper from "components/TippyWrapper";
 
-export function LockedOutfitControls({
-  selectedOutfit,
-}: {
+import { IOutfit } from "types/outfit";
+
+type Props = {
   selectedOutfit: IOutfit;
-}) {
+};
+
+export default function LockedOutfitControls({ selectedOutfit }: Props) {
   const dispatch = useDispatch();
 
   const ref = useRef<HTMLDivElement>(null);
 
   const [isTooltipActive, setIsTooltipActive] = useState(false);
 
-  const tooltipData = useMemo(
-    () => ({
-      description: DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT,
-    }),
-    []
-  );
+  const tooltipData = {
+    description: DISABLED_OUTFIT_CHANGE_EXPLANATORY_TEXT,
+  };
 
   const onClick = useCallback(() => {
     if (isTooltipActive) {
       return;
     }
+
     dispatch(openModalTooltip(tooltipData));
   }, [dispatch, isTooltipActive, tooltipData]);
 
@@ -37,11 +39,11 @@ export function LockedOutfitControls({
         <div
           className="outfit-controls--locked"
           onBlur={() => setIsTooltipActive(false)}
+          onClick={onClick}
           onFocus={() => setIsTooltipActive(true)}
+          onKeyUp={onClick}
           onMouseLeave={() => setIsTooltipActive(false)}
           onMouseOver={() => setIsTooltipActive(true)}
-          onClick={onClick}
-          onKeyUp={onClick}
           ref={ref}
           role="button"
           tabIndex={0}
@@ -50,9 +52,11 @@ export function LockedOutfitControls({
           <i className="fa fa-lg fa-lock" />
         </div>
       </TippyWrapper>
-      <span className="heading heading--3">Outfit</span>
+      <MediaMdUp>
+        <span className="heading heading--3">Outfit</span>
+      </MediaMdUp>
     </>
   );
 }
 
-export default connect()(LockedOutfitControls);
+LockedOutfitControls.displayText = "LockedOutfitControls";

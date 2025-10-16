@@ -1,1 +1,2 @@
-export const MAX_SELL_AMOUNT = 60000;
+export const MAX_BUY_AMOUNT = 999999;
+export const MAX_SELL_AMOUNT = MAX_BUY_AMOUNT;

@@ -1,13 +1,25 @@
-import Modal from "components/Modal";
-import PurchaseContent from "components/PurchaseModal/PurchaseContent";
-import { PURCHASE_CONTENT } from "constants/fate";
 import React, { useCallback, useState, PropsWithChildren } from "react";
-import { connect } from "react-redux";
+
+import { useDispatch } from "react-redux";
+
 import classnames from "classnames";
 
 import { setFateSubtab } from "actions/fate";
+
+import ActionRefreshContext from "components/ActionRefreshContext";
+import GameplayTab from "components/Fate/GameplayTab";
+import Header from "components/Fate/Header";
+import PurchaseStoriesTab from "components/Fate/PurchaseStoriesTab";
+import ResetStoriesTab from "components/Fate/ResetStoriesTab";
+import StoryletMenu from "components/Fate/Subscription/StoryletMenu";
+import Modal from "components/Modal";
 import PurchaseModal from "components/PurchaseModal";
-import { IAppState } from "types/app";
+import PurchaseContent from "components/PurchaseModal/PurchaseContent";
+
+import { PURCHASE_CONTENT } from "constants/fate";
+
+import { useAppSelector } from "features/app/store";
+
 import {
   IFateCard,
   FateSubtab,
@@ -15,21 +27,22 @@ import {
   SUBTAB_RESET,
   SUBTAB_NEW,
 } from "types/fate";
-import ActionRefreshContext from "components/ActionRefreshContext";
-import PurchaseStoriesTab from "./PurchaseStoriesTab";
-import GameplayTab from "./GameplayTab";
-import ResetStoriesTab from "./ResetStoriesTab";
-import Header from "./Header";
-import StoryletMenu from "./Subscription/StoryletMenu";
 
-function Fate({
-  activeSubtab,
-  data,
-  dispatch,
-  hasSubscription,
-  renewDate,
-  subscriptionType,
-}: Props) {
+export default function Fate() {
+  const dispatch = useDispatch();
+
+  const activeSubtab = useAppSelector((state) => state.fate.activeSubtab);
+  const data = useAppSelector((state) => state.fate.data);
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const renewDate = useAppSelector(
+    (state) => state.subscription.data?.renewDate
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
+  );
+
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isPurchaseContentModalOpen, setIsPurchaseContentModalOpen] =
     useState(false);
@@ -46,10 +59,13 @@ function Fate({
 
   const handleClickFateCard = useCallback((fateCard: IFateCard) => {
     setSelectedFateCard(fateCard);
+
     if (fateCard.action === PURCHASE_CONTENT) {
       setIsPurchaseContentModalOpen(true);
+
       return;
     }
+
     setIsConfirmModalOpen(true);
   }, []);
 
@@ -91,15 +107,19 @@ function Fate({
               subscriptionType={subscriptionType}
             />
 
-            <hr style={{ marginBottom: ".5rem" }} />
+            <hr
+              style={{
+                marginBottom: "0.5rem",
+              }}
+            />
           </div>
 
           <div className="inner-tabs" role="tablist">
             <Tab
               activeTab={activeSubtab}
+              border
               onClick={setActiveTab}
               subtabType={SUBTAB_GAMEPLAY}
-              border
             >
               <i className="fl-ico fl-ico-2x fl-ico-deck inner-tab__icon inner-tab__icon--fate" />
               <span className="inner-tab__label inner-tabe__label--fate">
@@ -109,9 +129,9 @@ function Fate({
 
             <Tab
               activeTab={activeSubtab}
+              border
               onClick={setActiveTab}
               subtabType={SUBTAB_NEW}
-              border
             >
               <i className="fl-ico fl-ico-2x fl-ico-story inner-tab__icon inner-tab__icon--fate" />
               <span className="inner-tab__label inner-tab__label--fate">
@@ -167,43 +187,28 @@ function Fate({
 
 Fate.displayName = "Fate";
 
-const mapStateToProps = (state: IAppState) => ({
-  activeSubtab: state.fate.activeSubtab,
-  data: state.fate.data,
-  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
-  renewDate: state.subscription.data?.renewDate,
-  subscriptionType: state.settings.subscriptions.subscriptionType,
-});
-
-type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: Function; // eslint-disable-line
-};
-
-export default connect(mapStateToProps)(Fate);
-
 function Tab({
   activeTab,
-  children,
-  subtabType,
-  onClick,
   border,
+  children,
+  onClick,
+  subtabType,
 }: PropsWithChildren<{
   activeTab: FateSubtab;
   border?: boolean;
-  subtabType: FateSubtab;
   onClick: (subtab: FateSubtab) => void;
+  subtabType: FateSubtab;
 }>) {
   return (
     <button
+      aria-selected={activeTab === subtabType}
       className={classnames(
-        "inner-tab",
-        "inner-tab--fate",
+        "inner-tab inner-tab--fate",
         border && "inner-tab--with-border inner-tab--with-border--fate",
         activeTab === subtabType && "inner-tab--active"
       )}
       onClick={() => onClick(subtabType)}
       role="tab"
-      aria-selected={activeTab === subtabType}
       type="button"
     >
       {children}

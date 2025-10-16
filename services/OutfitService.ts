@@ -32,6 +32,7 @@ export interface IOutfitService {
   unequipQuality: (
     qualityId: number
   ) => Promise<Either<ChangeEquipmentResponse>>;
+  equipHighest: (qualityId: number) => Promise<Either<ChangeEquipmentResponse>>;
 }
 
 export default class OutfitService
@@ -108,6 +109,18 @@ export default class OutfitService
       url: "/outfit/unequip",
       data: {
         qualityId,
+      },
+    };
+
+    return this.doRequest<ChangeEquipmentResponse>(config);
+  };
+
+  equipHighest = (id: number) => {
+    const config = {
+      method: "post",
+      url: "/outfit/equipHighest",
+      data: {
+        qualityId: id,
       },
     };
 

@@ -36,7 +36,10 @@ export default function reducer(state = INITIAL_STATE, action: OutfitActions) {
   switch (action.type) {
     case MyselfActionTypes.CHANGE_OUTFIT_REQUESTED:
     case MyselfActionTypes.EQUIP_QUALITY_REQUESTED:
-      return { ...state, isChanging: true };
+      return {
+        ...state,
+        isChanging: true,
+      };
 
     case MyselfActionTypes.EQUIP_QUALITY_SUCCESS:
       return fetchOutfitSuccess(state, action);

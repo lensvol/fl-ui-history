@@ -83,26 +83,25 @@ export default function MessagePreferencesForm() {
               </li>
               <li className="checkbox">
                 <MessagePreferenceFormItem
-                  name="messageAboutAnnouncements"
-                  label="When there is an announcement about the game"
-                >
-                  <p>
-                    You'll receive an email when there is an announcement
-                    regarding the game — including new stories, festivals and
-                    time-sensitive content. This also includes our monthly
-                    newsletter — a roundup of bits and bobs about our games,{" "}
-                    weird historical things, other games we like, and so on.
-                  </p>
-                </MessagePreferenceFormItem>
-              </li>
-              <li className="checkbox">
-                <MessagePreferenceFormItem
                   name="messageAboutStorylets"
                   label="A story develops"
                 >
                   <p>
                     When a Living Story timer advances, unlocking a repeatable
                     action or a story development in Fallen London.
+                  </p>
+                </MessagePreferenceFormItem>
+              </li>
+              <li className="checkbox">
+                <MessagePreferenceFormItem
+                  name="messageAboutAnnouncements"
+                  label="Monthly newsletter"
+                >
+                  <p>
+                    Covering music, internet ephemera, art and film
+                    recommendations, strange historical anecdotes, pigeons,
+                    various mines/caves/catacombs, and sometimes also updates on
+                    our games.
                   </p>
                 </MessagePreferenceFormItem>
               </li>

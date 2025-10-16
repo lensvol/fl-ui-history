@@ -7,6 +7,7 @@ import { isDowngradedSubscription } from "actions/fate/subscriptions";
 import * as DropdownStyles from "components/Equipment/dropdown-styles";
 import EquipmentContext from "components/Equipment/EquipmentContext";
 import { useSelectedOutfit } from "components/Equipment/hooks";
+import MediaMdUp from "components/Responsive/MediaMdUp";
 
 import {
   OUTFIT_TYPE_ENHANCED_EXCEPTIONAL,
@@ -15,7 +16,7 @@ import {
 
 import { useAppSelector } from "features/app/store";
 
-import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
+import getOrderedOutfits from "selectors/outfits/getOrderedOutfits";
 
 export default function OutfitDropdown({ onChange }: Props) {
   const isChanging = useAppSelector((state) => state.outfit.isChanging);
@@ -28,9 +29,11 @@ export default function OutfitDropdown({ onChange }: Props) {
   const maxOutfits = useAppSelector((state) => state.outfit.maxOutfits);
   const outfits = useAppSelector((state) => getOrderedOutfits(state));
   const selectedOutfit = useSelectedOutfit(outfits);
+
   const isExceptionalFriend =
     subscriptionType === "ExceptionalFriendship" ||
     isDowngradedSubscription(hasSubscription, subscriptionType);
+
   const isEnhancedExceptionalFriend =
     subscriptionType === "EnhancedExceptionalFriendship";
 
@@ -148,15 +151,17 @@ export default function OutfitDropdown({ onChange }: Props) {
             IndicatorSeparator: () => null,
           }}
         />
-        <span
-          className="heading heading--3"
-          style={{
-            position: "relative",
-            top: "2px",
-          }}
-        >
-          Outfit
-        </span>
+        <MediaMdUp>
+          <span
+            className="heading heading--3"
+            style={{
+              position: "relative",
+              top: "2px",
+            }}
+          >
+            Outfit
+          </span>
+        </MediaMdUp>
       </div>
     </>
   );

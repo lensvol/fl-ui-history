@@ -1,27 +1,37 @@
-import { purchaseItem } from "actions/fate";
+import React, { useCallback, useMemo, useState } from "react";
 
+import { useDispatch } from "react-redux";
+
+import { purchaseItem } from "actions/fate";
 import { fetchMyself } from "actions/myself";
+
 import Loading from "components/Loading";
 import Modal from "components/Modal";
-import { OUTFIT_PURCHASE } from "constants/fate";
-import React, { useCallback, useMemo, useState } from "react";
-import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import getOrderedOutfits from "selectors/outfit/getOrderedOutfits";
-import { Success } from "services/BaseMonadicService";
-import { IAppState } from "types/app";
-import { POSSIBLE_DEFAULT_NAMES, PurchaseOutfitStep } from "./constants";
-import PurchaseOutfitFailure from "./PurchaseOutfitFailure";
-import PurchaseOutfitReady from "./PurchaseOutfitReady";
-import PurchaseOutfitSuccess from "./PurchaseOutfitSuccess";
+import {
+  POSSIBLE_DEFAULT_NAMES,
+  PurchaseOutfitStep,
+} from "components/PurchaseOutfitSlotModal/constants";
+import PurchaseOutfitFailure from "components/PurchaseOutfitSlotModal/PurchaseOutfitFailure";
+import PurchaseOutfitReady from "components/PurchaseOutfitSlotModal/PurchaseOutfitReady";
+import PurchaseOutfitSuccess from "components/PurchaseOutfitSlotModal/PurchaseOutfitSuccess";
 
-export function PurchaseOutfitSlotModal({
-  dispatch,
-  fateCards,
+import { OUTFIT_PURCHASE } from "constants/fate";
+
+import { useAppSelector } from "features/app/store";
+
+import getOrderedOutfits from "selectors/outfits/getOrderedOutfits";
+
+import { Success } from "services/BaseMonadicService";
+
+export default function PurchaseOutfitSlotModal({
   isOpen,
   onRequestClose,
-  outfits,
 }: Props) {
+  const fateCards = useAppSelector((state) => state.fate.data.fateCards);
+  const outfits = useAppSelector((state) => getOrderedOutfits(state));
+
+  const dispatch = useDispatch();
+
   const [currentStep, setCurrentStep] = useState(PurchaseOutfitStep.Ready);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [newOutfitName, setNewOutfitName] = useState<string | undefined>();
@@ -33,6 +43,7 @@ export function PurchaseOutfitSlotModal({
     // Get a random name that isn't already one of the player's outfit names
     const outfitNames = outfits.map((o) => o.name);
     let defaultName = outfitNames[0];
+
     while (outfitNames.indexOf(defaultName) >= 0) {
       defaultName =
         POSSIBLE_DEFAULT_NAMES[
@@ -49,6 +60,7 @@ export function PurchaseOutfitSlotModal({
         "We couldn't find the corresponding Fate item for outfit purchase. No Fate has been deducted."
       );
       setCurrentStep(PurchaseOutfitStep.Failure);
+
       return;
     }
 
@@ -88,6 +100,7 @@ export function PurchaseOutfitSlotModal({
     switch (currentStep) {
       case PurchaseOutfitStep.Loading:
         return <Loading spinner />;
+
       case PurchaseOutfitStep.Success:
         return (
           <PurchaseOutfitSuccess
@@ -95,10 +108,12 @@ export function PurchaseOutfitSlotModal({
             onFinishedRenaming={onRequestClose}
           />
         );
+
       case PurchaseOutfitStep.Failure:
         return (
           <PurchaseOutfitFailure message={errorMessage} onReset={onReset} />
         );
+
       default:
         return <PurchaseOutfitReady onBuyOutfit={onBuyOutfit} />;
     }
@@ -123,15 +138,7 @@ export function PurchaseOutfitSlotModal({
   );
 }
 
-const mapStateToProps = (state: IAppState) => ({
-  fateCards: state.fate.data.fateCards,
-  outfits: getOrderedOutfits(state),
-});
-
-type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: ThunkDispatch<any, any, any>;
+type Props = {
   isOpen: boolean;
   onRequestClose: () => void;
 };
-
-export default connect(mapStateToProps)(PurchaseOutfitSlotModal);

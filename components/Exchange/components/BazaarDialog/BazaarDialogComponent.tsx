@@ -40,7 +40,6 @@ export default function BazaarDialogComponent(props: Props) {
       {({ activeItem }) => (
         <ExchangeUI
           activeItem={activeItem}
-          onRequestClose={onRequestClose}
           onTransactionComplete={handleTransactionComplete}
         />
       )}

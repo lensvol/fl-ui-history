@@ -10,7 +10,7 @@ import TagNameModal from "components/Journal/TagNameModal";
 
 import { useAppSelector } from "features/app/store";
 
-const MaxTagsPerUser = 15;
+const MaxTagsPerUser = 25;
 
 export type Props = {
   entryId?: number;

@@ -1,53 +1,62 @@
-import { QUALITY_ID_PENNY } from "constants/possessions";
 import React, { useRef } from "react";
 
-import { MAX_SELL_AMOUNT } from "components/Exchange/constants";
-
+import StateChangeButton from "components/Exchange/components/ExchangeUI/StateChangeButton";
+import { MAX_BUY_AMOUNT, MAX_SELL_AMOUNT } from "components/Exchange/constants";
 import Image from "components/Image";
 import QualityValue from "components/QualityValue";
+
+import { QUALITY_ID_PENNY } from "constants/possessions";
+
 import { IAvailability } from "types/exchange";
-import StateChangeButton from "./StateChangeButton";
 
-export function ExchangeUI(props: Props) {
-  const {
-    activeItem,
-    countCharacterAlreadyHas,
-    buying,
-    disabled,
-    onChange,
-    onIncrement,
-    onSubmit,
-    maxAmount,
-    sellAmount,
-  } = props;
-
+export default function ExchangeUI({
+  activeItem,
+  buying,
+  countCharacterAlreadyHas,
+  disabled,
+  onChange,
+  onIncrement,
+  onSubmit,
+  maxAmount,
+  sellAmount,
+}: Props) {
   const input = useRef<HTMLInputElement>(null);
 
   const { availability } = activeItem;
+
   const buttonText = buying ? "Buy" : "Sell";
   const verb = buttonText.toLowerCase();
   const priceValue = buying ? availability.cost : availability.sellPrice;
-  const title = buying
-    ? "Please select a number to buy"
-    : "Please select a number to sell";
+  const title = `Please select a number to ${verb}`;
   const tooltipData = availability.quality;
+  const transactionLimit = buying ? MAX_BUY_AMOUNT : MAX_SELL_AMOUNT;
 
   return (
     <div>
       <div className="exchange-ui__header">
-        <h3 className="heading heading--2" style={{ color: "#000" }}>
+        <h3
+          className="heading heading--2"
+          style={{
+            color: "#000",
+          }}
+        >
           {title}
         </h3>
       </div>
 
       <div className="exchange-ui__item">
-        <div className="media__left" style={{ paddingBottom: "0" }}>
+        <div
+          className="media__left"
+          style={{
+            paddingBottom: "0",
+          }}
+        >
           <div className="js-icon icon js-tt icon--inventory icon--emphasize">
             <Image
-              icon={availability.quality.image}
               alt={availability.quality.name}
-              type="small-icon"
+              icon={availability.quality.image}
               tooltipData={tooltipData}
+              type="small-icon"
             />
             {countCharacterAlreadyHas > 0 && (
               <span className="js-item-value icon__value">
@@ -74,8 +83,8 @@ export function ExchangeUI(props: Props) {
       </div>
       <div className="exchange-ui__rubric-and-controls">
         <em>
-          You may buy or sell up to {MAX_SELL_AMOUNT.toLocaleString("en-GB")}{" "}
-          items at a time. If you need to {verb} more, do so in batches.
+          You may {verb} up to {transactionLimit.toLocaleString("en-GB")} items
+          at a time. If you need to {verb} more, do so in batches.
         </em>
         <form className="exchange-ui__form" onSubmit={onSubmit}>
           <div className="exchange-ui__controls">
@@ -92,15 +101,17 @@ export function ExchangeUI(props: Props) {
               sellAmount={sellAmount}
             />
             <input
-              type="number"
+              autoFocus
               className="form__control form__control--1h"
-              max={MAX_SELL_AMOUNT}
+              max={transactionLimit}
               min={1}
-              style={{ marginLeft: "4px" }}
-              value={sellAmount}
               onChange={onChange}
               ref={input}
-              autoFocus
+              style={{
+                marginLeft: "4px",
+              }}
+              type="number"
+              value={sellAmount}
             />
             <StateChangeButton
               by={+1}
@@ -130,16 +141,16 @@ export function ExchangeUI(props: Props) {
   );
 }
 
+ExchangeUI.displayName = "ExchangeUI";
+
 type Props = {
   activeItem: IAvailability;
   buying: boolean;
-  disabled: boolean;
   countCharacterAlreadyHas: number;
+  disabled: boolean;
   maxAmount: number;
   onChange: (change: React.ChangeEvent<HTMLInputElement>) => void;
   onIncrement: Function;
   onSubmit: (evt: any) => void;
   sellAmount: number;
 };
-
-export default ExchangeUI;
