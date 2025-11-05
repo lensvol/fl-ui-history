@@ -1,15 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 import MediaQuery from "react-responsive";
 
-import { SM } from "./breakpoints";
+import PropTypes from "prop-types";
 
-export default function MediaMdUp({ children }) {
+import { SM } from "components/Responsive/breakpoints";
+
+export default function MediaSmUp({ children }) {
   return <MediaQuery query={`(min-width: ${SM}px)`}>{children}</MediaQuery>;
 }
 
-MediaMdUp.displayName = "MediaMdUp";
+MediaSmUp.displayName = "MediaSmUp";
 
-MediaMdUp.propTypes = {
+MediaSmUp.propTypes = {
   children: PropTypes.node.isRequired,
 };

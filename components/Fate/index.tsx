@@ -9,6 +9,7 @@ import { setFateSubtab } from "actions/fate";
 import ActionRefreshContext from "components/ActionRefreshContext";
 import GameplayTab from "components/Fate/GameplayTab";
 import Header from "components/Fate/Header";
+import OtherGamesTab from "components/Fate/OtherGamesTab";
 import PurchaseStoriesTab from "components/Fate/PurchaseStoriesTab";
 import ResetStoriesTab from "components/Fate/ResetStoriesTab";
 import StoryletMenu from "components/Fate/Subscription/StoryletMenu";
@@ -26,6 +27,7 @@ import {
   SUBTAB_GAMEPLAY,
   SUBTAB_RESET,
   SUBTAB_NEW,
+  SUBTAB_OTHER,
 } from "types/fate";
 
 export default function Fate() {
@@ -106,37 +108,16 @@ export default function Fate() {
               renewDate={renewDate}
               subscriptionType={subscriptionType}
             />
-
-            <hr
-              style={{
-                marginBottom: "0.5rem",
-              }}
-            />
           </div>
 
-          <div className="inner-tabs" role="tablist">
+          <div className="inner-tabs--fate" role="tablist">
             <Tab
               activeTab={activeSubtab}
-              border
-              onClick={setActiveTab}
-              subtabType={SUBTAB_GAMEPLAY}
-            >
-              <i className="fl-ico fl-ico-2x fl-ico-deck inner-tab__icon inner-tab__icon--fate" />
-              <span className="inner-tab__label inner-tabe__label--fate">
-                Gameplay
-              </span>
-            </Tab>
-
-            <Tab
-              activeTab={activeSubtab}
-              border
               onClick={setActiveTab}
               subtabType={SUBTAB_NEW}
             >
-              <i className="fl-ico fl-ico-2x fl-ico-story inner-tab__icon inner-tab__icon--fate" />
-              <span className="inner-tab__label inner-tab__label--fate">
-                Purchase Stories
-              </span>
+              <i className="fl-ico-story inner-tab__icon--fate" />
+              <div className="inner-tab__label--fate">Purchase Stories</div>
             </Tab>
 
             <Tab
@@ -144,25 +125,44 @@ export default function Fate() {
               onClick={setActiveTab}
               subtabType={SUBTAB_RESET}
             >
-              <i className="fl-ico fl-ico-2x fl-ico-star inner-tab__icon inner-tab__icon--fate inner-tab__icon--star" />
-              <span className="inner-tab__label inner-tab__label--fate">
-                Reset Stories
-              </span>
+              <i className="fl-ico-star inner-tab__icon--fate" />
+              <div className="inner-tab__label--fate">Reset Stories</div>
+            </Tab>
+
+            <div id="inner-tab-separator" />
+
+            <Tab
+              activeTab={activeSubtab}
+              onClick={setActiveTab}
+              subtabType={SUBTAB_GAMEPLAY}
+            >
+              <i className="fl-ico-deck inner-tab__icon--fate" />
+              <div className="inner-tab__label--fate">Gameplay</div>
+            </Tab>
+
+            <Tab
+              activeTab={activeSubtab}
+              onClick={setActiveTab}
+              subtabType={SUBTAB_OTHER}
+            >
+              <i className="fl-ico-logo inner-tab__icon--fate" />
+              <div className="inner-tab__label--fate">Other Games</div>
             </Tab>
           </div>
 
           <GameplayTab
-            active={activeSubtab === "gameplay"}
+            active={activeSubtab === SUBTAB_GAMEPLAY}
             onClick={handleClickFateCard}
           />
           <PurchaseStoriesTab
-            active={activeSubtab === "new"}
+            active={activeSubtab === SUBTAB_NEW}
             onClick={handleClickFateCard}
           />
           <ResetStoriesTab
-            active={activeSubtab === "reset"}
+            active={activeSubtab === SUBTAB_RESET}
             onClick={handleClickFateCard}
           />
+          <OtherGamesTab active={activeSubtab === SUBTAB_OTHER} />
 
           <PurchaseModal
             data={selectedFateCard}
@@ -203,8 +203,8 @@ function Tab({
     <button
       aria-selected={activeTab === subtabType}
       className={classnames(
-        "inner-tab inner-tab--fate",
-        border && "inner-tab--with-border inner-tab--with-border--fate",
+        "inner-tab--fate",
+        border && "inner-tab--with-border",
         activeTab === subtabType && "inner-tab--active"
       )}
       onClick={() => onClick(subtabType)}

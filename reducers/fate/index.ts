@@ -6,7 +6,7 @@ import fetchSuccess from "reducers/fate/fetchSuccess";
 import processFateChange from "reducers/fate/processFateChange";
 import purchaseItemSuccess from "reducers/fate/purchaseItemSuccess";
 
-import { FateData, FateSubtab, SUBTAB_GAMEPLAY } from "types/fate";
+import { FateData, FateSubtab, SUBTAB_NEW } from "types/fate";
 
 export interface IFateState {
   activePurchase: any | null;
@@ -27,7 +27,7 @@ export interface IFateState {
 
 const INITIAL_STATE: IFateState = {
   activePurchase: null,
-  activeSubtab: SUBTAB_GAMEPLAY,
+  activeSubtab: SUBTAB_NEW,
   hasFetched: false,
   isExceptionalFriend: false,
   isFetching: true,

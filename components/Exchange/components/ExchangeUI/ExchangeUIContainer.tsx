@@ -88,57 +88,62 @@ export default function ExchangeUIContainer({
     [getMaxAmount, upperLimit]
   );
 
-  const updateDisabledState = useCallback(() => {
-    if (!activeItem) {
-      return;
-    }
+  const updateDisabledState = useCallback(
+    (newSellAmount: number) => {
+      if (!activeItem) {
+        return;
+      }
 
-    const { forSale: buying } = activeItem;
+      const { forSale: buying } = activeItem;
 
-    if (Number.isNaN(parseInt(`${sellAmount}`, 10))) {
-      setDisabled(true);
+      if (Number.isNaN(parseInt(`${newSellAmount}`, 10))) {
+        setDisabled(true);
 
-      return;
-    }
+        return;
+      }
 
-    if (sellAmount === 0) {
-      setDisabled(true);
+      if (newSellAmount < 1) {
+        setDisabled(true);
 
-      return;
-    }
+        return;
+      }
 
-    // ... but if we *can* parse it as a value, then set an error message if
-    // the user is trying to buy or sell too many at once
-    const transactionLimit = buying ? MAX_BUY_AMOUNT : MAX_SELL_AMOUNT;
+      // ... but if we *can* parse it as a value, then set an error message if
+      // the user is trying to buy or sell too many at once
+      const transactionLimit = buying ? MAX_BUY_AMOUNT : MAX_SELL_AMOUNT;
 
-    if (sellAmount > transactionLimit) {
-      setDisabled(true);
+      if (newSellAmount > transactionLimit) {
+        setDisabled(true);
 
-      return;
-    }
+        return;
+      }
 
-    // If the player can't afford this (buying or selling), then disable
-    if (
-      !playerCanAffordTransaction({
-        activeItem,
-        buying,
-        quantities,
-        sellAmount,
-      })
-    ) {
-      setDisabled(true);
+      // If the player can't afford this (buying or selling), then disable
+      if (
+        !playerCanAffordTransaction({
+          activeItem,
+          buying,
+          quantities,
+          sellAmount: newSellAmount,
+        })
+      ) {
+        setDisabled(true);
 
-      return;
-    }
+        return;
+      }
 
-    setDisabled(Number.isNaN(+sellAmount));
-  }, [activeItem, quantities, sellAmount]);
+      setDisabled(Number.isNaN(+newSellAmount));
+    },
+    [activeItem, quantities]
+  );
 
   const handleChange = useCallback(
     (e: any) => {
+      const newSellAmount = clampAmount(e.target.value);
+
       // Update sell amount then update disabled state
-      setSellAmount(clampAmount(e.target.value));
-      updateDisabledState();
+      setSellAmount(newSellAmount);
+      updateDisabledState(newSellAmount);
     },
     [clampAmount, updateDisabledState]
   );
@@ -149,7 +154,7 @@ export default function ExchangeUIContainer({
 
       // Update sell amount (clamping it to possible values) then update disabled state
       setSellAmount(clampAmount(newSellAmount));
-      updateDisabledState();
+      updateDisabledState(newSellAmount);
     },
     [clampAmount, sellAmount, updateDisabledState]
   );
@@ -162,8 +167,8 @@ export default function ExchangeUIContainer({
     setDidLoad(true);
 
     // Immediately set disabled if the player can't even afford to buy/sell 1 of this item
-    updateDisabledState();
-  }, [didLoad, updateDisabledState]);
+    updateDisabledState(sellAmount);
+  }, [didLoad, sellAmount, updateDisabledState]);
 
   const handleSubmit = useCallback(
     async (e: any) => {

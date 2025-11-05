@@ -80,7 +80,9 @@ export type FateCardType =
 
 export type EnhancedStoryAvailability = "None" | "FreshlyAdded" | "FinalMonth";
 
-export type FateSubtab = "gameplay" | "new" | "reset";
+export type FateSubtab = "gameplay" | "new" | "reset" | "other";
+
 export const SUBTAB_GAMEPLAY: FateSubtab = "gameplay";
 export const SUBTAB_NEW: FateSubtab = "new";
-export const SUBTAB_RESET = "reset";
+export const SUBTAB_RESET: FateSubtab = "reset";
+export const SUBTAB_OTHER: FateSubtab = "other";

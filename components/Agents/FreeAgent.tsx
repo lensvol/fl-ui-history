@@ -37,7 +37,7 @@ export default function FreeAgent({
 
   const isButtonDisabled = useAppSelector(
     (state) =>
-      state.agents.agents.filter((agent) => agent.plot !== undefined).length ===
+      state.agents.agents.filter((agent) => agent.plot !== undefined).length >=
       state.agents.maxPlots
   );
 
