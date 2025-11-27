@@ -57,7 +57,6 @@ const mapStateToProps = (state: IAppState, props: OwnProps) => ({
 });
 
 interface Props
-  extends Omit<OwnProps, "qualities">,
-    ReturnType<typeof mapStateToProps> {}
+  extends Omit<OwnProps, "qualities">, ReturnType<typeof mapStateToProps> {}
 
 export default connect(mapStateToProps)(InventoryGroup);

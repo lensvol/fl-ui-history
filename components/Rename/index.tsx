@@ -56,8 +56,7 @@ const mapStateToProps = ({
 });
 
 interface Props
-  extends ReturnType<typeof mapStateToProps>,
-    RouteComponentProps {
+  extends ReturnType<typeof mapStateToProps>, RouteComponentProps {
   dispatch: Function; // eslint-disable-line
 }
 

@@ -50,8 +50,7 @@ export interface ICurrentDomicile {
   maxHandSize: number;
 }
 
-export interface IFetchMyselfResponse
-  extends AxiosResponse<IFetchMyselfResponseData> {
+export interface IFetchMyselfResponse extends AxiosResponse<IFetchMyselfResponseData> {
   data: IFetchMyselfResponseData;
 }
 

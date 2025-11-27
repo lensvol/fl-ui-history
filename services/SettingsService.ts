@@ -130,9 +130,7 @@ export type LinkGoogleRequest = {
   token: string;
 };
 
-export type LinkGoogleResponse = {
-  // empty response on success
-};
+export type LinkGoogleResponse = { // empty response on success };
 
 export type MessagesViaResponse = {
   message: string;
@@ -169,13 +167,9 @@ export type UnlinkFacebookResponse = {
   message: string;
 };
 
-export type UnlinkAppleResponse = {
-  // empty response on success
-};
+export type UnlinkAppleResponse = { // empty response on success };
 
-export type UnlinkGoogleResponse = {
-  // empty response on success
-};
+export type UnlinkGoogleResponse = { // empty response on success };
 
 export type UpdateEmailRequest = {
   emailAddress: string;

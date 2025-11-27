@@ -92,9 +92,7 @@ const mapStateToProps = (state: IAppState) => {
 };
 
 interface Props
-  extends OwnProps,
-    RouteComponentProps,
-    ReturnType<typeof mapStateToProps> {
+  extends OwnProps, RouteComponentProps, ReturnType<typeof mapStateToProps> {
   phase: StoryletPhase;
   label: string;
   setting: ISetting | undefined;

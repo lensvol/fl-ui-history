@@ -162,8 +162,10 @@ function AreaMarker({
   );
 }
 
-interface OwnProps
-  extends Pick<MapModalTooltipContextValue, "openModalTooltip"> {
+interface OwnProps extends Pick<
+  MapModalTooltipContextValue,
+  "openModalTooltip"
+> {
   area: IStateAwareArea & ILabelledArea;
   className?: string;
   currentArea: IArea;

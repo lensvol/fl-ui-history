@@ -75,11 +75,7 @@ export interface IUserService {
     token: string;
   }) => Promise<Either<LoginResponse>>;
   login: (credentials: ILoginCredentials) => Promise<Either<LoginResponse>>;
-  logout: () => Promise<
-    Either<{
-      /* empty response expected */
-    }>
-  >;
+  logout: () => Promise<Either<{ /* empty response expected */ }>>;
   facebookData: (confirmationCode?: string) => Promise<Either<BaseResponse>>;
 }
 
