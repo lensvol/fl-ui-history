@@ -16,7 +16,7 @@ export default function FooterContent({ className }: Props) {
       <div>
         <p>
           &copy; <a href="https://www.failbettergames.com/">Failbetter Games</a>{" "}
-          2010&ndash;2025{" "}
+          2010&ndash;2026{" "}
           <span
             style={{
               fontWeight: "bold",
