@@ -1,51 +1,38 @@
+import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Sticky, StickyContainer } from "react-sticky";
+
 import CategorySelector from "components/CategorySelector";
+import InnerTabs from "components/InnerTabs";
+import Loading from "components/Loading";
 import Name from "components/Myself/Name";
 import Profile from "components/Myself/Profile";
+import QualityGroup from "components/Myself/QualityGroup";
 import MediaLgUp from "components/Responsive/MediaLgUp";
 import MediaMdDown from "components/Responsive/MediaMdDown";
 import MediaSmDown from "components/Responsive/MediaSmDown";
 import SearchField from "components/SearchField";
-import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
-import { connect, useDispatch } from "react-redux";
-import { Sticky, StickyContainer } from "react-sticky";
-
-import scrollToComponent from "utils/scrollToComponent";
+import ScrollNav from "components/ScrollNav";
 import { categoryHasVisibleItems } from "components/utils";
-import Loading from "components/Loading";
+
+import { useAppSelector } from "features/app/store";
+
 import getMyselfCategories from "selectors/myself/getMyselfCategories";
 
 import { ICategory } from "types/possessions";
-import { IAppState } from "types/app";
-import InnerTabs from "components/InnerTabs";
-import ScrollNav from "components/ScrollNav";
-import QualityGroup from "./QualityGroup";
 
-const mapStateToProps = (state: IAppState) => {
-  const {
-    myself: {
-      qualities,
-      character: { descriptiveText, name: characterName },
-    },
-    scrollToComponent: { scrolling },
-  } = state;
-  return {
-    characterName,
-    qualities,
-    scrolling,
-    descriptiveText: descriptiveText ?? "",
-    categories: getMyselfCategories(state),
-  };
-};
+import scrollToComponent from "utils/scrollToComponent";
 
-type Props = ReturnType<typeof mapStateToProps>;
+export default function MyselfContainer() {
+  const categories = useAppSelector((state) => getMyselfCategories(state));
+  const characterName = useAppSelector((state) => state.myself.character.name);
+  const descriptiveText =
+    useAppSelector((state) => state.myself.character.descriptiveText) ?? "";
+  const qualities = useAppSelector((state) => state.myself.qualities);
+  const scrolling = useAppSelector(
+    (state) => state.scrollToComponent.scrolling
+  );
 
-function MyselfContainer({
-  categories,
-  characterName,
-  descriptiveText,
-  qualities,
-  scrolling,
-}: Props) {
   const dispatch = useDispatch();
 
   const [activeItem, setActiveItem] = useState<number | null>(null);
@@ -64,9 +51,15 @@ function MyselfContainer({
 
       setActiveItem(id);
 
+      const scrollOptions = {
+        align: "top",
+        duration: 1500,
+        ...options,
+      };
+
       scrollToComponent(
         document.querySelector(`[data-group-name="${name}"]`),
-        { align: "top", duration: 1500, ...options },
+        scrollOptions,
         dispatch
       );
     },
@@ -86,11 +79,11 @@ function MyselfContainer({
     () =>
       categories.map((category: ICategory) => (
         <QualityGroup
-          onEnterWaypoint={trackPosition}
-          key={category.id}
           filterString={filterString}
           id={category.id}
+          key={category.id}
           name={category.name}
+          onEnterWaypoint={trackPosition}
         />
       )),
     [categories, filterString, trackPosition]
@@ -108,7 +101,11 @@ function MyselfContainer({
   // build the page, so let's wait
   if (!characterName) {
     return (
-      <div style={{ textAlign: "center" }}>
+      <div
+        style={{
+          textAlign: "center",
+        }}
+      >
         <Loading />
       </div>
     );
@@ -130,16 +127,21 @@ function MyselfContainer({
       <hr />
 
       <MediaLgUp>
-        <StickyContainer style={{ height: "auto" }} className="row">
+        <StickyContainer
+          style={{
+            height: "auto",
+          }}
+          className="row"
+        >
           <div className="nav nav--stacked nav--stacked--1-of-4 nav--stacked--roman">
             <Sticky>
               {({ style }) => (
                 <ScrollNav
-                  style={style}
+                  active={activeItem}
                   data={stickyMenuItems}
                   gotoItem={onGoToItem}
-                  active={activeItem}
                   inverse
+                  style={style}
                 />
               )}
             </Sticky>
@@ -155,7 +157,13 @@ function MyselfContainer({
       <MediaMdDown>
         <Profile />
         <SearchField onChange={onFilterStringChange} value={filterString} />
-        <div style={{ position: "sticky", top: 0, zIndex: 1 }}>
+        <div
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 1,
+          }}
+        >
           <CategorySelector
             data={categories.filter((item) => item.name)}
             gotoItem={onGoToItem}
@@ -167,4 +175,4 @@ function MyselfContainer({
   );
 }
 
-export default connect(mapStateToProps)(MyselfContainer);
+MyselfContainer.displayName = "MyselfContainer";

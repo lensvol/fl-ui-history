@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 
 import moment from "moment";
 
-import { dismissNewsItem } from "actions/news";
+import { dismissNewsItem } from "actions/news/fetchNews";
 
 import Buttonlet from "components/Buttonlet";
 import Image from "components/Image";

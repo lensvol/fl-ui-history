@@ -103,6 +103,9 @@ function ResponsiveSidebar(props: Props) {
             <NavItem icon="star" onClick={makeHandler("plans")}>
               Plans
             </NavItem>
+            <NavItem icon="newspaper-o" onClick={makeHandler("updates")}>
+              Updates
+            </NavItem>
             <NavItem icon="question-circle" onClick={makeHandler("help")}>
               Help
             </NavItem>

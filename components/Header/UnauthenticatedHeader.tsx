@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function UnauthenticatedHeader() {
+export default function UnauthenticatedHeader() {
   return (
     <Fragment>
       <ul className="user__nav list--horizontal">
@@ -21,5 +21,3 @@ function UnauthenticatedHeader() {
 }
 
 UnauthenticatedHeader.displayName = "UnauthenticatedHeader";
-
-export default withRouter(UnauthenticatedHeader);

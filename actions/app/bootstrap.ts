@@ -14,7 +14,7 @@ import {
 } from "actions/map";
 import { fetch as fetchMessages } from "actions/messages";
 import { fetchMyself } from "actions/myself";
-import { fetch as fetchNews } from "actions/news";
+import { fetchNews } from "actions/news/fetchNews";
 import { fetchOutfit } from "actions/outfit";
 import { fetchPlans } from "actions/plans";
 import { fetch as fetchSettings } from "actions/settings";

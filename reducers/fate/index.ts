@@ -12,6 +12,7 @@ export interface IFateState {
   activePurchase: any | null;
   activeSubtab: FateSubtab;
   avatarSelected: any | null;
+  data: FateData;
   hasFetched: boolean;
   isDialogOpen: boolean;
   isExceptionalFriend: boolean;
@@ -20,9 +21,8 @@ export interface IFateState {
   message: string | null;
   premiumSubExpiryDateTime: string;
   purchaseComplete: boolean;
-  data: FateData;
-  showEnhancedStore: boolean;
   remainingStoryUnlocks?: number;
+  showEnhancedStore: boolean;
 }
 
 const INITIAL_STATE: IFateState = {

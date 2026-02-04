@@ -1,20 +1,16 @@
 import React from "react";
-import { connect } from "react-redux";
 
-import Loading from "components/Loading";
 import ActionCounter from "components/ActionCounter";
-import { IAppState } from "types/app";
-import PlayerEchoes from "./PlayerEchoes";
-import PlayerFate from "./PlayerFate";
-import SidebarCurrencies from "./SidebarCurrencies";
+import Loading from "components/Loading";
+import PlayerEchoes from "components/PlayerStats/PlayerEchoes";
+import PlayerFate from "components/PlayerStats/PlayerFate";
+import SidebarCurrencies from "components/PlayerStats/SidebarCurrencies";
 
-const mapStateToProps = (state: IAppState) => ({
-  actions: state.actions,
-});
+import { useAppSelector } from "features/app/store";
 
-type Props = ReturnType<typeof mapStateToProps>;
+export default function PlayerStats() {
+  const actions = useAppSelector((state) => state.actions);
 
-export function PlayerStats({ actions }: Props) {
   if (!actions) {
     return <Loading spinner />;
   }
@@ -32,5 +28,3 @@ export function PlayerStats({ actions }: Props) {
 }
 
 PlayerStats.displayName = "PlayerStats";
-
-export default connect(mapStateToProps)(PlayerStats);

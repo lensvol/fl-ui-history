@@ -1,7 +1,9 @@
-import BaseService, { Either } from "./BaseMonadicService";
+import BaseService, { Either } from "services/BaseMonadicService";
 
 export interface INewsService {
   fetch: () => Promise<Either<NewsResponse>>;
+
+  fetchAll: () => Promise<Either<NewsResponse[]>>;
 }
 
 export type NewsResponse = {
@@ -13,15 +15,21 @@ export type NewsResponse = {
 };
 
 export default class NewsService extends BaseService implements INewsService {
-  /**
-   * Fetch
-   * @return {Promise} [description]
-   */
   fetch = () => {
     const config = {
       method: "get",
       url: "/news",
     };
+
     return this.doRequest<NewsResponse>(config);
+  };
+
+  fetchAll = () => {
+    const config = {
+      method: "get",
+      url: "/news/all",
+    };
+
+    return this.doRequest<NewsResponse[]>(config);
   };
 }

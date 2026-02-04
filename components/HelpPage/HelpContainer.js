@@ -5,7 +5,7 @@ import Footer from "components/Footer";
 
 export default function HelpContainer() {
   return (
-    <div>
+    <div id="helpContainer">
       <Header />
       <Help />
       <Footer />

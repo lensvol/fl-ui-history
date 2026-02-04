@@ -1,7 +1,13 @@
 import { ActionCreator } from "redux";
-import { handleVersionMismatch } from "actions/versionSync";
-import * as FateActionTypes from "actiontypes/fate";
 import { ThunkDispatch } from "redux-thunk";
+
+import { fetchActions } from "actions/actions";
+import { fetch as fetchCards } from "actions/cards";
+import { fetchAvailable } from "actions/storylet";
+import { handleVersionMismatch } from "actions/versionSync";
+
+import * as FateActionTypes from "actiontypes/fate";
+
 import { Either, Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
 import FateService, {
@@ -9,11 +15,8 @@ import FateService, {
   PurchaseFateItemRequest,
   PurchaseFateItemResponse,
 } from "services/FateService";
-import { fetchAvailable } from "actions/storylet";
-import { fetch as fetchCards } from "actions/cards";
-import { fetchActions } from "actions/actions";
 
-export type PurchaseItemRequested = {
+type PurchaseItemRequested = {
   type: typeof FateActionTypes.PURCHASE_ITEM_REQUESTED;
 };
 
@@ -22,7 +25,7 @@ export type PurchaseItemSuccess = {
   payload: PurchaseFateItemResponse;
 };
 
-export type PurchaseItemFailure = {
+type PurchaseItemFailure = {
   type: typeof FateActionTypes.PURCHASE_ITEM_FAILURE;
 };
 
@@ -31,9 +34,7 @@ export type PurchaseItemActions =
   | PurchaseItemRequested
   | PurchaseItemSuccess;
 
-export const purchaseItemRequested: ActionCreator<
-  PurchaseItemRequested
-> = () => ({
+const purchaseItemRequested: ActionCreator<PurchaseItemRequested> = () => ({
   type: FateActionTypes.PURCHASE_ITEM_REQUESTED,
   isPurchasing: true,
 });
@@ -46,7 +47,7 @@ export const purchaseItemSuccess: ActionCreator<PurchaseItemSuccess> = (
   payload: data,
 });
 
-export const purchaseItemFailure: ActionCreator<PurchaseItemFailure> = (
+const purchaseItemFailure: ActionCreator<PurchaseItemFailure> = (
   error: any
 ) => ({
   type: FateActionTypes.PURCHASE_ITEM_FAILURE,
@@ -73,21 +74,28 @@ export function purchaseItem(
 
     try {
       const result = await service.purchaseItem(fateData);
+
       if (result instanceof Success) {
         const { data } = result;
+
         dispatch(purchaseItemSuccess(data));
         dispatch(fetchActions());
+
         // Fetch opp cards and available storylets in case one of them changed
         dispatch(fetchCards({ background: true }));
         dispatch(fetchAvailable());
       }
+
       return result;
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
+
         return error;
       }
+
       dispatch(purchaseItemFailure(error));
+
       throw error;
     }
   };

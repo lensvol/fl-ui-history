@@ -1,27 +1,15 @@
 import React from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
 
-type OwnProps = {
+type Props = {
+  disabled: boolean;
   onClick: () => void;
-  undiscardable?: boolean;
 };
 
-const mapStateToProps = ({ cards: { isFetching } }: IAppState) => ({
-  isFetching,
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export function DiscardButton({ isFetching, onClick, undiscardable }: Props) {
-  if (undiscardable) {
-    return null;
-  }
-
+export default function DiscardButton({ disabled, onClick }: Props) {
   return (
     <button
       className="button button--primary button--small card__discard-button"
-      disabled={isFetching}
+      disabled={disabled}
       onClick={onClick}
       type="button"
     >
@@ -31,5 +19,3 @@ export function DiscardButton({ isFetching, onClick, undiscardable }: Props) {
 }
 
 DiscardButton.displayName = "DiscardButton";
-
-export default connect(mapStateToProps)(DiscardButton);

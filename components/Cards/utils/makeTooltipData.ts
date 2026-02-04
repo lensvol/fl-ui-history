@@ -1,19 +1,18 @@
 import { ITooltipData } from "components/ModalTooltip/types";
+
 import { ICard } from "types/cards";
 
-export default function makeTooltipData({
-  action,
-  data,
-}: {
+type Props = {
   action: () => any;
   data: ITooltipData & Pick<ICard, "unlockedWithDescription" | "teaser">;
-}): ITooltipData {
+};
+
+export default function makeTooltipData({ action, data }: Props): ITooltipData {
   return {
-    // secondaryDescription: splitQreqString(data.unlockedWithDescription),
     secondaryDescription: data.unlockedWithDescription,
     name: data.name,
     description: data.teaser,
-    smallButtons: [
+    smallButtons: data.smallButtons ?? [
       {
         action,
         label: "play",

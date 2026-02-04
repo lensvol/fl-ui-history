@@ -38,6 +38,7 @@ import PrivacyPage from "components/PrivacyPage";
 import ProfilePage from "components/ProfilePage";
 import StoryTabContent from "components/StoryTabContent";
 import TermsPage from "components/TermsPage";
+import Updates from "components/Updates";
 
 import ErrorThrower from "components/ErrorThrower";
 import MyselfTab from "components/MyselfTab";
@@ -62,7 +63,6 @@ import { UIRestriction } from "types/myself";
 export default function App() {
   console.log("current version: ", Config.version); // eslint-disable-line no-console
   ReactGA.initialize("G-7ZBF3LYSFQ");
-  // const maintenance = function (){ return (<h1>Fallen London is in Maintenance Mode</h1>)};
 
   return (
     <ErrorBoundary>
@@ -162,6 +162,7 @@ export default function App() {
                   component={AgentsTab}
                   uiRestriction={UIRestriction.Agents}
                 />
+                <RequireCharacter path="/updates" exact component={Updates} />
 
                 {/* Also unrestricted but, it's the catch-all, so it lives at the end */}
                 <Route path="*" component={NotFound} />

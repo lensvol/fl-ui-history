@@ -2,8 +2,8 @@ import React from "react";
 
 import classnames from "classnames";
 
-import Image from "components/Image";
 import MaybeSecondChance from "components/Branch/MaybeSecondChance";
+import Image from "components/Image";
 
 import { IChallenge } from "types/storylet";
 
@@ -20,7 +20,7 @@ export default function Challenge({
   locked,
   toggleSecondChance,
 }: Props) {
-  const { description, baseDescription, image, name, targetNumber, bonuses } =
+  const { baseDescription, bonuses, description, image, name, targetNumber } =
     data;
 
   const hasBonus = bonuses && bonuses.length;
@@ -39,10 +39,9 @@ export default function Challenge({
         <div className="challenge__left">
           <div className="js-icon icon icon--circular challenge__icon">
             <Image
-              icon={image}
               alt={name}
-              type="small-icon"
               defaultCursor
+              icon={image}
               tooltipData={
                 hasBonus
                   ? {
@@ -50,6 +49,7 @@ export default function Challenge({
                     }
                   : undefined
               }
+              type="small-icon"
             />
           </div>
           {bonuses &&
@@ -57,16 +57,16 @@ export default function Challenge({
               <>
                 <div className="js-icon icon icon--circular challenge__icon">
                   <Image
-                    icon={b.image}
                     alt={b.name}
-                    type="small-icon"
                     defaultCursor
-                    tooltipData={{
-                      description: b.description,
-                    }}
+                    icon={b.image}
                     style={{
                       marginLeft: "0.25rem",
                     }}
+                    tooltipData={{
+                      description: b.description,
+                    }}
+                    type="small-icon"
                   />
                 </div>
               </>
@@ -80,7 +80,7 @@ export default function Challenge({
           <p className="challenge__description">{challengeDescription}</p>
         </div>
       </div>
-      {targetNumber < 100 && (
+      {targetNumber > 0 && targetNumber < 100 && (
         <MaybeSecondChance
           data={data}
           locked={locked}

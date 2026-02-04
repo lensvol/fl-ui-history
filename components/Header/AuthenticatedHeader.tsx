@@ -8,11 +8,12 @@ import { useAppSelector } from "features/app/store";
 
 enum CurrentLocation {
   Account,
+  Credits,
   Help,
   Privacy,
-  Terms,
-  Credits,
   SomewhereElse,
+  Terms,
+  Updates,
 }
 
 function AuthenticatedHeader(props: Props) {
@@ -30,6 +31,10 @@ function AuthenticatedHeader(props: Props) {
       return CurrentLocation.Account;
     }
 
+    if (pathname.startsWith("/credits")) {
+      return CurrentLocation.Credits;
+    }
+
     if (pathname.startsWith("/help")) {
       return CurrentLocation.Help;
     }
@@ -42,8 +47,8 @@ function AuthenticatedHeader(props: Props) {
       return CurrentLocation.Terms;
     }
 
-    if (pathname.startsWith("/credits")) {
-      return CurrentLocation.Credits;
+    if (pathname.startsWith("/updates")) {
+      return CurrentLocation.Updates;
     }
 
     return CurrentLocation.SomewhereElse;
@@ -71,6 +76,12 @@ function AuthenticatedHeader(props: Props) {
         {currentLocation !== CurrentLocation.SomewhereElse && (
           <li className="list-item--separated">
             <Link to="/">Back to game</Link>
+          </li>
+        )}
+
+        {currentLocation !== CurrentLocation.Updates && (
+          <li className="list-item--separated">
+            <Link to="/updates">Updates</Link>
           </li>
         )}
 

@@ -1,8 +1,9 @@
 import { PurchaseItemSuccess } from "actions/fate/purchaseItem";
+
+import calculateEffectiveFate from "reducers/fate/calculateEffectiveFate";
 import { IFateState } from "reducers/fate/index";
-import calculateEffectiveFate from "./calculateEffectiveFate";
-import makeFateRefreshCard from "./makeFateRefreshCard";
-import makeEnhancedActionRefreshCard from "./makeEnhancedActionRefreshCard";
+import makeEnhancedActionRefreshCard from "reducers/fate/makeEnhancedActionRefreshCard";
+import makeFateRefreshCard from "reducers/fate/makeFateRefreshCard";
 
 export default function purchaseItemSuccess(
   state: IFateState,
@@ -16,11 +17,11 @@ export default function purchaseItemSuccess(
     data: {
       ...payload,
       actionRefillFateCard: makeFateRefreshCard(payload),
-      enhancedActionRefreshCard: makeEnhancedActionRefreshCard(payload),
       currentFate: calculateEffectiveFate(payload),
+      enhancedActionRefreshCard: makeEnhancedActionRefreshCard(payload),
     },
-    purchaseComplete: true,
     message: null,
+    purchaseComplete: true,
     remainingStoryUnlocks: payload.remainingStoryUnlocks,
   };
 }

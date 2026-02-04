@@ -2,6 +2,7 @@ import * as PaymentActionTypes from "actiontypes/payment";
 
 import selectCurrencySuccess from "reducers/payment/selectCurrencySuccess";
 import selectPackage from "reducers/payment/selectPackage";
+
 import { IPaymentState } from "types/payment";
 
 /**
@@ -11,12 +12,12 @@ import { IPaymentState } from "types/payment";
 const INITIAL_STATE: IPaymentState = {
   braintreeConfig: undefined,
   clientRequestToken: undefined,
-  currency: "",
   currencies: {},
+  currency: "",
   currencyCode: undefined,
   environmentPrefix: null,
-  isBreakdownVisible: false,
   isBraintree: true,
+  isBreakdownVisible: false,
   isDialogOpen: false,
   isFetching: false,
   isPurchasing: false,
@@ -27,11 +28,6 @@ const INITIAL_STATE: IPaymentState = {
   selectedPackage: undefined,
 };
 
-/**
- * Payment Reducer
- * @param {Object} state
- * @param {[Object]} action
- */
 export default function reducer(
   state = INITIAL_STATE,
   action: { type: string; payload: any }

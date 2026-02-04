@@ -1,5 +1,6 @@
+import BaseService, { Either } from "services/BaseMonadicService";
+
 import { IFateCard } from "types/fate";
-import BaseService, { Either } from "./BaseMonadicService";
 
 export interface IFateService {
   changeAvatar: (avatarName: string) => Promise<Either<ChangeAvatarResponse>>;
@@ -29,37 +30,30 @@ export type PurchaseFateItemRequest = {
 
 export type PurchaseFateItemResponse = FetchFateResponse;
 
-class FateService extends BaseService implements IFateService {
-  /**
-   * Fetch
-   * @return {Promise}
-   */
+export default class FateService extends BaseService implements IFateService {
   fetchFate = () => {
     const config = {
       method: "get",
       url: "/fate",
     };
+
     return this.doRequest(config);
   };
 
-  /**
-   * Purchase Item
-   * @param  {Object} data
-   * @return {Promise}
-   */
   purchaseItem = (data: PurchaseFateItemRequest) => {
-    const { storeItemId, newName = null, avatarImage = null, action } = data;
+    const { action, avatarImage = null, newName = null, storeItemId } = data;
 
     const config = {
       method: "post",
       url: "/fate/purchase",
       data: {
-        storeItemId,
-        newName,
-        avatarImage,
         action,
+        avatarImage,
+        newName,
+        storeItemId,
       },
     };
+
     return this.doRequest<PurchaseFateItemResponse>(config);
   };
 
@@ -67,10 +61,11 @@ class FateService extends BaseService implements IFateService {
     const config = {
       method: "post",
       url: "/fate/changeavatar",
-      data: { avatarImage },
+      data: {
+        avatarImage,
+      },
     };
+
     return this.doRequest<ChangeAvatarResponse>(config);
   };
 }
-
-export { FateService as default };

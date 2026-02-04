@@ -1,6 +1,8 @@
-import { FetchNewsSuccess } from "actions/news";
-import { INewsState } from "reducers/news/index";
 import store from "store";
+
+import { FetchNewsSuccess } from "actions/news/fetchNews";
+
+import { INewsState } from "reducers/news/index";
 
 export default function fetchNewsSuccess(
   state: INewsState,
