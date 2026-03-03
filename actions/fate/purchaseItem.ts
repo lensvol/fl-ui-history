@@ -6,7 +6,11 @@ import { fetch as fetchCards } from "actions/cards";
 import { fetchAvailable } from "actions/storylet";
 import { handleVersionMismatch } from "actions/versionSync";
 
-import * as FateActionTypes from "actiontypes/fate";
+import {
+  PURCHASE_ITEM_FAILURE,
+  PURCHASE_ITEM_REQUESTED,
+  PURCHASE_ITEM_SUCCESS,
+} from "actiontypes/fate";
 
 import { Either, Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
@@ -17,16 +21,16 @@ import FateService, {
 } from "services/FateService";
 
 type PurchaseItemRequested = {
-  type: typeof FateActionTypes.PURCHASE_ITEM_REQUESTED;
+  type: typeof PURCHASE_ITEM_REQUESTED;
 };
 
 export type PurchaseItemSuccess = {
-  type: typeof FateActionTypes.PURCHASE_ITEM_SUCCESS;
+  type: typeof PURCHASE_ITEM_SUCCESS;
   payload: PurchaseFateItemResponse;
 };
 
 type PurchaseItemFailure = {
-  type: typeof FateActionTypes.PURCHASE_ITEM_FAILURE;
+  type: typeof PURCHASE_ITEM_FAILURE;
 };
 
 export type PurchaseItemActions =
@@ -35,23 +39,20 @@ export type PurchaseItemActions =
   | PurchaseItemSuccess;
 
 const purchaseItemRequested: ActionCreator<PurchaseItemRequested> = () => ({
-  type: FateActionTypes.PURCHASE_ITEM_REQUESTED,
-  isPurchasing: true,
+  type: PURCHASE_ITEM_REQUESTED,
 });
 
-export const purchaseItemSuccess: ActionCreator<PurchaseItemSuccess> = (
+const purchaseItemSuccess: ActionCreator<PurchaseItemSuccess> = (
   data: PurchaseFateItemResponse
 ) => ({
-  type: FateActionTypes.PURCHASE_ITEM_SUCCESS,
-  isPurchasing: false,
+  type: PURCHASE_ITEM_SUCCESS,
   payload: data,
 });
 
 const purchaseItemFailure: ActionCreator<PurchaseItemFailure> = (
   error: any
 ) => ({
-  type: FateActionTypes.PURCHASE_ITEM_FAILURE,
-  isPurchasing: false,
+  type: PURCHASE_ITEM_FAILURE,
   error: true,
   status: error.response && error.response.status,
 });

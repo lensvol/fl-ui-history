@@ -1,10 +1,7 @@
 import React, { useCallback } from "react";
 
-import { useDispatch } from "react-redux";
-
 import { withRouter, Link, RouteComponentProps } from "react-router-dom";
 
-import { openPurchaseDialog } from "actions/fate";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
 import { closeSidebar } from "actions/sidebar";
 
@@ -20,10 +17,7 @@ import { UIRestriction } from "types/myself";
 type Props = RouteComponentProps;
 
 function PlayerFate({ history }: Props) {
-  const dispatch = useDispatch();
-  const actions = useAppSelector((state) => state.actions.actions);
   const currentFate = useAppSelector((state) => state.fate.data.currentFate);
-  const fateCards = useAppSelector((state) => state.fate.data.fateCards);
   const hasSubscription = useAppSelector(
     (state) => state.settings.subscriptions.hasBraintreeSubscription
   );
@@ -41,17 +35,8 @@ function PlayerFate({ history }: Props) {
   );
 
   const handleClick = useCallback(() => {
-    const actionsRemaining = actions;
-    const actionItem = fateCards.find(
-      ({ action }) => action === "RefillActions"
-    );
-
-    if (actionsRemaining <= 6) {
-      dispatch(openPurchaseDialog(actionItem));
-    } else {
-      history.push("/fate");
-    }
-  }, [actions, dispatch, fateCards, history]);
+    history.push("/fate");
+  }, [history]);
 
   const renderSubscriptionInformation = useCallback(() => {
     const userDidDowngrade = isDowngradedSubscription(

@@ -1,4 +1,13 @@
-import * as PaymentActionTypes from "actiontypes/payment";
+import {
+  CLOSE_DIALOG,
+  OPEN_DIALOG,
+  PURCHASE_FAILURE,
+  PURCHASE_SUCCESS,
+  SELECT_CURRENCY_FAILURE,
+  SELECT_CURRENCY_REQUESTED,
+  SELECT_CURRENCY_SUCCESS,
+  SELECT_PACKAGE,
+} from "actiontypes/payment";
 
 import selectCurrencySuccess from "reducers/payment/selectCurrencySuccess";
 import selectPackage from "reducers/payment/selectPackage";
@@ -16,11 +25,7 @@ const INITIAL_STATE: IPaymentState = {
   currency: "",
   currencyCode: undefined,
   environmentPrefix: null,
-  isBraintree: true,
-  isBreakdownVisible: false,
-  isDialogOpen: false,
   isFetching: false,
-  isPurchasing: false,
   isSuccess: false,
   message: undefined,
   packages: [],
@@ -35,25 +40,23 @@ export default function reducer(
   const { payload = {} } = action;
 
   switch (action.type) {
-    case PaymentActionTypes.OPEN_DIALOG:
+    case OPEN_DIALOG:
       return {
         ...state,
-        isDialogOpen: true,
         isSuccess: false,
         message: null,
         paymentType: payload.paymentType,
       };
 
-    case PaymentActionTypes.CLOSE_DIALOG:
+    case CLOSE_DIALOG:
       return {
         ...state,
-        isDialogOpen: false,
         selectedPackage: null,
         isSuccess: false,
         message: null,
       };
 
-    case PaymentActionTypes.SELECT_CURRENCY_REQUESTED:
+    case SELECT_CURRENCY_REQUESTED:
       return {
         ...state,
         isFetching: true,
@@ -61,51 +64,31 @@ export default function reducer(
         selectedPackage: null,
       };
 
-    case PaymentActionTypes.SELECT_CURRENCY_SUCCESS:
+    case SELECT_CURRENCY_SUCCESS:
       return selectCurrencySuccess(state, payload);
 
-    case PaymentActionTypes.SELECT_CURRENCY_FAILURE:
+    case SELECT_CURRENCY_FAILURE:
       return {
         ...state,
         isFetching: false,
         currency: payload.currency,
       };
 
-    case PaymentActionTypes.SELECT_PACKAGE:
+    case SELECT_PACKAGE:
       return selectPackage(state, payload);
 
-    case PaymentActionTypes.PURCHASE_REQUESTED:
+    case PURCHASE_FAILURE:
       return {
         ...state,
-        isPurchasing: true,
-      };
-
-    case PaymentActionTypes.PURCHASE_FAILURE:
-      return {
-        ...state,
-        isPurchasing: false,
         isSuccess: false,
         message: payload.message,
       };
 
-    case PaymentActionTypes.PURCHASE_SUCCESS:
+    case PURCHASE_SUCCESS:
       return {
         ...state,
-        isPurchasing: false,
         isSuccess: true,
         message: payload.message,
-      };
-
-    case PaymentActionTypes.TOGGLE_PRICE_BREAKDOWN:
-      return {
-        ...state,
-        isBreakdownVisible: !state.isBreakdownVisible,
-      };
-
-    case PaymentActionTypes.TOGGLE_PAYMENT_PROVIDER:
-      return {
-        ...state,
-        isBraintree: !state.isBraintree,
       };
 
     default:

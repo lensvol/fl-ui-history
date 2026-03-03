@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
+
 import { Marker } from "react-leaflet";
-import { connect } from "react-redux";
 
 import classnames from "classnames";
 
 import L from "leaflet";
 
+import { useAppSelector } from "features/app/store";
 import { xy } from "features/mapping";
 import {
   PLAYER_MARKER_HEIGHT,
@@ -13,13 +14,15 @@ import {
 } from "features/mapping/constants";
 import getPlayerMarkerIconURL from "features/mapping/getPlayerMarkerIconURL";
 
-import getCurrentStateAwareArea from "selectors/map/getCurrentStateAwareArea";
 import getIsCurrentPlayerMarkerArea from "selectors/map/getIsCurrentPlayerMarkerArea";
 
-import { IAppState } from "types/app";
 import { IStateAwareArea } from "types/map";
 
-function PlayerMarker({ area, avatarImage, isCurrentPlayerMarkerArea }: Props) {
+type Props = {
+  area: IStateAwareArea;
+};
+
+export default function PlayerMarker({ area }: Props) {
   const {
     areaKey,
     labelX,
@@ -30,6 +33,13 @@ function PlayerMarker({ area, avatarImage, isCurrentPlayerMarkerArea }: Props) {
     playerMarkerAnchorX,
     playerMarkerAnchorY,
   } = area;
+
+  const avatarImage = useAppSelector(
+    (state) => state.myself.character.avatarImage
+  );
+  const isCurrentPlayerMarkerArea = useAppSelector((state) =>
+    getIsCurrentPlayerMarkerArea(state, { area })
+  );
 
   const iconAnchor = useMemo(() => {
     if (playerMarkerAnchorX && playerMarkerAnchorY) {
@@ -45,19 +55,17 @@ function PlayerMarker({ area, avatarImage, isCurrentPlayerMarkerArea }: Props) {
     );
   }, [pinOffsetX, pinOffsetY, playerMarkerAnchorX, playerMarkerAnchorY]);
 
-  const icon = useMemo(
-    () =>
-      new L.Icon({
-        iconAnchor,
-        className: classnames(
-          "map__player-marker",
-          isCurrentPlayerMarkerArea && "map__player-marker--visible"
-        ),
-        iconUrl: getPlayerMarkerIconURL(pinPrefix, avatarImage),
-        iconSize: new L.Point(PLAYER_MARKER_WIDTH, PLAYER_MARKER_HEIGHT),
-      }),
-    [avatarImage, iconAnchor, isCurrentPlayerMarkerArea, pinPrefix]
-  );
+  const icon = useMemo(() => {
+    return new L.Icon({
+      className: classnames(
+        "map__player-marker",
+        isCurrentPlayerMarkerArea && "map__player-marker--visible"
+      ),
+      iconAnchor,
+      iconUrl: getPlayerMarkerIconURL(pinPrefix, avatarImage),
+      iconSize: new L.Point(PLAYER_MARKER_WIDTH, PLAYER_MARKER_HEIGHT),
+    });
+  }, [avatarImage, iconAnchor, isCurrentPlayerMarkerArea, pinPrefix]);
 
   const position = useMemo(() => {
     if (!(labelX && labelY)) {
@@ -81,18 +89,4 @@ function PlayerMarker({ area, avatarImage, isCurrentPlayerMarkerArea }: Props) {
   return <Marker key={areaKey} icon={icon} position={position} />;
 }
 
-type OwnProps = {
-  area: IStateAwareArea;
-};
-
-type Props = ReturnType<typeof mapStateToProps> & OwnProps;
-
-function mapStateToProps(state: IAppState, props: OwnProps) {
-  return {
-    avatarImage: state.myself.character.avatarImage,
-    currentArea: getCurrentStateAwareArea(state),
-    isCurrentPlayerMarkerArea: getIsCurrentPlayerMarkerArea(state, props),
-  };
-}
-
-export default connect(mapStateToProps)(PlayerMarker);
+PlayerMarker.displayName = "PlayerMarker";

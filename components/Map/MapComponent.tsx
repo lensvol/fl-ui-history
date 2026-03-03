@@ -1,32 +1,53 @@
-import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
+
 import { connect } from "react-redux";
+
+import { ThunkDispatch } from "redux-thunk";
+
 import { LeafletEvent, ZoomAnimEvent } from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 
 import { mapClicked, mapZoomEnd } from "actions/mapAdmin";
-import { ThunkDispatch } from "redux-thunk";
-import getIsPlayerInLimbo from "selectors/map/getIsPlayerInLimbo";
-import { IArea, IMappableSetting, IStateAwareArea } from "types/map";
-import { IAppState } from "types/app";
+import { spriteLoaderProgress } from "actions/spriteLoader";
 
+import FallbackMap from "components/Map/FallbackMap";
+import Limbo from "components/Map/Limbo";
+import Lodgings from "components/Map/Lodgings";
+import MapModalTooltipContext from "components/Map/MapModalTooltipContext";
+import PixiMap from "components/Map/PixiMap";
+import SelectedAreaContext from "components/Map/SelectedAreaContext";
 import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
 
 import { isDistrict } from "features/mapping";
-import MapModalTooltipContext from "components/Map/MapModalTooltipContext";
-
 import asStateAwareArea from "features/mapping/asStateAwareArea";
-import FallbackMap from "components/Map/FallbackMap";
+import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
 import loadAndDrawMapSprites from "features/mapping/loadAndDrawMapSprites";
-import { spriteLoaderProgress } from "actions/spriteLoader";
 import isWebGLSupported from "features/startup/isWebGLSupported";
-import Limbo from "./Limbo";
-import PixiMap from "./PixiMap";
-import SelectedAreaContext from "./SelectedAreaContext";
-import Lodgings from "./Lodgings";
 
-export interface State {
+import getIsPlayerInLimbo from "selectors/map/getIsPlayerInLimbo";
+
+import { IAppState } from "types/app";
+import { IArea, IMappableSetting, IStateAwareArea } from "types/map";
+
+const mapStateToProps = (state: IAppState) => ({
+  areas: state.map.areas,
+  currentArea: state.map.currentArea,
+  fallbackMapPreferred: state.map.fallbackMapPreferred,
+  isPlayerInLimbo: getIsPlayerInLimbo(state),
+  setting: state.map.setting,
+});
+
+interface Props extends ReturnType<typeof mapStateToProps> {
+  dispatch: ThunkDispatch<any, any, any>;
+  initialCenter: number[];
+  initialZoom: number;
+  isChangingArea: boolean;
+  onAreaClick: (area: IArea) => Promise<void>;
+  onWillUnmount: (zoom: number, center: number[]) => void;
+}
+
+interface State {
   center: number[];
   isModalTooltipOpen: boolean;
   selectedArea?: IStateAwareArea;
@@ -34,13 +55,14 @@ export interface State {
   zoomLevel: number;
 }
 
-export class MapComponent extends Component<Props, State> {
+class MapComponent extends Component<Props, State> {
   static displayName = "MapComponent";
 
   state: State;
 
   constructor(props: Props) {
     super(props);
+
     this.state = {
       center: props.initialCenter,
       isModalTooltipOpen: false,
@@ -72,37 +94,52 @@ export class MapComponent extends Component<Props, State> {
   componentWillUnmount(): void {
     const { onWillUnmount } = this.props;
     const { center, zoomLevel } = this.state;
+
     onWillUnmount(zoomLevel, center);
   }
 
   // noinspection JSUnusedLocalSymbols
-  handleAreaClick = async (e: any, area: IArea) => {
+  handleAreaClick = async (_e: any, area: IArea) => {
     const { onAreaClick } = this.props;
+
     // Run the parent callback
     await onAreaClick(area);
   };
 
   handleAreaSelect = (area?: IArea) => {
     const { areas, currentArea, setting } = this.props;
+
     if (!area) {
-      this.setState({ selectedArea: area });
+      this.setState({
+        selectedArea: area,
+      });
+
       return;
     }
+
     const stateAwareArea = asStateAwareArea(
       area,
       areas || [],
       setting as IMappableSetting,
       currentArea
     );
+
     if (!stateAwareArea.isLit) {
-      this.setState({ selectedArea: undefined });
+      this.setState({
+        selectedArea: undefined,
+      });
+
       return;
     }
-    this.setState({ selectedArea: stateAwareArea });
+
+    this.setState({
+      selectedArea: stateAwareArea,
+    });
   };
 
   handleClick = ({ latlng }: { latlng: any }) => {
     const { dispatch } = this.props;
+
     dispatch(mapClicked(latlng.lng, latlng.lat));
   };
 
@@ -113,16 +150,17 @@ export class MapComponent extends Component<Props, State> {
   handleMoveEnd = (e: LeafletEvent) => {
     const mapCenter = e.target.getCenter();
     const zoomLevel = e.target.getZoom();
+
     this.setState({
-      zoomLevel,
       center: [mapCenter.lng, mapCenter.lat],
+      zoomLevel,
     });
   };
 
   handleOpenModalTooltip = (tooltipData: any) => {
     this.setState({
-      tooltipData,
       isModalTooltipOpen: true,
+      tooltipData,
     });
   };
 
@@ -140,12 +178,16 @@ export class MapComponent extends Component<Props, State> {
   handleZoomEnd = (e: ZoomAnimEvent) => {
     const { dispatch, fallbackMapPreferred, setting } = this.props;
     const { selectedArea } = this.state;
+
     const zoomLevel = e.target.getZoom();
-    this.setState({ zoomLevel });
+
+    this.setState({
+      zoomLevel,
+    });
+
     dispatch(mapZoomEnd(zoomLevel));
 
-    // If we have zoomed in while moused over an area's hitbox, then we need to automatically
-    // deselect it
+    // If we have zoomed in while moused over an area's hitbox, then we need to automatically deselect it
     if (
       setting &&
       setting.mapRootArea?.areaKey &&
@@ -181,13 +223,17 @@ export class MapComponent extends Component<Props, State> {
     return (
       <MapModalTooltipContext.Provider
         value={{
-          openModalTooltip: this.handleOpenModalTooltip,
           onRequestClose: () => {
             /* no-op */
           },
+          openModalTooltip: this.handleOpenModalTooltip,
         }}
       >
-        <SelectedAreaContext.Provider value={{ selectedArea }}>
+        <SelectedAreaContext.Provider
+          value={{
+            selectedArea,
+          }}
+        >
           {shouldWeShowTheFallbackMap ? (
             <FallbackMap
               currentArea={currentArea}
@@ -203,7 +249,7 @@ export class MapComponent extends Component<Props, State> {
               zoomLevel={zoomLevel}
             />
           ) : (
-            <Fragment>
+            <>
               <PixiMap
                 currentArea={currentArea}
                 initialCenter={initialCenter}
@@ -227,34 +273,17 @@ export class MapComponent extends Component<Props, State> {
               />
 
               <ModalTooltip
+                disableTouchEvents
                 modalIsOpen={isModalTooltipOpen}
                 onRequestClose={this.handleRequestCloseModalTooltip}
                 tooltipData={tooltipData}
-                disableTouchEvents
               />
-            </Fragment>
+            </>
           )}
         </SelectedAreaContext.Provider>
       </MapModalTooltipContext.Provider>
     );
   }
-}
-
-const mapStateToProps = (state: IAppState) => ({
-  areas: state.map.areas,
-  fallbackMapPreferred: state.map.fallbackMapPreferred,
-  currentArea: state.map.currentArea,
-  setting: state.map.setting,
-  isPlayerInLimbo: getIsPlayerInLimbo(state),
-});
-
-export interface Props extends ReturnType<typeof mapStateToProps> {
-  dispatch: ThunkDispatch<any, any, any>;
-  initialCenter: number[];
-  initialZoom: number;
-  isChangingArea: boolean;
-  onAreaClick: (area: IArea) => Promise<void>;
-  onWillUnmount: (zoom: number, center: number[]) => void;
 }
 
 export default connect(mapStateToProps)(MapComponent);

@@ -1,6 +1,15 @@
 import { FateActions } from "actions/fate";
 
-import * as FateActionTypes from "actiontypes/fate";
+import {
+  FETCH_FAILURE,
+  FETCH_REQUESTED,
+  FETCH_SUCCESS,
+  PROCESS_FATE_CHANGE,
+  PURCHASE_ITEM_REQUESTED,
+  PURCHASE_ITEM_SUCCESS,
+  SET_ACTIVE_SUBTAB,
+  TOGGLE_ENHANCED_STORE,
+} from "actiontypes/fate";
 
 import fetchSuccess from "reducers/fate/fetchSuccess";
 import processFateChange from "reducers/fate/processFateChange";
@@ -11,13 +20,10 @@ import { FateData, FateSubtab, SUBTAB_NEW } from "types/fate";
 export interface IFateState {
   activePurchase: any | null;
   activeSubtab: FateSubtab;
-  avatarSelected: any | null;
   data: FateData;
   hasFetched: boolean;
-  isDialogOpen: boolean;
   isExceptionalFriend: boolean;
   isFetching: boolean;
-  isPurchasing: boolean;
   message: string | null;
   premiumSubExpiryDateTime: string;
   purchaseComplete: boolean;
@@ -31,7 +37,6 @@ const INITIAL_STATE: IFateState = {
   hasFetched: false,
   isExceptionalFriend: false,
   isFetching: true,
-  isPurchasing: false,
   premiumSubExpiryDateTime: "0001-01-01T00:00:00", // this is the default value for non-EFs
   purchaseComplete: false,
   data: {
@@ -41,9 +46,7 @@ const INITIAL_STATE: IFateState = {
     fateCards: [],
     premiumSubPurchaseCard: undefined,
   },
-  isDialogOpen: false,
   message: null,
-  avatarSelected: null,
   showEnhancedStore: false,
 };
 
@@ -52,66 +55,42 @@ export default function fateReducer(
   action: FateActions
 ): IFateState {
   switch (action.type) {
-    case FateActionTypes.PROCESS_FATE_CHANGE:
+    case PROCESS_FATE_CHANGE:
       return processFateChange(state, action);
 
-    case FateActionTypes.FETCH_REQUESTED:
+    case FETCH_REQUESTED:
       return {
         ...state,
         isFetching: true,
         purchaseComplete: false,
       };
 
-    case FateActionTypes.FETCH_FAILURE:
+    case FETCH_FAILURE:
       return {
         ...state,
         isFetching: false,
         purchaseComplete: false,
       };
 
-    case FateActionTypes.FETCH_SUCCESS:
+    case FETCH_SUCCESS:
       return fetchSuccess(state, action);
 
-    case FateActionTypes.PURCHASE_ITEM_REQUESTED:
+    case PURCHASE_ITEM_REQUESTED:
       return {
         ...state,
-        isPurchasing: true,
         purchaseComplete: false,
       };
 
-    case FateActionTypes.PURCHASE_ITEM_SUCCESS:
+    case PURCHASE_ITEM_SUCCESS:
       return purchaseItemSuccess(state, action);
 
-    case FateActionTypes.PURCHASE_ITEM_FAILURE:
-      return {
-        ...state,
-        isPurchasing: false,
-      };
-
-    case FateActionTypes.OPEN_PURCHASE_DIALOG:
-      return {
-        ...state,
-        activePurchase: action.payload.item,
-        isDialogOpen: true,
-      };
-
-    case FateActionTypes.CLOSE_PURCHASE_DIALOG:
-      return {
-        ...state,
-        activePurchase: null,
-        isDialogOpen: false,
-        purchaseComplete: false,
-        avatarSelected: null,
-        isPurchasing: false,
-      };
-
-    case FateActionTypes.SET_ACTIVE_SUBTAB:
+    case SET_ACTIVE_SUBTAB:
       return {
         ...state,
         activeSubtab: action.payload.subtab,
       };
 
-    case FateActionTypes.TOGGLE_ENHANCED_STORE:
+    case TOGGLE_ENHANCED_STORE:
       return {
         ...state,
         showEnhancedStore: !state.showEnhancedStore,

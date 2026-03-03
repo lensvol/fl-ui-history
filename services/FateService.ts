@@ -3,14 +3,11 @@ import BaseService, { Either } from "services/BaseMonadicService";
 import { IFateCard } from "types/fate";
 
 export interface IFateService {
-  changeAvatar: (avatarName: string) => Promise<Either<ChangeAvatarResponse>>;
   fetchFate: () => Promise<Either<FetchFateResponse>>;
   purchaseItem: (
     data: PurchaseFateItemRequest
   ) => Promise<Either<PurchaseFateItemResponse>>;
 }
-
-export type ChangeAvatarResponse = FetchFateResponse;
 
 export type FetchFateResponse = {
   currentFate: number;
@@ -55,17 +52,5 @@ export default class FateService extends BaseService implements IFateService {
     };
 
     return this.doRequest<PurchaseFateItemResponse>(config);
-  };
-
-  changeAvatar = (avatarImage: string) => {
-    const config = {
-      method: "post",
-      url: "/fate/changeavatar",
-      data: {
-        avatarImage,
-      },
-    };
-
-    return this.doRequest<ChangeAvatarResponse>(config);
   };
 }

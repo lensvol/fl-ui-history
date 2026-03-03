@@ -13,7 +13,6 @@ export default function purchaseItemSuccess(
 
   return {
     ...state,
-    isPurchasing: false,
     data: {
       ...payload,
       actionRefillFateCard: makeFateRefreshCard(payload),

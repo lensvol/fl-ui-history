@@ -1,38 +1,50 @@
-import React, { useState, useCallback } from "react";
-import { connect } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
-import { ThunkDispatch } from "redux-thunk";
+import React, { useState, useCallback, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { beginSocialEvent } from "actions/storylet";
-import useIsMounted from "hooks/useIsMounted";
+
 import Loading from "components/Loading";
+import MessageComponent from "components/Messages/components/Message/MessageComponent";
+import PrimaryButton from "components/Messages/components/Message/PrimaryButton";
+
+import { useAppSelector } from "features/app/store";
+
+import useIsMounted from "hooks/useIsMounted";
+
 import { VersionMismatch } from "services/BaseService";
+
 import { FeedMessage } from "types/messages";
 import { BeginSocialEventResponse } from "types/storylet";
 
-import MessageComponent from "../MessageComponent";
-import PrimaryButton from "../PrimaryButton";
-
-type Props = RouteComponentProps & {
+type Props = {
   data: FeedMessage;
   disabled?: boolean;
-  dispatch: ThunkDispatch<any, any, any>;
   onEmail?: (hasMessagingEmail: boolean) => Promise<void>;
 };
 
-export function SocialMessage(props: Props) {
-  const { data, disabled, dispatch, history, onEmail } = props;
-
+export default function SocialMessage({ data, disabled, onEmail }: Props) {
   const { relatedId: invitationId } = data;
 
+  const dispatch = useDispatch();
+  const history = useHistory();
   const mounted = useIsMounted();
 
   const [isWorking, setIsWorking] = useState(false);
+
+  const inProgressInvitationId = useAppSelector(
+    (state) => state.messages.invitationId
+  );
+
+  const isDisabled = useMemo(() => {
+    return !!disabled || inProgressInvitationId === invitationId;
+  }, [disabled, inProgressInvitationId, invitationId]);
 
   const handleClick = useCallback(async () => {
     if (!invitationId) {
       return;
     }
+
     setIsWorking(true);
 
     const responseData: BeginSocialEventResponse | VersionMismatch =
@@ -55,11 +67,11 @@ export function SocialMessage(props: Props) {
 
   return (
     <MessageComponent data={data} emailable onEmail={onEmail}>
-      <PrimaryButton disabled={!!disabled} onClick={handleClick}>
+      <PrimaryButton disabled={isDisabled} onClick={handleClick}>
         {isWorking ? <Loading spinner small /> : <span>Respond</span>}
       </PrimaryButton>
     </MessageComponent>
   );
 }
 
-export default withRouter(connect()(SocialMessage));
+SocialMessage.displayName = "SocialMessage";

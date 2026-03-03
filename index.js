@@ -5,6 +5,7 @@ import ReactModal from "react-modal";
 import { Provider } from "react-redux";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
+
 import { FlagsProvider } from "flagged";
 
 import { bootstrap } from "actions/app";
@@ -20,9 +21,7 @@ import { APP_ROOT_SELECTOR } from "constants/selectors";
 
 import { store } from "features/app/store";
 import { FEATURE_FLAGS } from "features/feature-flags";
-
-import { applyFractionalTileSizeWorkaround, checkOtp } from "features/startup";
-
+import { checkOtp } from "features/startup";
 import clearAuthenticationTokens from "features/startup/clearAuthenticationTokens";
 import createMaintenanceModeDOM from "features/startup/createMaintenanceModeDOM";
 import createStaticErrorDOM from "features/startup/createStaticErrorDOM";
@@ -105,7 +104,11 @@ function runApp() {
     // Inspect the token for character and user IDs, and if we have both, then
     // start retrieving data before we render the app, and render it no matter what happens
     store
-      .dispatch(bootstrap({ fetchSpritesNow: false }))
+      .dispatch(
+        bootstrap({
+          fetchSpritesNow: false,
+        })
+      )
       .then(() => {
         const duration = window.performance.now() - startAt;
 
@@ -166,9 +169,6 @@ function runApp() {
     // Render the app immediately
     renderApp();
   }
-
-  // Fix 1px grey borders in Chrome
-  applyFractionalTileSizeWorkaround();
 
   // Render the React app into the DOM
   function renderApp() {

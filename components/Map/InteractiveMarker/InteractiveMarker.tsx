@@ -5,7 +5,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { connect } from "react-redux";
 
 import classnames from "classnames";
 
@@ -19,6 +18,7 @@ import { ContainerProps } from "components/Map/InteractiveMarker/props";
 import { MapModalTooltipContextValue } from "components/Map/MapModalTooltipContext";
 import TippyWrapper from "components/TippyWrapper";
 
+import { useAppSelector } from "features/app/store";
 import {
   areaToTooltipData,
   isUnterzeeSetting,
@@ -28,15 +28,19 @@ import {
 import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
 import isInteractableAtThisZoomLevel from "features/mapping/isInteractableAtThisZoomLevel";
 
-import { IAppState } from "types/app";
 import { IMappableSetting, IStateAwareArea } from "types/map";
 
 const DRAG_THRESHOLD = 10; // px movement before we treat this as a drag
 
-export function InteractiveMarker({
+type Props = ContainerProps &
+  Pick<MapModalTooltipContextValue, "openModalTooltip"> & {
+    selectedArea?: IStateAwareArea;
+    setting: IMappableSetting;
+  };
+
+export default function InteractiveMarker({
   area,
   currentArea,
-  fallbackMapPreferred,
   onAreaClick,
   onAreaSelect,
   onTapAtLowZoomLevel,
@@ -45,6 +49,10 @@ export function InteractiveMarker({
   setting,
   zoomLevel,
 }: Props) {
+  const fallbackMapPreferred = useAppSelector(
+    (state) => state.map.fallbackMapPreferred
+  );
+
   const shouldShowGateIcon = useMemo(() => {
     const hideCurrentGateIcon =
       currentArea.areaKey === area.areaKey &&
@@ -53,29 +61,28 @@ export function InteractiveMarker({
     return (
       area.shouldShowGateIcon && setting?.canTravel && !hideCurrentGateIcon
     );
+    // eslint-disable-next-line
   }, [area, currentArea, setting]);
 
-  const shouldShowLockIcon = useMemo(
-    () => area.shouldShowLockIcon && setting?.canTravel,
-    [area, setting]
-  );
+  const shouldShowLockIcon = useMemo(() => {
+    return area.shouldShowLockIcon && setting?.canTravel;
+    // eslint-disable-next-line
+  }, [area, setting]);
 
-  const shouldAreaBeInteractiveAtZoomLevel = useMemo(
-    () => isInteractableAtThisZoomLevel(area, setting, zoomLevel),
-    [area, setting, zoomLevel]
-  );
+  const shouldAreaBeInteractiveAtZoomLevel = useMemo(() => {
+    return isInteractableAtThisZoomLevel(area, setting, zoomLevel);
+  }, [area, setting, zoomLevel]);
 
-  const shouldShowBorderFancinessAtZoomLevel = useMemo(
-    () => shouldShowBorderFanciness(area, setting, zoomLevel),
-    [area, setting, zoomLevel]
-  );
+  const shouldShowBorderFancinessAtZoomLevel = useMemo(() => {
+    return shouldShowBorderFanciness(area, setting, zoomLevel);
+  }, [area, setting, zoomLevel]);
 
   const minZoomLevelForDestinations = useMemo(() => {
     if (!setting?.mapRootArea?.areaKey) {
       return 0;
     }
 
-    return getMinimumZoomLevelForDestinations(setting as IMappableSetting);
+    return getMinimumZoomLevelForDestinations(setting);
   }, [setting]);
 
   const tooltipData = areaToTooltipData(
@@ -98,7 +105,9 @@ export function InteractiveMarker({
   const ref = useRef<HTMLDivElement>(null);
   const tooltipAnchorRef = useRef<HTMLDivElement>(null);
 
-  const isIsland = useMemo(() => isUnterzeeSetting(setting), [setting]);
+  const isIsland = useMemo(() => {
+    return isUnterzeeSetting(setting);
+  }, [setting]);
 
   const isVisitableIsland: boolean = useMemo(() => {
     if (!isUnterzeeSetting(setting)) {
@@ -106,7 +115,7 @@ export function InteractiveMarker({
     }
 
     return area.visitable ?? false;
-  }, [area.visitable, setting]);
+  }, [area, setting]);
 
   const onClick = useCallback(
     (e) => {
@@ -223,7 +232,9 @@ export function InteractiveMarker({
       onAreaSelect(area);
 
       if (area.shouldShowTooltip) {
-        openModalTooltip({ ...tooltipData });
+        openModalTooltip({
+          ...tooltipData,
+        });
       }
     },
     [
@@ -262,41 +273,36 @@ export function InteractiveMarker({
   const cursor = useCursor(area, setting, zoomLevel);
 
   // Don't show the decorated border on destinations below min zoom level, unless we're in fallback mode
-  const undecorated = useMemo(
-    () =>
+  const undecorated = useMemo(() => {
+    return (
       area.isDestination &&
       zoomLevel < minZoomLevelForDestinations &&
-      !fallbackMapPreferred,
-    [
-      area.isDestination,
-      fallbackMapPreferred,
-      minZoomLevelForDestinations,
-      zoomLevel,
-    ]
-  );
+      !fallbackMapPreferred
+    );
+  }, [area, fallbackMapPreferred, minZoomLevelForDestinations, zoomLevel]);
 
   const isSelectedFromProps = selectedArea?.areaKey === area.areaKey;
 
-  const shouldExhibitSelectionGlow: boolean = useMemo(
-    () =>
+  const shouldExhibitSelectionGlow: boolean = useMemo(() => {
+    return (
       (isSelected || isSelectedFromProps) &&
       !!setting?.canTravel &&
       !area.isLandmark &&
       shouldAreaBeInteractiveAtZoomLevel &&
-      (!area.isDestination || zoomLevel >= minZoomLevelForDestinations),
-    [
-      area,
-      isSelected,
-      isSelectedFromProps,
-      minZoomLevelForDestinations,
-      setting,
-      shouldAreaBeInteractiveAtZoomLevel,
-      zoomLevel,
-    ]
-  );
+      (!area.isDestination || zoomLevel >= minZoomLevelForDestinations)
+    );
+    // eslint-disable-next-line
+  }, [
+    area,
+    isSelected,
+    isSelectedFromProps,
+    minZoomLevelForDestinations,
+    setting,
+    shouldAreaBeInteractiveAtZoomLevel,
+    zoomLevel,
+  ]);
 
-  const mappedSetting = setting as IMappableSetting;
-  const customMarkerColour = mappedSetting?.jsonInfo?.labelBackgroundColour;
+  const customMarkerColour = setting.jsonInfo?.labelBackgroundColour;
 
   useEffect(() => {
     const domElement = ref.current;
@@ -340,7 +346,6 @@ export function InteractiveMarker({
   const tippyChildComponent = useMemo(
     () => (
       <div
-        ref={tooltipAnchorRef}
         className={classnames(
           "leaflet-tooltip--fbg__name",
           undecorated && "leaflet-tooltip--fbg__name--no-decoration",
@@ -357,20 +362,28 @@ export function InteractiveMarker({
             !shouldAreaBeInteractiveAtZoomLevel &&
             "leaflet-tooltip--fbg__name--district--non-interactive"
         )}
+        ref={tooltipAnchorRef}
         style={{
+          backgroundColor:
+            area.isLandmark || customMarkerColour === undefined
+              ? undefined
+              : customMarkerColour,
           boxShadow: shouldExhibitSelectionGlow ? "0 0 4px white" : "none",
           filter: shouldExhibitSelectionGlow
             ? SELECTED_LABEL_FILTER_STRING
             : undefined,
           transition: "boxShadow 0.2s, filter 0.2s",
-          backgroundColor:
-            area.isLandmark || customMarkerColour === undefined
-              ? undefined
-              : customMarkerColour,
         }}
       >
-        <div style={{ cursor }}>{area.name}</div>
+        <div
+          style={{
+            cursor,
+          }}
+        >
+          {area.name}
+        </div>
       </div>
+      // eslint-disable-next-line
     ),
     [
       area,
@@ -386,64 +399,54 @@ export function InteractiveMarker({
   );
 
   return (
-    <>
-      <div
-        ref={ref}
-        style={{
-          cursor,
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "column",
-          imageRendering: "pixelated",
-          padding: "16px",
-        }}
-      >
-        {shouldAreaBeInteractiveAtZoomLevel && (
-          <HeaderImage area={area} setting={setting} />
-        )}
-        {shouldAreaBeInteractiveAtZoomLevel && shouldShowGateIcon && (
-          <GateIcon area={area} selected={shouldExhibitSelectionGlow} />
-        )}
-        {shouldAreaBeInteractiveAtZoomLevel && shouldShowLockIcon && (
-          <LockIcon area={area} selected={shouldExhibitSelectionGlow} />
-        )}
-        {shouldShowBorderFancinessAtZoomLevel && (
-          <BorderFanciness
-            side="top"
-            visible={shouldAreaBeInteractiveAtZoomLevel}
-            selected={shouldExhibitSelectionGlow}
-          />
-        )}
-        {tooltipData.description ? (
-          <TippyWrapper tooltipData={tooltipData}>
-            {tippyChildComponent}
-          </TippyWrapper>
-        ) : (
-          tippyChildComponent
-        )}
-        {shouldShowBorderFancinessAtZoomLevel && (
-          <BorderFanciness
-            side="bottom"
-            visible={shouldAreaBeInteractiveAtZoomLevel}
-            selected={isSelected}
-          />
-        )}
-      </div>
-    </>
+    <div
+      ref={ref}
+      style={{
+        alignItems: "center",
+        cursor,
+        display: "flex",
+        flexDirection: "column",
+        imageRendering: "pixelated",
+        padding: "16px",
+      }}
+    >
+      {shouldAreaBeInteractiveAtZoomLevel && (
+        <HeaderImage area={area} setting={setting} />
+      )}
+
+      {shouldAreaBeInteractiveAtZoomLevel && shouldShowGateIcon && (
+        <GateIcon area={area} selected={shouldExhibitSelectionGlow} />
+      )}
+
+      {shouldAreaBeInteractiveAtZoomLevel && shouldShowLockIcon && (
+        <LockIcon area={area} selected={shouldExhibitSelectionGlow} />
+      )}
+
+      {shouldShowBorderFancinessAtZoomLevel && (
+        <BorderFanciness
+          selected={shouldExhibitSelectionGlow}
+          side="top"
+          visible={shouldAreaBeInteractiveAtZoomLevel}
+        />
+      )}
+
+      {tooltipData.description ? (
+        <TippyWrapper tooltipData={tooltipData}>
+          {tippyChildComponent}
+        </TippyWrapper>
+      ) : (
+        tippyChildComponent
+      )}
+
+      {shouldShowBorderFancinessAtZoomLevel && (
+        <BorderFanciness
+          selected={isSelected}
+          side="bottom"
+          visible={shouldAreaBeInteractiveAtZoomLevel}
+        />
+      )}
+    </div>
   );
 }
 
-const mapStateToProps = ({
-  map: { fallbackMapPreferred, setting },
-}: IAppState) => ({
-  fallbackMapPreferred,
-  setting,
-});
-
-type Props = ContainerProps &
-  Pick<MapModalTooltipContextValue, "openModalTooltip"> &
-  ReturnType<typeof mapStateToProps> & {
-    selectedArea?: IStateAwareArea;
-  };
-
-export default connect(mapStateToProps)(InteractiveMarker);
+InteractiveMarker.displayName = "InteractiveMarker";

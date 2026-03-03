@@ -11,18 +11,11 @@ import { NexQuantity } from "types/payment";
 type Props = {
   data: NexQuantity;
   id: number | string;
-  isBreakdownVisible: boolean;
   isSelected: boolean;
   onSelect: (pkg: NexQuantity) => void;
 };
 
-export default function FateOption({
-  data,
-  id,
-  isBreakdownVisible,
-  isSelected,
-  onSelect,
-}: Props) {
+export default function FateOption({ data, id, isSelected, onSelect }: Props) {
   const {
     currency: { code: currencyCode },
     currencyAmount,
@@ -49,7 +42,6 @@ export default function FateOption({
     <li
       className={classnames(
         "fate-option",
-        isBreakdownVisible && "fate-option--breakdown-visible",
         isSelected && "fate-option--selected"
       )}
     >

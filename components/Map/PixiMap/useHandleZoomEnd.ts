@@ -1,5 +1,7 @@
-import { ZoomAnimEvent } from "leaflet";
 import { useCallback } from "react";
+
+import { ZoomAnimEvent } from "leaflet";
+
 import { IStateAwareArea } from "types/map";
 
 export default function useHandleZoomEnd(
@@ -12,6 +14,7 @@ export default function useHandleZoomEnd(
   return useCallback(
     (e: ZoomAnimEvent) => {
       const zoomLevel = e.target.getZoom();
+
       setZoomLevel(zoomLevel);
       onZoomEnd(e);
 

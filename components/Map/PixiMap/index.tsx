@@ -1,32 +1,67 @@
-import { BaseProps } from "components/Map/PixiMap/props";
+import React, { useState } from "react";
+
+import LondonPixiMap from "components/Map/PixiMap/LondonPixiMap";
+import { BaseProps as Props } from "components/Map/PixiMap/props";
+import UnterzeePixiMap from "components/Map/PixiMap/UnterzeePixiMap";
+
+import { useAppSelector } from "features/app/store";
 import { isUnterzeeSetting } from "features/mapping";
 import { MAP_ROOT_AREA_THE_FIFTH_CITY } from "features/mapping/constants";
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
-import LondonPixiMap from "./LondonPixiMap";
-import UnterzeePixiMap from "./UnterzeePixiMap";
 
-type StateProps = ReturnType<typeof mapStateToProps>;
-type Props = BaseProps & StateProps;
+export default function PixiMap({
+  currentArea,
+  initialCenter,
+  initialZoom,
+  onAreaClick,
+  onAreaSelect,
+  onClick,
+  onHitboxClick,
+  onMoveEnd,
+  onZoomEnd,
+  selectedArea,
+  zoomLevel,
+}: Props) {
+  const setting = useAppSelector((state) => state.map.setting!);
 
-export function PixiMap(props: Props) {
-  const { setting, ...restProps } = props;
   const [isModalTooltipOpen, setIsModalTooltipOpen] = useState(false);
   const [tooltipData, setTooltipData] = useState({});
 
   if (setting.mapRootArea?.areaKey === MAP_ROOT_AREA_THE_FIFTH_CITY) {
-    return <LondonPixiMap {...restProps} />;
+    return (
+      <LondonPixiMap
+        currentArea={currentArea}
+        initialCenter={initialCenter}
+        initialZoom={initialZoom}
+        onAreaClick={onAreaClick}
+        onAreaSelect={onAreaSelect}
+        onClick={onClick}
+        onHitboxClick={onHitboxClick}
+        onMoveEnd={onMoveEnd}
+        onZoomEnd={onZoomEnd}
+        selectedArea={selectedArea}
+        zoomLevel={zoomLevel}
+      />
+    );
   }
 
   if (isUnterzeeSetting(setting)) {
     return (
       <UnterzeePixiMap
-        {...restProps}
+        currentArea={currentArea}
+        initialCenter={initialCenter}
+        initialZoom={initialZoom}
         isModalTooltipOpen={isModalTooltipOpen}
+        onAreaClick={onAreaClick}
+        onAreaSelect={onAreaSelect}
+        onClick={onClick}
+        onHitboxClick={onHitboxClick}
+        onMoveEnd={onMoveEnd}
+        onZoomEnd={onZoomEnd}
+        selectedArea={selectedArea}
         setIsModalTooltipOpen={setIsModalTooltipOpen}
-        tooltipData={tooltipData}
         setTooltipData={setTooltipData}
+        tooltipData={tooltipData}
+        zoomLevel={zoomLevel}
       />
     );
   }
@@ -34,8 +69,4 @@ export function PixiMap(props: Props) {
   return null;
 }
 
-const mapStateToProps = (state: IAppState) => ({
-  setting: state.map.setting!,
-});
-
-export default connect(mapStateToProps)(PixiMap);
+PixiMap.displayName = "PixiMap";

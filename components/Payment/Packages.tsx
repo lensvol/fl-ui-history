@@ -1,11 +1,11 @@
 import React from "react";
 
 import Loading from "components/Loading";
-import { NexQuantity } from "types/payment";
 import FateOption from "components/Payment/FateOption";
 
+import { NexQuantity } from "types/payment";
+
 export default function Packages({
-  isBreakdownVisible,
   isFetching,
   packages,
   onSelect,
@@ -14,7 +14,11 @@ export default function Packages({
   if (isFetching) {
     return (
       <div
-        style={{ paddingTop: 24, display: "flex", justifyContent: "center" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: 24,
+        }}
       >
         <Loading spinner />
       </div>
@@ -26,12 +30,12 @@ export default function Packages({
       {packages.map((item, i) => {
         const isSelected =
           !!selectedPackage && selectedPackage.currency === item.currency;
+
         return (
           <FateOption
             key={item.quantity}
             data={item}
             id={i}
-            isBreakdownVisible={isBreakdownVisible}
             isSelected={isSelected}
             onSelect={onSelect}
           />
@@ -44,7 +48,6 @@ export default function Packages({
 Packages.displayName = "Packages";
 
 type Props = {
-  isBreakdownVisible: boolean;
   isFetching: boolean;
   onSelect: (selectedPackage: NexQuantity) => void;
   packages: NexQuantity[];

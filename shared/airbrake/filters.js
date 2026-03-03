@@ -2,6 +2,7 @@ export function isNetworkError(error) {
   if (!error.type) {
     return false;
   }
+
   return !!error.type.match("Network( )?Error");
 }
 

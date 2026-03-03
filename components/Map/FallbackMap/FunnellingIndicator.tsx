@@ -1,9 +1,12 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
-import Control from "react-leaflet-control";
-import Modal from "react-modal";
-import { Link, withRouter } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
 
-export function FunnellingIndicator() {
+import Control from "react-leaflet-control";
+
+import Modal from "react-modal";
+
+import { Link } from "react-router-dom";
+
+export default function FunnellingIndicator() {
   const [didUserWantThis, setDidUserWantThis] = useState(true);
   const [didUserHideThis, setDidUserHideThis] = useState(true);
   const [isBumfModalOpen, setIsBumfModalOpen] = useState(false);
@@ -20,6 +23,7 @@ export function FunnellingIndicator() {
   const handleHide = useCallback((hideForever) => {
     setDidUserHideThis(hideForever);
     setIsBumfModalOpen(false);
+
     if (hideForever) {
       window.localStorage.setItem("hide-funnelling-indicator", "true");
     }
@@ -30,26 +34,27 @@ export function FunnellingIndicator() {
   }
 
   return (
-    <Fragment>
+    <>
       <Control position="topleft">
         <img
           alt="Funnelling indicator"
           className="fallback-map__funnelling-indicator"
-          src="/map/exclamation-icon.png"
           onClick={() => setIsBumfModalOpen(true)}
+          src="/map/exclamation-icon.png"
         />
       </Control>
+
       <Modal
+        className="modal--tooltip-like__content"
         isOpen={isBumfModalOpen}
         onRequestClose={() => setIsBumfModalOpen(false)}
         overlayClassName="modal--tooltip-like__overlay"
-        className="modal--tooltip-like__content"
         style={{
-          overlay: {
-            zIndex: 9999,
-          },
           content: {
             backgroundImage: "none",
+          },
+          overlay: {
+            zIndex: 9999,
           },
         }}
       >
@@ -64,7 +69,6 @@ export function FunnellingIndicator() {
           </p>
           <div className="buttons">
             <button
-              type="button"
               className="button button--primary button--sm"
               onClick={() => handleHide(false)}
               style={{
@@ -72,11 +76,11 @@ export function FunnellingIndicator() {
                 color: "#92d1d5",
                 textTransform: "none",
               }}
+              type="button"
             >
               OK
             </button>
             <button
-              type="button"
               className="button button--tertiary button--sm"
               onClick={() => handleHide(true)}
               style={{
@@ -84,14 +88,15 @@ export function FunnellingIndicator() {
                 color: "#92d1d5",
                 textTransform: "none",
               }}
+              type="button"
             >
               Don't show this again
             </button>
           </div>
         </div>
       </Modal>
-    </Fragment>
+    </>
   );
 }
 
-export default withRouter(FunnellingIndicator);
+FunnellingIndicator.displayName = "FunnellingIndicator";

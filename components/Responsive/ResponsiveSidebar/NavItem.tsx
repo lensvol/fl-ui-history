@@ -1,4 +1,5 @@
 import React from "react";
+
 import classnames from "classnames";
 
 type Props = {
@@ -30,9 +31,12 @@ export default function NavItem({
   );
 }
 
+NavItem.displayName = "NavItem";
+
 function makeClassName({ fl, icon }: Pick<Props, "fl" | "icon">) {
   if (fl) {
     return `fl-ico fl-ico-${icon} sidemenu__nav-icon sidemenu__nav-icon--fl-ico`;
   }
+
   return `fa fa-${icon} sidemenu__nav-icon`;
 }

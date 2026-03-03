@@ -1,32 +1,34 @@
-import * as PIXI from "pixi.js";
+import { Sprite } from "pixi.js";
+
 import { IArea, SpriteType } from "types/map";
 
-const coastlineMap: { [key: string]: PIXI.Sprite } = {};
-const spriteMap: { [key: string]: PIXI.Sprite } = {};
-const selectionSpriteMap: { [key: string]: PIXI.Sprite } = {};
-const mainDestinationMap: { [key: string]: PIXI.Sprite } = {};
-const mainDestinationSelectionMap: { [key: string]: PIXI.Sprite } = {};
-const fogMap: { [key: string]: PIXI.Sprite } = {};
-const seaMap: { [key: string]: PIXI.Sprite } = {};
-const coastlineSeaMap: { [key: string]: PIXI.Sprite } = {};
+const coastlineMap: { [key: string]: Sprite } = {};
+const spriteMap: { [key: string]: Sprite } = {};
+const selectionSpriteMap: { [key: string]: Sprite } = {};
+const mainDestinationMap: { [key: string]: Sprite } = {};
+const mainDestinationSelectionMap: { [key: string]: Sprite } = {};
+const fogMap: { [key: string]: Sprite } = {};
+const seaMap: { [key: string]: Sprite } = {};
+const coastlineSeaMap: { [key: string]: Sprite } = {};
 
-const mapsByType: { [key in SpriteType]: { [key: string]: PIXI.Sprite } } = {
+const mapsByType: { [key in SpriteType]: { [key: string]: Sprite } } = {
   /* eslint-disable quote-props */
   available: spriteMap,
-  selection: selectionSpriteMap,
+  coastline: coastlineMap,
+  coastlinesea: coastlineSeaMap,
+  fog: fogMap,
   "main-destination": mainDestinationMap,
   "main-destination-selection": mainDestinationSelectionMap,
-  coastline: coastlineMap,
-  fog: fogMap,
   sea: seaMap,
-  coastlinesea: coastlineSeaMap,
+  selection: selectionSpriteMap,
   /* eslint-enable quote-props */
 };
 
 const GlobalSpriteMap = {
-  put: async (areaKey: string, whatKind: SpriteType, sprite: PIXI.Sprite) => {
+  put: async (areaKey: string, whatKind: SpriteType, sprite: Sprite) => {
     // Scale the sprite (not sure why it's necessary)
     sprite.scale.set(0.5, 0.5);
+
     // Add it to the cache
     mapsByType[whatKind][areaKey] = sprite;
   },

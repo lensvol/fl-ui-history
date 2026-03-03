@@ -1,5 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
+
 import { connect } from "react-redux";
+
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import { fetch as fetchMap } from "actions/map";
@@ -20,9 +22,40 @@ import StoryletIn from "components/StoryletIn/StoryletInContainer";
 import StoryletsAvailable from "components/StoryletsAvailable";
 import UniqueActPending from "components/UniqueActPending";
 
-import * as phases from "constants/phases";
+import {
+  ACT,
+  AVAILABLE,
+  END,
+  EXTERNAL_ACT,
+  IN,
+  IN_ITEM_USE,
+  RENAME,
+  SECOND_CHANCE,
+  UNIQUE_ACT_PENDING,
+} from "constants/phases";
 
 import { IAppState } from "types/app";
+
+const mapStateToProps = ({
+  map: { setting },
+  storylet: { isFetching, phase, socialAct, storylet, storylets },
+}: IAppState) => ({
+  isFetching,
+  phase,
+  setting,
+  socialAct,
+  storylet,
+  storylets,
+});
+
+interface State {
+  isExceptionalFriendModalOpen: boolean;
+}
+
+interface Props
+  extends ReturnType<typeof mapStateToProps>, RouteComponentProps {
+  dispatch: Function; // eslint-disable-line
+}
 
 class StoryTabContentContainer extends React.Component<Props, State> {
   static displayName = "StoryTabContentContainer";
@@ -75,29 +108,29 @@ class StoryTabContentContainer extends React.Component<Props, State> {
     }
 
     switch (phase) {
-      case phases.ACT:
+      case ACT:
         return <Act />;
 
-      case phases.END:
+      case END:
         return <StoryletEnd />;
 
-      case phases.EXTERNAL_ACT:
+      case EXTERNAL_ACT:
         return <ExternalAct />;
 
-      case phases.IN: // fall-through; these are the same for slet rendering
-      case phases.IN_ITEM_USE:
+      case IN: // fall-through; these are the same for slet rendering
+      case IN_ITEM_USE:
         return <StoryletIn />;
 
-      case phases.RENAME:
+      case RENAME:
         return <Rename />;
 
-      case phases.SECOND_CHANCE:
+      case SECOND_CHANCE:
         return <SecondChance />;
 
-      case phases.AVAILABLE:
+      case AVAILABLE:
         return <StoryletsAvailable />;
 
-      case phases.UNIQUE_ACT_PENDING:
+      case UNIQUE_ACT_PENDING:
         return <UniqueActPending />;
 
       default: // We don't know what to show
@@ -115,7 +148,7 @@ class StoryTabContentContainer extends React.Component<Props, State> {
     const { isExceptionalFriendModalOpen } = this.state;
 
     return (
-      <Fragment>
+      <>
         <DomManipulationContext.Provider
           value={{
             onOpenSubscriptionModal: this.handleOpenSubscriptionModal,
@@ -123,35 +156,16 @@ class StoryTabContentContainer extends React.Component<Props, State> {
         >
           <GeneralContainer>{this.renderContent()}</GeneralContainer>
         </DomManipulationContext.Provider>
+
         <ExceptionalFriendModal
           isOpen={isExceptionalFriendModalOpen}
           onRequestClose={this.handleRequestCloseSubscriptionModal}
         />
+
         {setting?.canOpenMap && <Map />}
-      </Fragment>
+      </>
     );
   }
-}
-
-const mapStateToProps = ({
-  map: { setting },
-  storylet: { isFetching, phase, socialAct, storylet, storylets },
-}: IAppState) => ({
-  setting,
-  isFetching,
-  phase,
-  socialAct,
-  storylet,
-  storylets,
-});
-
-export interface Props
-  extends ReturnType<typeof mapStateToProps>, RouteComponentProps {
-  dispatch: Function; // eslint-disable-line
-}
-
-export interface State {
-  isExceptionalFriendModalOpen: boolean;
 }
 
 export default withRouter(connect(mapStateToProps)(StoryTabContentContainer));

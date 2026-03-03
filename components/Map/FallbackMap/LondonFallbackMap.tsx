@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { ImageOverlay, Map as LeafletMap } from "react-leaflet";
-import { connect } from "react-redux";
+
+import { ImageOverlay, Map } from "react-leaflet";
 
 import L from "leaflet";
 
@@ -11,11 +11,12 @@ import { FallbackMapProps } from "components/Map/FallbackMap/types";
 import Limbo from "components/Map/Limbo";
 import Lodgings from "components/Map/Lodgings/Lodgings";
 import MapModalTooltipContext from "components/Map/MapModalTooltipContext";
-import { ZoomControl } from "components/Map/PixiMap/ZoomControl";
+import ZoomControl from "components/Map/PixiMap/ZoomControl";
 import PlayerMarkers from "components/Map/PlayerMarkers";
 import { ModalTooltip } from "components/ModalTooltip/ModalTooltipContainer";
 import { ITooltipData } from "components/ModalTooltip/types";
 
+import { useAppSelector } from "features/app/store";
 import {
   getMapDimensionsForSetting,
   getMinimumZoomThatFits,
@@ -28,31 +29,30 @@ import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomL
 import getIsPlayerInLimbo from "selectors/map/getIsPlayerInLimbo";
 import getStateAwareAreas from "selectors/map/getStateAwareAreas";
 
-import { IAppState } from "types/app";
 import { ILabelledStateAwareArea, IMappableSetting } from "types/map";
 
-type Props = FallbackMapProps &
-  ReturnType<typeof mapStateToProps> & {
-    isModalTooltipOpen: boolean;
-    tooltipData: ITooltipData;
-  };
+type Props = FallbackMapProps & {
+  isModalTooltipOpen: boolean;
+  tooltipData: ITooltipData;
+};
 
-export function LondonFallbackMap(props: Props) {
-  const {
-    areas,
-    currentArea,
-    initialCenter,
-    isModalTooltipOpen,
-    isPlayerInLimbo,
-    onAreaClick,
-    onAreaSelect,
-    onMoveEnd,
-    onZoomEnd,
-    selectedArea,
-    setting,
-    tooltipData,
-    zoomLevel: parentZoomLevel,
-  } = props;
+export default function LondonFallbackMap({
+  currentArea,
+  initialCenter,
+  isModalTooltipOpen,
+  onAreaClick,
+  onAreaSelect,
+  onMoveEnd,
+  onZoomEnd,
+  selectedArea,
+  tooltipData,
+  zoomLevel: parentZoomLevel,
+}: Props) {
+  const areas = useAppSelector((state) => getStateAwareAreas(state));
+  const isPlayerInLimbo = useAppSelector((state) => getIsPlayerInLimbo(state));
+  const setting = useAppSelector(
+    (state) => state.map.setting! as IMappableSetting
+  );
 
   const { height: mapHeight, width: mapWidth } =
     getMapDimensionsForSetting(setting);
@@ -69,13 +69,11 @@ export function LondonFallbackMap(props: Props) {
     }
   }
 
-  const labelledAreas = useMemo(
-    () =>
-      areas
-        .filter((area) => area.shouldAppearOnMap && area.isLabelled)
-        .map((area) => area as ILabelledStateAwareArea),
-    [areas]
-  );
+  const labelledAreas = useMemo(() => {
+    return areas
+      .filter((area) => area.shouldAppearOnMap && area.isLabelled)
+      .map((area) => area as ILabelledStateAwareArea);
+  }, [areas]);
 
   const [zoomLevel, setZoomLevel] = useState(parentZoomLevel);
 
@@ -107,25 +105,26 @@ export function LondonFallbackMap(props: Props) {
   );
 
   return (
-    <LeafletMap
+    <Map
       attributionControl={false}
       center={xy(initialCenter[0], initialCenter[1])}
+      crs={getCRSForSetting(setting)}
       maxBounds={L.latLngBounds(xy(0, 0), xy(mapWidth, -mapHeight))}
-      minZoom={minZoom}
-      maxZoom={maxZoom}
       maxBoundsViscosity={1}
+      maxZoom={maxZoom}
+      minZoom={minZoom}
       onmoveend={onMoveEnd}
       onzoomend={handleZoomEnd}
-      zoomControl={false}
       zoom={zoomLevel}
+      zoomControl={false}
       zoomDelta={0.6}
       zoomSnap={0.6}
-      crs={getCRSForSetting(setting)}
     >
       <ImageOverlay
-        url={getFallbackMapImageURL(setting)}
         bounds={L.latLngBounds(xy(0, 0), xy(mapWidth, -mapHeight))}
+        url={getFallbackMapImageURL(setting)}
       />
+
       <DistrictLabelLayer
         areas={labelledAreas.filter((a) => a.isDistrict)}
         currentArea={currentArea}
@@ -136,6 +135,7 @@ export function LondonFallbackMap(props: Props) {
         }}
         zoomLevel={getMinimumZoomLevelForDestinations(setting)} // Lie to the markers in order to force them to appear
       />
+
       <DistrictLabelLayer
         areas={labelledAreas.filter((a) => !a.isDistrict)}
         currentArea={currentArea}
@@ -146,45 +146,44 @@ export function LondonFallbackMap(props: Props) {
         }}
         zoomLevel={getMinimumZoomLevelForDestinations(setting)} // Lie to the markers in order to force them to appear
       />
+
       <PlayerMarkers />
+
       {isPlayerInLimbo && <Limbo />}
+
       <Lodgings
+        fallback
         onAreaClick={onAreaClick}
         onAreaSelect={onAreaSelect}
         selectedArea={selectedArea}
-        fallback
       />
+
       <MapModalTooltipContext.Consumer>
         {({ onRequestClose }) => (
           <ModalTooltip
+            disableTouchEvents
             modalIsOpen={isModalTooltipOpen}
             onRequestClose={onRequestClose}
             tooltipData={tooltipData}
-            disableTouchEvents
           />
         )}
       </MapModalTooltipContext.Consumer>
+
       <FunnellingIndicator />
+
       <CompatibilityWarning />
+
       <ZoomControl
         maxZoom={maxZoom}
-        setZoomLevel={handleSetZoomLevelWithZoomControl}
         minZoom={minZoom}
         setting={setting}
+        setZoomLevel={handleSetZoomLevelWithZoomControl}
         spriteLoaderProgress={100}
         zoomDelta={0.6}
         zoomLevel={zoomLevel}
       />
-    </LeafletMap>
+    </Map>
   );
 }
 
-function mapStateToProps(state: IAppState) {
-  return {
-    areas: getStateAwareAreas(state),
-    setting: state.map.setting! as IMappableSetting, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    isPlayerInLimbo: getIsPlayerInLimbo(state),
-  };
-}
-
-export default connect(mapStateToProps)(LondonFallbackMap);
+LondonFallbackMap.displayName = "LondonFallbackMap";

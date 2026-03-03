@@ -1,16 +1,30 @@
 import React from "react";
-import { connect } from "react-redux";
-import SelectedAreaContext from "components/Map/SelectedAreaContext";
+
+import InteractiveMarker from "components/Map/InteractiveMarker/InteractiveMarker";
+import { ContainerProps } from "components/Map/InteractiveMarker/props";
 import MapModalTooltipContext from "components/Map/MapModalTooltipContext";
+import SelectedAreaContext from "components/Map/SelectedAreaContext";
 
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
 import asStateAwareArea from "features/mapping/asStateAwareArea";
-import { IMappableSetting } from "types/map";
-import InteractiveMarker from "./InteractiveMarker";
-import { ContainerProps } from "./props";
 
-export function InteractiveMarkerContainer(props: ContainerProps & StateProps) {
-  const { areas, setting } = props;
+import { IMappableSetting } from "types/map";
+
+type Props = ContainerProps;
+
+export default function InteractiveMarkerContainer({
+  area,
+  currentArea,
+  onAreaClick,
+  onAreaSelect,
+  onTapAtLowZoomLevel,
+  zoomLevel,
+}: Props) {
+  const areas = useAppSelector((state) => state.map.areas);
+  const setting = useAppSelector(
+    (state) => state.map.setting
+  ) as IMappableSetting;
+
   return (
     <SelectedAreaContext.Consumer>
       {({ selectedArea }) => (
@@ -28,9 +42,15 @@ export function InteractiveMarkerContainer(props: ContainerProps & StateProps) {
 
             return (
               <InteractiveMarker
-                {...props}
-                selectedArea={stateAwareSelectedArea}
+                area={area}
+                currentArea={currentArea}
+                onAreaClick={onAreaClick}
+                onAreaSelect={onAreaSelect}
+                onTapAtLowZoomLevel={onTapAtLowZoomLevel}
                 openModalTooltip={openModalTooltip}
+                selectedArea={stateAwareSelectedArea}
+                setting={setting}
+                zoomLevel={zoomLevel}
               />
             );
           }}
@@ -40,11 +60,4 @@ export function InteractiveMarkerContainer(props: ContainerProps & StateProps) {
   );
 }
 
-const mapStateToProps = ({ map: { areas, setting } }: IAppState) => ({
-  areas,
-  setting: setting as IMappableSetting,
-});
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(InteractiveMarkerContainer);
+InteractiveMarkerContainer.displayName = "InteractiveMarkerContainer";

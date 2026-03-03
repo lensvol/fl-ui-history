@@ -1,40 +1,42 @@
-import { handleVersionMismatch } from "actions/versionSync";
 import React, { useCallback, useRef, useState } from "react";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+
+import { useDispatch } from "react-redux";
+
+import { useHistory } from "react-router-dom";
 
 import { actionsUpdated } from "actions/actions";
-import { fetch as fetchCards } from "actions/cards";
 import { processMessages } from "actions/app";
-import { fetchAvailableSuccess } from "actions/storylet";
+import { fetch as fetchCards } from "actions/cards";
+import { fetchAvailableSuccess, goBackSuccess } from "actions/storylet";
+import { handleVersionMismatch } from "actions/versionSync";
 
-import useIsMounted from "hooks/useIsMounted";
-import { ThunkDispatch } from "redux-thunk";
-import { VersionMismatch } from "services/BaseService";
-import StoryletService from "services/StoryletService";
+import StoryletInComponent from "components/StoryletIn/StoryletInComponent";
 
 import * as phases from "constants/phases";
 
+import { useAppSelector } from "features/app/store";
+
+import useIsMounted from "hooks/useIsMounted";
+
 import getSortedBranches from "selectors/storylet/getSortedBranches";
-import { IAppState } from "types/app";
 
-import StoryletInComponent from "./StoryletInComponent";
+import { VersionMismatch } from "services/BaseService";
+import StoryletService from "services/StoryletService";
 
-const mapStateToProps = (state: IAppState) => ({
-  branches: getSortedBranches(state),
-  isChoosing: state.storylet.isChoosing,
-  phase: state.storylet.phase,
-  storylet: state.storylet.storylet,
-});
-
-type Props = ReturnType<typeof mapStateToProps> &
-  RouteComponentProps & { dispatch: ThunkDispatch<any, any, any> };
-
-function StoryletInContainer(props: Props) {
-  const { branches, dispatch, history, isChoosing, phase, storylet } = props;
+export default function StoryletInContainer() {
+  const branches = useAppSelector((state) => getSortedBranches(state));
+  const isChoosing = useAppSelector((state) => state.storylet.isChoosing);
+  const phase = useAppSelector((state) => state.storylet.phase);
+  const storylet = useAppSelector((state) => state.storylet.storylet);
+  const canChangeOutfit = useAppSelector(
+    (state) => state.storylet.canChangeOutfit
+  );
 
   const [isGoingBack, setIsGoingBack] = useState(false);
+
   const isMounted = useIsMounted();
+  const dispatch = useDispatch();
+  const history = useHistory();
   const service = useRef(new StoryletService());
 
   const goBack = useCallback(async () => {
@@ -55,6 +57,15 @@ function StoryletInContainer(props: Props) {
       // Fill state (actions, storylets, etc.)
       dispatch(fetchAvailableSuccess(data));
 
+      // reset invitation button
+      dispatch(
+        goBackSuccess({
+          actions: undefined,
+          canChangeOutfit,
+          phase: nextPhase,
+        })
+      );
+
       // If there are messages, then process them
       if (messages) {
         dispatch(processMessages(messages));
@@ -73,11 +84,13 @@ function StoryletInContainer(props: Props) {
     } catch (e) {
       if (e instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(e));
+
         return;
       }
+
       throw e;
     }
-  }, [dispatch, history, isMounted, phase]);
+  }, [canChangeOutfit, dispatch, history, isMounted, phase]);
 
   return (
     <StoryletInComponent
@@ -91,5 +104,3 @@ function StoryletInContainer(props: Props) {
 }
 
 StoryletInContainer.displayName = "StoryletInContainer";
-
-export default withRouter(connect(mapStateToProps)(StoryletInContainer));

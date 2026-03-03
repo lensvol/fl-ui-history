@@ -1,15 +1,20 @@
 /* eslint-disable no-param-reassign */
-import AirbrakeClient from "airbrake-js";
+import { Notifier } from "@airbrake/browser";
 
 import Config from "configuration";
-import { isGreasemonkeyError, isNetworkError, isTimeoutOf0ms } from "./filters";
-import { isExtensionContextInvalidated } from "shared/airbrake/filters";
+
+import {
+  isExtensionContextInvalidated,
+  isGreasemonkeyError,
+  isNetworkError,
+  isTimeoutOf0ms,
+} from "shared/airbrake/filters";
 
 let instance = null;
 
 export default function getClient() {
-  if (instance == null) {
-    const airbrake = new AirbrakeClient({
+  if (!instance) {
+    const airbrake = new Notifier({
       projectId: 175794,
       projectKey: "7f518739d29b3fe03280cdb1f8f90c85",
     });
@@ -34,6 +39,7 @@ export default function getClient() {
       // If one of our filters returns true, then return null (don't submit to Airbrake)
       for (let i = 0; i < filters.length; i++) {
         const filter = filters[i];
+
         if (filter(error)) {
           return null;
         }

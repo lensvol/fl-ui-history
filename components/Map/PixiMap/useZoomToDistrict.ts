@@ -1,5 +1,7 @@
-import L from "leaflet";
 import { MutableRefObject, useCallback } from "react";
+
+import L from "leaflet";
+
 import { IArea } from "types/map";
 
 const HITBOX_CLICK_ZOOM_LEVEL = 4;
@@ -10,7 +12,9 @@ export default function useZoomToDistrict(mapRef: MutableRefObject<any>) {
       if (mapRef.current === null) {
         return;
       }
+
       const destination = new L.LatLng(area.labelY!, area.labelX!);
+
       mapRef.current.leafletElement.setView(
         destination,
         HITBOX_CLICK_ZOOM_LEVEL,

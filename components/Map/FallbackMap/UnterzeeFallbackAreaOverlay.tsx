@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+
 import { ImageOverlay } from "react-leaflet";
 
 import L from "leaflet";
@@ -20,13 +21,11 @@ type Props = {
 export default function UnterzeeFallbackAreaOverlay({ area, setting }: Props) {
   const { areaKey, spriteTopLeftX: x, spriteTopLeftY: y } = area;
 
-  const { mapRootArea } = setting;
-
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
   const imageUrl = useMemo(() => {
-    const mapRootAreaKey = mapRootArea?.areaKey;
+    const mapRootAreaKey = setting?.mapRootArea?.areaKey;
 
     const path =
       mapRootAreaKey === undefined ||
@@ -35,7 +34,7 @@ export default function UnterzeeFallbackAreaOverlay({ area, setting }: Props) {
         : getPrefixForSetting(setting as IMappableSetting);
 
     return `${MAP_BASE_URL}/${path}/${areaKey}-available.png`;
-  }, [areaKey, mapRootArea, setting]);
+  }, [areaKey, setting]);
 
   const bounds = useMemo(() => {
     if (
@@ -71,3 +70,5 @@ export default function UnterzeeFallbackAreaOverlay({ area, setting }: Props) {
 
   return <ImageOverlay bounds={bounds} url={imageUrl} />;
 }
+
+UnterzeeFallbackAreaOverlay.displayName = "UnterzeeFallbackAreaOverlay";

@@ -1,21 +1,35 @@
-import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting";
 import React from "react";
+
 import Control from "react-leaflet-control";
+
 import classnames from "classnames";
+
 import Loading from "components/Loading";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
+
+import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting";
+
 import { IMappableSetting } from "types/map";
+
 import { isRoughlyGTE, isRoughlyLTE } from "utils";
 
-export const DEFAULT_ZOOM_DELTA = 0.25;
+const DEFAULT_ZOOM_DELTA = 0.25;
 
-export function ZoomControl({
+interface Props {
+  setting: IMappableSetting;
+  setZoomLevel: (zoomLevel: number, direction?: "in" | "out") => void;
+  spriteLoaderProgress: number;
+  maxZoom?: number;
+  minZoom?: number;
+  zoomDelta?: number;
+  zoomLevel: number;
+}
+
+export default function ZoomControl({
   maxZoom,
   minZoom,
-  spriteLoaderProgress,
   setting,
   setZoomLevel,
+  spriteLoaderProgress,
   zoomDelta,
   zoomLevel,
 }: Props) {
@@ -35,11 +49,14 @@ export function ZoomControl({
 
   return (
     <Control position="topleft">
-      <div style={{ display: "flex" }}>
+      <div
+        style={{
+          display: "flex",
+        }}
+      >
         <div>
           <img
             alt="Zoom in"
-            src={"/map/zoom-plus.png"} // eslint-disable-line react/jsx-curly-brace-presence
             className={classnames(
               "leaflet-control--custom-zoom",
               isRoughlyGTE(zoomLevel, clampedMaxZoom) &&
@@ -54,10 +71,11 @@ export function ZoomControl({
                 "in"
               );
             }}
+            src="/map/zoom-plus.png"
           />
+
           <img
             alt="Zoom out"
-            src={"/map/zoom-minus.png"} // eslint-disable-line react/jsx-curly-brace-presence
             className={classnames(
               "leaflet-control--custom-zoom",
               isRoughlyLTE(zoomLevel, clampedMinZoom) &&
@@ -72,8 +90,10 @@ export function ZoomControl({
                 "out"
               );
             }}
+            src="/map/zoom-minus.png"
           />
         </div>
+
         {spriteLoaderProgress < 100 && (
           <div
             style={{
@@ -83,13 +103,21 @@ export function ZoomControl({
               pointerEvents: "none",
             }}
           >
-            <Loading spinner style={{ height: "28px", marginTop: 0 }} />
+            <Loading
+              spinner
+              style={{
+                height: "28px",
+                marginTop: 0,
+              }}
+            />
+
             <div
               style={{
                 marginLeft: "4px",
               }}
             >
               <div>Loading images...</div>
+
               <div
                 className="progress-bar"
                 style={{
@@ -100,12 +128,9 @@ export function ZoomControl({
                 }}
               >
                 <span
-                  className={classnames(
-                    "progress-bar__stripe",
-                    "progress-bar__stripe--has-transition"
-                  )}
+                  className="progress-bar__stripe progress-bar__stripe--has-transition"
                   style={{
-                    transition: "width .4s ease-out",
+                    transition: "width 0.4s ease-out",
                     width: spriteLoaderProgress,
                   }}
                 />
@@ -118,20 +143,4 @@ export function ZoomControl({
   );
 }
 
-const mapStateToProps = ({
-  map: { setting },
-  spriteLoader: { progress: spriteLoaderProgress },
-}: IAppState) => ({
-  spriteLoaderProgress,
-  setting: setting as IMappableSetting,
-});
-
-interface Props extends ReturnType<typeof mapStateToProps> {
-  setZoomLevel: (zoomLevel: number, direction?: "in" | "out") => void;
-  zoomLevel: number;
-  maxZoom?: number;
-  minZoom?: number;
-  zoomDelta?: number;
-}
-
-export default connect(mapStateToProps)(ZoomControl);
+ZoomControl.displayName = "ZoomControl";

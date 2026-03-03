@@ -1,6 +1,8 @@
-import React, { Fragment } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
 import ReactModal from "react-modal";
-import { connect } from "react-redux";
+
+import { useDispatch } from "react-redux";
 
 import classnames from "classnames";
 
@@ -20,6 +22,7 @@ import { getMapModalStyles } from "components/Map/styles";
 import MediaSmDown from "components/Responsive/MediaSmDown";
 import TravelFailureModal from "components/TravelFailureModal";
 
+import { useAppSelector } from "features/app/store";
 import { getMapDimensionsForSetting } from "features/mapping";
 import getCachedZoomLevelForSetting from "features/mapping/getCachedZoomLevelForSetting";
 import getInitialMapCenter from "features/mapping/getInitialMapCenter";
@@ -29,251 +32,261 @@ import { VersionMismatch } from "services/BaseService";
 import MapService, { IChangeLocationResponse } from "services/MapService";
 
 import { IArea, IGateEvent, IMappableSetting } from "types/map";
-import { IAppState } from "types/app";
 
 import wait from "utils/wait";
 
-interface State {
-  cachedMapCenter: number[];
-  cachedZoomLevel: number;
-  gateEvent?: IGateEvent | undefined;
-  isActionRefreshModalOpen: boolean;
-  isChangingArea: boolean;
-  isDelayingCloseAfterGateEventModalClose: boolean;
-  isExceptionalFriendModalOpen: boolean;
-  isFetchingUpdatedMapData: boolean;
-  isGateStoryletModalOpen: boolean;
-  isPurchaseFateModalOpen: boolean;
-  isEnhancedRefreshModalOpen: boolean;
-  isModalOpen: boolean;
-  message?: string | undefined;
-}
-
 const MINIMUM_TRAVEL_DURATION_MILLISECONDS = 800;
 
-class MapContainer extends React.Component<Props, State> {
-  state = {
-    cachedMapCenter: [-1, -1], // default
-    cachedZoomLevel: -1, // default
-    gateEvent: undefined,
-    isActionRefreshModalOpen: false,
-    isChangingArea: false,
-    isDelayingCloseAfterGateEventModalClose: false,
-    isExceptionalFriendModalOpen: false,
-    isFetchingUpdatedMapData: false,
-    isGateStoryletModalOpen: false,
-    isPurchaseFateModalOpen: false,
-    isEnhancedRefreshModalOpen: false,
-    isModalOpen: false,
-    message: undefined,
-  };
+export default function MapContainer() {
+  const currentArea = useAppSelector((state) => state.map.currentArea);
+  const fallbackMapPreferred = useAppSelector(
+    (state) => state.map.fallbackMapPreferred
+  );
+  const isMoving = useAppSelector((state) => state.map.isMoving);
+  const isVisible = useAppSelector((state) => state.map.isVisible);
+  const setting = useAppSelector((state) => state.map.setting);
 
-  componentDidMount = () => {
-    const { setting } = this.props;
-    const { cachedMapCenter, cachedZoomLevel } = this.state;
+  const canOpenMap = useMemo(() => {
+    return setting?.canOpenMap ?? false;
+    // eslint-disable-next-line
+  }, [setting]);
 
-    if (setting?.mapRootArea) {
-      // If we don't have centre coordinates to re-use, then get the middle of the map we're using and use that
-      if (cachedMapCenter[0] < 0 && cachedMapCenter[1] < 0) {
-        const { width, height } = getMapDimensionsForSetting(
-          setting as IMappableSetting
-        );
-        const { initPercentX, initPercentY } = getInitialMapCenter(
-          setting as IMappableSetting
-        );
+  const isMapOpen = useMemo(() => {
+    return (setting?.canOpenMap ?? false) && isVisible;
+    // eslint-disable-next-line
+  }, [isVisible, setting]);
 
-        this.setState({
-          cachedMapCenter: [
-            (width * initPercentX) / 100.0,
-            (-height * initPercentY) / 100.0,
-          ],
-        });
-      }
+  const readonly = useMemo(() => {
+    return !setting?.canTravel;
+    // eslint-disable-next-line
+  }, [setting]);
 
-      // Same for cached zoom from previously using the map
-      if (cachedZoomLevel < 0) {
-        this.setState({
-          cachedZoomLevel: getCachedZoomLevelForSetting(
-            setting as IMappableSetting
-          ),
-        });
-      }
+  const dispatch = useDispatch();
+
+  const [cachedMapCenter, setCachedMapCenter] = useState([-1, -1]);
+  const [cachedZoomLevel, setCachedZoomLevel] = useState(-1);
+  const [gateEvent, setGateEvent] = useState<IGateEvent | undefined>(undefined);
+  const [isActionRefreshModalOpen, setIsActionRefreshModalOpen] =
+    useState(false);
+  const [isChangingArea, setIsChangingArea] = useState(false);
+  const [
+    isDelayingCloseAfterGateEventModalClose,
+    setIsDelayingCloseAfterGateEventModalClose,
+  ] = useState(false);
+  const [isEnhancedRefreshModalOpen, setIsEnhancedRefreshModalOpen] =
+    useState(false);
+  const [isExceptionalFriendModalOpen, setIsExceptionalFriendModalOpen] =
+    useState(false);
+  const [isFetchingUpdatedMapData, setIsFetchingUpdatedMapData] =
+    useState(false);
+  const [isGateStoryletModalOpen, setIsGateStoryletModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPurchaseFateModalOpen, setIsPurchaseFateModalOpen] = useState(false);
+  const [message, setMessage] = useState<string | undefined>(undefined);
+  const [didLoad, setDidLoad] = useState(false);
+
+  useEffect(() => {
+    if (didLoad) {
+      return;
     }
-  };
 
-  handleAfterCloseMap = () => {
+    setDidLoad(true);
+
+    if (!setting?.mapRootArea) {
+      return;
+    }
+
+    // If we don't have centre coordinates to re-use, then get the middle of the map we're using and use that
+    if (cachedMapCenter[0] < 0 && cachedMapCenter[1] < 0) {
+      const { width, height } = getMapDimensionsForSetting(
+        setting as IMappableSetting
+      );
+      const { initPercentX, initPercentY } = getInitialMapCenter(
+        setting as IMappableSetting
+      );
+
+      setCachedMapCenter([
+        (width * initPercentX) / 100.0,
+        (-height * initPercentY) / 100.0,
+      ]);
+    }
+
+    // Same for cached zoom from previously using the map
+    if (cachedZoomLevel < 0) {
+      setCachedZoomLevel(
+        getCachedZoomLevelForSetting(setting as IMappableSetting)
+      );
+    }
+  }, [cachedMapCenter, cachedZoomLevel, didLoad, dispatch, setting]);
+
+  const handleAfterCloseMap = useCallback(() => {
     // After the map has closed, reset the flags we use to disable map interaction when delaying closure
-    this.setState({
-      isChangingArea: false,
-      isDelayingCloseAfterGateEventModalClose: false,
-    });
-  };
+    setIsChangingArea(false);
+    setIsDelayingCloseAfterGateEventModalClose(false);
+  }, []);
 
-  handleAreaClick = async (area: IArea) => {
-    const { currentArea, dispatch, isMoving, readonly } = this.props;
-
-    const { isChangingArea, isDelayingCloseAfterGateEventModalClose } =
-      this.state;
-    const { gateEvent, id, unlocked } = area;
-
-    if (
-      isChangingArea || // We're moving, so ignore clicks
-      isMoving || // We're waiting for the API to respond
-      !currentArea || // We don't know where we are
-      area.id === currentArea.id // We're trying to move to where we already are
-    ) {
-      return;
-    }
-
-    // We are in read-only mode; ignore clicks
-    if (readonly) {
-      return;
-    }
-
-    // We have just finished a gate event, and we're waiting a bit before we close the window;
-    // don't respond to any clicks
-    if (isDelayingCloseAfterGateEventModalClose) {
-      return;
-    }
-
-    // If we're locked, with a gate storylet, then enter it
-    if (!unlocked) {
-      if (gateEvent) {
-        this.setState({
-          gateEvent,
-          isGateStoryletModalOpen: true,
-        });
-      }
-    } else {
-      const startAt = window.performance.now();
-
-      // Store a reference to this, in case changing area fails and we need to roll back
-      const previousArea = currentArea;
-
-      this.setState({ isChangingArea: true });
-
-      // Optimistically move the player's marker to the destination
-      dispatch(setCurrentArea(area));
-
-      // Wait for the server response
-      const result: Either<IChangeLocationResponse> | VersionMismatch =
-        await dispatch(changeLocation(id, { closeMap: false }));
-
-      if (result instanceof VersionMismatch) {
-        return;
-      }
-
-      // On success, wait for transitions to complete, then hide the map
-      if (result instanceof Success) {
-        // If we were previously in a no-opp-deck area but we've moved to an opp-deck area, then fetch
-        // cards
-        if (area.showOps && !currentArea.showOps) {
-          dispatch(fetchCards());
-        }
-
-        // We want to spend at least 800ms in the window, to allow transitions to settle
-        const elapsedTravelTime = window.performance.now() - startAt;
-        const travelTimeRemaining =
-          MINIMUM_TRAVEL_DURATION_MILLISECONDS - elapsedTravelTime;
-
-        if (travelTimeRemaining > 20) {
-          await wait(travelTimeRemaining);
-        }
-
-        // Don't set isChangingArea to false here; we will wait until the map has closed
-
-        // We have successfully moved; close up the map
-        this.handleRequestCloseMap();
-
-        return;
-      }
-
-      // On failure, restore the marker to where we were, and show the message we received
-      dispatch(setCurrentArea(previousArea));
-
-      this.setState({
-        message: result.message,
-        isChangingArea: false,
-        isModalOpen: true,
-      });
-    }
-  };
-
-  handleMapWillUnmount = (zoom: number, center: number[]) => {
-    this.setState({
-      cachedMapCenter: center,
-      cachedZoomLevel: zoom,
-    });
-  };
-
-  handleOpenActionRefreshModal = () => {
-    this.setState({ isActionRefreshModalOpen: true });
-  };
-
-  handleOpenPurchaseFateModal = () => {
-    this.setState({ isPurchaseFateModalOpen: true });
-  };
-
-  handleRequestCloseActionRefreshModal = () => {
-    this.setState({ isActionRefreshModalOpen: false });
-  };
-
-  handleOpenEnhancedRefreshModal = () => {
-    this.setState({ isEnhancedRefreshModalOpen: true });
-  };
-
-  handleRequestCloseEnhancedRefreshModal = () => {
-    this.setState({ isEnhancedRefreshModalOpen: false });
-  };
-
-  handleRequestCloseExceptionalFriendModal = async (
-    didUserSubscribe: boolean
-  ) => {
-    const { gateEvent, isGateStoryletModalOpen } = this.state;
-
-    // Close the modal
-    this.setState({ isExceptionalFriendModalOpen: false });
-
-    // If the user actually subscribed from within the modal, we need to update the map and gate event
-    if (didUserSubscribe) {
-      this.setState({ isFetchingUpdatedMapData: true });
-
-      const result = await new MapService().fetch();
-
-      if (result instanceof Success) {
-        const {
-          data: { areas },
-        } = result;
-
-        // If the gate event modal is open and has gate event data, update state
-        if (isGateStoryletModalOpen && gateEvent) {
-          // We need to cast to IGateEvent because TS thinks gateEvent is a 'never'
-          const gateEventID = (gateEvent as unknown as IGateEvent).id;
-          const gatedArea = (areas as IArea[]).find(
-            (area) => area.gateEvent?.id === gateEventID
-          );
-
-          if (gatedArea) {
-            this.setState({ gateEvent: gatedArea.gateEvent });
-          }
-        }
-
-        this.setState({ isFetchingUpdatedMapData: false });
-      }
-    }
-  };
-
-  handleRequestCloseFailureModal = () => {
-    this.setState((s) => ({ ...s, isModalOpen: false }));
-  };
-
-  handleRequestCloseMap = () => {
-    const { dispatch } = this.props;
-
+  const handleRequestCloseMap = useCallback(() => {
     dispatch(hideMap());
-  };
+  }, [dispatch]);
 
-  handleRequestOpenGateStorylet = (area: IArea) => {
+  const handleAreaClick = useCallback(
+    async (area: IArea) => {
+      const { gateEvent, id, unlocked } = area;
+
+      if (
+        isChangingArea || // We're moving, so ignore clicks
+        isMoving || // We're waiting for the API to respond
+        !currentArea || // We don't know where we are
+        area.id === currentArea.id // We're trying to move to where we already are
+      ) {
+        return;
+      }
+
+      // We are in read-only mode; ignore clicks
+      if (readonly) {
+        return;
+      }
+
+      // We have just finished a gate event, and we're waiting a bit before we close the window;
+      // don't respond to any clicks
+      if (isDelayingCloseAfterGateEventModalClose) {
+        return;
+      }
+
+      // If we're locked, with a gate storylet, then enter it
+      if (!unlocked) {
+        if (gateEvent) {
+          setGateEvent(gateEvent);
+          setIsGateStoryletModalOpen(true);
+        }
+      } else {
+        const startAt = window.performance.now();
+
+        // Store a reference to this, in case changing area fails and we need to roll back
+        const previousArea = currentArea;
+
+        setIsChangingArea(true);
+
+        // Optimistically move the player's marker to the destination
+        dispatch(setCurrentArea(area));
+
+        // Wait for the server response
+        const result: Either<IChangeLocationResponse> | VersionMismatch =
+          await (dispatch as Function)(changeLocation(id, { closeMap: false }));
+
+        if (result instanceof VersionMismatch) {
+          return;
+        }
+
+        // On success, wait for transitions to complete, then hide the map
+        if (result instanceof Success) {
+          // If we were previously in a no-opp-deck area but we've moved to an opp-deck area, then fetch cards
+          if (area.showOps && !currentArea.showOps) {
+            dispatch(fetchCards());
+          }
+
+          // We want to spend at least 800ms in the window, to allow transitions to settle
+          const elapsedTravelTime = window.performance.now() - startAt;
+          const travelTimeRemaining =
+            MINIMUM_TRAVEL_DURATION_MILLISECONDS - elapsedTravelTime;
+
+          if (travelTimeRemaining > 20) {
+            await wait(travelTimeRemaining);
+          }
+
+          // Don't set isChangingArea to false here; we will wait until the map has closed
+
+          // We have successfully moved; close up the map
+          handleRequestCloseMap();
+
+          return;
+        }
+
+        // On failure, restore the marker to where we were, and show the message we received
+        dispatch(setCurrentArea(previousArea));
+
+        setIsChangingArea(false);
+        setIsModalOpen(true);
+        setMessage(result.message);
+      }
+    },
+    [
+      currentArea,
+      dispatch,
+      handleRequestCloseMap,
+      isChangingArea,
+      isDelayingCloseAfterGateEventModalClose,
+      isMoving,
+      readonly,
+    ]
+  );
+
+  const handleMapWillUnmount = useCallback((zoom: number, center: number[]) => {
+    setCachedMapCenter(center);
+    setCachedZoomLevel(zoom);
+  }, []);
+
+  const handleOpenActionRefreshModal = useCallback(() => {
+    setIsActionRefreshModalOpen(true);
+  }, []);
+
+  const handleOpenPurchaseFateModal = useCallback(() => {
+    setIsPurchaseFateModalOpen(true);
+  }, []);
+
+  const handleRequestCloseActionRefreshModal = useCallback(() => {
+    setIsActionRefreshModalOpen(false);
+  }, []);
+
+  const handleOpenEnhancedRefreshModal = useCallback(() => {
+    setIsEnhancedRefreshModalOpen(true);
+  }, []);
+
+  const handleRequestCloseEnhancedRefreshModal = useCallback(() => {
+    setIsEnhancedRefreshModalOpen(false);
+  }, []);
+
+  const handleRequestCloseExceptionalFriendModal = useCallback(
+    async (didUserSubscribe: boolean) => {
+      // Close the modal
+      setIsExceptionalFriendModalOpen(false);
+
+      // If the user actually subscribed from within the modal, we need to update the map and gate event
+      if (didUserSubscribe) {
+        setIsFetchingUpdatedMapData(true);
+
+        const result = await new MapService().fetch();
+
+        if (result instanceof Success) {
+          const {
+            data: { areas },
+          } = result;
+
+          // If the gate event modal is open and has gate event data, update state
+          if (isGateStoryletModalOpen && gateEvent) {
+            // We need to cast to IGateEvent because TS thinks gateEvent is a 'never'
+            const gateEventID = (gateEvent as unknown as IGateEvent).id;
+            const gatedArea = (areas as IArea[]).find(
+              (area) => area.gateEvent?.id === gateEventID
+            );
+
+            if (gatedArea) {
+              setGateEvent(gatedArea.gateEvent);
+            }
+          }
+
+          setIsFetchingUpdatedMapData(false);
+        }
+      }
+    },
+    [gateEvent, isGateStoryletModalOpen]
+  );
+
+  const handleRequestCloseFailureModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  const handleRequestOpenGateStorylet = useCallback((area: IArea) => {
     const { unlocked, gateEvent } = area;
 
     if (unlocked) {
@@ -281,179 +294,122 @@ class MapContainer extends React.Component<Props, State> {
     }
 
     // Try beginning the storylet
-    this.setState({ gateEvent, isGateStoryletModalOpen: true });
-  };
+    setGateEvent(gateEvent);
+    setIsGateStoryletModalOpen(true);
+  }, []);
 
-  handleRequestCloseGateStorylet = async (shouldAutoClose?: boolean) => {
-    const { dispatch } = this.props;
+  const handleRequestCloseGateStorylet = useCallback(
+    async (shouldAutoClose?: boolean) => {
+      setIsGateStoryletModalOpen(false);
+      setIsDelayingCloseAfterGateEventModalClose(!!shouldAutoClose);
 
-    this.setState(
-      {
-        isGateStoryletModalOpen: false,
-        isDelayingCloseAfterGateEventModalClose: !!shouldAutoClose,
-      },
-      async () => {
-        if (shouldAutoClose) {
-          await wait(500);
+      if (shouldAutoClose) {
+        await wait(500);
 
-          dispatch(hideMap());
-        }
+        dispatch(hideMap());
       }
-    );
-  };
+    },
+    [dispatch]
+  );
 
-  handleRequestClosePurchaseFateModal = () => {
-    this.setState({ isPurchaseFateModalOpen: false });
-  };
+  const handleRequestClosePurchaseFateModal = useCallback(() => {
+    setIsPurchaseFateModalOpen(false);
+  }, []);
 
-  renderContent = () => {
-    const { canOpenMap, fallbackMapPreferred, isMapOpen, isVisible } =
-      this.props;
-
-    const {
-      cachedMapCenter,
-      cachedZoomLevel,
-      gateEvent,
-      isChangingArea,
-      isExceptionalFriendModalOpen,
-      isFetchingUpdatedMapData,
-      isGateStoryletModalOpen,
-    } = this.state;
-
-    return (
-      <Fragment>
-        <ExceptionalFriendModalContext.Provider
-          value={{
-            openModal: () =>
-              this.setState({ isExceptionalFriendModalOpen: true }),
-            onRequestClose: this.handleRequestCloseExceptionalFriendModal,
-          }}
-        >
-          <MediaSmDown>
-            {isMapOpen && <CloseButton onClick={this.handleRequestCloseMap} />}
-          </MediaSmDown>
-          <ReactModal
-            onAfterClose={this.handleAfterCloseMap}
-            onRequestClose={this.handleRequestCloseMap}
-            isOpen={canOpenMap && isVisible}
-            closeTimeoutMS={200}
-            bodyOpenClassName="ReactModal__Body--open-map"
-            className={classnames(
-              "modal--map__content",
-              fallbackMapPreferred && "modal--map__content--fallback"
-            )}
-            style={getMapModalStyles(fallbackMapPreferred)}
-          >
-            <MapContext.Provider
-              value={{
-                isGateStoryletModalOpen,
-                onRequestOpenGateStoryletModal:
-                  this.handleRequestOpenGateStorylet,
-                onRequestCloseGateStoryletModal:
-                  this.handleRequestCloseGateStorylet,
-              }}
-            >
-              <MapComponent
-                initialCenter={cachedMapCenter}
-                initialZoom={cachedZoomLevel}
-                isChangingArea={isChangingArea}
-                onAreaClick={this.handleAreaClick}
-                onWillUnmount={this.handleMapWillUnmount}
-              />
-            </MapContext.Provider>
-          </ReactModal>
-          <GateStoryletModal
-            isBeingUpdated={isFetchingUpdatedMapData}
-            isOpen={isGateStoryletModalOpen}
-            gateEvent={gateEvent}
-            onRequestClose={this.handleRequestCloseGateStorylet}
-          />
-          <ExceptionalFriendModal
-            isOpen={isExceptionalFriendModalOpen}
-            onRequestClose={this.handleRequestCloseExceptionalFriendModal}
-            disableTouchEvents
-          />
-        </ExceptionalFriendModalContext.Provider>
-      </Fragment>
-    );
-  };
-
-  /**
-   * Render
-   * @return {Object}
-   */
-  render() {
-    const {
-      isActionRefreshModalOpen,
-      isModalOpen,
-      isPurchaseFateModalOpen,
-      isEnhancedRefreshModalOpen,
-      message,
-    } = this.state;
-
-    return (
-      <ActionRefreshContext.Provider
+  return (
+    <ActionRefreshContext.Provider
+      value={{
+        onOpenActionRefreshModal: handleOpenActionRefreshModal,
+        onOpenEnhancedRefreshModal: handleOpenEnhancedRefreshModal,
+        onOpenPurchaseFateModal: handleOpenPurchaseFateModal,
+      }}
+    >
+      <ExceptionalFriendModalContext.Provider
         value={{
-          onOpenActionRefreshModal: this.handleOpenActionRefreshModal,
-          onOpenPurchaseFateModal: this.handleOpenPurchaseFateModal,
-          onOpenEnhancedRefreshModal: this.handleOpenEnhancedRefreshModal,
+          onRequestClose: handleRequestCloseExceptionalFriendModal,
+          openModal: () => setIsExceptionalFriendModalOpen(true),
         }}
       >
-        <Fragment>
-          {this.renderContent()}
-          <TravelFailureModal
-            isOpen={isModalOpen}
-            message={message}
-            onRequestClose={this.handleRequestCloseFailureModal}
-            disableTouchEvents
-          />
-          <ActionRefreshModal
-            isOpen={isActionRefreshModalOpen}
-            onRequestClose={this.handleRequestCloseActionRefreshModal}
-            overlayClassName="modal--map-action-refresh__overlay modal--map-action-refresh__overlay"
-            disableTouchEvents
-          />
-          <ActionRefreshModal
-            isOpen={isEnhancedRefreshModalOpen}
-            onRequestClose={this.handleRequestCloseEnhancedRefreshModal}
-            overlayClassName="modal--map-action-refresh__overlay"
-            disableTouchEvents
-          />
-          <PurchaseFateFromGateEvent
-            isModalOpen={isPurchaseFateModalOpen}
-            onRequestClose={this.handleRequestClosePurchaseFateModal}
-            style={{
-              overlay: {
-                zIndex: 20000,
-              },
+        <MediaSmDown>
+          {isMapOpen && <CloseButton onClick={handleRequestCloseMap} />}
+        </MediaSmDown>
+
+        <ReactModal
+          bodyOpenClassName="ReactModal__Body--open-map"
+          className={classnames(
+            "modal--map__content",
+            fallbackMapPreferred && "modal--map__content--fallback"
+          )}
+          closeTimeoutMS={200}
+          isOpen={canOpenMap && isVisible}
+          onAfterClose={handleAfterCloseMap}
+          onRequestClose={handleRequestCloseMap}
+          style={getMapModalStyles(fallbackMapPreferred)}
+        >
+          <MapContext.Provider
+            value={{
+              isGateStoryletModalOpen,
+              onRequestCloseGateStoryletModal: handleRequestCloseGateStorylet,
+              onRequestOpenGateStoryletModal: handleRequestOpenGateStorylet,
             }}
-            disableTouchEvents
-          />
-        </Fragment>
-      </ActionRefreshContext.Provider>
-    );
-  }
+          >
+            <MapComponent
+              initialCenter={cachedMapCenter}
+              initialZoom={cachedZoomLevel}
+              isChangingArea={isChangingArea}
+              onAreaClick={handleAreaClick}
+              onWillUnmount={handleMapWillUnmount}
+            />
+          </MapContext.Provider>
+        </ReactModal>
+
+        <GateStoryletModal
+          isBeingUpdated={isFetchingUpdatedMapData}
+          isOpen={isGateStoryletModalOpen}
+          gateEvent={gateEvent}
+          onRequestClose={handleRequestCloseGateStorylet}
+        />
+
+        <ExceptionalFriendModal
+          disableTouchEvents
+          isOpen={isExceptionalFriendModalOpen}
+          onRequestClose={handleRequestCloseExceptionalFriendModal}
+        />
+      </ExceptionalFriendModalContext.Provider>
+
+      <TravelFailureModal
+        disableTouchEvents
+        isOpen={isModalOpen}
+        message={message}
+        onRequestClose={handleRequestCloseFailureModal}
+      />
+
+      <ActionRefreshModal
+        disableTouchEvents
+        isOpen={isActionRefreshModalOpen}
+        onRequestClose={handleRequestCloseActionRefreshModal}
+        overlayClassName="modal--map-action-refresh__overlay modal--map-action-refresh__overlay"
+      />
+
+      <ActionRefreshModal
+        disableTouchEvents
+        isOpen={isEnhancedRefreshModalOpen}
+        onRequestClose={handleRequestCloseEnhancedRefreshModal}
+        overlayClassName="modal--map-action-refresh__overlay"
+      />
+
+      <PurchaseFateFromGateEvent
+        disableTouchEvents
+        isModalOpen={isPurchaseFateModalOpen}
+        onRequestClose={handleRequestClosePurchaseFateModal}
+        style={{
+          overlay: {
+            zIndex: 20000,
+          },
+        }}
+      />
+    </ActionRefreshContext.Provider>
+  );
 }
 
-const mapStateToProps = ({
-  map: { currentArea, fallbackMapPreferred, isMoving, isVisible, setting },
-}: IAppState) => ({
-  currentArea,
-  fallbackMapPreferred,
-  isMoving,
-  isVisible,
-  canOpenMap: setting?.canOpenMap ?? false,
-  isMapOpen: (setting?.canOpenMap ?? false) && isVisible,
-  readonly: !setting?.canTravel,
-  setting,
-});
-
-interface OwnProps {
-  dispatch: Function; // eslint-disable-line @typescript-eslint/ban-types
-}
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-
-type Props = OwnProps & StateProps;
-
-export default connect(mapStateToProps)(MapContainer);
+MapContainer.displayName = "MapContainer";

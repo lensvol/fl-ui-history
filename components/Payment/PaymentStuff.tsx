@@ -1,21 +1,3 @@
-import {
-  Dropin,
-  PaymentMethodPayload,
-  PaymentMethodRequestablePayload,
-} from "braintree-web-drop-in";
-import getDefaultPayPalOptions from "components/Payment/getDefaultPayPalOptions";
-import { CURRENCY_CODE_GBP } from "constants/payment";
-import Loading from "components/Loading";
-import BillingField from "components/Payment/BillingField";
-import BraintreeDropIn, {
-  BraintreeDropInProps,
-  BraintreeWebDropInOptions,
-} from "components/Payment/BraintreeWebDropIn";
-import CountrySelect from "components/Payment/CountrySelect";
-import Packages from "components/Payment/Packages";
-import CurrencySelector from "components/Payment/CurrencySelector";
-import { Field, Form, Formik, FormikHelpers } from "formik";
-import useIsMounted from "hooks/useIsMounted";
 import React, {
   ChangeEvent,
   useCallback,
@@ -23,7 +5,32 @@ import React, {
   useMemo,
   useState,
 } from "react";
+
+import {
+  Dropin,
+  PaymentMethodPayload,
+  PaymentMethodRequestablePayload,
+} from "braintree-web-drop-in";
+
+import { Field, Form, Formik, FormikHelpers } from "formik";
+
+import Loading from "components/Loading";
+import BillingField from "components/Payment/BillingField";
+import BraintreeDropIn, {
+  BraintreeDropInProps,
+  BraintreeWebDropInOptions,
+} from "components/Payment/BraintreeWebDropIn";
+import CountrySelect from "components/Payment/CountrySelect";
+import CurrencySelector from "components/Payment/CurrencySelector";
+import getDefaultPayPalOptions from "components/Payment/getDefaultPayPalOptions";
+import Packages from "components/Payment/Packages";
+
+import { CURRENCY_CODE_GBP } from "constants/payment";
+
+import useIsMounted from "hooks/useIsMounted";
+
 import PaymentService from "services/PaymentService";
+
 import {
   CurrencyCode,
   ExtendedThreeDSecureInfo,
@@ -51,7 +58,7 @@ export const INITIAL_VALUES = {
 export const GENERIC_THREE_D_SECURE_FAILURE_MESSAGE =
   "ThreeDSecure verification failed";
 
-export type FormValues = typeof INITIAL_VALUES;
+type FormValues = typeof INITIAL_VALUES;
 
 export interface PaymentStuffProps<
   TPayload extends {
@@ -65,7 +72,7 @@ export interface PaymentStuffProps<
   onThreeDSComplete: (result: ThreeDSecureCompleteResult<TPayload>) => void;
 }
 
-export function getFailureMessageFromPayload(payload: PaymentMethodPayload) {
+function getFailureMessageFromPayload(payload: PaymentMethodPayload) {
   if (payload.type !== "CreditCard") {
     // currently, we only have logic for credit card messages
     return `${GENERIC_THREE_D_SECURE_FAILURE_MESSAGE} (${payload.type})`;
@@ -81,6 +88,7 @@ export function getFailureMessageFromPayload(payload: PaymentMethodPayload) {
   }
 
   const status = (payload.threeDSecureInfo as ExtendedThreeDSecureInfo)?.status;
+
   if (status !== undefined) {
     return `${GENERIC_THREE_D_SECURE_FAILURE_MESSAGE} (${status})`;
   }
@@ -92,6 +100,7 @@ export function formValuesToBillingAddress(
   values: FormValues
 ): ThreeDSecureParameters["billingAddress"] {
   const { country, ...rest } = values;
+
   return {
     ...rest,
     countryCodeAlpha2: country.replace("US1", "US").replace("GB1", "GB"),
@@ -137,6 +146,7 @@ export default function PaymentStuff({
     async (code?: CurrencyCode) => {
       const paymentService: IPaymentService = new PaymentService();
       const currencyCode = code ?? CURRENCY_CODE_GBP;
+
       setIsFetchingCurrencyOptions(true);
       setSelectedCurrency(currencyCode);
 
@@ -185,8 +195,11 @@ export default function PaymentStuff({
       const {
         target: { value },
       } = evt;
+
       setIsSelectingCurrency(true);
+
       await fetchNexOptions(value as CurrencyCode);
+
       if (isMounted.current) {
         setIsSelectingCurrency(false);
       }
@@ -236,11 +249,13 @@ export default function PaymentStuff({
     async (values: FormValues, helpers: FormikHelpers<FormValues>) => {
       if (dropInInstance === undefined) {
         console.error("Trying to submit without a Braintree instance");
+
         return;
       }
 
       if (selectedPackage === undefined) {
         console.error("Trying to submit without a selected package");
+
         return;
       }
 
@@ -251,8 +266,6 @@ export default function PaymentStuff({
       const amount = (currencyAmount + valueAddedTax).toFixed(2);
 
       setSubmitting(true);
-
-      // console.info('INITIATING PAYMENT METHOD REQUEST');
 
       const requestPaymentMethodPayload: {
         threeDSecure: ThreeDSecureParameters;
@@ -277,10 +290,12 @@ export default function PaymentStuff({
           console.error(
             "Liability did not shift as a result of 3DS authentication."
           );
+
           onThreeDSComplete({
             isSuccess: false,
             message: getFailureMessageFromPayload(payload),
           });
+
           return;
         }
       }
@@ -359,7 +374,7 @@ export default function PaymentStuff({
               className="buttons buttons--left buttons--no-squash buttons--space-between"
               style={{
                 paddingBottom:
-                  currentPaymentMethod === "CreditCard" ? ".5rem" : 0,
+                  currentPaymentMethod === "CreditCard" ? "0.5rem" : 0,
               }}
             >
               <button
@@ -386,7 +401,7 @@ export default function PaymentStuff({
   );
 }
 
-export interface PersonalDeetsProps {
+interface PersonalDeetsProps {
   values: FormValues;
 }
 
@@ -468,6 +483,7 @@ function CurrencySelectionOrLoading({
   if (value === undefined) {
     return <Loading spinner />;
   }
+
   if (isFetching) {
     return <Loading spinner />;
   }
@@ -475,7 +491,12 @@ function CurrencySelectionOrLoading({
   return (
     <>
       {/* select currency */}
-      <label htmlFor="currency-code" style={{ fontWeight: "bold" }}>
+      <label
+        htmlFor="currency-code"
+        style={{
+          fontWeight: "bold",
+        }}
+      >
         Currency
       </label>
       <CurrencySelector value={value} onChange={onSelect} />
@@ -501,6 +522,7 @@ function DropInOrLoading({
   if (isFetchingCurrencies || isSelectingCurrency) {
     return null;
   }
+
   if (options === undefined) {
     return null;
   }
@@ -534,13 +556,13 @@ function PackagesOrLoading({
   if (isFetchingCurrencies) {
     return null;
   }
+
   if (isFetching) {
     return <Loading spinner />;
   }
 
   return (
     <Packages
-      isBreakdownVisible={false}
       isFetching={false}
       packages={packages}
       onSelect={onSelect}

@@ -1,19 +1,22 @@
+import { ActionCreator } from "redux";
+
+import { ThunkDispatch } from "redux-thunk";
+
+import fetchAvailable from "actions/storylet/fetchAvailable";
 import { handleVersionMismatch } from "actions/versionSync";
+
 import {
   BEGIN_SOCIAL_EVENT_FAILURE,
   BEGIN_SOCIAL_EVENT_REQUESTED,
   BEGIN_SOCIAL_EVENT_SUCCESS,
   BEGIN_SOCIAL_EVENT_UNAVAILABLE,
 } from "actiontypes/storylet";
-import * as StoryletActionTypes from "actiontypes/storylet";
-import { ActionCreator } from "redux";
-import { ThunkDispatch } from "redux-thunk";
+
 import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
   IApiStoryletResponseData,
   IStoryletService,
 } from "services/StoryletService";
-import fetchAvailable from "./fetchAvailable";
 
 export type BeginSocialEventRequestedAction = {
   type: typeof BEGIN_SOCIAL_EVENT_REQUESTED;
@@ -21,7 +24,9 @@ export type BeginSocialEventRequestedAction = {
 
 export type BeginSocialEventSuccessAction = {
   type: typeof BEGIN_SOCIAL_EVENT_SUCCESS;
-  payload: Pick<IApiStoryletResponseData, "storylet" | "phase" | "messages">;
+  payload: Pick<IApiStoryletResponseData, "storylet" | "phase" | "messages"> & {
+    invitationId: number;
+  };
 };
 
 export type BeginSocialEventFailureAction = {
@@ -30,7 +35,9 @@ export type BeginSocialEventFailureAction = {
 
 export type BeginSocialEventUnavailableAction = {
   type: typeof BEGIN_SOCIAL_EVENT_UNAVAILABLE;
-  payload: { message: string };
+  payload: {
+    message: string;
+  };
 };
 
 export type BeginSocialEventAction =
@@ -42,7 +49,7 @@ export type BeginSocialEventAction =
 const beginSocialEventUnavailable: ActionCreator<
   BeginSocialEventUnavailableAction
 > = (data: { message: string }) => ({
-  type: StoryletActionTypes.BEGIN_SOCIAL_EVENT_UNAVAILABLE,
+  type: BEGIN_SOCIAL_EVENT_UNAVAILABLE,
   payload: {
     message: data.message,
   },
@@ -51,25 +58,26 @@ const beginSocialEventUnavailable: ActionCreator<
 const beginSocialEventRequested: ActionCreator<
   BeginSocialEventRequestedAction
 > = (_invitationId: number) => ({
-  type: StoryletActionTypes.BEGIN_SOCIAL_EVENT_REQUESTED,
+  type: BEGIN_SOCIAL_EVENT_REQUESTED,
 });
 
-const beginSocialEventSuccess: ActionCreator<
-  BeginSocialEventSuccessAction
-> = () => ({
-  type: StoryletActionTypes.BEGIN_SOCIAL_EVENT_SUCCESS,
+const beginSocialEventSuccess: ActionCreator<BeginSocialEventSuccessAction> = (
+  invitationId: number
+) => ({
+  type: BEGIN_SOCIAL_EVENT_SUCCESS,
   payload: {
-    storylet: undefined,
+    invitationId,
     phase: "In",
+    storylet: undefined,
   },
 });
 
 const beginSocialEventFailure: ActionCreator<BeginSocialEventFailureAction> = (
   error: any
 ) => ({
-  type: StoryletActionTypes.BEGIN_SOCIAL_EVENT_FAILURE,
-  isFetching: false,
+  type: BEGIN_SOCIAL_EVENT_FAILURE,
   error: true,
+  isFetching: false,
   status: error.response && error.response.status,
 });
 
@@ -82,20 +90,24 @@ export function beginSocialEvent(service: IStoryletService) {
 
       try {
         const { data } = await service.beginSocialEvent(invitationId);
+
         if (data.isSuccess) {
-          dispatch(beginSocialEventSuccess());
+          dispatch(beginSocialEventSuccess(invitationId));
           dispatch(fetchAvailable()); // Get slets for this social event
         } else {
           dispatch(beginSocialEventUnavailable(data));
         }
+
         // Return the data
         return data;
       } catch (error) {
         if (error instanceof VersionMismatch) {
           dispatch(handleVersionMismatch(error));
+
           return error;
         }
         dispatch(beginSocialEventFailure(error));
+
         throw error;
       }
     };

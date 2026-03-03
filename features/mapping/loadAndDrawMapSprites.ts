@@ -1,26 +1,32 @@
-import * as PIXI from "pixi.js";
-import { IArea, IMappableSetting } from "types/map";
+import { Loader } from "pixi.js";
 
-import * as SpriteCaching from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
-import { updateSpriteForArea } from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
-import asStateAwareArea from "./asStateAwareArea";
-import drawAreas from "./drawing/drawAreas";
-import drawAreaSelections from "./drawing/drawAreaSelections";
-import getAllSpritesFromSpritesheet from "./getAllSpritesFromSpritesheet";
-import getSortedSpriteRecords from "./getSortedSpriteRecords";
-import loadSpritesheetsForSetting from "./loadSpritesheetsForSetting";
-import { isForegroundSpriteRecord } from "./util";
+import {
+  addForegroundStalagmiteSprite,
+  forceRender,
+  updateSpriteForArea,
+} from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
+
+import asStateAwareArea from "features/mapping/asStateAwareArea";
+import drawAreas from "features/mapping/drawing/drawAreas";
+import drawAreaSelections from "features/mapping/drawing/drawAreaSelections";
+import getAllSpritesFromSpritesheet from "features/mapping/getAllSpritesFromSpritesheet";
+import getSortedSpriteRecords from "features/mapping/getSortedSpriteRecords";
+import loadSpritesheetsForSetting from "features/mapping/loadSpritesheetsForSetting";
+import { isForegroundSpriteRecord } from "features/mapping/util";
+
+import { IArea, IMappableSetting } from "types/map";
 
 export default async function loadAndDrawMapSprites(
   _areas: IArea[],
   setting: IMappableSetting,
   onProgress?: (_: any) => void
 ) {
+  const loader = Loader.shared;
   const SPRITE_SHEET_FILE_NAMES = await loadSpritesheetsForSetting(
+    loader,
     setting,
     onProgress
   );
-  const loader = PIXI.Loader.shared;
   const areas = _areas;
 
   const startAt = window.performance.now();
@@ -36,15 +42,13 @@ export default async function loadAndDrawMapSprites(
   );
 
   // Draw areas
-  // const drawnAreaPromises = await drawAreas(sortedSpriteRecords, areas);
   await drawAreas(sortedSpriteRecords, areas);
-  // await Promise.all(drawnAreaPromises);
 
   // Add foreground sprites (which need to go underneath selection sprites)
   unsortedSpriteRecords
     .filter(isForegroundSpriteRecord)
     .forEach(([_, aOrB, sprite]) => {
-      SpriteCaching.addForegroundStalagmiteSprite(sprite, aOrB as string);
+      addForegroundStalagmiteSprite(sprite, aOrB as string);
     });
 
   // Draw selection sprites
@@ -57,5 +61,5 @@ export default async function loadAndDrawMapSprites(
   const duration = (window.performance.now() - startAt) / 1000;
   console.info(`Adding sprites to container took ${duration.toFixed(2)} s`); // eslint-disable-line no-console
 
-  SpriteCaching.forceRender();
+  forceRender();
 }

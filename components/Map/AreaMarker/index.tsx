@@ -1,31 +1,40 @@
 import React, {
-  Fragment,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
-import { IArea, ILabelledArea, IStateAwareArea } from "types/map";
-import {
-  CircleMarker,
-  Tooltip,
-  Tooltip as LeafletTooltip,
-} from "react-leaflet";
 
+import { CircleMarker, Tooltip } from "react-leaflet";
+
+import classnames from "classnames";
+
+import InteractiveMarker from "components/Map/InteractiveMarker";
+import { MapModalTooltipContextValue } from "components/Map/MapModalTooltipContext";
+
+import { useAppSelector } from "features/app/store";
 import {
   areaToTooltipData,
   isInteractable,
   shouldZoomOnTapAtZoomLevel,
   xy,
 } from "features/mapping";
-import classnames from "classnames";
-import InteractiveMarker from "components/Map/InteractiveMarker";
-import { MapModalTooltipContextValue } from "components/Map/MapModalTooltipContext";
 
-function AreaMarker({
+import { IArea, ILabelledArea, IStateAwareArea } from "types/map";
+
+interface Props extends Pick<MapModalTooltipContextValue, "openModalTooltip"> {
+  area: IStateAwareArea & ILabelledArea;
+  className?: string;
+  currentArea: IArea;
+  interactive?: boolean;
+  onAreaClick: (e: any, area: IArea) => Promise<void>;
+  onAreaSelect: (area?: IArea) => void;
+  onTapAtLowZoomLevel: (area: IArea) => void;
+  zoomLevel: number;
+}
+
+export default function AreaMarker({
   area,
   className,
   currentArea,
@@ -34,13 +43,14 @@ function AreaMarker({
   onAreaSelect,
   onTapAtLowZoomLevel,
   openModalTooltip,
-  setting,
   zoomLevel,
 }: Props) {
   const ref = useRef<Tooltip>(null);
 
   const [isTouchActive, setIsTouchActive] = useState(false);
   const [didUserTap, setDidUserTap] = useState(false);
+
+  const setting = useAppSelector((state) => state.map.setting);
 
   const onClick = useCallback(() => {
     // Only listen to 'click' events that were fired by taps
@@ -52,6 +62,7 @@ function AreaMarker({
 
     if (shouldZoomOnTapAtZoomLevel(area, setting, zoomLevel)) {
       onTapAtLowZoomLevel(area);
+
       return;
     }
 
@@ -64,7 +75,10 @@ function AreaMarker({
         !!setting?.canTravel,
         onAreaClick
       );
-      openModalTooltip({ ...tooltipData });
+
+      openModalTooltip({
+        ...tooltipData,
+      });
     }
   }, [
     area,
@@ -124,62 +138,42 @@ function AreaMarker({
 
   const isAreaInteractable = isInteractable(area) && (interactive ?? true);
 
-  const center = useMemo(() => xy(labelX, labelY), [labelX, labelY]);
+  const center = useMemo(() => {
+    return xy(labelX, labelY);
+  }, [labelX, labelY]);
 
   return (
-    <Fragment>
-      <CircleMarker
-        center={center}
-        radius={0}
-        fillColor="transparent"
-        opacity={0}
+    <CircleMarker
+      center={center}
+      fillColor="transparent"
+      radius={0}
+      opacity={0}
+    >
+      <Tooltip
+        className={classnames(
+          "leaflet-tooltip--fbg",
+          isAreaInteractable && area.unlocked
+            ? "leaflet-tooltip--fbg-interactable"
+            : "leaflet-tooltip--fbg-landmark",
+          className
+        )}
+        direction="center"
+        offset={[0, 0]}
+        opacity={1}
+        permanent
+        ref={ref}
       >
-        <LeafletTooltip
-          className={classnames(
-            "leaflet-tooltip--fbg",
-            isAreaInteractable && area.unlocked
-              ? "leaflet-tooltip--fbg-interactable"
-              : "leaflet-tooltip--fbg-landmark",
-            className
-          )}
-          direction="center"
-          offset={[0, 0]}
-          permanent
-          opacity={1}
-          ref={ref}
-        >
-          <InteractiveMarker
-            area={area}
-            currentArea={currentArea}
-            onAreaClick={onAreaClick}
-            onAreaSelect={onAreaSelect}
-            onTapAtLowZoomLevel={onTapAtLowZoomLevel}
-            zoomLevel={zoomLevel}
-          />
-        </LeafletTooltip>
-      </CircleMarker>
-    </Fragment>
+        <InteractiveMarker
+          area={area}
+          currentArea={currentArea}
+          onAreaClick={onAreaClick}
+          onAreaSelect={onAreaSelect}
+          onTapAtLowZoomLevel={onTapAtLowZoomLevel}
+          zoomLevel={zoomLevel}
+        />
+      </Tooltip>
+    </CircleMarker>
   );
 }
 
-interface OwnProps extends Pick<
-  MapModalTooltipContextValue,
-  "openModalTooltip"
-> {
-  area: IStateAwareArea & ILabelledArea;
-  className?: string;
-  currentArea: IArea;
-  interactive?: boolean;
-  onAreaClick: (e: any, area: IArea) => Promise<void>;
-  onAreaSelect: (area?: IArea) => void;
-  onTapAtLowZoomLevel: (area: IArea) => void;
-  zoomLevel: number;
-}
-
-const mapStateToProps = ({ map: { setting } }: IAppState) => ({
-  setting,
-});
-
-export type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(AreaMarker);
+AreaMarker.displayName = "AreaMarker";

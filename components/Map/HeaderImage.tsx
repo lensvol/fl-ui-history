@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import classNames from "classnames";
-
 import {
   MAP_BASE_URL,
   MAP_ROOT_AREA_THE_UNTERZEE_V2,
@@ -52,24 +50,20 @@ export default function HeaderImage({ area, setting }: Props) {
   }
 
   return (
-    <>
-      <img
-        alt=""
-        className={classNames(
-          "leaflet-marker-icon",
-          "leaflet-zoom-animated",
-          "leaflet-interactive"
-        )}
-        src={imageUrl}
-        style={{
-          marginLeft: (area.headerOffsetX ?? 0) - 16,
-          marginTop: (area.headerOffsetY ?? 0) - 8,
-          width: width,
-          height: height,
-          zIndex: -1,
-          outline: "none",
-        }}
-      />
-    </>
+    <img
+      alt=""
+      className="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive"
+      src={imageUrl}
+      style={{
+        height: height,
+        marginLeft: (area.headerOffsetX ?? 0) - 16,
+        marginTop: (area.headerOffsetY ?? 0) - 8,
+        outline: "none",
+        width: width,
+        zIndex: -1,
+      }}
+    />
   );
 }
+
+HeaderImage.displayName = "HeaderImage";

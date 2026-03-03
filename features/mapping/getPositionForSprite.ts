@@ -1,11 +1,13 @@
+import { Point } from "pixi.js";
+
+import { DUMMY_XY_COORDINATES } from "features/mapping/constants";
+import getMainDestinationSelectionCoordinates from "features/mapping/getMainDestinationSelectionCoordinates";
+import getSelectionSpriteCoordinates from "features/mapping/getSelectionSpriteCoordinates";
+
 import { IArea, SpriteType } from "types/map";
-import * as PIXI from "pixi.js";
-import getSelectionSpriteCoordinates from "./getSelectionSpriteCoordinates";
-import getMainDestinationSelectionCoordinates from "./getMainDestinationSelectionCoordinates";
-import { DUMMY_XY_COORDINATES } from "./constants";
 
 function pointFromXY({ x, y }: { x: number; y: number }) {
-  return new PIXI.Point(x / 2, -y / 2);
+  return new Point(x / 2, -y / 2);
 }
 
 export default function getPositionForSprite(
@@ -27,15 +29,21 @@ export default function getPositionForSprite(
           `getPositionForSprite(${areaKey}): this area has no sprite coords`
         );
         console.error(area);
+
         return pointFromXY(DUMMY_XY_COORDINATES);
       }
-      return new PIXI.Point(spriteTopLeftX / 2, -spriteTopLeftY / 2);
+
+      return new Point(spriteTopLeftX / 2, -spriteTopLeftY / 2);
     }
-    case "selection":
+
+    case "selection": {
       return pointFromXY(getSelectionSpriteCoordinates(area));
+    }
+
     case "main-destination-selection": {
       return pointFromXY(getMainDestinationSelectionCoordinates(area));
     }
+
     case "main-destination": {
       if (
         mainDestinationSpriteTopLeftX === undefined ||
@@ -44,17 +52,21 @@ export default function getPositionForSprite(
         console.error(
           `getPositionForSprite(${areaKey}): no main destination sprite coordinates`
         );
+
         return pointFromXY(DUMMY_XY_COORDINATES);
       }
-      return new PIXI.Point(
+
+      return new Point(
         mainDestinationSpriteTopLeftX / 2,
         -mainDestinationSpriteTopLeftY / 2
       );
     }
+
     default:
       console.error(
         `I don't know what to do with this sprite: ${areaKey}-${whatKind}`
       );
+
       return pointFromXY(DUMMY_XY_COORDINATES);
   }
 }
