@@ -25,8 +25,8 @@ import {
 } from "features/mapping";
 import getCRSForSetting from "features/mapping/getCRSForSetting";
 import getFallbackMapImageURL from "features/mapping/getFallbackMapImageURL";
+import getIdealMaximumZoomForSetting from "features/mapping/getIdealMaximumZoomForSetting";
 import getIdealMinimumZoomForSetting from "features/mapping/getIdealMinimumZoomForSetting";
-import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
 
 import getLabelledStateAwareAreas from "selectors/map/getLabelledStateAwareAreas";
@@ -94,7 +94,7 @@ export default function UnterzeePixiMap({
       return 0;
     }
 
-    return getMapZoomLimitsForSetting(mappableSetting)?.max;
+    return getIdealMaximumZoomForSetting(mappableSetting);
     // eslint-disable-next-line
   }, [mappableSetting, setting]);
 

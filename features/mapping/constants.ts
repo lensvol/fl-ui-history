@@ -1,7 +1,7 @@
 import Config from "configuration";
 
-// In development, allow overriding the base URL for map art assets; otherwise use versioned assets for this
-// environment
+// In development, allow overriding the base URL for map art assets;
+// otherwise use versioned assets for this environment
 export const MAP_BASE_URL =
   process.env.REACT_APP_MAP_BASE_URL ??
   `${Config.mapBaseUrl}/${Config.version}`;

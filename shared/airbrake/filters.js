@@ -23,3 +23,21 @@ export function isTimeoutOf0ms(error) {
 export function isTooManySetStates(error) {
   return !!(error.message && error.message.match("Minified React error #185"));
 }
+
+export function isBrowserPluginError(error) {
+  if (!error.errors) {
+    return false;
+  }
+
+  if (!error.errors.length) {
+    return false;
+  }
+
+  if (!error.errors[0].backtrace.length) {
+    return false;
+  }
+
+  return !!error.errors[0].backtrace[0].file.match(
+    /(moz|chrome)-extension:\/\//
+  );
+}

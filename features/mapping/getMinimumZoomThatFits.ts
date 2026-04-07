@@ -1,3 +1,5 @@
+import { MD } from "components/Responsive/breakpoints";
+
 import { getMapDimensionsForSetting } from "features/mapping/index";
 
 import { IMappableSetting } from "types/map";
@@ -15,7 +17,7 @@ export default function getMinimumZoomThatFits(
   const { height: mapHeight } = getMapDimensionsForSetting(setting!);
 
   // On sufficiently wide screens, we can show the map fully zoomed out
-  if (innerWidth >= 768) {
+  if (innerWidth >= MD) {
     return 3;
   }
 

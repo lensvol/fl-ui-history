@@ -4,6 +4,7 @@ import { Notifier } from "@airbrake/browser";
 import Config from "configuration";
 
 import {
+  isBrowserPluginError,
   isExtensionContextInvalidated,
   isGreasemonkeyError,
   isNetworkError,
@@ -30,6 +31,7 @@ export default function getClient() {
       const error = notice.errors[0];
 
       const filters = [
+        isBrowserPluginError,
         isExtensionContextInvalidated,
         isGreasemonkeyError,
         isNetworkError,
