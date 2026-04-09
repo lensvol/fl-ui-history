@@ -25,19 +25,17 @@ export function isTooManySetStates(error) {
 }
 
 export function isBrowserPluginError(error) {
-  if (!error.errors) {
+  if (!error.backtrace) {
     return false;
   }
 
-  if (!error.errors.length) {
+  if (!error.backtrace.length) {
     return false;
   }
 
-  if (!error.errors[0].backtrace.length) {
+  if (!error.backtrace[0].file) {
     return false;
   }
 
-  return !!error.errors[0].backtrace[0].file.match(
-    /(moz|chrome)-extension:\/\//
-  );
+  return !!error.backtrace[0].file.match(/(moz|chrome)-extension:\/\//);
 }
