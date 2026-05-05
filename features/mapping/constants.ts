@@ -23,6 +23,7 @@ export const ROUTE_LODGINGS_QUALITY_ID = 125023;
 export const MAP_ROOT_AREA_THE_FIFTH_CITY = Config.mapRootAreaIDs.london;
 export const MAP_ROOT_AREA_THE_UNTERZEE = Config.mapRootAreaIDs.unterzee;
 export const MAP_ROOT_AREA_THE_UNTERZEE_V2 = Config.mapRootAreaIDs.unterzeev2;
+export const MAP_ROOT_AREA_THE_ROOF = Config.mapRootAreaIDs.roof;
 
 export const SETTING_ID_ABOARD_AT_PORT = 107951;
 
@@ -30,6 +31,7 @@ export const IDEAL_MINIMUM_ZOOMS_BY_MAP_ROOT_AREA_ID: {
   [areaKey: string]: number;
 } = {
   [MAP_ROOT_AREA_THE_FIFTH_CITY]: 3,
+  [MAP_ROOT_AREA_THE_ROOF]: 4.35107444,
   [MAP_ROOT_AREA_THE_UNTERZEE]: 4.35107444,
   [MAP_ROOT_AREA_THE_UNTERZEE_V2]: 4.35107444,
 };
@@ -38,6 +40,7 @@ export const MAP_DIMENSIONS_BY_MAP_ROOT_AREA_ID: {
   [areaKey: string]: { height: number; width: number };
 } = {
   [MAP_ROOT_AREA_THE_FIFTH_CITY]: { height: 3000, width: 5220 },
+  [MAP_ROOT_AREA_THE_ROOF]: { height: 750, width: 1473 },
   [MAP_ROOT_AREA_THE_UNTERZEE]: { height: 1178, width: 2048 },
   [MAP_ROOT_AREA_THE_UNTERZEE_V2]: { height: 1178, width: 2048 },
 };
@@ -45,6 +48,7 @@ export const MAP_DIMENSIONS_BY_MAP_ROOT_AREA_ID: {
 export const MAXIMUM_ZOOMS_BY_MAP_ROOT_AREA_ID: { [areaKey: string]: number } =
   {
     [MAP_ROOT_AREA_THE_FIFTH_CITY]: 5,
+    [MAP_ROOT_AREA_THE_ROOF]: 4.35107444,
     [MAP_ROOT_AREA_THE_UNTERZEE]: 5,
     [MAP_ROOT_AREA_THE_UNTERZEE_V2]: 5,
   };
@@ -53,6 +57,7 @@ export const MINIMUM_ZOOM_LEVEL_FOR_DESTINATIONS_BY_MAP_ROOT_AREA_ID: {
   [areaKey: string]: number;
 } = {
   [MAP_ROOT_AREA_THE_FIFTH_CITY]: 3.5,
+  [MAP_ROOT_AREA_THE_ROOF]: 4.35107444,
   [MAP_ROOT_AREA_THE_UNTERZEE]: 4.35107444,
   [MAP_ROOT_AREA_THE_UNTERZEE_V2]: 4.35107444,
 };
@@ -61,14 +66,25 @@ export const NUMBER_OF_SPRITESHEETS_BY_MAP_ROOT_AREA_ID: {
   [areaKey: string]: number;
 } = {
   [MAP_ROOT_AREA_THE_FIFTH_CITY]: 5,
+  [MAP_ROOT_AREA_THE_ROOF]: 0,
   [MAP_ROOT_AREA_THE_UNTERZEE]: 2,
   [MAP_ROOT_AREA_THE_UNTERZEE_V2]: 2,
 };
 
 export const SPRITESHEET_PREFIXES_BY_MAP_ROOT_AREA_ID = {
   [MAP_ROOT_AREA_THE_FIFTH_CITY]: "london",
+  [MAP_ROOT_AREA_THE_ROOF]: "roof",
   [MAP_ROOT_AREA_THE_UNTERZEE]: "unterzee",
   [MAP_ROOT_AREA_THE_UNTERZEE_V2]: "unterzeev2",
+};
+
+export const MAP_CENTER_BY_MAP_ROOT_AREA_ID: {
+  [areaKey: string]: { percentX: number; percentY: number };
+} = {
+  [MAP_ROOT_AREA_THE_FIFTH_CITY]: { percentX: 50, percentY: 0 },
+  [MAP_ROOT_AREA_THE_ROOF]: { percentX: 0, percentY: 0 },
+  [MAP_ROOT_AREA_THE_UNTERZEE]: { percentX: 0, percentY: 0 },
+  [MAP_ROOT_AREA_THE_UNTERZEE_V2]: { percentX: 0, percentY: 0 },
 };
 
 export const SPRITE_REGEX = /([^-]*)-(.*)\.png/;

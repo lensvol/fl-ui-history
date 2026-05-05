@@ -1,6 +1,9 @@
 import GlobalSpriteMap from "components/Map/PixiMap/GlobalSpriteMap";
-import { isSpriteInCache } from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
-import * as SpriteCaching from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
+import {
+  addAreaSpriteToContainer,
+  isSpriteInCache,
+} from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
+
 import { IArea, SpriteRecord } from "types/map";
 
 export default async function drawSpriteRecords(
@@ -18,7 +21,8 @@ export default async function drawSpriteRecords(
       if (isSpriteInCache(area, spriteType)) {
         return;
       }
-      await SpriteCaching.addAreaSpriteToContainer(area, spriteType);
+
+      await addAreaSpriteToContainer(area, spriteType);
     }
   });
 }

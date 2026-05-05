@@ -4,7 +4,7 @@ import { Route, Redirect, withRouter } from "react-router-dom";
 
 import destructureJwt from "utils/destructureJwt";
 
-export const RequireCharacter = ({
+const RequireCharacter = ({
   component: Component,
   uiRestriction,
   uiRestrictions,
@@ -20,7 +20,7 @@ export const RequireCharacter = ({
       render={(props) => {
         // If we're logged out entirely, then take us to the login page
         if (!userId) {
-          return <Redirect to="/login" />;
+          return <Redirect to={"/login" + window.location.search} />;
         }
 
         // If we're logged in but don't have a character, take us to the character creation page
@@ -28,13 +28,13 @@ export const RequireCharacter = ({
           return <Redirect to="/create-character" />;
         }
 
-        // If we're logged in with a character, but the declared quality filter is in effect, redirect to Story tab
+        // If we're logged in with a character, but the declared quality filter is in effect,
+        // redirect to Story tab
         if (!shouldShowUI) {
           return <Redirect to={{ pathname: "/" }} />;
         }
 
-        // If we are logged in as a user who has a character, then take us to
-        // the requested component
+        // If we are logged in as a user who has a character, then take us to the requested component
         return <Component {...props} />;
       }}
     />

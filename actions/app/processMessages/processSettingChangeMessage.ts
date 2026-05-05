@@ -1,8 +1,11 @@
-import { fetch as fetchMap, setCurrentSetting } from "actions/map";
 import { ThunkDispatch } from "redux-thunk";
+
+import { fetch as fetchMap, setCurrentSetting } from "actions/map";
+
+import { clearContainerAndCaches } from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
+
 import { IAppState } from "types/app";
 import { ISettingChangeMessage } from "types/app/messages";
-import * as SpriteCache from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
 
 export default function processSettingChangeMessage(
   message: ISettingChangeMessage
@@ -12,24 +15,26 @@ export default function processSettingChangeMessage(
     getState: () => IAppState
   ) => {
     const { map } = getState();
-    const { setting } = message;
+    const setting = message?.setting;
 
-    // If we are able to travel in the new Setting but have no
-    // map locations, then retrieve them
-    const { canOpenMap, mapRootArea } = setting;
+    // If we are able to travel in the new Setting but have no map locations, then retrieve them
     const oldMapRootAreaKey = getState().map.setting?.mapRootArea?.areaKey;
-    const newMapRootAreaKey = mapRootArea?.areaKey;
+    const newMapRootAreaKey = setting?.mapRootArea?.areaKey;
     const hasMapRootAreaChanged = newMapRootAreaKey !== oldMapRootAreaKey;
 
     if (hasMapRootAreaChanged) {
-      SpriteCache.clearContainerAndCaches();
+      clearContainerAndCaches();
     }
 
     // Update our Setting
     dispatch(setCurrentSetting(setting));
 
-    if (canOpenMap && !map.areas) {
-      dispatch(fetchMap({ hasMapRootAreaChanged }));
+    if (setting?.canOpenMap && !map.areas) {
+      dispatch(
+        fetchMap({
+          hasMapRootAreaChanged,
+        })
+      );
     }
 
     return message;

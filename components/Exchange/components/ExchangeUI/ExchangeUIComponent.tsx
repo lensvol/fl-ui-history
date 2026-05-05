@@ -29,7 +29,8 @@ export default function ExchangeUI({
   const priceValue = buying ? availability.cost : availability.sellPrice;
   const title = `Please select a number to ${verb}`;
   const tooltipData = availability.quality;
-  const transactionLimit = buying ? MAX_BUY_AMOUNT : MAX_SELL_AMOUNT;
+  const upperLimit = buying ? MAX_BUY_AMOUNT : MAX_SELL_AMOUNT;
+  const transactionLimit = Math.min(maxAmount, upperLimit);
 
   return (
     <div>
@@ -83,8 +84,8 @@ export default function ExchangeUI({
       </div>
       <div className="exchange-ui__rubric-and-controls">
         <em>
-          You may {verb} up to {transactionLimit.toLocaleString("en-GB")} items
-          at a time. If you need to {verb} more, do so in batches.
+          You may {verb} up to {upperLimit.toLocaleString("en-GB")} items at a
+          time. If you need to {verb} more, do so in batches.
         </em>
         <form className="exchange-ui__form" onSubmit={onSubmit}>
           <div className="exchange-ui__controls">
@@ -103,7 +104,7 @@ export default function ExchangeUI({
             <input
               autoFocus
               className="form__control form__control--1h"
-              max={transactionLimit}
+              max={upperLimit}
               min={1}
               onChange={onChange}
               ref={input}
@@ -116,13 +117,13 @@ export default function ExchangeUI({
             <StateChangeButton
               by={+1}
               onClick={onIncrement}
-              maxAmount={maxAmount}
+              maxAmount={transactionLimit}
               sellAmount={sellAmount}
             />
             <StateChangeButton
               by={+10}
               onClick={onIncrement}
-              maxAmount={maxAmount}
+              maxAmount={transactionLimit}
               sellAmount={sellAmount}
             />
           </div>

@@ -2,6 +2,7 @@ import { Loader } from "pixi.js";
 
 import {
   MAP_ROOT_AREA_THE_FIFTH_CITY,
+  MAP_ROOT_AREA_THE_ROOF,
   MAP_ROOT_AREA_THE_UNTERZEE,
   MAP_ROOT_AREA_THE_UNTERZEE_V2,
 } from "features/mapping/constants";
@@ -11,6 +12,7 @@ import { IMappableSetting } from "types/map";
 
 const haveWeLoadedThisMapRootArea: { [areaKey: string]: boolean } = {
   [MAP_ROOT_AREA_THE_FIFTH_CITY]: false,
+  [MAP_ROOT_AREA_THE_ROOF]: false,
   [MAP_ROOT_AREA_THE_UNTERZEE]: false,
   [MAP_ROOT_AREA_THE_UNTERZEE_V2]: false,
 };

@@ -77,8 +77,8 @@ export async function addAreaSpriteToContainer(
 }
 
 /**
- * Clear the PIXI container (removing all children) and empty the sprite caches, so that when we
- * next draw the map we'll add all areas.
+ * Clear the PIXI container (removing all children) and empty the sprite caches,
+ * so that when we next draw the map we'll add all areas.
  *
  * This refreshes the map when we change Setting.
  */
@@ -109,7 +109,6 @@ function getCacheForSpriteType(whatKind: SpriteType) {
     case "main-destination-selection":
       return MAIN_DESTINATION_SELECTION_SPRITE_CACHE;
 
-    case "main-destination":
     default:
       return MAIN_DESTINATION_SPRITE_CACHE;
   }

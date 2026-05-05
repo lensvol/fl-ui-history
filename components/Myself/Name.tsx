@@ -1,17 +1,18 @@
 import React, { useCallback, useRef, useState } from "react";
-import { connect } from "react-redux";
 
 import ChangeNameModal from "components/Myself/ChangeNameModal";
 import TippyWrapper from "components/TippyWrapper";
 
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
 
 const tooltipData = {
   name: "Change your name!",
   description: "You need at least 15 Fate to do this",
 };
 
-function Name({ name }: Props) {
+export default function Name() {
+  const name = useAppSelector((state) => state.myself.character.name);
+
   const ref = useRef<HTMLButtonElement>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,15 +46,3 @@ function Name({ name }: Props) {
 }
 
 Name.displayName = "Name";
-
-const mapStateToProps = ({
-  myself: {
-    character: { name },
-  },
-}: IAppState) => ({
-  name,
-});
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(Name);

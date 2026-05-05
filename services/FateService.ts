@@ -23,6 +23,7 @@ export type PurchaseFateItemRequest = {
   avatarImage?: string | null;
   newName?: string | null;
   action?: string;
+  isFree?: boolean;
 };
 
 export type PurchaseFateItemResponse = FetchFateResponse;
@@ -38,7 +39,13 @@ export default class FateService extends BaseService implements IFateService {
   };
 
   purchaseItem = (data: PurchaseFateItemRequest) => {
-    const { action, avatarImage = null, newName = null, storeItemId } = data;
+    const {
+      action,
+      avatarImage = null,
+      newName = null,
+      storeItemId,
+      isFree,
+    } = data;
 
     const config = {
       method: "post",
@@ -48,6 +55,7 @@ export default class FateService extends BaseService implements IFateService {
         avatarImage,
         newName,
         storeItemId,
+        isFree,
       },
     };
 

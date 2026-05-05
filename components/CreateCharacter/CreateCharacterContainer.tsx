@@ -1,211 +1,200 @@
-import React, { ChangeEvent, Component, Fragment } from "react";
-import { connect } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { checkAvailability, createCharacter } from "actions/registration";
 import { fetchUser } from "actions/user";
 
+import CharacterNameContext from "components/CreateCharacter/CharacterNameContext";
+import CreateCharacterComponent from "components/CreateCharacter/CreateCharacterComponent";
+import ConfirmCancelCreateModal from "components/CreateCharacter/components/ConfirmCancelCreateModal";
 import Loading from "components/Loading";
-import { IAppState } from "types/app";
 
 import { Success } from "services/BaseMonadicService";
-import CreateCharacterComponent from "./CreateCharacterComponent";
-import CharacterNameContext from "./CharacterNameContext";
-import ConfirmCancelCreateModal from "./components/ConfirmCancelCreateModal";
 
-type State = {
-  avatar: string | undefined;
-  errors: any;
-  gender: any | undefined;
-  isCheckingAvailability: boolean;
-  isConfirmCancelModalOpen: boolean;
-  isFetching: boolean;
-  isSubmitting: boolean;
-  userName: string;
-  userNameIsAvailable: boolean;
+type CreateCharacterErrors = {
+  userName?: string;
 };
 
-export class CreateCharacterContainer extends Component<Props, State> {
-  mounted = false;
+export default function CreateCharacterContainer() {
+  const [avatar, setAvatar] = useState<string | undefined>(undefined);
+  const [errors, setErrors] = useState<CreateCharacterErrors>({});
+  const [gender, setGender] = useState<string | undefined>(undefined);
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+  const [isConfirmCancelModalOpen, setIsConfirmCancelModalOpen] =
+    useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userNameIsAvailable, setUserNameIsAvailable] = useState(false);
+  const [didLoad, setDidLoad] = useState(false);
 
-  static displayName = "CreateCharacterContainer";
+  const dispatch = useDispatch();
+  const history = useHistory();
 
-  state: State = {
-    avatar: undefined,
-    gender: undefined,
-    errors: {},
-    isCheckingAvailability: false,
-    isConfirmCancelModalOpen: false,
-    isFetching: false,
-    isSubmitting: false,
-    userName: "",
-    userNameIsAvailable: false,
-  };
+  const checkUserName = useCallback(
+    async (name: string) => {
+      setIsCheckingAvailability(true);
 
-  componentDidMount = async () => {
-    const { dispatch } = this.props;
-    // We're mounted
-    this.mounted = true;
-    // Fetch the user state
-    this.setState({ isFetching: true });
-    const result = await dispatch(fetchUser());
-    if (result instanceof Success) {
-      const {
-        user: { name: userName },
-      } = result.data;
-      if (userName) {
-        this.setState({ userName, isFetching: false }, () => {
-          // Validate the user name after setting state
-          this.handleBlurName();
-        });
-      }
-    }
-  };
-
-  handleBlurName = async () => {
-    const { dispatch } = this.props;
-    const { errors, userName } = this.state;
-    this.setState({
-      isCheckingAvailability: true,
-      userNameIsAvailable: false,
-      errors: {
-        ...errors,
+      setErrors({
         userName: undefined,
-      },
-    });
-    try {
-      // const { isSuccess } = await dispatch(checkAvailability(userName));
-      const result = await dispatch(checkAvailability(userName));
+      });
 
-      this.setState((state) => ({
-        isCheckingAvailability: false,
-        userNameIsAvailable: result.isSuccess,
-        errors: {
-          ...state.errors,
+      setUserNameIsAvailable(false);
+
+      try {
+        const result: any = await dispatch(checkAvailability(name));
+
+        setIsCheckingAvailability(false);
+
+        setErrors({
           userName: result.isSuccess
             ? undefined
-            : (result.message ?? `'${userName}' is taken.`),
-        },
-      }));
-    } catch (e) {
-      // TODO: handle actual errors
+            : (result.message ?? `'${name}' is taken.`),
+        });
+
+        setUserNameIsAvailable(result.isSuccess);
+      } catch (e) {
+        // TODO: handle actual errors
+      }
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    if (didLoad) {
+      return;
     }
-  };
 
-  handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      userName: e.target.value,
-      userNameIsAvailable: false,
-    });
-  };
+    asyncUseEffect();
 
-  handleChangeGender = (gender: any) => {
-    this.setState({ gender });
-  };
+    async function asyncUseEffect() {
+      setDidLoad(true);
 
-  handleCloseCancelModal = () => {
-    this.setState({ isConfirmCancelModalOpen: false });
-  };
+      // Fetch the user state
+      setIsFetching(true);
 
-  handleRequestCancel = () => {
-    this.setState({ isConfirmCancelModalOpen: true });
-  };
+      const result = await dispatch(fetchUser());
 
-  handleSelectAvatar = (avatar: string) => {
-    this.setState({ avatar });
-  };
+      if (!(result instanceof Success)) {
+        return;
+      }
 
-  handleSubmit = async () => {
-    const { dispatch, history } = this.props;
-    const { avatar, gender, userName } = this.state;
-    this.setState({ isSubmitting: true });
+      const {
+        user: { name },
+      } = result.data;
+
+      if (!name) {
+        return;
+      }
+
+      setIsFetching(false);
+      setUserName(name);
+      checkUserName(name);
+    }
+  }, [checkUserName, didLoad, dispatch, errors, userName]);
+
+  const handleBlurName = useCallback(async () => {
+    checkUserName(userName);
+  }, [checkUserName, userName]);
+
+  const handleChangeName = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setUserName(e.target.value);
+    setUserNameIsAvailable(false);
+  }, []);
+
+  const handleChangeGender = useCallback((gender: string) => {
+    setGender(gender);
+  }, []);
+
+  const handleCloseCancelModal = useCallback(() => {
+    setIsConfirmCancelModalOpen(false);
+  }, []);
+
+  const handleRequestCancel = useCallback(() => {
+    setIsConfirmCancelModalOpen(true);
+  }, []);
+
+  const handleSelectAvatar = useCallback((avatar: string) => {
+    setAvatar(avatar);
+  }, []);
+
+  const handleSubmit = useCallback(async () => {
+    setIsSubmitting(true);
+
     // Send to the character-creation endpoint
-    const result = await dispatch(
+    const result: any = await dispatch(
       createCharacter({ avatar, gender, userName })
     );
     const { isSuccess } = result;
+
     if (isSuccess) {
       history.push("/");
     }
-  };
+  }, [avatar, dispatch, gender, history, userName]);
 
-  render = () => {
-    const {
-      avatar,
-      errors,
-      isCheckingAvailability,
-      isConfirmCancelModalOpen,
-      isFetching,
-      isSubmitting,
-      gender,
-      userName,
-      userNameIsAvailable,
-    } = this.state;
-
-    if (isFetching) {
-      return (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            height: "100vh",
-            width: "100vw",
-            top: "0",
-            left: "0",
-          }}
-        >
-          <Loading spinner />
-        </div>
-      );
-    }
-
-    const canSubmit = !!(
+  const canSubmit = useMemo(() => {
+    return !!(
       avatar !== undefined &&
       gender !== undefined &&
       userName.length &&
       userNameIsAvailable
     );
+  }, [avatar, gender, userName, userNameIsAvailable]);
 
+  if (isFetching) {
     return (
-      <CharacterNameContext.Provider
-        value={{
-          isCheckingAvailability,
-          isAvailable: userNameIsAvailable,
-          error: errors.userName,
-          onBlur: this.handleBlurName,
-          onChange: this.handleChangeName,
-          value: userName,
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "absolute",
+          height: "100vh",
+          width: "100vw",
+          top: "0",
+          left: "0",
         }}
       >
-        <Fragment>
-          <CreateCharacterComponent
-            avatar={avatar}
-            canSubmit={canSubmit}
-            errors={errors}
-            gender={gender}
-            isSubmitting={isSubmitting}
-            onChangeGender={this.handleChangeGender}
-            onRequestCancel={this.handleRequestCancel}
-            onSelectAvatar={this.handleSelectAvatar}
-            onSubmit={this.handleSubmit}
-          />
-          <ConfirmCancelCreateModal
-            isOpen={isConfirmCancelModalOpen}
-            onRequestClose={this.handleCloseCancelModal}
-          />
-        </Fragment>
-      </CharacterNameContext.Provider>
+        <Loading spinner />
+      </div>
     );
-  };
+  }
+
+  return (
+    <CharacterNameContext.Provider
+      value={{
+        isCheckingAvailability,
+        isAvailable: userNameIsAvailable,
+        error: errors.userName,
+        onBlur: handleBlurName,
+        onChange: handleChangeName,
+        value: userName,
+      }}
+    >
+      <CreateCharacterComponent
+        avatar={avatar}
+        canSubmit={canSubmit}
+        gender={gender}
+        isSubmitting={isSubmitting}
+        nameError={errors.userName}
+        onChangeGender={handleChangeGender}
+        onRequestCancel={handleRequestCancel}
+        onSelectAvatar={handleSelectAvatar}
+        onSubmit={handleSubmit}
+      />
+      <ConfirmCancelCreateModal
+        isOpen={isConfirmCancelModalOpen}
+        onRequestClose={handleCloseCancelModal}
+      />
+    </CharacterNameContext.Provider>
+  );
 }
 
-const mapStateToProps = ({ user }: IAppState) => ({ user });
-
-type Props = RouteComponentProps &
-  ReturnType<typeof mapStateToProps> & {
-    dispatch: Function; // eslint-disable-line
-  };
-
-export default withRouter(connect(mapStateToProps)(CreateCharacterContainer));
+CreateCharacterContainer.displayName = "CreateCharacterContainer";

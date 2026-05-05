@@ -24,6 +24,11 @@ import TravelFailureModal from "components/TravelFailureModal";
 
 import { useAppSelector } from "features/app/store";
 import { getMapDimensionsForSetting } from "features/mapping";
+import {
+  MAP_ROOT_AREA_THE_ROOF,
+  MAP_ROOT_AREA_THE_UNTERZEE,
+  MAP_ROOT_AREA_THE_UNTERZEE_V2,
+} from "features/mapping/constants";
 import getCachedZoomLevelForSetting from "features/mapping/getCachedZoomLevelForSetting";
 import getInitialMapCenter from "features/mapping/getInitialMapCenter";
 
@@ -63,7 +68,12 @@ export default function MapContainer() {
 
   const dispatch = useDispatch();
 
+  const [cachedSetting, setCachedSetting] = useState(setting);
   const [cachedMapCenter, setCachedMapCenter] = useState([-1, -1]);
+  const [cachedRoofMapCenter, setCachedRoofMapCenter] = useState([-1, -1]);
+  const [cachedNonRoofMapCenter, setCachedNonRoofMapCenter] = useState([
+    -1, -1,
+  ]);
   const [cachedZoomLevel, setCachedZoomLevel] = useState(-1);
   const [gateEvent, setGateEvent] = useState<IGateEvent | undefined>(undefined);
   const [isActionRefreshModalOpen, setIsActionRefreshModalOpen] =
@@ -85,6 +95,90 @@ export default function MapContainer() {
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [didLoad, setDidLoad] = useState(false);
 
+  const isRoofMap = useMemo(() => {
+    if (!setting) {
+      return false;
+    }
+
+    return setting.mapRootArea?.areaKey === MAP_ROOT_AREA_THE_ROOF;
+  }, [setting]);
+
+  const isUnterzeeMap = useMemo(() => {
+    if (!setting) {
+      return false;
+    }
+
+    const areaKey = setting.mapRootArea?.areaKey;
+
+    return (
+      areaKey === MAP_ROOT_AREA_THE_UNTERZEE ||
+      areaKey === MAP_ROOT_AREA_THE_UNTERZEE_V2
+    );
+  }, [setting]);
+
+  const getInitMapCenterForSetting = useCallback(
+    (setting: IMappableSetting) => {
+      if (!setting) {
+        return [-1, -1];
+      }
+
+      const { width, height } = getMapDimensionsForSetting(setting);
+      const { initPercentX, initPercentY } = getInitialMapCenter(setting);
+
+      return [(width * initPercentX) / 100.0, (-height * initPercentY) / 100.0];
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!setting || !cachedSetting) {
+      // setting unknown
+      return;
+    }
+
+    if (setting.id === cachedSetting.id) {
+      // setting unchanged
+      return;
+    }
+
+    // setting changed
+    setCachedSetting(setting);
+
+    const initMapCenter = getInitMapCenterForSetting(
+      setting as IMappableSetting
+    );
+
+    if (isUnterzeeMap) {
+      setCachedMapCenter(initMapCenter);
+    } else if (isRoofMap) {
+      if (cachedRoofMapCenter[0] < 0 && cachedRoofMapCenter[1] < 0) {
+        setCachedRoofMapCenter(initMapCenter);
+        setCachedMapCenter(initMapCenter);
+      } else {
+        setCachedMapCenter(cachedRoofMapCenter);
+      }
+    } else {
+      if (cachedNonRoofMapCenter[0] < 0 && cachedNonRoofMapCenter[1] < 0) {
+        setCachedNonRoofMapCenter(initMapCenter);
+        setCachedMapCenter(initMapCenter);
+      } else {
+        setCachedMapCenter(cachedNonRoofMapCenter);
+      }
+    }
+
+    setCachedZoomLevel(
+      getCachedZoomLevelForSetting(setting as IMappableSetting)
+    );
+  }, [
+    cachedNonRoofMapCenter,
+    cachedRoofMapCenter,
+    cachedSetting,
+    getInitMapCenterForSetting,
+    isRoofMap,
+    isUnterzeeMap,
+    setting,
+  ]);
+
   useEffect(() => {
     if (didLoad) {
       return;
@@ -96,28 +190,47 @@ export default function MapContainer() {
       return;
     }
 
-    // If we don't have centre coordinates to re-use, then get the middle of the map we're using and use that
-    if (cachedMapCenter[0] < 0 && cachedMapCenter[1] < 0) {
-      const { width, height } = getMapDimensionsForSetting(
-        setting as IMappableSetting
-      );
-      const { initPercentX, initPercentY } = getInitialMapCenter(
-        setting as IMappableSetting
-      );
+    const initMapCenter = getInitMapCenterForSetting(
+      setting as IMappableSetting
+    );
 
-      setCachedMapCenter([
-        (width * initPercentX) / 100.0,
-        (-height * initPercentY) / 100.0,
-      ]);
+    // this runs regardless during initial load, so it's not [-1, -1]
+    setCachedMapCenter(initMapCenter);
+
+    if (isUnterzeeMap) {
+      // no-op
+    } else if (isRoofMap) {
+      setCachedRoofMapCenter(initMapCenter);
+    } else {
+      setCachedNonRoofMapCenter(initMapCenter);
     }
 
-    // Same for cached zoom from previously using the map
     if (cachedZoomLevel < 0) {
       setCachedZoomLevel(
         getCachedZoomLevelForSetting(setting as IMappableSetting)
       );
     }
-  }, [cachedMapCenter, cachedZoomLevel, didLoad, dispatch, setting]);
+  }, [
+    cachedZoomLevel,
+    didLoad,
+    getInitMapCenterForSetting,
+    isRoofMap,
+    isUnterzeeMap,
+    setting,
+  ]);
+
+  const handleMoveEnd = useCallback(
+    (center: number[]) => {
+      if (isUnterzeeMap) {
+        // no-op
+      } else if (isRoofMap) {
+        setCachedRoofMapCenter(center);
+      } else {
+        setCachedNonRoofMapCenter(center);
+      }
+    },
+    [isRoofMap, isUnterzeeMap]
+  );
 
   const handleAfterCloseMap = useCallback(() => {
     // After the map has closed, reset the flags we use to disable map interaction when delaying closure
@@ -358,6 +471,7 @@ export default function MapContainer() {
               initialZoom={cachedZoomLevel}
               isChangingArea={isChangingArea}
               onAreaClick={handleAreaClick}
+              onMoveEnd={handleMoveEnd}
               onWillUnmount={handleMapWillUnmount}
             />
           </MapContext.Provider>

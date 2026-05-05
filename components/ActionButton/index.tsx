@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import ButtonLabel from "components/ActionButton/components/ButtonLabel";
 import FateRefreshButton from "components/ActionButton/components/FateRefreshButton";
@@ -7,7 +7,12 @@ import ActionRefreshContext from "components/ActionRefreshContext";
 import { IActionRefreshContextValues } from "components/ActionRefreshContext/ActionRefreshContext";
 
 import { useAppSelector } from "features/app/store";
-import { UI_INTEGRATION_REGEX } from "features/content-behaviour-integration/constants";
+import {
+  UI_BEHAVIOUR_OPEN_NAME_CHANGE,
+  UI_BEHAVIOUR_OPEN_SITE,
+  UI_INTEGRATION_REGEX, // eslint-disable-line @typescript-eslint/no-unused-vars
+} from "features/content-behaviour-integration/constants";
+import ChangeNameModal from "components/Myself/ChangeNameModal";
 
 export type Props = {
   children?: React.ReactNode;
@@ -45,19 +50,35 @@ export default function ActionButton({
     data.qualityLocked;
   const hasEnoughFate = (currentFate || 0) >= 4;
   const hasActionRefreshes = (remainingActionRefreshes || 0) !== 0;
-  const uiTriggerMatches = data.description?.match(UI_INTEGRATION_REGEX);
-  const target =
-    (uiTriggerMatches?.length ?? 0) > 4 ? uiTriggerMatches?.[4] : undefined;
   const showActionRefresh =
     isActionLocked && !(isWorking ?? false) && !(suppressUnlockButton ?? false);
+
+  const uiTriggerMatches = data.description?.match(UI_INTEGRATION_REGEX);
+  const uiTriggerMatchLength = uiTriggerMatches?.length ?? 0;
+  const command = uiTriggerMatchLength > 1 ? uiTriggerMatches[1] : undefined;
+
+  const target =
+    command === UI_BEHAVIOUR_OPEN_SITE && uiTriggerMatchLength > 4
+      ? uiTriggerMatches[4]
+      : undefined;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleRequestClose = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
 
   const handleClick = useCallback(() => {
     if (isDisabled) {
       return null;
     }
 
+    if (command === UI_BEHAVIOUR_OPEN_NAME_CHANGE) {
+      setIsModalOpen(true);
+    }
+
     return onClick();
-  }, [isDisabled, onClick]);
+  }, [command, isDisabled, onClick]);
 
   return (
     <>
@@ -92,6 +113,11 @@ export default function ActionButton({
           )}
         </ActionRefreshContext.Consumer>
       )}
+      <ChangeNameModal
+        isFree
+        isOpen={isModalOpen}
+        onRequestClose={handleRequestClose}
+      />
     </>
   );
 }

@@ -100,7 +100,6 @@ export type FetchSettingsResponse = {
   messageAboutNiceness: boolean;
   messageAboutStorylets: boolean;
   messageViaNetwork: MessageVia;
-  charactersInWorlds: string[];
   name: string;
   emailAddress: string;
   nex: number;

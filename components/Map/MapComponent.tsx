@@ -43,6 +43,7 @@ interface Props extends ReturnType<typeof mapStateToProps> {
   initialCenter: number[];
   initialZoom: number;
   isChangingArea: boolean;
+  onMoveEnd: (center: number[]) => void;
   onAreaClick: (area: IArea) => Promise<void>;
   onWillUnmount: (zoom: number, center: number[]) => void;
 }
@@ -151,8 +152,14 @@ class MapComponent extends Component<Props, State> {
     const mapCenter = e.target.getCenter();
     const zoomLevel = e.target.getZoom();
 
+    const center = [mapCenter.lng, mapCenter.lat];
+
+    const { onMoveEnd } = this.props;
+
+    onMoveEnd(center);
+
     this.setState({
-      center: [mapCenter.lng, mapCenter.lat],
+      center,
       zoomLevel,
     });
   };

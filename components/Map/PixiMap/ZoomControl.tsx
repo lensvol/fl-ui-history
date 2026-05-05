@@ -36,14 +36,15 @@ export default function ZoomControl({
   const { max: MAP_MAX_ZOOM, min: MAP_MIN_ZOOM } =
     getMapZoomLimitsForSetting(setting) ?? {};
 
-  if (MAP_MAX_ZOOM === undefined || MAP_MIN_ZOOM === undefined) {
-    return null;
-  }
+  const clampedMaxZoom = MAP_MAX_ZOOM
+    ? Math.min(MAP_MAX_ZOOM, maxZoom ?? MAP_MAX_ZOOM)
+    : undefined;
 
-  const clampedMaxZoom = Math.min(MAP_MAX_ZOOM, maxZoom ?? MAP_MAX_ZOOM);
-  const clampedMinZoom = Math.max(MAP_MIN_ZOOM, minZoom ?? MAP_MIN_ZOOM);
+  const clampedMinZoom = MAP_MIN_ZOOM
+    ? Math.max(MAP_MIN_ZOOM, minZoom ?? MAP_MIN_ZOOM)
+    : undefined;
 
-  if (clampedMinZoom === undefined) {
+  if (clampedMaxZoom === undefined || clampedMinZoom === undefined) {
     return null;
   }
 
