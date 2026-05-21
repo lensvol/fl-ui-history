@@ -8,6 +8,7 @@ import { useAppSelector } from "features/app/store";
 
 enum CurrentLocation {
   Account,
+  AiStatement,
   Credits,
   Help,
   Privacy,
@@ -41,6 +42,10 @@ function AuthenticatedHeader(props: Props) {
 
     if (pathname.startsWith("/privacy")) {
       return CurrentLocation.Privacy;
+    }
+
+    if (pathname.startsWith("/ai-statement")) {
+      return CurrentLocation.AiStatement;
     }
 
     if (pathname.startsWith("/terms")) {

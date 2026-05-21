@@ -1,4 +1,7 @@
+import { ActionCreator } from "redux";
+
 import { handleVersionMismatch } from "actions/versionSync";
+
 import {
   FETCH_SNIPPETS_FAILURE,
   FETCH_SNIPPETS_REQUESTED,
@@ -7,7 +10,7 @@ import {
   SUPPORTING_DATA_REQUESTED,
   SUPPORTING_DATA_SUCCESS,
 } from "actiontypes/infoBar";
-import { ActionCreator } from "redux";
+
 import { Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
 import InfoBarService, {
@@ -15,30 +18,42 @@ import InfoBarService, {
   Snippet,
 } from "services/InfoBarService";
 
-export type FetchSnippetsRequested = { type: typeof FETCH_SNIPPETS_REQUESTED };
-export type FetchSnippetsSuccess = {
-  type: typeof FETCH_SNIPPETS_SUCCESS;
-  payload: { snippets: Snippet[] };
+type FetchSnippetsRequested = {
+  type: typeof FETCH_SNIPPETS_REQUESTED;
 };
-export type FetchSnippetsFailure = { type: typeof FETCH_SNIPPETS_FAILURE };
 
-export type FetchSnippetsAction =
+type FetchSnippetsSuccess = {
+  type: typeof FETCH_SNIPPETS_SUCCESS;
+  payload: {
+    snippets: Snippet[];
+  };
+};
+
+type FetchSnippetsFailure = {
+  type: typeof FETCH_SNIPPETS_FAILURE;
+};
+
+type FetchSnippetsAction =
   | FetchSnippetsFailure
   | FetchSnippetsRequested
   | FetchSnippetsSuccess;
 
-export type GetSupportingDataRequested = {
+type GetSupportingDataRequested = {
   type: typeof SUPPORTING_DATA_REQUESTED;
 };
-export type GetSupportingDataSuccess = {
+
+type GetSupportingDataSuccess = {
   type: typeof SUPPORTING_DATA_SUCCESS;
   payload: GetSupportingDataResponse;
 };
-export type GetSupportingDataFailure = { type: typeof SUPPORTING_DATA_FAILURE };
 
-export type GetSupportingDataAction =
-  | GetSupportingDataRequested
+type GetSupportingDataFailure = {
+  type: typeof SUPPORTING_DATA_FAILURE;
+};
+
+type GetSupportingDataAction =
   | GetSupportingDataFailure
+  | GetSupportingDataRequested
   | GetSupportingDataSuccess;
 
 export type InfoBarActions = FetchSnippetsAction | GetSupportingDataAction;
@@ -50,35 +65,41 @@ export const fetchSnippets = () => async (dispatch: Function) => {
 
   try {
     const result = await service.fetchSnippets();
+
     if (result instanceof Success) {
       const { data } = result;
+
       dispatch(fetchSnippetsSuccess(data));
     }
+
     return result;
   } catch (error) {
     if (error instanceof VersionMismatch) {
       dispatch(handleVersionMismatch(error));
+
       return error;
     }
+
     dispatch(fetchSnippetsFailure(error));
+
     throw error;
   }
 };
 
-export const fetchSnippetsRequested: ActionCreator<
-  FetchSnippetsRequested
-> = () => ({
+const fetchSnippetsRequested: ActionCreator<FetchSnippetsRequested> = () => ({
   type: FETCH_SNIPPETS_REQUESTED,
 });
 
-export const fetchSnippetsSuccess: ActionCreator<FetchSnippetsSuccess> = (
+const fetchSnippetsSuccess: ActionCreator<FetchSnippetsSuccess> = (
   snippets: Snippet[]
 ) => ({
   type: FETCH_SNIPPETS_SUCCESS,
-  payload: { snippets },
+  payload: {
+    snippets,
+  },
 });
 
-export const fetchSnippetsFailure: ActionCreator<FetchSnippetsFailure> = (
+const fetchSnippetsFailure: ActionCreator<FetchSnippetsFailure> = (
   error?: any
 ) => ({
   type: FETCH_SNIPPETS_FAILURE,
@@ -90,34 +111,45 @@ export const getSupportingData = () => async (dispatch: Function) => {
 
   try {
     const result = await service.getSupportingData();
+
     if (result instanceof Success) {
       dispatch(getSupportingDataSuccess(result.data));
     }
+
     return result;
   } catch (error) {
     if (error instanceof VersionMismatch) {
       dispatch(handleVersionMismatch(error));
+
       return error;
     }
+
     dispatch(getSupportingDataFailure());
+
     throw error;
   }
 };
 
-export const getSupportingDataSuccess: ActionCreator<
-  GetSupportingDataSuccess
-> = ({ advert, snippets }: GetSupportingDataResponse) => ({
+const getSupportingDataSuccess: ActionCreator<GetSupportingDataSuccess> = ({
+  advert,
+  isSocialAvailable,
+  snippets,
+}: GetSupportingDataResponse) => ({
   type: SUPPORTING_DATA_SUCCESS,
-  payload: { advert, snippets },
+  payload: {
+    advert,
+    isSocialAvailable,
+    snippets,
+  },
 });
 
-export const getSupportingDataRequested: ActionCreator<
+const getSupportingDataRequested: ActionCreator<
   GetSupportingDataRequested
 > = () => ({
   type: SUPPORTING_DATA_REQUESTED,
 });
 
-export const getSupportingDataFailure: ActionCreator<
+const getSupportingDataFailure: ActionCreator<
   GetSupportingDataFailure
 > = () => ({
   type: SUPPORTING_DATA_FAILURE,

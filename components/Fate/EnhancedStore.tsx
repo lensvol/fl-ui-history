@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { useHistory } from "react-router";
 
@@ -26,20 +26,36 @@ import PurchaseContent from "components/PurchaseModal/PurchaseContent";
 
 import { PURCHASE_CONTENT } from "constants/fate";
 
+import { useAppSelector } from "features/app/store";
+
 import getSortedVisibleFateCards from "selectors/fate/getSortedVisibleFateCards";
 
-import { IAppState } from "types/app";
 import { IFateCard } from "types/fate";
 
-function EnhancedStore({
-  data,
-  dispatch,
-  fateCards,
-  hasSubscription,
-  remainingStoryUnlocks,
-  renewDate,
-  subscriptionType,
-}: Props) {
+type Props = {
+  isAccountView?: boolean;
+};
+
+export default function EnhancedStore({ isAccountView }: Props) {
+  const data = useAppSelector((state) => state.fate.data);
+  const fateCards = useAppSelector((state) => getSortedVisibleFateCards(state));
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const remainingStoryUnlocks = useAppSelector(
+    (state) =>
+      state.fate.remainingStoryUnlocks ??
+      state.settings.subscriptions.remainingStoryUnlocks
+  );
+  const renewDate = useAppSelector(
+    (state) => state.subscription.data?.renewDate
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
+  );
+
+  const dispatch = useDispatch();
+
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isPurchaseContentModalOpen, setIsPurchaseContentModalOpen] =
     useState(false);
@@ -60,8 +76,8 @@ function EnhancedStore({
       setSelectedFateCard({
         ...fateCard,
         action: "EnhancedUnlock",
-        price: price,
         canAfford: (remainingStoryUnlocks ?? 0) >= price,
+        price: price,
       });
 
       if (originalAction === PURCHASE_CONTENT) {
@@ -132,12 +148,14 @@ function EnhancedStore({
       };
     })
     .sort((a, b) => {
-      if (a.id === featuredCard?.id) {
+      const featuredCardId = featuredCard ? featuredCard.id : undefined;
+
+      if (a.id === featuredCardId) {
         // if 'a' is featured, 'a' *always* comes before 'b'
         return -1;
       }
 
-      if (b.id === featuredCard?.id) {
+      if (b.id === featuredCardId) {
         // if 'b' is featured, 'a' *always* comes after 'b'
         return 1;
       }
@@ -198,7 +216,7 @@ function EnhancedStore({
   return (
     <>
       <div
-        className="media media--root"
+        className={classnames("media", !isAccountView && "media--root")}
         style={{
           marginBottom: "18px",
         }}
@@ -206,18 +224,18 @@ function EnhancedStore({
         <div className="media__left">
           <div className="storylet-root__card">
             <Image
-              className="media__object storylet-root__card-image"
-              icon={featuredCard?.image ?? "furtivehand"}
               alt={title}
-              type="icon"
               border={featuredCard?.border?.toLowerCase() ?? "Ongoing"}
+              className="media__object storylet-root__card-image"
               defaultCursor
+              icon={featuredCard?.image ?? "furtivehand"}
+              type="icon"
             />
           </div>
           <div
             style={{
-              width: "93px",
               margin: "0.5rem 8px 0",
+              width: "93px",
             }}
           >
             <b>{featuredCard?.name}</b>
@@ -237,11 +255,11 @@ function EnhancedStore({
         <h1
           className="media__heading heading heading--2"
           style={{
-            width: "100%",
             backgroundColor: "#4a4843",
             color: "white",
-            textAlign: "center",
             padding: "0.5em",
+            textAlign: "center",
+            width: "100%",
           }}
         >
           {headerText}
@@ -273,10 +291,11 @@ function EnhancedStore({
 
         {newStories.map((c) => (
           <FateCard
-            key={c.id}
-            data={c}
-            onClick={handleClickFateCard}
             badge={c.badge}
+            data={c}
+            isAccountView={isAccountView}
+            key={c.id}
+            onClick={handleClickFateCard}
           />
         ))}
       </div>
@@ -296,10 +315,11 @@ function EnhancedStore({
         )}
         {replayStories.map((c) => (
           <FateCard
-            key={c.id}
-            data={c}
-            onClick={handleClickFateCard}
             badge={c.badge}
+            data={c}
+            isAccountView={isAccountView}
+            key={c.id}
+            onClick={handleClickFateCard}
           />
         ))}
 
@@ -333,11 +353,11 @@ function EnhancedStore({
         )}
       >
         <ActionButton
-          go
           data={{
             ...data,
             buttonClassNames: "button--ef",
           }}
+          go
           onClick={handleClickToggle}
         >
           <i className="fa fa-arrow-left" /> Perhaps not
@@ -370,21 +390,3 @@ function EnhancedStore({
 }
 
 EnhancedStore.displayName = "EnhancedStore";
-
-const mapStateToProps = (state: IAppState) => ({
-  activeSubtab: state.fate.activeSubtab,
-  data: state.fate.data,
-  fateCards: getSortedVisibleFateCards(state),
-  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
-  remainingStoryUnlocks:
-    state.fate.remainingStoryUnlocks ??
-    state.settings.subscriptions.remainingStoryUnlocks,
-  renewDate: state.subscription.data?.renewDate,
-  subscriptionType: state.settings.subscriptions.subscriptionType,
-});
-
-type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: Function; // eslint-disable-line
-};
-
-export default connect(mapStateToProps)(EnhancedStore);

@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { fetch as fetchSettings } from "actions/settings";
 
 import HasSubscriptionContent from "components/Account/Subscriptions/HasSubscriptionContent";
+import EnhancedStore from "components/Fate/EnhancedStore";
+import StoryletMenu from "components/Fate/Subscription/StoryletMenu";
 import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
 
 import { useAppSelector } from "features/app/store";
@@ -20,6 +22,9 @@ export default function Subscriptions() {
   const subscriptionType = useAppSelector(
     (state) => state.settings.subscriptions.subscriptionType
   );
+  const showEnhancedStore = useAppSelector(
+    (state) => state.fate.showEnhancedStore
+  );
 
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
@@ -31,6 +36,10 @@ export default function Subscriptions() {
     }
   }, [data, dispatch]);
 
+  if (showEnhancedStore) {
+    return <EnhancedStore isAccountView />;
+  }
+
   return (
     <>
       <div>
@@ -39,6 +48,7 @@ export default function Subscriptions() {
           onClick={() => setIsSubscriptionModalOpen(true)}
         />
       </div>
+
       <PurchaseSubscriptionModal
         hasSubscription={hasBraintreeSubscription}
         isOpen={isSubscriptionModalOpen}
@@ -46,6 +56,8 @@ export default function Subscriptions() {
         renewDate={renewDate}
         subscriptionType={subscriptionType}
       />
+
+      <StoryletMenu enhancedPlacement isAccountView />
     </>
   );
 }

@@ -1,6 +1,11 @@
-import BaseService, { Either } from "./BaseMonadicService";
+import BaseService, { Either } from "services/BaseMonadicService";
 
-export type PageName = "help" | "termsandconditions" | "privacy" | "credits";
+export type PageName =
+  | "ai-statement"
+  | "credits"
+  | "help"
+  | "privacy"
+  | "termsandconditions";
 
 export interface FetchPageResponse {
   name: string;

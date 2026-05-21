@@ -8,7 +8,7 @@ import React, {
 
 import { useDispatch } from "react-redux";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import classnames from "classnames";
 
@@ -34,23 +34,36 @@ import { ApiAvailableStorylet } from "types/storylet";
 
 import getBorderColour from "utils/getBorderColour";
 
-function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
-  const { id, image, name, teaser, mobileTeaser, deckType } = data;
+interface Props {
+  data: ApiAvailableStorylet;
+  badge?: ImageProps;
+  beforeHandleClick?: (storyletId: number) => void;
+  isAccountView?: boolean;
+}
 
+export default function StoryletContainer({
+  badge,
+  beforeHandleClick,
+  data,
+  isAccountView,
+}: Props) {
+  const { deckType, id, image, mobileTeaser, name, teaser } = data;
+
+  const history = useHistory();
   const dispatch = useDispatch();
   const isChoosing = useAppSelector((state) => state.storylet.isChoosing);
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const [shouldClearQReqs, setShouldClearQReqs] = useState(false);
+  const [forceClearQreqs, setForceClearQreqs] = useState(false);
   const [isWorking, setIsWorking] = useState(false);
 
   const commandAction = useMemo(() => {
     // Check whether we have a special UI token in the teaser
-    const uiTriggerMatches = teaser?.match(UI_INTEGRATION_REGEX);
+    const uiTriggerMatches = teaser ? teaser.match(UI_INTEGRATION_REGEX) : null;
 
-    if ((uiTriggerMatches?.length ?? 0) > 1) {
-      const commandMatch = uiTriggerMatches?.[1];
+    if (uiTriggerMatches && uiTriggerMatches.length > 1) {
+      const commandMatch = uiTriggerMatches[1];
 
       if (commandMatch !== undefined) {
         return COMMAND_MAP[commandMatch];
@@ -61,7 +74,9 @@ function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
   }, [teaser]);
 
   const handleChoose = useCallback(() => {
-    beforeHandleClick?.(id);
+    if (beforeHandleClick) {
+      beforeHandleClick(id);
+    }
 
     if (commandAction) {
       dispatch(commandAction(history));
@@ -77,19 +92,17 @@ function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
 
   const onResize = useCallback(() => {
     if (ref.current) {
-      setShouldClearQReqs(qreqsNeedClear(ref.current));
+      setForceClearQreqs(qreqsNeedClear(ref.current));
     }
   }, []);
 
-  const qualityRequirements = useMemo(
-    () =>
-      [...data.qualityRequirements]
-        .reverse()
-        .map((quality) => (
-          <QualityRequirement key={quality.qualityId} data={quality} storylet />
-        )),
-    [data.qualityRequirements]
-  );
+  const qualityRequirements = useMemo(() => {
+    return [...data.qualityRequirements]
+      .reverse()
+      .map((quality) => (
+        <QualityRequirement key={quality.qualityId} data={quality} storylet />
+      ));
+  }, [data.qualityRequirements]);
 
   useEffect(() => {
     window.addEventListener("resize", onResize);
@@ -101,15 +114,12 @@ function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
     };
   }, [onResize]);
 
-  const onCardClick = handleChoose;
-  const forceClearQreqs = shouldClearQReqs;
-  const storyletStyle = deckType === "Persistent" ? "persistent" : "storylet";
-
   return (
     <div
       className={classnames(
         "media",
-        storyletStyle,
+        deckType === "Persistent" && "persistent",
+        deckType !== "Persistent" && !isAccountView && "storylet",
         isChoosing && !isWorking && "storylet--semi-transparent"
       )}
       data-branch-id={data.id}
@@ -120,7 +130,7 @@ function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
           borderColour={borderColour}
           image={image}
           name={name}
-          onClick={onCardClick}
+          onClick={handleChoose}
         />
       </div>
       <MediaXsDown>
@@ -164,13 +174,3 @@ function StoryletContainer({ data, history, badge, beforeHandleClick }: Props) {
 }
 
 StoryletContainer.displayName = "StoryletContainer";
-
-interface OwnProps {
-  data: ApiAvailableStorylet;
-  badge?: ImageProps;
-  beforeHandleClick?: (storyletId: number) => void;
-}
-
-export type Props = RouteComponentProps & OwnProps;
-
-export default withRouter(StoryletContainer);

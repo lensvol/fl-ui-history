@@ -1,24 +1,36 @@
-import { getFormattedReleaseDate } from "components/Fate/utils";
-import TippyWrapper from "components/TippyWrapper";
-import { RESET_STORY } from "constants/fate";
-import React, { Fragment, useCallback, useMemo } from "react";
-import classnames from "classnames";
-import Image from "components/Image";
+import React, { useCallback, useMemo } from "react";
+
 import { connect } from "react-redux";
-import { IFateCard } from "types/fate";
-import MediaSmDown from "components/Responsive/MediaSmDown";
-import MediaMdUp from "components/Responsive/MediaMdUp";
-import FateCardTitleAndByline from "./FateCardTitleAndByline";
+
+import classnames from "classnames";
+
+import FateCardTitleAndByline from "components/Fate/FateCard/FateCardTitleAndByline";
+import { getFormattedReleaseDate } from "components/Fate/utils";
+import Image from "components/Image";
 import { ImageProps } from "components/Image/props";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+import TippyWrapper from "components/TippyWrapper";
+
+import { RESET_STORY } from "constants/fate";
+
+import { IFateCard } from "types/fate";
 
 type Props = {
+  badge?: ImageProps;
   data: IFateCard;
+  isAccountView?: boolean;
   onClick: (data: IFateCard) => void;
   story?: boolean;
-  badge?: ImageProps;
 };
 
-export function FateCard({ data, onClick, story, badge }: Props) {
+export function FateCard({
+  badge,
+  data,
+  isAccountView,
+  onClick,
+  story,
+}: Props) {
   const { description, shortDescription } = data;
 
   const handleClick = useCallback(() => {
@@ -28,92 +40,91 @@ export function FateCard({ data, onClick, story, badge }: Props) {
   const theData: any = data;
 
   return (
-    <Fragment>
+    <div
+      className={classnames(
+        "media",
+        !isAccountView && "storylet",
+        "fate-card",
+        story && "fate-card--story"
+      )}
+      style={{
+        position: "relative",
+      }}
+    >
       <div
         className={classnames(
-          "media storylet fate-card",
-          story && "fate-card--story"
+          "storylet__bordered-container fate-card__bordered-container",
+          story && "fate-card__bordered-container--story"
         )}
       >
         <div
           className={classnames(
-            "storylet__bordered-container fate-card__bordered-container",
-            story && "fate-card__bordered-container--story"
+            "fate-card__left",
+            story && "fate-card__left--story"
           )}
         >
-          <div
-            className={classnames(
-              "fate-card__left",
-              story && "fate-card__left--story"
-            )}
-          >
-            <div
-              className={classnames(
-                "media__object icon icon--fate",
-                "fate-card__image-container"
-              )}
-            >
-              <FateCardImage {...data} />
-            </div>
-            {story && (
-              <MediaSmDown>
-                <FateCardTitleAndByline {...data} story={story} />
-              </MediaSmDown>
-            )}
+          <div className="media__object icon icon--fate fate-card__image-container">
+            <FateCardImage {...data} />
           </div>
 
-          <div
-            className={classnames(
-              "media__body fate-card__body",
-              story && "fate-card__body--story"
-            )}
-          >
-            {!!story && <FateCardFanFavouriteIcon {...data} />}
-
-            {story ? (
-              <MediaMdUp>
-                <FateCardTitleAndByline {...data} story={story} />
-              </MediaMdUp>
-            ) : (
+          {story && (
+            <MediaSmDown>
               <FateCardTitleAndByline {...data} story={story} />
-            )}
+            </MediaSmDown>
+          )}
+        </div>
 
-            <p
-              dangerouslySetInnerHTML={{
-                __html: shortDescription || description,
-              }}
-            />
+        <div
+          className={classnames(
+            "media__body fate-card__body",
+            story && "fate-card__body--story"
+          )}
+        >
+          {!!story && <FateCardFanFavouriteIcon {...data} />}
 
-            <div className="buttons">
-              <button
-                className={classnames(
-                  "button button--secondary",
-                  !theData.enhancedStore &&
-                    !(story || data.canAfford) &&
-                    "button--disabled",
-                  theData.buttonClassNames
-                )}
-                disabled={!theData.enhancedStore && !(story || data.canAfford)}
-                onClick={handleClick}
-                type="button"
-              >
-                {theData.enhancedStore ? (
-                  <span>{theData.buttonText}</span>
-                ) : story ? (
-                  <span>Learn more</span>
-                ) : (
-                  <span>
-                    {data.type === RESET_STORY ? "Reset" : "Purchase"} (
-                    {data.price} Fate)
-                  </span>
-                )}
-              </button>
-            </div>
+          {story ? (
+            <MediaMdUp>
+              <FateCardTitleAndByline {...data} story={story} />
+            </MediaMdUp>
+          ) : (
+            <FateCardTitleAndByline {...data} story={story} />
+          )}
+
+          <p
+            dangerouslySetInnerHTML={{
+              __html: shortDescription || description,
+            }}
+          />
+
+          <div className="buttons">
+            <button
+              className={classnames(
+                "button button--secondary",
+                !theData.enhancedStore &&
+                  !(story || data.canAfford) &&
+                  "button--disabled",
+                theData.buttonClassNames
+              )}
+              disabled={!theData.enhancedStore && !(story || data.canAfford)}
+              onClick={handleClick}
+              type="button"
+            >
+              {theData.enhancedStore ? (
+                <span>{theData.buttonText}</span>
+              ) : story ? (
+                <span>Learn more</span>
+              ) : (
+                <span>
+                  {data.type === RESET_STORY ? "Reset" : "Purchase"} (
+                  {data.price} Fate)
+                </span>
+              )}
+            </button>
           </div>
         </div>
-        {badge && <Image {...badge} />}
       </div>
-    </Fragment>
+      {badge && <Image {...badge} />}
+    </div>
   );
 }
 
@@ -141,10 +152,13 @@ export function FateCardFanFavouriteIcon({
   );
 }
 
+FateCardFanFavouriteIcon.displayName = "FateCardFanFavouriteIcon";
+
 export function FateCardImage(
   data: Pick<IFateCard, "border" | "image" | "name">
 ) {
   const { border, image, name } = data;
+
   return (
     <Image
       borderContainerClassName="small-card__border"
@@ -152,10 +166,12 @@ export function FateCardImage(
       icon={image}
       alt={name}
       type="icon"
-      border={border?.toLowerCase()}
+      border={border && border.toLowerCase()}
     />
   );
 }
+
+FateCardImage.displayName = "FateCardImage";
 
 export function FateCardReleaseDate({
   releaseDate,
@@ -174,7 +190,11 @@ export function FateCardReleaseDate({
     <p className="fate-card__release-date">
       {formattedReleaseDate}
       {season && (
-        <span style={{ fontSize: "95%" }}>
+        <span
+          style={{
+            fontSize: "95%",
+          }}
+        >
           {" "}
           (a part of the Season of {season})
         </span>
@@ -182,3 +202,5 @@ export function FateCardReleaseDate({
     </p>
   );
 }
+
+FateCardReleaseDate.displayName = "FateCardReleaseDate";

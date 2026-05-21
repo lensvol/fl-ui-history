@@ -1,11 +1,15 @@
 import { ChangeEvent, createContext } from "react";
-import { IneligibleContact } from "types/storylet";
+
+import { IEligibleFriend, IneligibleContact } from "types/storylet";
 
 export type ActContextValue = {
   ineligibleContacts: IneligibleContact[];
+  onAddContact?: (payload: {
+    addedFriendId: number;
+    eligibleFriends: IEligibleFriend[];
+  }) => Promise<void>;
   onSelectContact: (args: ChangeEvent<HTMLSelectElement>) => void;
-  onAddContact: unknown;
-  selectedContactId: number | undefined;
+  selectedContactId?: number;
 };
 
 const ActContext = createContext<ActContextValue>({

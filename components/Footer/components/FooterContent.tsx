@@ -36,6 +36,9 @@ export default function FooterContent({ className }: Props) {
             <Link to="/privacy">Privacy</Link>
           </li>
           <li className="list-item--separated">
+            <Link to="/ai-statement">AI</Link>
+          </li>
+          <li className="list-item--separated">
             <Link to="/terms">Terms</Link>
           </li>
           <li className="list-item--separated">

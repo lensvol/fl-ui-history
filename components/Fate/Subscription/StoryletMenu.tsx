@@ -2,9 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import ReactCSSTransitionReplace from "react-css-transition-replace";
 
-import { connect, useDispatch } from "react-redux";
-
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import { fetch as fetchFate } from "actions/fate";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
@@ -14,21 +12,33 @@ import Loading from "components/Loading";
 import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
 import Storylet from "components/Storylet";
 
+import { useAppSelector } from "features/app/store";
+
 import getSortedVisibleFateCards from "selectors/fate/getSortedVisibleFateCards";
 
-import { IAppState } from "types/app";
-import { IFateCard } from "types/fate";
-import { ISubscriptionData, PremiumSubscriptionType } from "types/subscription";
+interface Props {
+  enhancedPlacement?: boolean;
+  isAccountView?: boolean;
+}
 
-export function StoryletMenu({
-  data,
+export default function StoryletMenu({
   enhancedPlacement,
-  hasSubscription,
-  renewDate,
-  subscriptionType,
-  fateCards,
+  isAccountView,
 }: Props) {
   const dispatch = useDispatch();
+
+  const data = useAppSelector((state) => state.subscription.data);
+  const fateCards = useAppSelector((state) => getSortedVisibleFateCards(state));
+  const hasSubscription = useAppSelector(
+    (state) => state.settings.subscriptions.hasBraintreeSubscription
+  );
+  const renewDate = useAppSelector(
+    (state) => state.subscription.data?.renewDate
+  );
+  const subscriptionType = useAppSelector(
+    (state) => state.settings.subscriptions.subscriptionType
+  );
+  const isFetchingFate = useAppSelector((state) => state.fate.isFetching);
 
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
@@ -42,11 +52,6 @@ export function StoryletMenu({
     dispatch(fetchSubscriptions());
   }, [dispatch]);
 
-  // Show spinner while we're loading
-  if (!data) {
-    return <Loading spinner small />;
-  }
-
   const userDidDowngrade = isDowngradedSubscription(
     hasSubscription,
     subscriptionType
@@ -54,8 +59,13 @@ export function StoryletMenu({
   const isEnhanced =
     userDidDowngrade || subscriptionType === "EnhancedExceptionalFriendship";
 
+  // Show spinner while we're loading
+  if (!data || (isAccountView && isEnhanced && isFetchingFate)) {
+    return <Loading spinner small />;
+  }
+
   // Enhanced EF has different placement from other subscription types; this prevents the 'wrong' placement.
-  if (enhancedPlacement !== isEnhanced) {
+  if ((enhancedPlacement ?? false) !== isEnhanced) {
     return null;
   }
 
@@ -102,7 +112,7 @@ export function StoryletMenu({
         transitionLeaveTimeout={100}
       >
         <div>
-          <Storylet data={pseudoStorylet} />
+          <Storylet data={pseudoStorylet} isAccountView={isAccountView} />
         </div>
       </ReactCSSTransitionReplace>
       <PurchaseSubscriptionModal
@@ -117,24 +127,3 @@ export function StoryletMenu({
 }
 
 StoryletMenu.displayName = "StoryletMenu";
-
-interface Props extends RouteComponentProps {
-  data?: ISubscriptionData;
-  dispatch: Function;
-  enhancedPlacement: boolean;
-  fateCards: IFateCard[];
-  hasSubscription: boolean;
-  history: any;
-  renewDate?: string;
-  subscriptionType?: PremiumSubscriptionType;
-}
-
-const mapStateToProps = (state: IAppState) => ({
-  data: state.subscription.data,
-  hasSubscription: state.settings.subscriptions.hasBraintreeSubscription,
-  renewDate: state.subscription.data?.renewDate,
-  subscriptionType: state.settings.subscriptions.subscriptionType,
-  fateCards: getSortedVisibleFateCards(state),
-});
-
-export default withRouter(connect(mapStateToProps)(StoryletMenu));

@@ -8,7 +8,7 @@ import { setFateSubtab } from "actions/fate";
 
 import ActionRefreshContext from "components/ActionRefreshContext";
 import GameplayTab from "components/Fate/GameplayTab";
-import Header from "components/Fate/Header";
+import FateHeader from "components/Fate/Header";
 import OtherGamesTab from "components/Fate/OtherGamesTab";
 import PurchaseStoriesTab from "components/Fate/PurchaseStoriesTab";
 import ResetStoriesTab from "components/Fate/ResetStoriesTab";
@@ -100,9 +100,9 @@ export default function Fate() {
               </button>
             </div>
 
-            <StoryletMenu enhancedPlacement={true} />
+            <StoryletMenu enhancedPlacement />
 
-            <Header
+            <FateHeader
               data={data}
               hasSubscription={hasSubscription}
               renewDate={renewDate}
@@ -215,3 +215,5 @@ function Tab({
     </button>
   );
 }
+
+Tab.displayName = "Tab";

@@ -85,7 +85,9 @@ export default function OtherGame({ gameId }: Props) {
   const theGame = FBGames.find((g) => g.id === gameId);
 
   const ctaVerb = useMemo(() => {
-    if (theGame?.id === GameIdentifier.Mandrake) {
+    const id = theGame ? theGame.id : undefined;
+
+    if (id === GameIdentifier.Mandrake) {
       return "Wishlist";
     }
 
@@ -93,7 +95,8 @@ export default function OtherGame({ gameId }: Props) {
   }, [theGame]);
 
   const doPopUp = useCallback(async () => {
-    const mobileUrl = `https://store.steampowered.com/app/${theGame?.steamId}/`;
+    const steamId = theGame ? theGame.steamId : "";
+    const mobileUrl = `https://store.steampowered.com/app/${steamId}/`;
     const newWindow = window.open(mobileUrl, "_blank", "noopener,noreferrer");
 
     if (newWindow) {
@@ -126,6 +129,7 @@ export default function OtherGame({ gameId }: Props) {
               {theGame.platforms.map((platform) => (
                 <i
                   id={platform.toString()}
+                  key={platform.toString()}
                   aria-label={platform.toString()}
                   className={`fa fa-${platform.toString().toLowerCase()}`}
                 />

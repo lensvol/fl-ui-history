@@ -1,22 +1,23 @@
 import React from "react";
 
+import { isDowngradedSubscription } from "actions/fate/subscriptions";
+
 import Disclosure from "components/Disclosure";
+import ExceptionalStoryTrailerSmUp from "components/Fate/Header/ExceptionalStoryTrailerSmUp";
+import ExceptionalStoryTrailerXsDown from "components/Fate/Header/ExceptionalStoryTrailerXsDown";
+import { Props as TrailerProps } from "components/Fate/Header/props";
+import Subscription from "components/Fate/Subscription";
+import StoryletMenu from "components/Fate/Subscription/StoryletMenu";
+import SubscriptionBenefits from "components/PurchaseSubscriptionWizard/SubscriptionBenefits";
 import MediaSmUp from "components/Responsive/MediaSmUp";
 import MediaXsDown from "components/Responsive/MediaXsDown";
-import Subscription from "../Subscription";
-import ExceptionalStoryTrailerSmUp from "./ExceptionalStoryTrailerSmUp";
-import ExceptionalStoryTrailerXsDown from "./ExceptionalStoryTrailerXsDown";
-import { Props as TrailerProps } from "./props";
-import SubscriptionBenefits from "components/PurchaseSubscriptionWizard/SubscriptionBenefits";
-import StoryletMenu from "../Subscription/StoryletMenu";
-import { isDowngradedSubscription } from "actions/fate/subscriptions";
 
 type Props = TrailerProps & {
   hasSubscription: boolean;
   renewDate?: string;
 };
 
-export default function Header({
+export default function FateHeader({
   concealStoryTrailerOnSmallDevices,
   data,
   hasSubscription,
@@ -40,9 +41,7 @@ export default function Header({
     <div key="content fate-header">
       <MediaSmUp>
         {subscriptionType !== "EnhancedExceptionalFriendship" && (
-          <>
-            <h1 className="media__heading heading heading--2">{heading}</h1>
-          </>
+          <h1 className="media__heading heading heading--2">{heading}</h1>
         )}
 
         <SubscriptionBenefits orientation="horizontal" />
@@ -50,9 +49,7 @@ export default function Header({
       <MediaXsDown>
         <Disclosure getDisclosureText={() => "Exceptional Friendship"}>
           {subscriptionType !== "EnhancedExceptionalFriendship" && (
-            <>
-              <h1 className="media__heading heading heading--2">{heading}</h1>
-            </>
+            <h1 className="media__heading heading heading--2">{heading}</h1>
           )}
 
           <SubscriptionBenefits orientation="horizontal" />
@@ -72,7 +69,7 @@ export default function Header({
         </>
       )}
 
-      <StoryletMenu enhancedPlacement={false} />
+      <StoryletMenu />
 
       <div className="fate-header__subscription-container">
         <Subscription
@@ -85,3 +82,5 @@ export default function Header({
     </div>
   );
 }
+
+FateHeader.displayName = "FateHeader";

@@ -1,75 +1,75 @@
-import React from "react";
-import { connect } from "react-redux";
-
-import Snippet from "components/Snippet";
-import MediaXlUp from "components/Responsive/MediaXlUp";
+import React, { useMemo } from "react";
 
 import Advert from "components/Infobar/Advert";
+import MakeContacts from "components/Infobar/MakeContacts";
 import Welcome from "components/Infobar/Welcome";
-import { IAppState } from "types/app";
+import MediaXlUp from "components/Responsive/MediaXlUp";
+import Snippet from "components/Snippet";
+
+import { useAppSelector } from "features/app/store";
+
 import { UIRestriction } from "types/myself";
 
-class Infobar extends React.Component<Props> {
-  static displayName = "Infobar";
+export default function Infobar() {
+  const advert = useAppSelector((state) => state.infoBar.advert);
+  const uiRestrictions = useAppSelector((state) => state.myself.uiRestrictions);
+  const showMakeContacts = useAppSelector(
+    (state) => state.infoBar.isSocialAvailable
+  );
 
-  renderAdvert = () => {
-    const { advert, showExtrasUI } = this.props;
+  const showExtrasUI =
+    uiRestrictions === undefined ||
+    !uiRestrictions.find((restriction) => restriction === UIRestriction.Extras);
 
-    if (advert?.altText && advert?.url && advert?.image && showExtrasUI) {
-      return <Advert {...advert} />;
-    }
+  const currentArea = useAppSelector((state) => state.map.currentArea);
+  const name = useAppSelector((state) => state.myself.character.name);
 
-    return null;
-  };
-
-  renderWelcome = () => {
-    const { currentArea, name } = this.props;
-    if (!name || !currentArea?.name) {
-      return null;
-    }
-    return <Welcome name={name} currentAreaName={currentArea.name} />;
-  };
-
-  /**
-   * render
-   * @return {Object}
-   */
-  render() {
+  const showAdvert = useMemo(() => {
     return (
-      <MediaXlUp>
-        <div className="col-tertiary">
-          <div className="col-1-of-3">
-            <div className="travel">
-              {this.renderWelcome()}
-              <br />
-              <br />
-              {this.renderAdvert()}
-              {this.props.showExtrasUI && <Snippet />}
-            </div>
+      advert && advert.altText && advert.url && advert.image && showExtrasUI
+    );
+  }, [advert, showExtrasUI]);
+
+  const showWelcome = useMemo(() => {
+    return name && currentArea && currentArea?.name;
+  }, [currentArea, name]);
+
+  return (
+    <MediaXlUp>
+      <div className="col-tertiary">
+        <div className="col-1-of-3">
+          <div className="travel">
+            {showWelcome && (
+              <Welcome currentAreaName={currentArea!.name} name={name} />
+            )}
+
+            <br />
+            <br />
+
+            {showAdvert && (
+              <Advert
+                altText={advert!.altText}
+                image={advert!.image}
+                url={advert!.url}
+              />
+            )}
+
+            {showExtrasUI && <Snippet />}
+
+            {showMakeContacts && (
+              <>
+                <br />
+
+                <div className="snippet">
+                  <MakeContacts />
+                </div>
+              </>
+            )}
           </div>
         </div>
-      </MediaXlUp>
-    );
-  }
+      </div>
+    </MediaXlUp>
+  );
 }
 
-const mapStateToProps = ({
-  myself: {
-    character: { name },
-    uiRestrictions,
-  },
-  infoBar: { advert, snippets },
-  map: { currentArea },
-}: IAppState) => ({
-  advert,
-  currentArea,
-  snippets,
-  name,
-  showExtrasUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Extras
-  ),
-});
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(Infobar);
+Infobar.displayName = "Infobar";

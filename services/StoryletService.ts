@@ -17,9 +17,9 @@ type ApiExternalSocialActResponse = {
 };
 
 export interface ApiInternalSocialActRequest {
-  userMessage: string;
   branchId: number;
   targetCharacterId: number;
+  userMessage: string;
 }
 
 type ApiShowRenamableQualities = any;
@@ -39,67 +39,60 @@ export type ApiSocialActResponse = {
 };
 
 export type ApiActInviteeSelection = {
-  branchId: number;
-  message: string;
-  actQReqText: string;
   actInviterQReqText: string;
+  actQReqText: string;
+  addedFriendId: number;
+  branchId: number;
   designatedFriend?: ApiCharacterFriend;
   eligibleFriends?: ApiCharacterFriend[];
-  addedFriendId: number;
+  message: string;
 };
 
 export type ApiCharacterFriend = {
-  userId: number;
   id: number;
   name: string;
+  userId: number;
   userName: string;
 };
 
 export type FetchIneligibleContactsResponse = {
-  message: string;
   ineligibleContacts: {
+    correctInstance: string;
     name: string;
     qualifies: string;
-    correctInstance: string;
     youQualify: string;
   }[];
+  message: string;
 };
 
 export interface IApiStoryletResponseData {
   actions: number;
   canChangeOutfit: boolean;
-  phase: StoryletPhase;
+  elapsed?: number;
   endStorylet?: IEndStorylet;
   externalSocialAct?: ApiExternalSocialActResponse;
+  hasUpdatedCharacter?: boolean;
   isSuccess: boolean;
+  maxHandSize?: number;
   messages?: IMessages;
+  phase: StoryletPhase;
   rename?: ApiShowRenamableQualities;
   secondChance?: ApiSecondChance;
-  socialAct?: ApiSocialActResponse;
-  storylets?: ApiAvailableStorylet[];
-  storylet?: IInStorylet;
   setting?: ISetting;
-  hasUpdatedCharacter?: boolean;
-  maxHandSize?: number;
-  elapsed?: number;
+  socialAct?: ApiSocialActResponse;
+  storylet?: IInStorylet;
+  storylets?: ApiAvailableStorylet[];
 }
 
 export interface ApiAddContactRequest {
-  username: string;
   branchId: number;
+  username: string;
 }
 
 export interface IChooseBranchRequestData {
   branchId: number;
   secondChanceIds?: number[];
 }
-
-export type SuggestedContact = {
-  userId: number;
-  id: number;
-  name: string;
-  userName: string;
-};
 
 export interface IStoryletService {
   addNewContact: (
@@ -125,7 +118,6 @@ export interface IStoryletService {
   sendSocialInvite: (
     invitation: ApiInternalSocialActRequest
   ) => Promise<{ data: IApiStoryletResponseData }>;
-  suggestContact: (branchId: number) => Promise<{ data: SuggestedContact }>;
 }
 
 export default class StoryletService
@@ -215,8 +207,8 @@ export default class StoryletService
       url: "/storylet/renamequality",
       data: {
         branchId: data.branchId,
-        qualityPossessedId: data.qualityPossessedId,
         name: data.name,
+        qualityPossessedId: data.qualityPossessedId,
       },
     };
 
@@ -228,9 +220,9 @@ export default class StoryletService
       method: "post",
       url: "/storylet/sendinternalsocialact",
       data: {
-        userMessage: data.userMessage,
         branchId: data.branchId,
         targetCharacterId: data.targetCharacterId,
+        userMessage: data.userMessage,
       },
     };
 
@@ -242,15 +234,6 @@ export default class StoryletService
       method: "post",
       url: "/storylet/sendexternalsocialact",
       data,
-    };
-
-    return this.doRequest(config);
-  };
-
-  suggestContact = (branchId: number) => {
-    const config = {
-      method: "get",
-      url: `/storylet/suggest?branchid=${branchId}`,
     };
 
     return this.doRequest(config);

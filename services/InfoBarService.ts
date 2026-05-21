@@ -1,4 +1,4 @@
-import BaseService, { Either } from "./BaseMonadicService";
+import BaseService, { Either } from "services/BaseMonadicService";
 
 export type Advert = {
   altText: string;
@@ -13,10 +13,11 @@ export type Snippet = {
   image: string;
 };
 
-export type FetchSnippetsResponse = Snippet[];
+type FetchSnippetsResponse = Snippet[];
 
 export type GetSupportingDataResponse = {
   advert: Advert;
+  isSocialAvailable: boolean;
   snippets: Snippet[];
 };
 

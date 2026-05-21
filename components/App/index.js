@@ -24,6 +24,7 @@ import Timer from "components/Timer";
 // Containers (These are essentially used like 'pages')
 import AccountPage from "components/AccountPage";
 import AgentsTab from "components/Agents/AgentsTab";
+import AiStatementPage from "components/AiStatement";
 import CreateCharacter from "components/CreateCharacter";
 import CreditsPage from "components/Credits";
 import ExchangeTab from "components/ExchangeTab";
@@ -91,6 +92,7 @@ export default function App() {
                 <Route path="/terms" exact component={TermsPage} />
                 <Route path="/account" exact component={AccountPage} />
                 <Route path="/credits" exact component={CreditsPage} />
+                <Route path="/ai-statement" exact component={AiStatementPage} />
                 <Route path="/500" exact component={ErrorThrower} />
                 <Route
                   path="/email/:token"
