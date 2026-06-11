@@ -1,26 +1,27 @@
 import { MD } from "components/Responsive/breakpoints";
 
+import getIdealMaximumZoomForSetting from "features/mapping/getIdealMaximumZoomForSetting";
+import getIdealMinimumZoomForSetting from "features/mapping/getIdealMinimumZoomForSetting";
 import { getMapDimensionsForSetting } from "features/mapping/index";
 
 import { IMappableSetting } from "types/map";
 
 export default function getMinimumZoomThatFits(
-  { innerWidth, innerHeight }: Window,
-  setting: undefined | IMappableSetting
+  window: Window,
+  setting?: IMappableSetting
 ) {
-  const { mapRootArea } = setting ?? {};
-
-  if (!mapRootArea) {
+  if (!setting || !setting.mapRootArea) {
     return undefined;
   }
 
-  const { height: mapHeight } = getMapDimensionsForSetting(setting!);
-
   // On sufficiently wide screens, we can show the map fully zoomed out
-  if (innerWidth >= MD) {
-    return 3;
+  if (window.innerWidth >= MD) {
+    return getIdealMinimumZoomForSetting(setting);
   }
 
+  const baseZoomLevel = getIdealMaximumZoomForSetting(setting);
+  const { height: mapHeight } = getMapDimensionsForSetting(setting);
+
   // Otherwise, we need to show a zoom level that will fill the screen
-  return 5 + Math.log2(innerHeight / mapHeight);
+  return baseZoomLevel + Math.log2(window.innerHeight / mapHeight);
 }

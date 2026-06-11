@@ -34,6 +34,7 @@ import {
   MAP_ROOT_AREA_THE_FIFTH_CITY,
 } from "features/mapping/constants";
 import getCRSForSetting from "features/mapping/getCRSForSetting";
+import getIdealMinimumZoomForSetting from "features/mapping/getIdealMinimumZoomForSetting";
 import getMapZoomLimitsForSetting from "features/mapping/getMapZoomLimitsForSetting"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import getMinimumZoomLevelForDestinations from "features/mapping/getMinimumZoomLevelForDestinations";
 import shouldHaveHitbox from "features/mapping/shouldHaveHitbox";
@@ -257,7 +258,9 @@ export default function LondonPixiMap({
       return undefined;
     }
 
-    return Math.max(3, minimumZoomThatFits);
+    const idealMinimumZoom = getIdealMinimumZoomForSetting(mappableSetting);
+
+    return Math.max(idealMinimumZoom!, minimumZoomThatFits);
   }, [mappableSetting]);
 
   const districtAreas = useMemo(() => {
