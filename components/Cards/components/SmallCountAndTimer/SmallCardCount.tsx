@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import CardTimer from "components/Cards/components/CardTimer";
 import { useHandFull } from "components/Cards/hooks";
@@ -23,27 +23,23 @@ export default function SmallCardCount() {
   );
 
   if (cardsCount > deckSize) {
-    return <>No draw limit. {isHandFull && handFullFragment}</>;
+    return <p>No draw limit. {isHandFull && handFullFragment}</p>;
   }
 
   if (cardsCount === 0) {
     return (
-      <Fragment>
-        <p>
-          No cards waiting. <CardTimer formatter={(str) => `(${str}.)`} />
-        </p>
-      </Fragment>
+      <p>
+        No cards waiting. <CardTimer formatter={(str) => `(${str}.)`} />
+      </p>
     );
   }
 
   if (cardsCount === 1) {
     return (
-      <Fragment>
-        <p>
-          There is 1 card in your Opportunity Deck.{" "}
-          <CardTimer formatter={(str) => `(${str}.)`} />
-        </p>
-      </Fragment>
+      <p>
+        There is 1 card in your Opportunity Deck.{" "}
+        <CardTimer formatter={(str) => `(${str}.)`} />
+      </p>
     );
   }
 

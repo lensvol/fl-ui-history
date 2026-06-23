@@ -1,31 +1,40 @@
 import React, { useEffect } from "react";
-import { fetch as fetchCards } from "actions/cards";
-import { connect, useDispatch } from "react-redux";
-import { IAppState } from "types/app";
-import DeckRefreshContext from "components/DeckRefreshContext";
-import SmallCardContainer from "./SmallCardContainer";
-import SmallCountAndTimer from "./SmallCountAndTimer";
-import SmallDeck from "./SmallDeck";
 
-function SmallCards(props: Props) {
-  const { displayCards, handSize, wasInvalidatedByEquipmentChange } = props;
+import { useDispatch } from "react-redux";
+
+import { fetch as fetchCards } from "actions/cards";
+
+import SmallCardContainer from "components/Cards/components/SmallCardContainer";
+import SmallCountAndTimer from "components/Cards/components/SmallCountAndTimer";
+import SmallDeck from "components/Cards/components/SmallDeck";
+import DeckRefreshContext from "components/DeckRefreshContext";
+
+import { useAppSelector } from "features/app/store";
+
+export default function SmallCards() {
+  const cards = useAppSelector((state) => state.cards);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (wasInvalidatedByEquipmentChange) {
+    if (cards.wasInvalidatedByEquipmentChange) {
       dispatch(fetchCards());
     }
-  }, [dispatch, wasInvalidatedByEquipmentChange]);
+  }, [cards, dispatch]);
 
   return (
     <>
       <div className="opportunity-cards--small">
         <div className="opportunity-cards__left--small">
           <DeckRefreshContext.Consumer>
-            {(value) => <SmallDeck {...value} />}
+            {(value) => (
+              <SmallDeck
+                onOpenDeckRefreshModal={value.onOpenDeckRefreshModal}
+              />
+            )}
           </DeckRefreshContext.Consumer>
         </div>
+
         <div className="media__body opportunity-cards__body--small">
           <h2 className="media__heading heading heading--3">
             Opportunity deck
@@ -33,11 +42,14 @@ function SmallCards(props: Props) {
           <SmallCountAndTimer />
         </div>
       </div>
+
       <h2 className="heading heading--3 small-cards__heading">
-        Pick a card from your hand ({displayCards.length}/{handSize})
+        Pick a card from your hand ({cards.displayCards.length}/{cards.handSize}
+        )
       </h2>
+
       <div className="hand hand--small-media">
-        {displayCards.map((card) => (
+        {cards.displayCards.map((card) => (
           <SmallCardContainer key={card.eventId} data={card} />
         ))}
       </div>
@@ -46,15 +58,3 @@ function SmallCards(props: Props) {
 }
 
 SmallCards.displayName = "SmallCards";
-
-const mapStateToProps = ({
-  cards: { displayCards, handSize, wasInvalidatedByEquipmentChange },
-}: IAppState) => ({
-  displayCards,
-  handSize,
-  wasInvalidatedByEquipmentChange,
-});
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(SmallCards);

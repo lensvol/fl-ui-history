@@ -11,7 +11,6 @@ import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 import Act from "components/Act";
 import DomManipulationContext from "components/DomManipulationContext";
 import ExceptionalFriendModal from "components/ExceptionalFriendModal";
-import ExternalAct from "components/ExternalAct";
 import GeneralContainer from "components/GeneralContainer";
 import Loading from "components/Loading";
 import Map from "components/Map";
@@ -26,7 +25,6 @@ import {
   ACT,
   AVAILABLE,
   END,
-  EXTERNAL_ACT,
   IN,
   IN_ITEM_USE,
   RENAME,
@@ -114,9 +112,6 @@ class StoryTabContentContainer extends React.Component<Props, State> {
       case END:
         return <StoryletEnd />;
 
-      case EXTERNAL_ACT:
-        return <ExternalAct />;
-
       case IN: // fall-through; these are the same for slet rendering
       case IN_ITEM_USE:
         return <StoryletIn />;
@@ -162,7 +157,7 @@ class StoryTabContentContainer extends React.Component<Props, State> {
           onRequestClose={this.handleRequestCloseSubscriptionModal}
         />
 
-        {setting?.canOpenMap && <Map />}
+        {setting && setting.canOpenMap && <Map />}
       </>
     );
   }

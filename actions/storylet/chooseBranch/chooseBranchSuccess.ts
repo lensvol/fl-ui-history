@@ -1,4 +1,4 @@
-import * as StoryletActionTypes from "actiontypes/storylet";
+import { CHOOSE_BRANCH_SUCCESS } from "actiontypes/storylet";
 
 import {
   ApiCharacterFriend,
@@ -6,7 +6,7 @@ import {
 } from "services/StoryletService";
 
 export type ChooseBranchSuccessAction = {
-  type: typeof StoryletActionTypes.CHOOSE_BRANCH_SUCCESS;
+  type: typeof CHOOSE_BRANCH_SUCCESS;
   payload: Pick<
     IApiStoryletResponseData,
     | "actions"
@@ -19,7 +19,6 @@ export type ChooseBranchSuccessAction = {
     | "elapsed"
     | "endStorylet"
     | "socialAct"
-    | "externalSocialAct"
     | "secondChance"
     | "setting"
     | "messages"
@@ -40,7 +39,6 @@ export default function chooseBranchSuccess(
     rename,
     endStorylet,
     socialAct,
-    externalSocialAct,
     secondChance,
     messages,
     setting,
@@ -49,7 +47,7 @@ export default function chooseBranchSuccess(
   } = data;
 
   return {
-    type: StoryletActionTypes.CHOOSE_BRANCH_SUCCESS,
+    type: CHOOSE_BRANCH_SUCCESS,
     payload: {
       actions,
       canChangeOutfit,
@@ -59,7 +57,6 @@ export default function chooseBranchSuccess(
       rename,
       endStorylet,
       socialAct,
-      externalSocialAct,
       secondChance,
       messages,
       eligibleFriends: socialAct?.inviteeData.eligibleFriends,

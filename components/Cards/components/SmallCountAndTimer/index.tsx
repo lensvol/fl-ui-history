@@ -1,20 +1,17 @@
-import Loading from "components/Loading";
 import React from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
 
-import SmallCardCount from "./SmallCardCount";
+import Loading from "components/Loading";
+import SmallCardCount from "components/Cards/components/SmallCountAndTimer/SmallCardCount";
 
-const mapStateToProps = ({ cards: { isFetching } }: IAppState) => ({
-  isFetching,
-});
+import { useAppSelector } from "features/app/store";
 
-export function SmallCountAndTimer(props: ReturnType<typeof mapStateToProps>) {
-  const { isFetching } = props;
+export default function SmallCountAndTimer() {
+  const isFetching = useAppSelector((state) => state.cards.isFetching);
 
   if (isFetching) {
     return <Loading spinner small />;
   }
+
   return (
     <div>
       <SmallCardCount />
@@ -23,5 +20,3 @@ export function SmallCountAndTimer(props: ReturnType<typeof mapStateToProps>) {
 }
 
 SmallCountAndTimer.displayName = "SmallCountAndTimer";
-
-export default connect(mapStateToProps)(SmallCountAndTimer);

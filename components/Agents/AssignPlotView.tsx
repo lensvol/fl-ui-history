@@ -92,6 +92,7 @@ export default function AssignPlotView({
       }
 
       setIsChanging(false);
+      // eslint-disable-next-line
     },
     [agent, agents, dispatch, outfit, plotId]
   );
@@ -132,7 +133,7 @@ export default function AssignPlotView({
           {plot.currencyCost > 0 && (
             <div>
               <strong>
-                This plot costs {plot.currencyCost.toLocaleString("en-GB")} Fate
+                This Plot costs {plot.currencyCost.toLocaleString("en-GB")} Fate
                 to play.
               </strong>
             </div>

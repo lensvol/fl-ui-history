@@ -1,22 +1,21 @@
 import React, { useEffect } from "react";
-import { connect, useDispatch } from "react-redux";
+
+import { useDispatch } from "react-redux";
+
 import { fetch as fetchCards } from "actions/cards";
-import { IAppState } from "types/app";
 
+import Deck from "components/Cards/components/Deck";
+import Hand from "components/Cards/components/Hand";
 import DeckRefreshContext from "components/DeckRefreshContext";
-import Deck from "./components/Deck";
-import Hand from "./components/Hand";
 
-const mapStateToProps = ({
-  cards: { wasInvalidatedByEquipmentChange },
-  map: { showOps },
-}: IAppState) => ({
-  showOps,
-  wasInvalidatedByEquipmentChange,
-});
+import { useAppSelector } from "features/app/store";
 
-function Cards(props: ReturnType<typeof mapStateToProps>) {
-  const { showOps, wasInvalidatedByEquipmentChange } = props;
+export default function Cards() {
+  const showOps = useAppSelector((state) => state.map.showOps);
+
+  const wasInvalidatedByEquipmentChange = useAppSelector(
+    (state) => state.cards.wasInvalidatedByEquipmentChange
+  );
 
   const dispatch = useDispatch();
 
@@ -33,7 +32,9 @@ function Cards(props: ReturnType<typeof mapStateToProps>) {
   return (
     <div className="cards">
       <DeckRefreshContext.Consumer>
-        {(value) => <Deck {...value} />}
+        {(value) => (
+          <Deck onOpenDeckRefreshModal={value.onOpenDeckRefreshModal} />
+        )}
       </DeckRefreshContext.Consumer>
       <Hand />
     </div>
@@ -41,5 +42,3 @@ function Cards(props: ReturnType<typeof mapStateToProps>) {
 }
 
 Cards.displayName = "Cards";
-
-export default connect(mapStateToProps)(Cards);

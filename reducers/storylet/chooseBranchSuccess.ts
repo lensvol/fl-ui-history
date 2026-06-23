@@ -1,4 +1,5 @@
 import { ChooseBranchSuccessAction } from "actions/storylet/chooseBranch/chooseBranchSuccess";
+
 import { IStoryletState } from "types/storylet";
 
 export default function chooseBranchSuccess(
@@ -9,7 +10,6 @@ export default function chooseBranchSuccess(
     canChangeOutfit,
     eligibleFriends,
     endStorylet,
-    externalSocialAct,
     messages,
     phase,
     rename,
@@ -27,7 +27,6 @@ export default function chooseBranchSuccess(
     phase,
     messages,
     rename,
-    externalSocialAct,
     secondChance,
     addedFriendId: 0,
     isChoosing: false,

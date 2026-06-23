@@ -11,11 +11,6 @@ import {
   StoryletPhase,
 } from "types/storylet";
 
-type ApiExternalSocialActResponse = {
-  branch: IBranch;
-  message: string;
-};
-
 export interface ApiInternalSocialActRequest {
   branchId: number;
   targetCharacterId: number;
@@ -70,7 +65,6 @@ export interface IApiStoryletResponseData {
   canChangeOutfit: boolean;
   elapsed?: number;
   endStorylet?: IEndStorylet;
-  externalSocialAct?: ApiExternalSocialActResponse;
   hasUpdatedCharacter?: boolean;
   isSuccess: boolean;
   maxHandSize?: number;
@@ -227,16 +221,6 @@ export default class StoryletService
     };
 
     return this.doRequest<IApiStoryletResponseData>(config);
-  };
-
-  sendExternalSocialInvite = (data: any) => {
-    const config = {
-      method: "post",
-      url: "/storylet/sendexternalsocialact",
-      data,
-    };
-
-    return this.doRequest(config);
   };
 
   useQuality = (qualityId: number) => {

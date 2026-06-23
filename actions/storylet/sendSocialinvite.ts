@@ -7,7 +7,11 @@ import { processMessages } from "actions/app";
 import { shouldFetch as shouldFetchOpportunityCards } from "actions/cards/fetch";
 import { handleVersionMismatch } from "actions/versionSync";
 
-import * as StoryletActionTypes from "actiontypes/storylet";
+import {
+  SEND_SOCIAL_INVITATION_FAILURE,
+  SEND_SOCIAL_INVITATION_REQUESTED,
+  SEND_SOCIAL_INVITATION_SUCCESS,
+} from "actiontypes/storylet";
 
 import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
@@ -15,19 +19,19 @@ import StoryletService, {
   IStoryletService,
 } from "services/StoryletService";
 
-export type SendSocialInviteFailureAction = {
-  type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_FAILURE;
+type SendSocialInviteFailureAction = {
+  type: typeof SEND_SOCIAL_INVITATION_FAILURE;
 };
 
-export type SendSocialInviteRequestedAction = {
-  type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_REQUESTED;
+type SendSocialInviteRequestedAction = {
+  type: typeof SEND_SOCIAL_INVITATION_REQUESTED;
 };
 
 export type SendSocialInviteSuccessAction = {
-  type: typeof StoryletActionTypes.SEND_SOCIAL_INVITATION_SUCCESS;
+  type: typeof SEND_SOCIAL_INVITATION_SUCCESS;
   payload: Pick<
     IApiStoryletResponseData,
-    "phase" | "endStorylet" | "elapsed" | "externalSocialAct" | "messages"
+    "phase" | "endStorylet" | "elapsed" | "messages"
   >;
 };
 
@@ -36,25 +40,24 @@ export type SendSocialInviteAction =
   | SendSocialInviteFailureAction
   | SendSocialInviteSuccessAction;
 
-export const sendSocialInviteRequested: ActionCreator<
+const sendSocialInviteRequested: ActionCreator<
   SendSocialInviteRequestedAction
 > = () => ({
-  type: StoryletActionTypes.SEND_SOCIAL_INVITATION_REQUESTED,
+  type: SEND_SOCIAL_INVITATION_REQUESTED,
 });
 
-export const sendSocialInviteSuccess = (data: any) => ({
-  type: StoryletActionTypes.SEND_SOCIAL_INVITATION_SUCCESS,
+const sendSocialInviteSuccess = (data: any) => ({
+  type: SEND_SOCIAL_INVITATION_SUCCESS,
   payload: {
-    phase: data.phase,
     elapsed: data.elapsed,
     endStorylet: data.endStorylet,
-    externalSocialAct: data.externalSocialAct,
     messages: data.messages,
+    phase: data.phase,
   },
 });
 
-export const sendSocialInviteFailure = (error: any) => ({
-  type: StoryletActionTypes.SEND_SOCIAL_INVITATION_FAILURE,
+const sendSocialInviteFailure = (error: any) => ({
+  type: SEND_SOCIAL_INVITATION_FAILURE,
   error: true,
   status: error.response && error.response.status,
 });

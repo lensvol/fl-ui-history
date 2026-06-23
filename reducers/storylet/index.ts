@@ -5,15 +5,49 @@ import { BeginSocialEventSuccessAction } from "actions/storylet/beginSocialEvent
 import { FetchAvailableSuccessAction } from "actions/storylet/fetchAvailable";
 import { GoBackFromSocialActAction } from "actions/storylet/goBackFromSocialAct";
 import { RenameQualitySuccessAction } from "actions/storylet/renameQuality";
-import * as StoryletActionTypes from "actiontypes/storylet";
+
+import {
+  ADD_NEW_CONTACT_FAILURE,
+  ADD_NEW_CONTACT_REQUESTED,
+  ADD_NEW_CONTACT_SUCCESS,
+  BEGIN_SOCIAL_EVENT_FAILURE,
+  BEGIN_SOCIAL_EVENT_REQUESTED,
+  BEGIN_SOCIAL_EVENT_SUCCESS,
+  CANNOT_USE_QUALITY,
+  CHOOSE_BRANCH_FAILURE,
+  CHOOSE_BRANCH_REQUESTED,
+  CHOOSE_BRANCH_SUCCESS,
+  CHOOSE_STORYLET_FAILURE,
+  CHOOSE_STORYLET_REQUESTED,
+  CHOOSE_STORYLET_SUCCESS,
+  CLEAR_CACHE,
+  CREATE_PLAN_FAILURE,
+  FETCH_AVAILABLE_FAILURE,
+  FETCH_AVAILABLE_IN_BACKGROUND_REQUESTED,
+  FETCH_AVAILABLE_REQUESTED,
+  FETCH_AVAILABLE_SUCCESS,
+  FETCH_INELIGIBLE_CONTACTS_SUCCESS,
+  GO_BACK_FROM_SOCIAL_ACT,
+  GOBACK_FAILURE,
+  GOBACK_REQUESTED,
+  GOBACK_SUCCESS,
+  PUT_IN,
+  RENAME_QUALITY_FAILURE,
+  RENAME_QUALITY_REQUESTED,
+  RENAME_QUALITY_SUCCESS,
+  RESET_MAP_UPDATED,
+  SEND_SOCIAL_INVITATION_FAILURE,
+  SEND_SOCIAL_INVITATION_REQUESTED,
+  SEND_SOCIAL_INVITATION_SUCCESS,
+} from "actiontypes/storylet";
+
+import chooseBranchSuccess from "reducers/storylet/chooseBranchSuccess";
+import clearCache from "reducers/storylet/clearCache";
+import fetchAvailableSuccess from "reducers/storylet/fetchAvailableSuccess";
+import renameQualitySuccess from "reducers/storylet/renameQualitySuccess";
+import sortEligibleFriends from "reducers/storylet/sortEligibleFriends";
 
 import { IStoryletState } from "types/storylet";
-
-import chooseBranchSuccess from "./chooseBranchSuccess";
-import clearCache from "./clearCache";
-import fetchAvailableSuccess from "./fetchAvailableSuccess";
-import renameQualitySuccess from "./renameQualitySuccess";
-import sortEligibleFriends from "./sortEligibleFriends";
 
 export const INITIAL_STATE: IStoryletState = {
   addedFriendId: 0,
@@ -31,7 +65,6 @@ export const INITIAL_STATE: IStoryletState = {
   storylets: [],
   storylet: null,
   socialAct: null,
-  externalSocialAct: null,
   rename: null,
   eligibleFriends: null,
   ineligibleContacts: [],
@@ -47,46 +80,51 @@ export default function reducer(
   state = INITIAL_STATE,
   action: StoryletActions
 ): IStoryletState {
-  // const { payload = {} } = action;
-
   switch (action.type) {
-    case StoryletActionTypes.CLEAR_CACHE:
+    case CLEAR_CACHE:
       return clearCache(state);
 
-    case StoryletActionTypes.CHOOSE_STORYLET_REQUESTED:
-      return { ...state, isChoosing: true };
+    case CHOOSE_STORYLET_REQUESTED:
+      return {
+        ...state,
+        isChoosing: true,
+      };
 
-    case StoryletActionTypes.CHOOSE_STORYLET_FAILURE:
+    case CHOOSE_STORYLET_FAILURE:
       return {
         ...state,
         isChoosing: false,
       };
 
-    case StoryletActionTypes.CHOOSE_STORYLET_SUCCESS: {
+    case CHOOSE_STORYLET_SUCCESS: {
       const {
         payload: { canChangeOutfit, endStorylet, messages, phase, storylet },
       } = action as BeginSuccessAction;
+
       return {
         ...state,
         canChangeOutfit,
+        endStorylet,
+        isChoosing: false,
+        messages,
         phase,
         storylet,
-        endStorylet,
-        messages,
-        isChoosing: false,
       };
     }
 
-    case StoryletActionTypes.FETCH_AVAILABLE_REQUESTED:
-      return { ...state, isFetching: true };
+    case FETCH_AVAILABLE_REQUESTED:
+      return {
+        ...state,
+        isFetching: true,
+      };
 
     // This is here to remind us that it's not omitted. If the app is doing
     // a background fetch of available storylets, then we shouldn't set
     // isFetching to true (the UI is being updated separately)
-    case StoryletActionTypes.FETCH_AVAILABLE_IN_BACKGROUND_REQUESTED:
+    case FETCH_AVAILABLE_IN_BACKGROUND_REQUESTED:
       return state;
 
-    case StoryletActionTypes.FETCH_AVAILABLE_FAILURE:
+    case FETCH_AVAILABLE_FAILURE:
       return {
         ...state,
         isFetching: false,
@@ -96,16 +134,19 @@ export default function reducer(
         // phase: action.phase
       };
 
-    case StoryletActionTypes.FETCH_AVAILABLE_SUCCESS:
+    case FETCH_AVAILABLE_SUCCESS:
       return fetchAvailableSuccess(
         state,
         (action as FetchAvailableSuccessAction).payload
       );
 
-    case StoryletActionTypes.GOBACK_REQUESTED:
-      return { ...state, isGoingBack: true };
+    case GOBACK_REQUESTED:
+      return {
+        ...state,
+        isGoingBack: true,
+      };
 
-    case StoryletActionTypes.GOBACK_FAILURE:
+    case GOBACK_FAILURE:
       return {
         ...state,
         isGoingBack: false,
@@ -114,40 +155,47 @@ export default function reducer(
         // phase: action.phase || state.phase,
       };
 
-    case StoryletActionTypes.GOBACK_SUCCESS: {
+    case GOBACK_SUCCESS: {
       const { payload } = action;
+
       return {
         ...state,
-        isGoingBack: false,
-        storylet: null,
         canChangeOutfit: payload.canChangeOutfit,
+        isGoingBack: false,
         phase: payload.phase,
+        storylet: null,
       };
     }
 
-    case StoryletActionTypes.CHOOSE_BRANCH_REQUESTED:
-      return { ...state, isChoosing: true };
+    case CHOOSE_BRANCH_REQUESTED:
+      return {
+        ...state,
+        isChoosing: true,
+      };
 
-    case StoryletActionTypes.CHOOSE_BRANCH_FAILURE:
+    case CHOOSE_BRANCH_FAILURE:
       return {
         ...state,
         isChoosing: false,
-        // phase: action.phase,
       };
 
-    case StoryletActionTypes.CHOOSE_BRANCH_SUCCESS: {
+    case CHOOSE_BRANCH_SUCCESS: {
       return chooseBranchSuccess(state, action);
-      // const { payload } = action as ChooseBranchSuccessAction;
-      // return chooseBranchSuccess(state, payload);
     }
 
-    case StoryletActionTypes.SEND_SOCIAL_INVITATION_REQUESTED:
-      return { ...state, isFetching: true };
+    case SEND_SOCIAL_INVITATION_REQUESTED:
+      return {
+        ...state,
+        isFetching: true,
+      };
 
-    case StoryletActionTypes.SEND_SOCIAL_INVITATION_FAILURE:
-      return { ...state, isFetching: false };
+    case SEND_SOCIAL_INVITATION_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+      };
 
-    case StoryletActionTypes.SEND_SOCIAL_INVITATION_SUCCESS: {
+    case SEND_SOCIAL_INVITATION_SUCCESS: {
       const { payload } = action;
 
       return {
@@ -157,66 +205,82 @@ export default function reducer(
         // TODO: WTF?
         storylet: payload.phase === "End" ? null : state.storylet,
         endStorylet: payload.endStorylet,
-        externalSocialAct: payload.externalSocialAct,
         messages: payload.messages,
       };
     }
 
-    case StoryletActionTypes.FETCH_INELIGIBLE_CONTACTS_SUCCESS:
+    case FETCH_INELIGIBLE_CONTACTS_SUCCESS:
       return {
         ...state,
         ineligibleContacts: action.payload.ineligibleContacts,
       };
 
-    case StoryletActionTypes.CREATE_PLAN_FAILURE:
-      return { ...state, isFetching: false };
-
-    case StoryletActionTypes.ADD_NEW_CONTACT_REQUESTED:
-      return { ...state, isSaving: true };
-
-    case StoryletActionTypes.ADD_NEW_CONTACT_FAILURE:
-      return { ...state, isSaving: false };
-
-    case StoryletActionTypes.ADD_NEW_CONTACT_SUCCESS: {
-      const { payload } = action as AddNewContactSuccessAction;
-      return {
-        ...state,
-        isSaving: false,
-        message: payload.message,
-        eligibleFriends: [...(payload.eligibleFriends ?? [])].sort(
-          sortEligibleFriends
-        ),
-        addedFriendId: payload.addedFriendId,
-      };
-    }
-
-    case StoryletActionTypes.RENAME_QUALITY_REQUESTED:
-      return { ...state, isRenaming: true };
-
-    case StoryletActionTypes.RENAME_QUALITY_FAILURE:
-      return { ...state, isRenaming: false };
-
-    case StoryletActionTypes.RENAME_QUALITY_SUCCESS: {
-      const { payload } = action as RenameQualitySuccessAction;
-      return renameQualitySuccess(state, payload);
-    }
-
-    case StoryletActionTypes.RESET_MAP_UPDATED:
-      return state;
-
-    case StoryletActionTypes.BEGIN_SOCIAL_EVENT_REQUESTED:
-      return {
-        ...state,
-        isFetching: true,
-      };
-
-    case StoryletActionTypes.BEGIN_SOCIAL_EVENT_FAILURE:
+    case CREATE_PLAN_FAILURE:
       return {
         ...state,
         isFetching: false,
       };
 
-    case StoryletActionTypes.BEGIN_SOCIAL_EVENT_SUCCESS: {
+    case ADD_NEW_CONTACT_REQUESTED:
+      return {
+        ...state,
+        isSaving: true,
+      };
+
+    case ADD_NEW_CONTACT_FAILURE:
+      return {
+        ...state,
+        isSaving: false,
+      };
+
+    case ADD_NEW_CONTACT_SUCCESS: {
+      const { payload } = action as AddNewContactSuccessAction;
+
+      return {
+        ...state,
+        addedFriendId: payload.addedFriendId,
+        eligibleFriends: [...(payload.eligibleFriends ?? [])].sort(
+          sortEligibleFriends
+        ),
+        isSaving: false,
+        message: payload.message,
+      };
+    }
+
+    case RENAME_QUALITY_REQUESTED:
+      return {
+        ...state,
+        isRenaming: true,
+      };
+
+    case RENAME_QUALITY_FAILURE:
+      return {
+        ...state,
+        isRenaming: false,
+      };
+
+    case RENAME_QUALITY_SUCCESS: {
+      const { payload } = action as RenameQualitySuccessAction;
+
+      return renameQualitySuccess(state, payload);
+    }
+
+    case RESET_MAP_UPDATED:
+      return state;
+
+    case BEGIN_SOCIAL_EVENT_REQUESTED:
+      return {
+        ...state,
+        isFetching: true,
+      };
+
+    case BEGIN_SOCIAL_EVENT_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+      };
+
+    case BEGIN_SOCIAL_EVENT_SUCCESS: {
       const {
         payload: { messages, phase, storylet },
       } = action as BeginSocialEventSuccessAction;
@@ -230,22 +294,23 @@ export default function reducer(
       };
     }
 
-    case StoryletActionTypes.GO_BACK_FROM_SOCIAL_ACT:
+    case GO_BACK_FROM_SOCIAL_ACT:
       return {
         ...state,
         phase: (action as GoBackFromSocialActAction).payload.phase,
         socialAct: null,
       };
 
-    case StoryletActionTypes.PUT_IN:
-      return { ...state, phase: "In" };
+    case PUT_IN:
+      return {
+        ...state,
+        phase: "In",
+      };
 
-    case StoryletActionTypes.CANNOT_USE_QUALITY:
+    case CANNOT_USE_QUALITY:
       return state;
 
     default:
       return state;
   }
 }
-
-// export default Storylet;

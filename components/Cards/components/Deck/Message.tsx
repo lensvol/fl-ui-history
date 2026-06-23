@@ -1,40 +1,32 @@
-import Loading from "components/Loading";
 import React from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
 
-const mapStateToProps = ({
-  cards: { cardsCount, deckSize, isFetching },
-}: IAppState) => ({
-  cardsCount,
-  deckSize,
-  isFetching,
-});
+import Loading from "components/Loading";
 
-type Props = ReturnType<typeof mapStateToProps>;
+import { useAppSelector } from "features/app/store";
 
-export function Message(props: Props) {
-  const { cardsCount, isFetching, deckSize } = props;
+export default function Message() {
+  const cards = useAppSelector((state) => state.cards);
 
-  const noDrawLimit = cardsCount > deckSize;
-  const noCards = cardsCount === 0;
+  const noDrawLimit = cards.cardsCount > cards.deckSize;
+  const noCards = cards.cardsCount === 0;
 
-  if (isFetching) {
+  if (cards.isFetching) {
     return <Loading spinner small />;
   }
 
   if (noDrawLimit) {
     return <span>No draw limit.</span>;
   }
+
   if (noCards) {
     return <span>No cards waiting.</span>;
   }
-  if (cardsCount === 1) {
+
+  if (cards.cardsCount === 1) {
     return <span>1 card waiting!</span>;
   }
-  return <span>{`${cardsCount} cards waiting!`}</span>;
+
+  return <span>{`${cards.cardsCount} cards waiting!`}</span>;
 }
 
 Message.displayName = "Message";
-
-export default connect(mapStateToProps)(Message);

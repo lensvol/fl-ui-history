@@ -39,7 +39,6 @@ export default function SmallDeckContainer({ onOpenDeckRefreshModal }: Props) {
   return (
     <div className="media__body">
       <button
-        type="button"
         className={classnames(
           "deck deck--small-media",
           handFull && !noCards && "deck--full",
@@ -48,6 +47,7 @@ export default function SmallDeckContainer({ onOpenDeckRefreshModal }: Props) {
         )}
         disabled={handFull}
         onClick={onClick}
+        type="button"
       />
     </div>
   );
