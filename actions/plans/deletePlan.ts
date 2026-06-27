@@ -19,9 +19,7 @@ export type DeletePlanSuccess = {
 };
 
 export type DeletePlanAction =
-  | DeletePlanRequested
-  | DeletePlanFailure
-  | DeletePlanSuccess;
+  DeletePlanRequested | DeletePlanFailure | DeletePlanSuccess;
 
 /** ----------------------------------------------------------------------------
  * DELETE PLAN

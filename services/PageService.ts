@@ -1,11 +1,7 @@
 import BaseService, { Either } from "services/BaseMonadicService";
 
 export type PageName =
-  | "ai-statement"
-  | "credits"
-  | "help"
-  | "privacy"
-  | "termsandconditions";
+  "ai-statement" | "credits" | "help" | "privacy" | "termsandconditions";
 
 export interface FetchPageResponse {
   name: string;

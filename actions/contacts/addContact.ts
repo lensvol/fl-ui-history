@@ -17,9 +17,7 @@ export type AddContactSuccess = {
 };
 
 export type AddContactActions =
-  | AddContactRequested
-  | AddContactFailure
-  | AddContactSuccess;
+  AddContactRequested | AddContactFailure | AddContactSuccess;
 
 const service = new ContactService();
 

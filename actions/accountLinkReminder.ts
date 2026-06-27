@@ -12,8 +12,7 @@ export type HideAccountLinkReminder = {
 };
 
 export type AccountLinkReminderActions =
-  | ShowAccountLinkReminder
-  | HideAccountLinkReminder;
+  ShowAccountLinkReminder | HideAccountLinkReminder;
 
 export const showAccountLinkReminder: ActionCreator<
   ShowAccountLinkReminder

@@ -18,9 +18,7 @@ export type AddFromTwitterFailure = { type: typeof ADD_FROM_TWITTER_FAILURE };
 export type AddFromTwitterSuccess = { type: typeof ADD_FROM_TWITTER_SUCCESS };
 
 export type AddFromTwitterActions =
-  | AddFromTwitterRequested
-  | AddFromTwitterFailure
-  | AddFromTwitterSuccess;
+  AddFromTwitterRequested | AddFromTwitterFailure | AddFromTwitterSuccess;
 
 /** ----------------------------------------------------------------------------
  * Add Friends from Twitter

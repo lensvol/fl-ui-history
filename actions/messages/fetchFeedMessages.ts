@@ -21,8 +21,7 @@ export type FetchFeedMessagesSuccess = {
 };
 
 export type FetchFeedMessagesAction =
-  | FetchFeedMessagesRequested
-  | FetchFeedMessagesSuccess;
+  FetchFeedMessagesRequested | FetchFeedMessagesSuccess;
 
 export default fetchFeedMessages(new MessagesService());
 

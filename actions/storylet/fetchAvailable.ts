@@ -31,8 +31,7 @@ export type FetchAvailableRequestedAction = {
 };
 
 type AnyFetchAvailableAction =
-  | FetchAvailableInBackgroundRequestedAction
-  | FetchAvailableRequestedAction;
+  FetchAvailableInBackgroundRequestedAction | FetchAvailableRequestedAction;
 
 export type FetchAvailableSuccessAction = {
   type: typeof FETCH_AVAILABLE_SUCCESS;

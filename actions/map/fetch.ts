@@ -43,9 +43,7 @@ export type FetchMapSuccess = {
 };
 
 export type FetchMapAction =
-  | FetchMapRequested
-  | FetchMapSuccess
-  | FetchMapFailure;
+  FetchMapRequested | FetchMapSuccess | FetchMapFailure;
 
 const fetchMapRequested: ActionCreator<FetchMapRequested> = () => ({
   type: FETCH_MAP_REQUESTED,

@@ -72,5 +72,4 @@ export type DetachJournalTagSuccess = {
 };
 
 export type DetachJournalTagActions =
-  | DetachJournalTagRequested
-  | DetachJournalTagSuccess;
+  DetachJournalTagRequested | DetachJournalTagSuccess;

@@ -21,9 +21,7 @@ export type FetchAccessCodeSuccess = {
 export type FetchAccessCodeFailure = { type: typeof FETCH_ACCESS_CODE_FAILURE };
 
 export type FetchAccessCodeActions =
-  | FetchAccessCodeRequested
-  | FetchAccessCodeFailure
-  | FetchAccessCodeSuccess;
+  FetchAccessCodeRequested | FetchAccessCodeFailure | FetchAccessCodeSuccess;
 
 /** ----------------------------------------------------------------------------
  * FETCH ACCESSCODE

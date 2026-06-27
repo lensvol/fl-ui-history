@@ -26,9 +26,7 @@ export type TransactionRequested = BuyItemsRequested | SellItemsRequested;
 export type TransactionSuccess = BuyItemsSuccess | SellItemsSuccess;
 
 export type TransactionAction =
-  | TransactionFailure
-  | TransactionRequested
-  | TransactionSuccess;
+  TransactionFailure | TransactionRequested | TransactionSuccess;
 
 type TransactionActions = {
   failure: ActionCreator<TransactionFailure>;

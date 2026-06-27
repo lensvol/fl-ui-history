@@ -21,9 +21,7 @@ export type SaveMessageViaSuccess = {
 };
 
 export type SaveMessageViaActions =
-  | SaveMessageViaFailure
-  | SaveMessageViaRequested
-  | SaveMessageViaSuccess;
+  SaveMessageViaFailure | SaveMessageViaRequested | SaveMessageViaSuccess;
 
 export const saveMessageViaRequested = () => ({
   type: SettingsActionTypes.SAVE_MESSAGES_VIA_REQUESTED,

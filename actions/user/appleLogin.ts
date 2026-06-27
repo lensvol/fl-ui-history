@@ -41,10 +41,7 @@ export type AppleLoginFailure = {
 };
 
 export type AppleLoginActions =
-  | AppleLoginRequested
-  | AppleLoginSuccess
-  | AppleLoginError
-  | AppleLoginFailure;
+  AppleLoginRequested | AppleLoginSuccess | AppleLoginError | AppleLoginFailure;
 
 const appleLoginRequested: ActionCreator<AppleLoginRequested> = () => ({
   type: APPLE_LOGIN_REQUESTED,

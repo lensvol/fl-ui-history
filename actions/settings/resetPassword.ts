@@ -18,9 +18,7 @@ export type ResetPasswordSuccess = {
 };
 
 export type ResetPasswordActions =
-  | ResetPasswordRequested
-  | ResetPasswordFailure
-  | ResetPasswordSuccess;
+  ResetPasswordRequested | ResetPasswordFailure | ResetPasswordSuccess;
 
 export const resetPasswordRequested = () => ({
   type: SettingsActionTypes.PASSWORD_RESET_REQUESTED,

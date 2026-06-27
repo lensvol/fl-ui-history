@@ -24,9 +24,7 @@ export type CreatePlanFailureAction = {
 };
 
 export type CreatePlanAction =
-  | CreatePlanRequestedAction
-  | CreatePlanFailureAction
-  | CreatePlanSuccessAction;
+  CreatePlanRequestedAction | CreatePlanFailureAction | CreatePlanSuccessAction;
 
 /** ----------------------------------------------------------------------------
  * CREATE PLAN

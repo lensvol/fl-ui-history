@@ -18,9 +18,7 @@ export type FetchProfileSuccess = {
 };
 
 export type FetchProfileActions =
-  | FetchProfileRequested
-  | FetchProfileFailure
-  | FetchProfileSuccess;
+  FetchProfileRequested | FetchProfileFailure | FetchProfileSuccess;
 
 const fetchProfileRequest: ActionCreator<FetchProfileRequested> = () => ({
   type: FETCH_PROFILE_REQUESTED,

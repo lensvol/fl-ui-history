@@ -24,9 +24,7 @@ type FetchAllNewsSuccess = {
 };
 
 export type AllNewsActions =
-  | FetchAllNewsFailure
-  | FetchAllNewsRequested
-  | FetchAllNewsSuccess;
+  FetchAllNewsFailure | FetchAllNewsRequested | FetchAllNewsSuccess;
 
 const fetchAllRequested = () => ({
   type: FETCH_ALL_NEWS_REQUESTED,

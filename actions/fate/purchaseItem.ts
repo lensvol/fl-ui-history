@@ -34,9 +34,7 @@ type PurchaseItemFailure = {
 };
 
 export type PurchaseItemActions =
-  | PurchaseItemFailure
-  | PurchaseItemRequested
-  | PurchaseItemSuccess;
+  PurchaseItemFailure | PurchaseItemRequested | PurchaseItemSuccess;
 
 const purchaseItemRequested: ActionCreator<PurchaseItemRequested> = () => ({
   type: PURCHASE_ITEM_REQUESTED,

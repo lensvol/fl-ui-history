@@ -20,9 +20,7 @@ export type DeleteContactSuccess = {
 };
 
 export type DeleteContactActions =
-  | DeleteContactRequested
-  | DeleteContactFailure
-  | DeleteContactSuccess;
+  DeleteContactRequested | DeleteContactFailure | DeleteContactSuccess;
 
 const service = new ContactService();
 

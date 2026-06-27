@@ -36,9 +36,7 @@ export type FetchFateSuccess = {
 };
 
 export type FetchFateActions =
-  | FetchFateFailure
-  | FetchFateRequested
-  | FetchFateSuccess;
+  FetchFateFailure | FetchFateRequested | FetchFateSuccess;
 
 export default fetch(new FateService());
 

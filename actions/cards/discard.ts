@@ -21,9 +21,7 @@ export type DiscardCardsSuccess = {
 export type DiscardCardsFailure = { type: typeof DISCARD_CARDS_FAILURE };
 
 export type DiscardCardsAction =
-  | DiscardCardsRequested
-  | DiscardCardsFailure
-  | DiscardCardsSuccess;
+  DiscardCardsRequested | DiscardCardsFailure | DiscardCardsSuccess;
 
 export const discardRequest: ActionCreator<DiscardCardsRequested> = () => ({
   type: DISCARD_CARDS_REQUESTED,

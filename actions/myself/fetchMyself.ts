@@ -18,9 +18,7 @@ export type FetchMyselfSuccess = {
 export type FetchMyselfError = { type: typeof FETCH_MYSELF_ERROR };
 
 export type FetchMyselfActions =
-  | FetchMyselfRequested
-  | FetchMyselfSuccess
-  | FetchMyselfError;
+  FetchMyselfRequested | FetchMyselfSuccess | FetchMyselfError;
 
 export default function fetchMyself(setIsFetching = false) {
   const service: IMyselfService = new MyselfService();

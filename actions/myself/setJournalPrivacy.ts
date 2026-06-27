@@ -19,8 +19,7 @@ export type SetJournalPrivacySuccess = {
 };
 
 export type SetJournalPrivacyActions =
-  | SetJournalPrivacyRequested
-  | SetJournalPrivacySuccess;
+  SetJournalPrivacyRequested | SetJournalPrivacySuccess;
 
 export default setJournalPrivacy(new MyselfService());
 

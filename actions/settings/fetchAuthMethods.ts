@@ -26,9 +26,7 @@ export type FetchAuthMethodsFailure = {
 };
 
 export type FetchAuthMethodsActions =
-  | FetchAuthMethodsRequested
-  | FetchAuthMethodsSuccess
-  | FetchAuthMethodsFailure;
+  FetchAuthMethodsRequested | FetchAuthMethodsSuccess | FetchAuthMethodsFailure;
 
 export const fetchAuthMethodsRequested: ActionCreator<
   FetchAuthMethodsRequested

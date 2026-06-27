@@ -9,9 +9,7 @@ export default function ContactsHeader() {
   return (
     <div
       style={
-        {
-          /* alignItems: 'center', display: 'flex ', marginBottom: '.5rem' */
-        }
+        {/* alignItems: 'center', display: 'flex ', marginBottom: '.5rem' */}
       }
     >
       <h2 className="heading heading--2 heading--no-margin-bottom">Contacts</h2>

@@ -18,9 +18,7 @@ export type FetchContactsSuccess = {
 };
 
 export type FetchContactsActions =
-  | FetchContactsRequested
-  | FetchContactsFailure
-  | FetchContactsSuccess;
+  FetchContactsRequested | FetchContactsFailure | FetchContactsSuccess;
 
 export const fetchContactsRequested: ActionCreator<
   FetchContactsRequested

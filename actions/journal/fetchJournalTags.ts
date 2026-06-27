@@ -65,5 +65,4 @@ export type FetchJournalTagSuccess = {
 };
 
 export type FetchJournalTagActions =
-  | FetchJournalTagRequested
-  | FetchJournalTagSuccess;
+  FetchJournalTagRequested | FetchJournalTagSuccess;

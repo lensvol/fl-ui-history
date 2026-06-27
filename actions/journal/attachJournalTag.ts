@@ -72,5 +72,4 @@ export type AttachJournalTagSuccess = {
 };
 
 export type AttachJournalTagActions =
-  | AttachJournalTagRequested
-  | AttachJournalTagSuccess;
+  AttachJournalTagRequested | AttachJournalTagSuccess;

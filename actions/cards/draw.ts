@@ -28,9 +28,7 @@ export type DrawCardsSuccess = {
 export type DrawCardsFailure = { type: typeof DRAW_CARDS_FAILURE };
 
 export type DrawCardsActions =
-  | DrawCardsRequested
-  | DrawCardsFailure
-  | DrawCardsSuccess;
+  DrawCardsRequested | DrawCardsFailure | DrawCardsSuccess;
 
 const drawRequest: ActionCreator<DrawCardsRequested> = () => ({
   type: DRAW_CARDS_REQUESTED,

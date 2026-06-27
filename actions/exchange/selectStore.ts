@@ -22,9 +22,7 @@ export type SelectStoreSuccess = {
 };
 
 export type SelectStoreAction =
-  | SelectStoreFailure
-  | SelectStoreRequested
-  | SelectStoreSuccess;
+  SelectStoreFailure | SelectStoreRequested | SelectStoreSuccess;
 
 const service = new ExchangeService();
 

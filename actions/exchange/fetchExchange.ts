@@ -25,9 +25,7 @@ export type FetchExchangeSuccess = {
 export type FetchExchangeFailure = { type: typeof FETCH_EXCHANGE_FAILURE };
 
 export type FetchExchangeAction =
-  | FetchExchangeFailure
-  | FetchExchangeRequested
-  | FetchExchangeSuccess;
+  FetchExchangeFailure | FetchExchangeRequested | FetchExchangeSuccess;
 
 /** ----------------------------------------------------------------------------
  * FETCH EXCHANGE

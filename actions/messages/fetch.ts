@@ -34,9 +34,7 @@ export type FetchQueued = {
 };
 
 export type FetchAllAction =
-  | FetchAllFailure
-  | FetchAllRequested
-  | FetchAllSuccess;
+  FetchAllFailure | FetchAllRequested | FetchAllSuccess;
 
 const messagesService: IMessagesService = new MessagesService();
 

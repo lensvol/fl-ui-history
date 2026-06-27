@@ -28,9 +28,7 @@ type SelectCurrencyFailure = {
 };
 
 export type SelectCurrencyActions =
-  | SelectCurrencyRequested
-  | SelectCurrencyFailure
-  | SelectCurrencySuccess;
+  SelectCurrencyRequested | SelectCurrencyFailure | SelectCurrencySuccess;
 
 /** ----------------------------------------------------------------------------
  * SELECT CURRENCY

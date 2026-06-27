@@ -67,5 +67,4 @@ export type FetchJournalFavoriteSuccess = {
 };
 
 export type FetchJournalFavoriteActions =
-  | FetchJournalFavoriteRequested
-  | FetchJournalFavoriteSuccess;
+  FetchJournalFavoriteRequested | FetchJournalFavoriteSuccess;

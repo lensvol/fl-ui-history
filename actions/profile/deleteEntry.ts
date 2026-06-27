@@ -20,9 +20,7 @@ export type DeleteEntrySuccess = {
 };
 
 export type DeleteEntryActions =
-  | DeleteEntryRequested
-  | DeleteEntryFailure
-  | DeleteEntrySuccess;
+  DeleteEntryRequested | DeleteEntryFailure | DeleteEntrySuccess;
 
 export const deleteEntryRequest = () => ({
   type: ProfileActionTypes.DELETE_ENTRY_REQUESTED,

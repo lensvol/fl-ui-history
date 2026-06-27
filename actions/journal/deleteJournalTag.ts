@@ -71,5 +71,4 @@ export type DeleteJournalTagSuccess = {
 };
 
 export type DeleteJournalTagActions =
-  | DeleteJournalTagRequested
-  | DeleteJournalTagSuccess;
+  DeleteJournalTagRequested | DeleteJournalTagSuccess;

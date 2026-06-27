@@ -21,9 +21,7 @@ export type FetchUserRequested = {
 };
 
 export type FetchUserActions =
-  | FetchUserRequested
-  | FetchUserFailure
-  | FetchUserSuccess;
+  FetchUserRequested | FetchUserFailure | FetchUserSuccess;
 
 const fetchUserSuccess: ActionCreator<FetchUserSuccess> = (
   data: FetchUserResponse

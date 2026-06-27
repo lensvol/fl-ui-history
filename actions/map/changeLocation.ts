@@ -30,9 +30,7 @@ export type ChangeLocationSuccess = {
 };
 
 export type ChangeLocationAction =
-  | ChangeLocationFailure
-  | ChangeLocationRequested
-  | ChangeLocationSuccess;
+  ChangeLocationFailure | ChangeLocationRequested | ChangeLocationSuccess;
 
 const changeLocationRequested: ActionCreator<ChangeLocationRequested> = () => ({
   type: CHANGE_LOCATION_REQUESTED,

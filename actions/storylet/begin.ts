@@ -45,9 +45,7 @@ export type BeginSuccessAction = {
 };
 
 export type BeginStoryletActions =
-  | BeginSuccessAction
-  | BeginRequestedAction
-  | BeginFailureAction;
+  BeginSuccessAction | BeginRequestedAction | BeginFailureAction;
 
 const beginRequest: ActionCreator<BeginRequestedAction> = (
   _eventId: number

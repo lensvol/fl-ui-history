@@ -7,9 +7,7 @@ import { IOutfitState } from "reducers/outfit/index";
 export default function fetchOutfitSuccess(
   state: IOutfitState,
   action:
-    | ChangeOutfitSuccessAction
-    | EquipQualitySuccess
-    | FetchOutfitSuccessAction
+    ChangeOutfitSuccessAction | EquipQualitySuccess | FetchOutfitSuccessAction
 ): IOutfitState {
   const { payload } = action;
 

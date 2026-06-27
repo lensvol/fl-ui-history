@@ -67,5 +67,4 @@ export type FetchJournalPageSuccess = {
 };
 
 export type FetchJournalPageActions =
-  | FetchJournalPageRequested
-  | FetchJournalPageSuccess;
+  FetchJournalPageRequested | FetchJournalPageSuccess;

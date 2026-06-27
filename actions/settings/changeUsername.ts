@@ -24,9 +24,7 @@ export type ChangeUsernameSuccess = {
 };
 
 export type ChangeUsernameActions =
-  | ChangeUsernameRequested
-  | ChangeUsernameFailure
-  | ChangeUsernameSuccess;
+  ChangeUsernameRequested | ChangeUsernameFailure | ChangeUsernameSuccess;
 
 export const changeUsernameRequested: ActionCreator<
   ChangeUsernameRequested

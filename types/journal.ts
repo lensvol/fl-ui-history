@@ -1,10 +1,5 @@
 export type JournalTagColor =
-  | "None"
-  | "Green"
-  | "Red"
-  | "Yellow"
-  | "Blue"
-  | "Violet";
+  "None" | "Green" | "Red" | "Yellow" | "Blue" | "Violet";
 
 export type JournalTagEntry = {
   id: number;

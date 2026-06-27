@@ -21,9 +21,7 @@ export type SaveEditSuccess = {
 };
 
 export type SaveEditActions =
-  | SaveEditRequested
-  | SaveEditSuccess
-  | SaveEditFailure;
+  SaveEditRequested | SaveEditSuccess | SaveEditFailure;
 
 /** ----------------------------------------------------------------------------
  * SAVE EDIT PLAN

@@ -26,8 +26,7 @@ export type FetchPlotsAndConcernsSuccess = {
 };
 
 export type FetchPlotsAndConcernsAction =
-  | FetchPlotsAndConcernsRequested
-  | FetchPlotsAndConcernsSuccess;
+  FetchPlotsAndConcernsRequested | FetchPlotsAndConcernsSuccess;
 
 export default fetchPlots(new AgentsService());
 

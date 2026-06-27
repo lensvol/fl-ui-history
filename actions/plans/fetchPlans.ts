@@ -23,9 +23,7 @@ export type FetchPlansSuccess = {
 };
 
 export type FetchPlansAction =
-  | FetchPlansRequested
-  | FetchPlansFailure
-  | FetchPlansSuccess;
+  FetchPlansRequested | FetchPlansFailure | FetchPlansSuccess;
 
 /** ----------------------------------------------------------------------------
  * FETCH PLANS

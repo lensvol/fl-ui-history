@@ -34,9 +34,7 @@ type FetchSnippetsFailure = {
 };
 
 type FetchSnippetsAction =
-  | FetchSnippetsFailure
-  | FetchSnippetsRequested
-  | FetchSnippetsSuccess;
+  FetchSnippetsFailure | FetchSnippetsRequested | FetchSnippetsSuccess;
 
 type GetSupportingDataRequested = {
   type: typeof SUPPORTING_DATA_REQUESTED;

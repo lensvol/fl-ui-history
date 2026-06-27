@@ -34,9 +34,7 @@ export type ClearAgentsNotification = {
 };
 
 export type FetchAgentsAction =
-  | FetchAgentsRequested
-  | FetchAgentsSuccess
-  | ClearAgentsNotification;
+  FetchAgentsRequested | FetchAgentsSuccess | ClearAgentsNotification;
 
 export const clearAgentsNotification: ActionCreator<
   ClearAgentsNotification

@@ -20,10 +20,7 @@ export type FetchNewsFailure = { type: typeof FETCH_NEWS_FAILURE };
 export type DismissNewsItem = { type: typeof DISMISS_NEWS_ITEM };
 
 export type NewsActions =
-  | FetchNewsRequested
-  | FetchNewsFailure
-  | FetchNewsSuccess
-  | DismissNewsItem;
+  FetchNewsRequested | FetchNewsFailure | FetchNewsSuccess | DismissNewsItem;
 
 export const fetchRequested = () => ({
   type: FETCH_NEWS_REQUESTED,

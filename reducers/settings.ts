@@ -108,9 +108,7 @@ const INITIAL_STATE: ISettingsState = {
 export default function reducer(
   state: ISettingsState = INITIAL_STATE,
   action:
-    | SettingsActions
-    | FetchSubscriptionSuccess
-    | FetchEnhancedActionsSuccess
+    SettingsActions | FetchSubscriptionSuccess | FetchEnhancedActionsSuccess
 ): ISettingsState {
   switch (action.type) {
     case SettingsActionTypes.FETCH_SETTINGS_REQUESTED:

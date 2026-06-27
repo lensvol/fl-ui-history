@@ -13,9 +13,7 @@ const SignUpTab = "signup";
 const PromotionalTab = "promo";
 
 type RegistrationTab =
-  | typeof LoginTab
-  | typeof SignUpTab
-  | typeof PromotionalTab;
+  typeof LoginTab | typeof SignUpTab | typeof PromotionalTab;
 
 function Registration({ accessCode }: Props) {
   const [activeTab, setActiveTab] = useState<RegistrationTab>(LoginTab);

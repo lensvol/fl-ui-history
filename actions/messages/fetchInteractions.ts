@@ -20,8 +20,7 @@ export type FetchInteractionsSuccess = {
 };
 
 export type FetchInteractionsAction =
-  | FetchInteractionsRequested
-  | FetchInteractionsSuccess;
+  FetchInteractionsRequested | FetchInteractionsSuccess;
 
 export const fetchInteractionsRequested: ActionCreator<
   FetchInteractionsRequested

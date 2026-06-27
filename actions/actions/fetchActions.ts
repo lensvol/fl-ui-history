@@ -45,9 +45,7 @@ export type FetchEnhancedActionsSuccess = {
 };
 
 export type FetchActionsActions =
-  | FetchActionsRequested
-  | FetchActionsError
-  | FetchActionsSuccess;
+  FetchActionsRequested | FetchActionsError | FetchActionsSuccess;
 
 export const fetchActionsError: ActionCreator<FetchActionsError> = (
   error: any

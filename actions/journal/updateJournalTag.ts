@@ -68,5 +68,4 @@ export type UpdateJournalTagSuccess = {
 };
 
 export type UpdateJournalTagActions =
-  | UpdateJournalTagRequested
-  | UpdateJournalTagSuccess;
+  UpdateJournalTagRequested | UpdateJournalTagSuccess;

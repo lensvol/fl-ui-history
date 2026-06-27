@@ -23,8 +23,7 @@ export type FetchSharedContentSuccess = {
 };
 
 export type FetchSharedContentActions =
-  | FetchSharedContentRequested
-  | FetchSharedContentSuccess;
+  FetchSharedContentRequested | FetchSharedContentSuccess;
 
 export const fetchSharedContentRequested: ActionCreator<
   FetchSharedContentRequested

@@ -18,8 +18,7 @@ export type FetchCategoriesSuccess = {
 };
 
 export type FetchCategoriesActions =
-  | FetchCategoriesSuccess
-  | FetchCategoriesFailure;
+  FetchCategoriesSuccess | FetchCategoriesFailure;
 
 export const fetchCategoriesFailure: ActionCreator<
   FetchCategoriesFailure

@@ -17,9 +17,7 @@ export type AddFromFacebookFailure = { type: typeof ADD_FROM_FACEBOOK_FAILURE };
 export type AddFromFacebookSuccess = { type: typeof ADD_FROM_FACEBOOK_SUCCESS };
 
 export type AddFromFacebookActions =
-  | AddFromFacebookRequested
-  | AddFromFacebookFailure
-  | AddFromFacebookSuccess;
+  AddFromFacebookRequested | AddFromFacebookFailure | AddFromFacebookSuccess;
 
 const service = new ContactService();
 

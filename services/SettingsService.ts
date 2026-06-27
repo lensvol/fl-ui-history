@@ -10,12 +10,7 @@ import { MessagePreferences } from "types/settings";
 import { PremiumSubscriptionType } from "types/subscription";
 
 export type MessageVia =
-  | "All"
-  | "Apple"
-  | "Email"
-  | "Facebook"
-  | "Google"
-  | "None";
+  "All" | "Apple" | "Email" | "Facebook" | "Google" | "None";
 
 export type AuthMethod = {
   type: MessageVia;

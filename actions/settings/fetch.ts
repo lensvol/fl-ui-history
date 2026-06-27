@@ -22,9 +22,7 @@ export type FetchSettingsFailure = {
 };
 
 export type FetchSettingsActions =
-  | FetchSettingsSuccess
-  | FetchSettingsRequested
-  | FetchSettingsFailure;
+  FetchSettingsSuccess | FetchSettingsRequested | FetchSettingsFailure;
 
 export const fetchSettingsRequested = () => ({
   type: SettingsActionTypes.FETCH_SETTINGS_REQUESTED,
