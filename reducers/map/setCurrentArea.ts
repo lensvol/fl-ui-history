@@ -1,5 +1,7 @@
 import { SetCurrentArea } from "actions/map/setCurrentArea";
+
 import asStateAwareArea from "features/mapping/asStateAwareArea";
+
 import { IArea, IMapState, IStateAwareArea } from "types/map";
 
 export default function setCurrentArea(
@@ -10,11 +12,9 @@ export default function setCurrentArea(
   const { area } = payload;
   const { moveMessage, showOps } = area;
 
-  // If we already know about this area, then merge the new information with
-  // what's already in state
-  const existingAreaInState: IStateAwareArea | undefined = state.areas?.find(
-    (a) => a.id === area.id
-  );
+  // If we already know about this area, then merge the new information with what's already in state
+  const existingAreaInState = state.areas?.find((a) => a.id === area.id);
+
   if (existingAreaInState) {
     const filteredAreaInfo = (
       Object.keys(area) as Array<keyof Partial<IArea>>
@@ -22,7 +22,11 @@ export default function setCurrentArea(
       if (area[k] === undefined) {
         return acc;
       }
-      return { ...acc, [k]: area[k] };
+
+      return {
+        ...acc,
+        [k]: area[k],
+      };
     }, {});
 
     const merge: IStateAwareArea = {

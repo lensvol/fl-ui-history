@@ -1,4 +1,5 @@
 import { ActionCreator } from "redux";
+
 import { ThunkDispatch } from "redux-thunk";
 
 import { IBootstrapOptions } from "actions/app/bootstrap";
@@ -65,9 +66,9 @@ const fetchMapFailure: ActionCreator<FetchMapFailure> = (error: any) => ({
  * FETCH MAP
  -----------------------------------------------------------------------------*/
 
-export default fetch(new MapService());
+export default fetchMap(new MapService());
 
-export function fetch(service: IMapService) {
+function fetchMap(service: IMapService) {
   return (options?: IBootstrapOptions) =>
     async (
       dispatch: ThunkDispatch<any, any, any>,
@@ -92,9 +93,8 @@ export function fetch(service: IMapService) {
         if (data.areas) {
           dispatch(fetchMapSuccess(data));
 
-          const {
-            map: { fallbackMapPreferred },
-          } = getState();
+          const { map } = getState();
+          const { fallbackMapPreferred } = map;
 
           if (fallbackMapPreferred) {
             console.info("Fallback map preferred; not loading map sprites"); // eslint-disable-line no-console
@@ -104,7 +104,7 @@ export function fetch(service: IMapService) {
             dispatch(setFallbackMapPreferred(true)); // update setting without changing preference
           } else {
             const { fetchSpritesNow } = options ?? {};
-            const { setting } = getState().map;
+            const { setting } = map;
 
             // We have the Setting, but it may not be mappable;
             // check whether it has a mapRootArea property

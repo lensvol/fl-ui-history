@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
-
-import { fetch as fetchMap } from "actions/map";
+import { fetchMap } from "actions/map";
 import { fetch as fetchSettings } from "actions/settings";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 
@@ -32,39 +30,26 @@ import {
   UNIQUE_ACT_PENDING,
 } from "constants/phases";
 
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
 
-const mapStateToProps = ({
-  map: { setting },
-  storylet: { isFetching, phase, socialAct, storylet, storylets },
-}: IAppState) => ({
-  isFetching,
-  phase,
-  setting,
-  socialAct,
-  storylet,
-  storylets,
-});
+export default function StoryTabContentContainer() {
+  const [isExceptionalFriendModalOpen, setIsExceptionalFriendModalOpen] =
+    useState(false);
+  const [didLoad, setDidLoad] = useState(false);
 
-interface State {
-  isExceptionalFriendModalOpen: boolean;
-}
+  const dispatch = useDispatch();
 
-interface Props
-  extends ReturnType<typeof mapStateToProps>, RouteComponentProps {
-  dispatch: Function; // eslint-disable-line
-}
+  const isFetching = useAppSelector((state) => state.storylet.isFetching);
+  const phase = useAppSelector((state) => state.storylet.phase);
+  const setting = useAppSelector((state) => state.map.setting);
+  const socialAct = useAppSelector((state) => state.storylet.socialAct);
+  const storylet = useAppSelector((state) => state.storylet.storylet);
+  const storylets = useAppSelector((state) => state.storylet.storylets);
 
-class StoryTabContentContainer extends React.Component<Props, State> {
-  static displayName = "StoryTabContentContainer";
-
-  state = {
-    isExceptionalFriendModalOpen: false,
-  };
-
-  componentDidMount = () => {
-    const { dispatch, isFetching, phase, socialAct, storylet, storylets } =
-      this.props;
+  useEffect(() => {
+    if (didLoad) {
+      return;
+    }
 
     if (isFetching) {
       return;
@@ -78,29 +63,28 @@ class StoryTabContentContainer extends React.Component<Props, State> {
       dispatch(fetchAvailableStorylets());
       dispatch(fetchSettings());
     }
-  };
 
-  handleOpenSubscriptionModal = () => {
-    this.setState({ isExceptionalFriendModalOpen: true });
-  };
+    setDidLoad(true);
+  }, [didLoad, dispatch, isFetching, phase, socialAct, storylet, storylets]);
 
-  handleRequestCloseSubscriptionModal = (didUserSubscribe: boolean) => {
-    this.setState({
-      isExceptionalFriendModalOpen: false,
-    });
+  const handleOpenSubscriptionModal = useCallback(() => {
+    setIsExceptionalFriendModalOpen(true);
+  }, []);
 
-    const { dispatch } = this.props;
+  const handleRequestCloseSubscriptionModal = useCallback(
+    (didUserSubscribe: boolean) => {
+      setIsExceptionalFriendModalOpen(false);
 
-    // If the user subscribed, we need to update storylet and map state
-    if (didUserSubscribe) {
-      dispatch(fetchAvailableStorylets());
-      dispatch(fetchMap());
-    }
-  };
+      // If the user subscribed, we need to update storylet and map state
+      if (didUserSubscribe) {
+        dispatch(fetchAvailableStorylets());
+        dispatch(fetchMap());
+      }
+    },
+    [dispatch]
+  );
 
-  renderContent = () => {
-    const { isFetching, phase } = this.props;
-
+  const renderContent = useMemo(() => {
     if (isFetching) {
       return <Loading />;
     }
@@ -131,36 +115,26 @@ class StoryTabContentContainer extends React.Component<Props, State> {
       default: // We don't know what to show
         return null;
     }
-  };
+  }, [isFetching, phase]);
 
-  /**
-   * Render
-   * @return {Object}
-   */
-  render() {
-    const { setting } = this.props;
+  return (
+    <>
+      <DomManipulationContext.Provider
+        value={{
+          onOpenSubscriptionModal: handleOpenSubscriptionModal,
+        }}
+      >
+        <GeneralContainer>{renderContent}</GeneralContainer>
+      </DomManipulationContext.Provider>
 
-    const { isExceptionalFriendModalOpen } = this.state;
+      <ExceptionalFriendModal
+        isOpen={isExceptionalFriendModalOpen}
+        onRequestClose={handleRequestCloseSubscriptionModal}
+      />
 
-    return (
-      <>
-        <DomManipulationContext.Provider
-          value={{
-            onOpenSubscriptionModal: this.handleOpenSubscriptionModal,
-          }}
-        >
-          <GeneralContainer>{this.renderContent()}</GeneralContainer>
-        </DomManipulationContext.Provider>
-
-        <ExceptionalFriendModal
-          isOpen={isExceptionalFriendModalOpen}
-          onRequestClose={this.handleRequestCloseSubscriptionModal}
-        />
-
-        {setting && setting.canOpenMap && <Map />}
-      </>
-    );
-  }
+      {setting && setting.canOpenMap && <Map />}
+    </>
+  );
 }
 
-export default withRouter(connect(mapStateToProps)(StoryTabContentContainer));
+StoryTabContentContainer.displayName = "StoryTabContentContainer";

@@ -1,44 +1,50 @@
-import buildMessagesObject from "actions/app/processMessages/buildMessagesObject";
-import { handleVersionMismatch } from "actions/versionSync";
 import React from "react";
-import ReactModal from "react-modal";
-import { connect } from "react-redux";
-import { VersionMismatch } from "services/BaseService";
 
+import ReactModal from "react-modal";
+
+import { connect } from "react-redux";
+
+import { actionsUpdated } from "actions/actions";
+import { processMessages } from "actions/app";
+import buildMessagesObject from "actions/app/processMessages/buildMessagesObject";
+import processSettingChangeMessage from "actions/app/processMessages/processSettingChangeMessage";
 import { fetch as fetchOpportunityCards } from "actions/cards";
-import { IGateEvent } from "types/map";
 import {
   beginGateEvent,
   chooseGateEventBranch,
-  fetch as fetchMap,
+  fetchMap,
   goBackFromGateEvent,
 } from "actions/map";
-import Loading from "components/Loading/index";
+import { fetchAvailable, goBack } from "actions/storylet";
+import { handleVersionMismatch } from "actions/versionSync";
 
 import Available from "components/GateEventModal/Available";
 import In from "components/GateEventModal/In";
 import End from "components/GateEventModal/End";
-import { IBranch, IEndStorylet, IStorylet } from "types/storylet";
+import ErrorState from "components/GateEventModal/ErrorState";
+import SecondChance from "components/GateEventModal/SecondChance";
+import Loading from "components/Loading/index";
+
 import {
-  IHasTypeString,
-  IMessagesObject,
-  ISettingChangeMessage,
-} from "types/app/messages";
-import { fetchAvailable, goBack } from "actions/storylet";
-import { processMessages } from "actions/app";
-import { actionsUpdated } from "actions/actions";
-import {
+  // eslint-disable-next-line
   AREA_CHANGE_MESSAGE,
   SETTING_CHANGE_MESSAGE,
 } from "constants/message-types";
-import processSettingChangeMessage from "actions/app/processMessages/processSettingChangeMessage";
+
+import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
   ApiSecondChance,
   IApiStoryletResponseData,
   IChooseBranchRequestData,
 } from "services/StoryletService";
-import ErrorState from "./ErrorState";
-import SecondChance from "./SecondChance";
+
+import {
+  IHasTypeString,
+  IMessagesObject,
+  ISettingChangeMessage,
+} from "types/app/messages";
+import { IGateEvent } from "types/map";
+import { IBranch, IEndStorylet, IStorylet } from "types/storylet";
 
 export interface Props {
   dispatch: Function; // eslint-disable-line @typescript-eslint/ban-types
@@ -97,12 +103,13 @@ export class GateEventModal extends React.Component<Props, State> {
     _prevState: Readonly<State>,
     _snapshot?: any
   ): void {
-    // If the gate event has changed, it means that something has happened, and we need to update our
-    // local state
+    // If the gate event has changed, it means that something has happened, and we need to update our local state
     const { gateEvent } = this.props;
+
     if (prevProps.gateEvent === gateEvent) {
       return;
     }
+
     this.fetchAvailable();
   }
 
@@ -112,7 +119,11 @@ export class GateEventModal extends React.Component<Props, State> {
 
   fetchAvailable = async () => {
     const { dispatch } = this.props;
-    this.setState({ currentStep: StoryletPhase.Loading });
+
+    this.setState({
+      currentStep: StoryletPhase.Loading,
+    });
+
     try {
       // We're using a StoryletService directly (rather than dispatch(fetchAvailable()) because
       // we don't want to update global state. We'll clean up after ourselves if the player backs
@@ -123,40 +134,67 @@ export class GateEventModal extends React.Component<Props, State> {
 
       // We only know how to handle the In phase of a gate event
       if (phase === "In") {
-        this.setState({ storylet, currentStep: StoryletPhase.In });
+        this.setState({
+          storylet,
+          currentStep: StoryletPhase.In,
+        });
       }
     } catch (e) {
       if (e instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(e));
+
         return;
       }
+
       throw e;
     }
   };
 
   handleBegin = async () => {
     const { dispatch, gateEvent } = this.props;
+
     if (!gateEvent) {
       return;
     }
-    this.setState({ currentStep: StoryletPhase.Loading });
+
+    this.setState({
+      currentStep: StoryletPhase.Loading,
+    });
+
     const {
       data: { isSuccess, message, storylet },
     } = await dispatch(beginGateEvent(gateEvent.id));
+
     if (isSuccess) {
-      this.setState({ storylet }, () => {
-        this.setState({ currentStep: StoryletPhase.In });
-      });
+      this.setState(
+        {
+          storylet,
+        },
+        () => {
+          this.setState({
+            currentStep: StoryletPhase.In,
+          });
+        }
+      );
+
       return;
     }
-    this.setState({ currentStep: StoryletPhase.Error, errorMessage: message });
+
+    this.setState({
+      currentStep: StoryletPhase.Error,
+      errorMessage: message,
+    });
   };
 
   handleChooseBranch = async (
     branchData: IBranch & IChooseBranchRequestData
   ) => {
     const { dispatch } = this.props;
-    this.setState({ currentStep: StoryletPhase.Loading });
+
+    this.setState({
+      currentStep: StoryletPhase.Loading,
+    });
+
     const {
       actions,
       endStorylet,
@@ -168,9 +206,12 @@ export class GateEventModal extends React.Component<Props, State> {
     );
 
     // Update actions
-    dispatch(actionsUpdated({ actions }));
+    dispatch(
+      actionsUpdated({
+        actions,
+      })
+    );
 
-    // const messages = flattenMessages(unflattenedMessages ?? []);
     const messages = buildMessagesObject(unflattenedMessages ?? []);
 
     // Don't process setting change messages yet, but get it and defer it
@@ -193,6 +234,7 @@ export class GateEventModal extends React.Component<Props, State> {
     switch (phase) {
       case "In":
         this.handleGoOnwardsFromEnd();
+
         return;
 
       case "End":
@@ -206,6 +248,7 @@ export class GateEventModal extends React.Component<Props, State> {
             ? (deferredSettingChangeMessage as ISettingChangeMessage)
             : undefined,
         }));
+
         return;
 
       case "SecondChance":
@@ -214,6 +257,7 @@ export class GateEventModal extends React.Component<Props, State> {
           secondChance,
           currentStep: StoryletPhase.SecondChance,
         }));
+
         return; // eslint-disable-line no-useless-return
 
       default:
@@ -228,28 +272,44 @@ export class GateEventModal extends React.Component<Props, State> {
 
   handleGoBackFromSecondChance = async () => {
     const { dispatch } = this.props;
+
     // We need to go back, then begin the gate event again
-    this.setState({ currentStep: StoryletPhase.Loading });
+    this.setState({
+      currentStep: StoryletPhase.Loading,
+    });
+
     await dispatch(goBack()); // This takes to the Available phase
+
     this.handleBegin(); // And now we can behave as though we've just started the gate event
   };
 
   handleGoBackFromEnd = async () => {
-    this.setState({ currentStep: StoryletPhase.Loading });
+    this.setState({
+      currentStep: StoryletPhase.Loading,
+    });
+
     await this.handleBegin();
   };
 
   handleGoOnwardsFromEnd = async () => {
     const { didPlayerChangeArea } = this.state;
-    this.setState({ isGoingOnwards: true });
+
+    this.setState({
+      isGoingOnwards: true,
+    });
+
     this.handleRequestClose(didPlayerChangeArea);
+
     if (this.mounted) {
       // Cherry-pick stale deferred message out of state
       this.setState(
         ({
           deferredSettingChangeMessage: _deferredSettingChangeMessage,
           ...state
-        }) => ({ ...state, isGoingOnwards: false })
+        }) => ({
+          ...state,
+          isGoingOnwards: false,
+        })
       );
     }
   };
@@ -260,6 +320,7 @@ export class GateEventModal extends React.Component<Props, State> {
 
   cleanUpBeforeClosing = async () => {
     const { dispatch } = this.props;
+
     const { currentStep, deferredSettingChangeMessage } = this.state;
 
     if (
@@ -267,6 +328,7 @@ export class GateEventModal extends React.Component<Props, State> {
       currentStep === StoryletPhase.SecondChance
     ) {
       dispatch(goBackFromGateEvent());
+
       return;
     }
 
@@ -274,15 +336,21 @@ export class GateEventModal extends React.Component<Props, State> {
       if (deferredSettingChangeMessage) {
         dispatch(processSettingChangeMessage(deferredSettingChangeMessage));
       }
+
       await Promise.all([
         dispatch(fetchMap()),
-        dispatch(fetchAvailable({ setIsFetching: true })),
+        dispatch(
+          fetchAvailable({
+            setIsFetching: true,
+          })
+        ),
       ]);
     }
   };
 
   handleRequestClose = async (shouldCloseMap?: boolean) => {
     const { onRequestClose } = this.props;
+
     const { currentStep, isClosing } = this.state;
 
     if (isClosing) {
@@ -294,7 +362,9 @@ export class GateEventModal extends React.Component<Props, State> {
       return;
     }
 
-    this.setState({ isClosing });
+    this.setState({
+      isClosing,
+    });
 
     await this.cleanUpBeforeClosing();
 
@@ -316,6 +386,7 @@ export class GateEventModal extends React.Component<Props, State> {
 
   renderContent = () => {
     const { gateEvent, isBeingUpdated } = this.props;
+
     const {
       currentStep,
       endStorylet,
@@ -336,12 +407,15 @@ export class GateEventModal extends React.Component<Props, State> {
         if (!gateEvent) {
           return null;
         }
+
         return <Available gateEvent={gateEvent} onClick={this.handleBegin} />;
       }
+
       case StoryletPhase.In: {
         if (!storylet) {
           return null;
         }
+
         return (
           <In
             storylet={storylet}
@@ -366,6 +440,7 @@ export class GateEventModal extends React.Component<Props, State> {
         if (!(endStorylet && messages)) {
           return null;
         }
+
         return (
           <End
             endStorylet={endStorylet}
@@ -382,6 +457,7 @@ export class GateEventModal extends React.Component<Props, State> {
         if (!errorMessage) {
           return null;
         }
+
         return <ErrorState message={errorMessage} />;
       }
 

@@ -1,49 +1,69 @@
 import React, { useCallback, useMemo } from "react";
 import ReactCSSTransitionReplace from "react-css-transition-replace";
-import classnames from "classnames";
-import MediaSmDown from "components/Responsive/MediaSmDown";
-import { connect, useDispatch } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 
-import { fetch as fetchMap, toggleMapView } from "actions/map";
+import classnames from "classnames";
+
+import { fetchMap, toggleMapView } from "actions/map";
 import { openSidebar } from "actions/sidebar";
 
-import { IAppState } from "types/app";
-import getImagePath from "utils/getImagePath";
+import MediaSmDown from "components/Responsive/MediaSmDown";
+
+import { useAppSelector } from "features/app/store";
+
 import { UIRestriction } from "types/myself";
 
-function ResponsiveMenuContainer(props: Props) {
-  const {
-    currentArea,
-    phase,
-    setting,
-    shouldMapUpdate,
-    location: { pathname },
-    enableTravelUI,
-  } = props;
+import getImagePath from "utils/getImagePath";
+
+export default function ResponsiveMenuContainer() {
+  const currentArea = useAppSelector((state) => state.map.currentArea);
+  const uiRestrictions =
+    useAppSelector((state) => state.myself.uiRestrictions) ?? [];
+  const enableTravelUI = !uiRestrictions.find(
+    (restriction) => restriction === UIRestriction.Travel
+  );
+  const phase = useAppSelector((state) => state.storylet.phase);
+  const setting = useAppSelector((state) => state.map.setting);
+  const shouldMapUpdate = useAppSelector((state) => state.map.shouldUpdate);
 
   const dispatch = useDispatch();
+  const location = useLocation();
+  const { pathname } = location;
 
-  const backgroundImage = useMemo(
-    () => `${getImagePath({ icon: currentArea?.image, type: "header" })}`,
-    [currentArea]
-  );
+  const backgroundImage = useMemo(() => {
+    const icon = currentArea ? currentArea.image : undefined;
+
+    const imagePath = getImagePath({
+      icon,
+      type: "header",
+    });
+
+    return `${imagePath}`;
+  }, [currentArea]);
 
   const isMapEnabled = useMemo(
     () =>
-      (setting?.canOpenMap ?? false) &&
+      setting &&
+      setting?.canOpenMap &&
       phase === "Available" &&
       pathname === "/" &&
       enableTravelUI,
-    [pathname, phase, setting, enableTravelUI]
+    [enableTravelUI, pathname, phase, setting]
   );
 
   const mapTitle = useMemo(() => {
-    if (setting?.canOpenMap && phase === "Available" && enableTravelUI) {
+    if (
+      setting &&
+      setting?.canOpenMap &&
+      phase === "Available" &&
+      enableTravelUI
+    ) {
       return "Map";
     }
+
     return "Map - you cannot move right now";
-  }, [phase, setting, enableTravelUI]);
+  }, [enableTravelUI, phase, setting]);
 
   const onOpenSidebar = useCallback(() => dispatch(openSidebar()), [dispatch]);
 
@@ -51,9 +71,11 @@ function ResponsiveMenuContainer(props: Props) {
     if (!isMapEnabled) {
       return;
     }
+
     if (shouldMapUpdate) {
       dispatch(fetchMap());
     }
+
     dispatch(toggleMapView());
   }, [dispatch, isMapEnabled, shouldMapUpdate]);
 
@@ -69,7 +91,9 @@ function ResponsiveMenuContainer(props: Props) {
       <nav
         key={backgroundImage}
         className="banner banner--md-down"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+        }}
       >
         <ul className="banner__list--md-down">
           <li className="banner-item">
@@ -83,6 +107,7 @@ function ResponsiveMenuContainer(props: Props) {
               <span className="u-visually-hidden">Menu</span>
             </button>
           </li>
+
           <MediaSmDown>
             <li className="banner-item">
               <button
@@ -108,20 +133,4 @@ function ResponsiveMenuContainer(props: Props) {
   );
 }
 
-const mapStateToProps = ({
-  storylet: { phase },
-  map: { currentArea, setting, shouldUpdate: shouldMapUpdate },
-  myself: { uiRestrictions },
-}: IAppState) => ({
-  shouldMapUpdate,
-  currentArea,
-  phase,
-  setting,
-  enableTravelUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Travel
-  ),
-});
-
-type Props = ReturnType<typeof mapStateToProps> & RouteComponentProps;
-
-export default withRouter(connect(mapStateToProps)(ResponsiveMenuContainer));
+ResponsiveMenuContainer.displayName = "ResponsiveMenuContainer";

@@ -1,44 +1,58 @@
-import { fetch as fetchMap, toggleMapView } from "actions/map";
+import React, { useCallback, useMemo } from "react";
+
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+
 import classnames from "classnames";
+
+import { fetchMap, toggleMapView } from "actions/map";
+
+import { AVAILABLE } from "constants/phases";
+
+import { useAppSelector } from "features/app/store";
+
 import getShouldShowTravelButtonLabel from "selectors/map/getShouldShowTravelButtonLabel";
 import getTravelButtonLabel from "selectors/map/getTravelButtonLabel";
 
-import * as phases from "constants/phases";
-import React, { useCallback, useMemo } from "react";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { ThunkDispatch } from "redux-thunk";
-import { IAppState } from "types/app";
-import { ISetting } from "types/map";
-import { StoryletPhase } from "types/storylet";
 import { UIRestriction } from "types/myself";
 
-function TravelButton({
-  canOpenMap,
-  className,
-  dispatch,
-  history,
-  label,
-  phase,
-  setting,
-  shouldMapUpdate,
-  shouldShowTravelButton,
-  enableTravelUI,
-}: Props) {
+interface Props {
+  className?: string;
+}
+
+export default function TravelButton({ className }: Props) {
+  const canOpenMap = useAppSelector(
+    (state) => state.map.setting?.canOpenMap ?? false
+  );
+  const uiRestrictions =
+    useAppSelector((state) => state.myself.uiRestrictions) ?? [];
+  const enableTravelUI = !uiRestrictions.find(
+    (restriction) => restriction === UIRestriction.Travel
+  );
+  const label = useAppSelector((state) => getTravelButtonLabel(state));
+  const phase = useAppSelector((state) => state.storylet.phase);
+  const setting = useAppSelector((state) => state.map.setting);
+  const shouldMapUpdate = useAppSelector((state) => state.map.shouldUpdate);
+  const shouldShowTravelButton = useAppSelector((state) =>
+    getShouldShowTravelButtonLabel(state)
+  );
+
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const { pathname } = location;
+
   const handleClick = useCallback(() => {
     if (shouldMapUpdate) {
       dispatch(fetchMap());
     }
+
     dispatch(toggleMapView());
   }, [dispatch, shouldMapUpdate]);
 
   const disabled = useMemo(
     () =>
-      !canOpenMap ||
-      phase !== phases.AVAILABLE ||
-      history.location.pathname !== "/" ||
-      !enableTravelUI,
-    [canOpenMap, history.location.pathname, phase, enableTravelUI]
+      !canOpenMap || phase !== AVAILABLE || pathname !== "/" || !enableTravelUI,
+    [canOpenMap, pathname, phase, enableTravelUI]
   );
 
   if (!shouldShowTravelButton) {
@@ -52,8 +66,8 @@ function TravelButton({
   return (
     <button
       className={classnames("button button--primary", className)}
-      onClick={handleClick}
       disabled={disabled}
+      onClick={handleClick}
       type="button"
     >
       {label}
@@ -61,43 +75,4 @@ function TravelButton({
   );
 }
 
-TravelButton.defaultProps = {
-  className: "",
-};
-
 TravelButton.displayName = "TravelButton";
-
-interface OwnProps {
-  dispatch: ThunkDispatch<any, any, any>;
-  className?: string;
-}
-
-const mapStateToProps = (state: IAppState) => {
-  const {
-    map: { setting, shouldUpdate },
-    storylet: { phase },
-    myself: { uiRestrictions },
-  } = state;
-  return {
-    phase,
-    setting,
-    shouldMapUpdate: shouldUpdate,
-    canOpenMap: setting?.canOpenMap ?? false,
-    label: getTravelButtonLabel(state),
-    shouldShowTravelButton: getShouldShowTravelButtonLabel(state),
-    enableTravelUI: !uiRestrictions?.find(
-      (restriction) => restriction === UIRestriction.Travel
-    ),
-  };
-};
-
-interface Props
-  extends OwnProps, RouteComponentProps, ReturnType<typeof mapStateToProps> {
-  phase: StoryletPhase;
-  label: string;
-  setting: ISetting | undefined;
-  shouldMapUpdate: boolean;
-  canOpenMap: boolean;
-}
-
-export default withRouter(connect(mapStateToProps)(TravelButton));

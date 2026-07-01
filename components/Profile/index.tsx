@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+
 import { useParams } from "react-router-dom";
 
 import Header from "components/Header";
@@ -64,6 +65,7 @@ export default function ProfileContainer() {
     <div>
       <Header />
       <Hero image={profileBanner} />
+
       <div className="profile__container">
         <div className="profile__card-container">
           <div className="profile__card-and-header">
@@ -72,15 +74,18 @@ export default function ProfileContainer() {
               Lodgings
             </h2>
           </div>
+
           <div className="profile__card-and-header">
             <ProfileCameo />
           </div>
         </div>
+
         <div className="profile__identity-container">
           <ProfileName />
           <ProfileDescription />
           <MantelAndScrap />
         </div>
+
         <div className="profile__inventory-theysay-container">
           <div />
           <TippyWrapper
@@ -101,10 +106,12 @@ export default function ProfileContainer() {
           </TippyWrapper>
           <ProfileInventory />
           <div />
+
           <div />
           <TheySay />
           <div />
         </div>
+
         <div className="profile__player-journal">
           <JournalEntriesContainer />
         </div>

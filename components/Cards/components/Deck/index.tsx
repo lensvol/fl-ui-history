@@ -1,14 +1,13 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import { useDispatch } from "react-redux";
 
 import classnames from "classnames";
 
-import { draw } from "actions/cards";
-
-import Message from "components/Cards/components/Deck/Message";
+import CardCount from "components/Cards/components/Deck/CardCount";
 import Timer from "components/Cards/components/Deck/Timer";
 import {
+  useDrawCards,
   useHandFull,
   useNoCards,
   useOnClickDeck,
@@ -17,7 +16,7 @@ import { DeckRefreshContextValue } from "components/DeckRefreshContext";
 
 import { useAppSelector } from "features/app/store";
 
-const DECK_IMAGE_URLS = {
+export const DECK_IMAGE_URLS = {
   default: "//images.fallenlondon.com/cards/deck.png",
   disabled: "//images.fallenlondon.com/cards/deck-disabled.png",
   empty: "//images.fallenlondon.com/cards/refill-deck-for-nex.png",
@@ -26,15 +25,16 @@ const DECK_IMAGE_URLS = {
 type Props = DeckRefreshContextValue;
 
 export default function Deck({ onOpenDeckRefreshModal }: Props) {
-  const cards = useAppSelector((state) => state.cards);
-  const handFull = useHandFull(cards.displayCards, cards.handSize);
-  const noCards = useNoCards(cards.cardsCount, cards.isFetching);
+  const cardsCount = useAppSelector((state) => state.cards.cardsCount);
+  const displayCards = useAppSelector((state) => state.cards.displayCards);
+  const handSize = useAppSelector((state) => state.cards.handSize);
+  const isFetching = useAppSelector((state) => state.cards.isFetching);
+
+  const handFull = useHandFull(displayCards, handSize);
+  const noCards = useNoCards(cardsCount, isFetching);
 
   const dispatch = useDispatch();
-
-  const drawCards = useCallback(() => {
-    dispatch(draw());
-  }, [dispatch]);
+  const drawCards = useDrawCards(dispatch);
 
   const imageUrl = useMemo(() => {
     if (noCards) {
@@ -48,32 +48,16 @@ export default function Deck({ onOpenDeckRefreshModal }: Props) {
     return DECK_IMAGE_URLS.default;
   }, [handFull, noCards]);
 
-  const topUpCards = useCallback(() => {
-    return onOpenDeckRefreshModal();
-  }, [onOpenDeckRefreshModal]);
-
   const onClick = useOnClickDeck({
     drawCards,
     handFull,
-    isFetching: cards.isFetching,
+    isFetching,
     noCards,
-    topUpCards,
+    topUpCards: onOpenDeckRefreshModal,
   });
 
-  const deckClassName = classnames(
-    "deck",
-    cards.isFetching && "deck--fetching",
-    handFull && !noCards && "deck--full",
-    noCards && "deck--empty"
-  );
-
-  const imageClassName = classnames(
-    "deck__image",
-    handFull && !noCards && "deck__image--disabled"
-  );
-
   const accessibleButtonText = useMemo(() => {
-    if (cards.isFetching) {
+    if (isFetching) {
       return "Loading...";
     }
 
@@ -86,21 +70,64 @@ export default function Deck({ onOpenDeckRefreshModal }: Props) {
     }
 
     return "Click to draw a card from your opportunity deck.";
-  }, [cards, handFull, noCards]);
+  }, [handFull, isFetching, noCards]);
 
   return (
-    <div className="deck-container">
-      <button className={deckClassName} onClick={onClick} type="button">
-        <img alt="Opportunity deck" className={imageClassName} src={imageUrl} />
+    <div
+      className={classnames(
+        "deck-container",
+        cardsCount === 2 && "deck-container-two-cards",
+        cardsCount > 2 && "deck-container-many-cards"
+      )}
+    >
+      <button
+        className={classnames(
+          "deck",
+          isFetching && "deck--fetching",
+          handFull && !noCards && "deck--full",
+          noCards && "deck--empty",
+          !noCards && cardsCount === 1 && "deck-one-card",
+          !noCards && cardsCount === 2 && "deck-two-cards",
+          !noCards && cardsCount > 2 && "deck-many-cards"
+        )}
+        onClick={onClick}
+        type="button"
+      >
+        {cardsCount > 2 && (
+          <img
+            alt=""
+            aria-hidden="true"
+            className="deck-third-card"
+            src={imageUrl}
+          />
+        )}
+
+        {cardsCount > 1 && (
+          <img
+            alt=""
+            aria-hidden="true"
+            className="deck-second-card"
+            src={imageUrl}
+          />
+        )}
+
+        <img
+          alt="Opportunity deck"
+          className={classnames(
+            "deck__image",
+            handFull && !noCards && "deck__image--disabled"
+          )}
+          src={imageUrl}
+        />
 
         <span className="u-visually-hidden">{accessibleButtonText}</span>
+
+        <div className="deck-info__cards-in-deck">
+          <CardCount />
+        </div>
       </button>
 
       <div className="deck-info">
-        <div className="deck-info__cards-in-deck">
-          <Message />
-        </div>
-
         <div className="deck-info__timer">
           <Timer />
         </div>

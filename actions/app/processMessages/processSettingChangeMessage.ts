@@ -1,6 +1,6 @@
 import { ThunkDispatch } from "redux-thunk";
 
-import { fetch as fetchMap, setCurrentSetting } from "actions/map";
+import { fetchMap, setCurrentSetting } from "actions/map";
 
 import { clearContainerAndCaches } from "components/Map/ReactLeafletPixiOverlay/sprite-caches";
 
@@ -18,7 +18,7 @@ export default function processSettingChangeMessage(
     const setting = message?.setting;
 
     // If we are able to travel in the new Setting but have no map locations, then retrieve them
-    const oldMapRootAreaKey = getState().map.setting?.mapRootArea?.areaKey;
+    const oldMapRootAreaKey = map.setting?.mapRootArea?.areaKey;
     const newMapRootAreaKey = setting?.mapRootArea?.areaKey;
     const hasMapRootAreaChanged = newMapRootAreaKey !== oldMapRootAreaKey;
 

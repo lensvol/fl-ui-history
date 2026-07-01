@@ -2,7 +2,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchMap } from "actions/map";
+import { fetchMap } from "actions/map";
 import { fetchAvailable } from "actions/storylet";
 
 import Blurb from "components/ExceptionalFriendModal/Blurb";

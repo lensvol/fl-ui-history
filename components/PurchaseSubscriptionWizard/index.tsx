@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
+
 import { useDispatch } from "react-redux";
 
 import { fetchActions } from "actions/actions";
 import { fetch as fetchFate } from "actions/fate";
-import { fetch as fetchMap } from "actions/map";
+import { fetchMap } from "actions/map";
 import { fetchMyself } from "actions/myself";
 import { fetchOutfit } from "actions/outfit";
 import { fetch as fetchSettings } from "actions/settings";

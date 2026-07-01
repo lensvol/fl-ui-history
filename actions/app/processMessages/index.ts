@@ -1,15 +1,34 @@
-import processFateChange from "actions/app/processFateChange";
-import findEquipmentChangeMessage from "actions/app/processMessages/findEquipmentChangeMessage";
-import { AREA_CHANGE_MESSAGE } from "constants/message-types";
+import { ThunkDispatch } from "redux-thunk";
 
 import { fetchActions } from "actions/actions";
+import processFateChange from "actions/app/processFateChange";
+import buildMessagesObject from "actions/app/processMessages/buildMessagesObject";
+import findAndProcessAreaMessage from "actions/app/processMessages/findAndProcessAreaMessage";
+import findAndProcessOutfitChangeabilityMessage from "actions/app/processMessages/findAndProcessOutfitChangeabilityMessage";
+import findChangesToAutomaticallyEquippedItems from "actions/app/processMessages/findChangesToAutomaticallyEquippedItems";
+import findChangesToMapState from "actions/app/processMessages/findChangesToMapState";
+import findEquipmentChangeMessage from "actions/app/processMessages/findEquipmentChangeMessage";
+import findEquippedItemLosses from "actions/app/processMessages/findEquippedItemLosses";
+import findNewEquippableItems from "actions/app/processMessages/findNewEquippableItems";
+import findQualityCapChanges from "actions/app/processMessages/findQualityCapChanges";
+import findSettingChangeMessages from "actions/app/processMessages/findSettingChangeMessages";
+import processEquippedItemLosses from "actions/app/processMessages/processEquippedItemLosses";
+import processSettingChangeMessage from "actions/app/processMessages/processSettingChangeMessage";
+import processStandardMessages from "actions/app/processMessages/processStandardMessages";
+import shouldFetchOpportunityCards from "actions/app/processMessages/shouldFetchOpportunityCards";
+import shouldPlansUpdate from "actions/app/processMessages/shouldPlansUpdate";
+import { shouldFetch as setOpportunitiesShouldFetch } from "actions/cards";
 import { fetch as fetchFate } from "actions/fate";
+import { fetchMap } from "actions/map";
 import { fetchMyself } from "actions/myself";
-import { fetch as fetchMap } from "actions/map";
 import { fetchOutfit } from "actions/outfit";
 import { fetchPlans } from "actions/plans";
-import { shouldFetch as setOpportunitiesShouldFetch } from "actions/cards";
-import { ThunkDispatch } from "redux-thunk";
+
+import { AREA_CHANGE_MESSAGE } from "constants/message-types";
+
+import getQualitiesRequiredAllPlans from "selectors/plans/getQualitiesRequiredAllPlans";
+import getQualityRequirementsAllCards from "selectors/cards/getQualitiesRequiredAllCards";
+
 import { IAppState } from "types/app";
 import {
   ApiResultMessageQualityEffect,
@@ -18,24 +37,6 @@ import {
   ISettingChangeMessage,
 } from "types/app/messages";
 
-import getQualitiesRequiredAllPlans from "selectors/plans/getQualitiesRequiredAllPlans";
-import getQualityRequirementsAllCards from "selectors/cards/getQualitiesRequiredAllCards";
-
-import buildMessagesObject from "./buildMessagesObject";
-import findAndProcessAreaMessage from "./findAndProcessAreaMessage";
-import findAndProcessOutfitChangeabilityMessage from "./findAndProcessOutfitChangeabilityMessage";
-import findChangesToAutomaticallyEquippedItems from "./findChangesToAutomaticallyEquippedItems";
-import findChangesToMapState from "./findChangesToMapState";
-import findEquippedItemLosses from "./findEquippedItemLosses";
-import findNewEquippableItems from "./findNewEquippableItems";
-import findSettingChangeMessages from "./findSettingChangeMessages";
-import shouldFetchOpportunityCards from "./shouldFetchOpportunityCards";
-import processEquippedItemLosses from "./processEquippedItemLosses";
-import processStandardMessages from "./processStandardMessages";
-import processSettingChangeMessage from "./processSettingChangeMessage";
-import shouldPlansUpdate from "./shouldPlansUpdate";
-import findQualityCapChanges from "./findQualityCapChanges";
-
 export default function processMessages(
   messages: IMessages,
   ignoredMessageTypes: string[] = []
@@ -43,6 +44,7 @@ export default function processMessages(
   if (Array.isArray(messages)) {
     return processMessageArray(messages, ignoredMessageTypes);
   }
+
   return processMessagesObject(messages, ignoredMessageTypes);
 }
 
@@ -51,6 +53,7 @@ function processMessageArray(
   ignoredMessageTypes: string[] = []
 ) {
   const obj = buildMessagesObject(messages);
+
   return processMessagesObject(obj, ignoredMessageTypes);
 }
 
@@ -63,8 +66,6 @@ function processMessagesObject(
     getState: () => IAppState
   ) => {
     try {
-      let isFateRefreshNeeded = false;
-
       const { fateMessage } = messages;
 
       const defaultMessages = (messages.defaultMessages ?? []).filter(
@@ -76,11 +77,6 @@ function processMessagesObject(
 
       // Handle Fate changes
       if (fateMessage) {
-        // Whether or not we can determine the amount of Fate spent, we will need to do a complete
-        // Fate refresh, because it's possible that we have just bought an Exceptional Story from
-        // a branch.
-        isFateRefreshNeeded = true;
-
         // If we have a currencyChangeAmount, then process it now
         if (fateMessage.currencyChangeAmount) {
           dispatch(processFateChange(fateMessage.currencyChangeAmount));
@@ -100,6 +96,7 @@ function processMessagesObject(
         defaultMessages,
         ignoredMessageTypes
       );
+
       if (settingChangeMessages.length > 0) {
         settingChangeMessages.forEach((message) => {
           dispatch(
@@ -201,8 +198,9 @@ function processMessagesObject(
         dispatch(fetchPlans());
       }
 
-      // If we need to refresh Fate, then do so now
-      if (isFateRefreshNeeded) {
+      // Whether or not we can determine the amount of Fate spent, we will need to do a complete Fate refresh,
+      // because it's possible that we have just bought an Exceptional Story from a branch.
+      if (fateMessage) {
         dispatch(fetchFate());
         dispatch(fetchActions());
       }

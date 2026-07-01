@@ -1,4 +1,5 @@
 import { SetCurrentSetting } from "actions/map/setCurrentSetting";
+
 import { IMapState } from "types/map";
 
 export default function setCurrentSetting(

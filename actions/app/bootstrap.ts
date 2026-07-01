@@ -7,11 +7,7 @@ import preloadImages from "actions/app/preloadImages";
 import { fetchExchange } from "actions/exchange";
 import { fetch as fetchFate } from "actions/fate";
 import { getSupportingData } from "actions/infoBar";
-import {
-  fetch as fetchMap,
-  setCurrentArea,
-  setCurrentSetting,
-} from "actions/map";
+import { fetchMap, setCurrentArea, setCurrentSetting } from "actions/map";
 import { fetch as fetchMessages } from "actions/messages";
 import { fetchMyself } from "actions/myself";
 import { fetchNews } from "actions/news/fetchNews";

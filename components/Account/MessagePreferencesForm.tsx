@@ -1,9 +1,14 @@
 import React, { useCallback, ReactNode } from "react";
-import * as SettingsActionCreators from "actions/settings";
-import { useAppDispatch, useAppSelector } from "features/app/store";
+
 import { Formik, Form, FormikHelpers, Field } from "formik";
-import { MessagePreferences } from "types/settings";
+
+import { saveMessagePreferences } from "actions/settings";
+
 import Loading from "components/Loading";
+
+import { useAppDispatch, useAppSelector } from "features/app/store";
+
+import { MessagePreferences } from "types/settings";
 
 type MessagePreferenceKeys =
   | "messageAboutNiceness"
@@ -27,11 +32,9 @@ export default function MessagePreferencesForm() {
       helpers: FormikHelpers<MessagePreferencesValues>
     ) => {
       helpers.setSubmitting(true);
-      await dispatch(
-        SettingsActionCreators.saveMessagePreferences(
-          valuesToPreferences(values)
-        )
-      );
+
+      await dispatch(saveMessagePreferences(valuesToPreferences(values)));
+
       helpers.setSubmitting(false);
     },
     [dispatch]
@@ -100,8 +103,8 @@ export default function MessagePreferencesForm() {
                   <p>
                     Covering music, internet ephemera, art and film
                     recommendations, strange historical anecdotes, pigeons,
-                    various mines/caves/catacombs, and sometimes also updates on
-                    our games.
+                    various mines/caves/catacombs. We&rsquo;ll also sometimes
+                    send updates on our games and events in Fallen London.
                   </p>
                 </MessagePreferenceFormItem>
               </li>
