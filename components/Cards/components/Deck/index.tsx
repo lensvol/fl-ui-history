@@ -121,13 +121,13 @@ export default function Deck({ onOpenDeckRefreshModal }: Props) {
         />
 
         <span className="u-visually-hidden">{accessibleButtonText}</span>
-
-        <div className="deck-info__cards-in-deck">
-          <CardCount />
-        </div>
       </button>
 
       <div className="deck-info">
+        <div className="deck-info__cards-in-deck">
+          <CardCount />
+        </div>
+
         <div className="deck-info__timer">
           <Timer />
         </div>

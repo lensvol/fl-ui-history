@@ -15,33 +15,20 @@ export default function CardCount() {
 
   if (cardsCount > deckSize) {
     // no draw limit
-    return <span aria-label="No draw limit.">&infin;</span>;
+    return <span>No draw limit.</span>;
   }
 
   if (cardsCount === 0) {
     // zero cards; omit badge
-    return (
-      <span aria-label="No cards waiting." className="u-visually-hidden" />
-    );
+    return <span>No cards waiting.</span>;
   }
 
   if (cardsCount === 1) {
     // one card; omit badge
-    return (
-      <span
-        aria-label="There is 1 card in your Opportunity Deck."
-        className="u-visually-hidden"
-      />
-    );
+    return <span>1 card waiting!</span>;
   }
 
-  return (
-    <span
-      aria-label={`There are ${cardsCount} cards in your Opportunity Deck.`}
-    >
-      x{cardsCount}
-    </span>
-  );
+  return <span>{`${cardsCount} cards waiting!`}</span>;
 }
 
 CardCount.displayName = "CardCount";

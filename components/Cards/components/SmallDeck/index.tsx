@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import classnames from "classnames";
 
 import { DECK_IMAGE_URLS } from "components/Cards/components/Deck";
-import CardCount from "components/Cards/components/Deck/CardCount";
 import {
   useDrawCards,
   useHandFull,
@@ -99,10 +98,6 @@ export default function SmallDeckContainer({ onOpenDeckRefreshModal }: Props) {
           )}
           src={imageUrl}
         />
-
-        <div className="deck-info__cards-in-deck">
-          <CardCount />
-        </div>
       </button>
     </div>
   );

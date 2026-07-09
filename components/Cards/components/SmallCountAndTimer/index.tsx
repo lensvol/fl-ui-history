@@ -2,6 +2,7 @@ import React from "react";
 
 import Loading from "components/Loading";
 import CardTimer from "components/Cards/components/CardTimer";
+import SmallCardCount from "components/Cards/components/SmallCountAndTimer/SmallCardCount";
 import { useHandFull } from "components/Cards/hooks";
 
 import { useAppSelector } from "features/app/store";
@@ -21,7 +22,10 @@ export default function SmallCountAndTimer() {
   return (
     <div>
       <p>
-        {cardsCount <= deckSize && <CardTimer formatter={(str) => `${str}.`} />}
+        <SmallCardCount />{" "}
+        {cardsCount <= deckSize && (
+          <CardTimer formatter={(str) => `(${str}.)`} />
+        )}
       </p>
 
       {isHandFull && (
