@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 
 import { useHistory } from "react-router";
 
+import classnames from "classnames";
+
 import { fetch as fetchFate, toggleEnhancedStoreView } from "actions/fate";
 import {
   isDowngradedSubscription,
@@ -12,8 +14,6 @@ import {
 
 import finalMonth from "assets/img/LeavingThisMonth.png";
 import freshlyAdded from "assets/img/NewThisMonth.png";
-
-import classnames from "classnames";
 
 import ActionButton from "components/ActionButton";
 import { StoryletDescription } from "components/common";
@@ -103,7 +103,8 @@ export default function EnhancedStore({ isAccountView }: Props) {
   const title = "Revisit Fallen London's Exceptional Stories";
   const description =
     "<p>" +
-    "Each month, we offer a delicious menu of six stories from the archives for our Enhanced Exceptional Friends to choose from." +
+    "Each month, we offer a delicious menu of six stories from the archives for our " +
+    "Enhanced Exceptional Friends to choose from." +
     "</p>" +
     "<p>" +
     "Enhanced Subscribers may play a story for the first time or reset two previously played stories." +
@@ -232,6 +233,7 @@ export default function EnhancedStore({ isAccountView }: Props) {
               type="icon"
             />
           </div>
+
           <div
             style={{
               margin: "0.5rem 8px 0",
@@ -241,6 +243,7 @@ export default function EnhancedStore({ isAccountView }: Props) {
             <b>{featuredCard?.name}</b>
           </div>
         </div>
+
         <div className="media__body">
           <h1 className="media__heading heading heading--2 storylet-root__heading">
             {title}
@@ -251,6 +254,7 @@ export default function EnhancedStore({ isAccountView }: Props) {
           />
         </div>
       </div>
+
       {shouldShowHeaderText && (
         <h1
           className="media__heading heading heading--2"
@@ -265,6 +269,7 @@ export default function EnhancedStore({ isAccountView }: Props) {
           {headerText}
         </h1>
       )}
+
       <div>
         <h2
           className="heading heading--2"
@@ -302,17 +307,16 @@ export default function EnhancedStore({ isAccountView }: Props) {
 
       <div>
         {replayStories.length > 0 && (
-          <>
-            <h2
-              className="heading heading--2"
-              style={{
-                margin: "1em 0 0.5em",
-              }}
-            >
-              Revisit Played Stories
-            </h2>
-          </>
+          <h2
+            className="heading heading--2"
+            style={{
+              margin: "1em 0 0.5em",
+            }}
+          >
+            Revisit Played Stories
+          </h2>
         )}
+
         {replayStories.map((c) => (
           <FateCard
             badge={c.badge}
@@ -347,11 +351,7 @@ export default function EnhancedStore({ isAccountView }: Props) {
         )}
       </div>
 
-      <div
-        className={classnames(
-          "buttons buttons--left buttons--storylet-exit-options"
-        )}
-      >
+      <div className="buttons buttons--left buttons--storylet-exit-options">
         <ActionButton
           data={{
             ...data,
@@ -369,6 +369,7 @@ export default function EnhancedStore({ isAccountView }: Props) {
         isOpen={isConfirmModalOpen}
         onRequestClose={() => setIsConfirmModalOpen(false)}
       />
+
       <Modal
         isOpen={isPurchaseContentModalOpen}
         onRequestClose={handleRequestClosePurchaseContentModal}

@@ -177,6 +177,7 @@ function processMessagesObject(
 
       // If we need to fetch new map data, then do so now
       const isFetchMapNeeded = changesToMapState.length > 0;
+
       if (isFetchMapNeeded && !getState().map.isFetching) {
         dispatch(fetchMap());
       }
@@ -185,6 +186,7 @@ function processMessagesObject(
       const isFetchOutfitNeeded =
         findEquipmentChangeMessage(defaultMessages) !== undefined ||
         changesToAutomaticallyEquippedItems.length > 0;
+
       if (isFetchOutfitNeeded) {
         dispatch(fetchOutfit());
       }
@@ -194,6 +196,7 @@ function processMessagesObject(
         defaultMessages,
         getQualitiesRequiredAllPlans(getState().plans)
       );
+
       if (isFetchPlansNeeded && !getState().plans.isFetching) {
         dispatch(fetchPlans());
       }

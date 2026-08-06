@@ -16,20 +16,20 @@ import MessagesService, {
   IMessagesService,
 } from "services/MessagesService";
 
-export type FetchAllFailure = {
+type FetchAllFailure = {
   type: typeof FETCH_ALL_FAILURE;
 };
 
-export type FetchAllRequested = {
+type FetchAllRequested = {
   type: typeof FETCH_ALL_REQUESTED;
 };
 
-export type FetchAllSuccess = {
+type FetchAllSuccess = {
   type: typeof FETCH_ALL_SUCCESS;
   payload: FetchAllMessagesResponse;
 };
 
-export type FetchQueued = {
+type FetchQueued = {
   type: typeof FETCH_QUEUED;
 };
 
@@ -46,6 +46,7 @@ export default function fetch() {
     if (document.hidden) {
       document.onvisibilitychange = () => {
         document.onvisibilitychange = null;
+
         dispatch(fetch());
       };
 
@@ -53,6 +54,7 @@ export default function fetch() {
     }
 
     document.onvisibilitychange = null;
+
     dispatch(fetchRequested());
 
     try {
@@ -76,13 +78,13 @@ export default function fetch() {
   };
 }
 
-export const fetchRequested: ActionCreator<FetchAllRequested> = () => {
+const fetchRequested: ActionCreator<FetchAllRequested> = () => {
   return {
     type: FETCH_ALL_REQUESTED,
   };
 };
 
-export const fetchSuccess: ActionCreator<FetchAllSuccess> = (
+const fetchSuccess: ActionCreator<FetchAllSuccess> = (
   data: any,
   type = FETCH_ALL_SUCCESS
 ) => ({
@@ -93,7 +95,7 @@ export const fetchSuccess: ActionCreator<FetchAllSuccess> = (
   },
 });
 
-export const fetchFailure = (error: any) => ({
+const fetchFailure = (error: any) => ({
   type: FETCH_ALL_FAILURE,
   status: error.response?.status,
 });

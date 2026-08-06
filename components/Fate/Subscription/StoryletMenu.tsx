@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 
 import { fetch as fetchFate } from "actions/fate";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
-import { fetch as fetchSubscriptions } from "actions/subscription";
+import { fetch as fetchSubscription } from "actions/subscription";
 
 import Loading from "components/Loading";
 import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
@@ -49,7 +49,7 @@ export default function StoryletMenu({
   // Fetch subscription on load
   useEffect(() => {
     dispatch(fetchFate());
-    dispatch(fetchSubscriptions());
+    dispatch(fetchSubscription());
   }, [dispatch]);
 
   const userDidDowngrade = isDowngradedSubscription(
@@ -115,6 +115,7 @@ export default function StoryletMenu({
           <Storylet data={pseudoStorylet} isAccountView={isAccountView} />
         </div>
       </ReactCSSTransitionReplace>
+
       <PurchaseSubscriptionModal
         hasSubscription={hasSubscription}
         isOpen={isSubscriptionModalOpen}

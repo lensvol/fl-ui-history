@@ -1,4 +1,5 @@
 import { ActionCreator } from "redux";
+
 import { ThunkDispatch } from "redux-thunk";
 
 import { processMessages } from "actions/app";
@@ -6,7 +7,11 @@ import { fetch as fetchCards } from "actions/cards";
 import { fetchAvailableSuccess } from "actions/storylet/fetchAvailable";
 import { handleVersionMismatch } from "actions/versionSync";
 
-import * as StoryletActionTypes from "actiontypes/storylet";
+import {
+  GOBACK_FAILURE,
+  GOBACK_REQUESTED,
+  GOBACK_SUCCESS,
+} from "actiontypes/storylet";
 
 import { VersionMismatch } from "services/BaseService";
 import StoryletService, {
@@ -14,29 +19,29 @@ import StoryletService, {
 } from "services/StoryletService";
 
 export type GoBackFailureAction = {
-  type: typeof StoryletActionTypes.GOBACK_FAILURE;
+  type: typeof GOBACK_FAILURE;
   error: boolean;
   status?: number;
 };
 
 export type GoBackRequestedAction = {
-  type: typeof StoryletActionTypes.GOBACK_REQUESTED;
+  type: typeof GOBACK_REQUESTED;
 };
 
 export type GoBackSuccessAction = {
-  type: typeof StoryletActionTypes.GOBACK_SUCCESS;
+  type: typeof GOBACK_SUCCESS;
   payload: Pick<
     IApiStoryletResponseData,
     "actions" | "canChangeOutfit" | "phase"
   >;
 };
 
-export type GoBackOptions = {
+type GoBackOptions = {
   fetchOpportunityCards?: boolean;
 };
 
 const goBackRequest: ActionCreator<GoBackRequestedAction> = () => ({
-  type: StoryletActionTypes.GOBACK_REQUESTED,
+  type: GOBACK_REQUESTED,
 });
 
 export const goBackSuccess: ActionCreator<GoBackSuccessAction> = ({
@@ -47,7 +52,7 @@ export const goBackSuccess: ActionCreator<GoBackSuccessAction> = ({
   IApiStoryletResponseData,
   "actions" | "canChangeOutfit" | "phase"
 >) => ({
-  type: StoryletActionTypes.GOBACK_SUCCESS,
+  type: GOBACK_SUCCESS,
   payload: {
     actions,
     canChangeOutfit,
@@ -56,7 +61,7 @@ export const goBackSuccess: ActionCreator<GoBackSuccessAction> = ({
 });
 
 const goBackFailure = (error: any) => ({
-  type: StoryletActionTypes.GOBACK_FAILURE,
+  type: GOBACK_FAILURE,
   error: true,
   status: error.response?.status,
 });
@@ -73,7 +78,11 @@ export default function goBack({ fetchOpportunityCards }: GoBackOptions = {}) {
     // Fetch opp cards, just in case something interesting has happened
     // (e.g. St Arthur's Candle, which adds a card to your hand)
     if (fetchOpportunityCards ?? true) {
-      dispatch(fetchCards({ background: true }));
+      dispatch(
+        fetchCards({
+          background: true,
+        })
+      );
     }
 
     try {

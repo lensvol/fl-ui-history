@@ -1,18 +1,24 @@
+import React, { useCallback, useState } from "react";
+
+import { useDispatch } from "react-redux";
+
+import { fetchActions } from "actions/actions";
+import { fetch as fetchFate } from "actions/fate";
+
 import Loading from "components/Loading";
 import Modal, { Props as ModalProps } from "components/Modal";
 import PaymentStuff from "components/Payment/PaymentStuff";
 import PurchaseFateFailure from "components/Payment/PurchaseFateFailure";
 import PurchaseFateSuccess from "components/Payment/PurchaseFateSuccess";
+
 import useIsMounted from "hooks/useIsMounted";
-import React, { useCallback, useState } from "react";
-import { fetch as fetchFate } from "actions/fate";
-import { useDispatch } from "react-redux";
+
 import PaymentService from "services/PaymentService";
+
 import {
   IBraintreePurchaseFateRequest,
   ThreeDSecureCompleteResult,
 } from "types/payment";
-import { fetchActions } from "actions/actions";
 
 type Props = ModalProps & {
   onRequestClose: (_args?: any) => void;
@@ -57,11 +63,13 @@ export default function PurchaseFateModal({
       if (!result.isSuccess) {
         setMessage(result.message);
         setCurrentStep(PaymentStep.Failure);
+
         return;
       }
 
       // Start processing
       setCurrentStep(PaymentStep.Processing);
+
       const { payload } = result;
       const { data } = await new PaymentService().purchaseWithBraintree(
         payload
@@ -74,10 +82,12 @@ export default function PurchaseFateModal({
 
       // Update message and yeet to success or failure
       setMessage(data.message);
+
       if (data.isSuccess) {
         dispatch(fetchFate());
         dispatch(fetchActions());
         setCurrentStep(PaymentStep.Success);
+
         return;
       }
 
@@ -89,12 +99,12 @@ export default function PurchaseFateModal({
   return (
     <Modal
       className="modal-dialog--purchase-fate"
+      disableTouchEvents={disableTouchEvents}
       isOpen={isOpen}
       onAfterClose={handleAfterClose}
       onRequestClose={onRequestClose}
       shouldCloseOnOverlayClick={false}
       shouldCloseOnEsc={false}
-      disableTouchEvents={disableTouchEvents}
       style={style}
     >
       {isOpen && (
@@ -102,8 +112,8 @@ export default function PurchaseFateModal({
           <Wizard
             currentStep={currentStep}
             message={message}
-            onGoBackFromFailure={handleGoBackFromFailure}
             onCancel={onRequestClose}
+            onGoBackFromFailure={handleGoBackFromFailure}
             onThreeDSecureComplete={handleThreeDSecureComplete}
           />
         </div>
@@ -112,9 +122,11 @@ export default function PurchaseFateModal({
   );
 }
 
+PurchaseFateModal.displayName = "PurchaseFateModal";
+
 interface WizardProps {
   currentStep: PaymentStep;
-  message: string | undefined;
+  message?: string;
   onGoBackFromFailure: () => void;
   onCancel: () => void;
   onThreeDSecureComplete: (
@@ -133,20 +145,24 @@ function Wizard({
     case PaymentStep.Failure:
       return (
         <PurchaseFateFailure
-          onGoBack={onGoBackFromFailure}
-          onClose={onCancel}
           message={message}
+          onClose={onCancel}
+          onGoBack={onGoBackFromFailure}
         />
       );
+
     case PaymentStep.Success:
       return <PurchaseFateSuccess message={message} onClick={onCancel} />;
+
     case PaymentStep.Processing:
       return <Loading spinner />;
+
     case PaymentStep.Details:
     default:
       return (
         <>
           <h2 className="heading heading--2">Purchase Fate</h2>
+
           <PaymentStuff
             onCancel={onCancel}
             onThreeDSComplete={onThreeDSecureComplete}
@@ -155,3 +171,5 @@ function Wizard({
       );
   }
 }
+
+Wizard.displayName = "Wizard";

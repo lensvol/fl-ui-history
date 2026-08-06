@@ -1,37 +1,49 @@
-import { handleVersionMismatch } from "actions/versionSync";
-import * as FateActionTypes from "actiontypes/fate";
 import { ActionCreator } from "redux";
+
+import { ThunkDispatch } from "redux-thunk";
+
+import { handleVersionMismatch } from "actions/versionSync";
+
+import {
+  FETCH_FAILURE,
+  FETCH_REQUESTED,
+  FETCH_SUCCESS,
+} from "actiontypes/fate";
+
 import { Either, Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
 import FateService, {
   FetchFateResponse,
   IFateService,
 } from "services/FateService";
-import { ThunkDispatch } from "redux-thunk";
 
 const fetchFateRequested: ActionCreator<FetchFateRequested> = () => ({
-  type: FateActionTypes.FETCH_REQUESTED,
+  type: FETCH_REQUESTED,
 });
 
 const fetchFateSuccess: ActionCreator<FetchFateSuccess> = (
   data: FetchFateResponse
 ) => ({
-  type: FateActionTypes.FETCH_SUCCESS,
+  type: FETCH_SUCCESS,
   payload: data,
 });
 
 const fetchFateFailure: ActionCreator<FetchFateFailure> = (error: any) => ({
-  type: FateActionTypes.FETCH_FAILURE,
+  type: FETCH_FAILURE,
   error: true,
   status: error.response && error.response.status,
 });
 
-export type FetchFateFailure = { type: typeof FateActionTypes.FETCH_FAILURE };
-export type FetchFateRequested = {
-  type: typeof FateActionTypes.FETCH_REQUESTED;
+type FetchFateFailure = {
+  type: typeof FETCH_FAILURE;
 };
+
+type FetchFateRequested = {
+  type: typeof FETCH_REQUESTED;
+};
+
 export type FetchFateSuccess = {
-  type: typeof FateActionTypes.FETCH_SUCCESS;
+  type: typeof FETCH_SUCCESS;
   payload: FetchFateResponse;
 };
 
@@ -47,11 +59,13 @@ export function fetch(
 ) => Promise<Either<FetchFateResponse> | VersionMismatch> {
   return () => async (dispatch) => {
     dispatch(fetchFateRequested());
+
     try {
       const result = await service.fetchFate();
 
       if (result instanceof Success) {
         const { data } = result;
+
         dispatch(fetchFateSuccess(data));
       }
 
@@ -59,9 +73,12 @@ export function fetch(
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
+
         return error;
       }
+
       dispatch(fetchFateFailure(error));
+
       throw error;
     }
   };

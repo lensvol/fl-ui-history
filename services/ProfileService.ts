@@ -48,7 +48,7 @@ export interface IProfileCharacter {
   userName?: string;
 }
 
-export type Domicile = {
+type Domicile = {
   name: string;
   description: string;
   image: string;
@@ -64,8 +64,7 @@ export type ShareContentRequest = {
 
 export interface IProfileService {
   fetchProfile: (
-    characterName: string,
-    fromEchoId?: string | number
+    characterName: string
   ) => Promise<Either<FetchProfileResponse>>;
   share: (req: ShareContentRequest) => Promise<Either<ShareResponse>>;
   updateDescription: (
@@ -73,13 +72,12 @@ export interface IProfileService {
   ) => Promise<Either<UpdateDescriptionResponse>>;
 }
 
-class ProfileService extends BaseService implements IProfileService {
-  fetchProfile = (characterName: string, fromEchoId?: string | number) => {
+export default class ProfileService
+  extends BaseService
+  implements IProfileService
+{
+  fetchProfile = (characterName: string) => {
     let url = `/profile?characterName=${encodeURIComponent(characterName ?? "")}`;
-
-    if (fromEchoId) {
-      url += `/${fromEchoId}`;
-    }
 
     const config = {
       method: "get",
@@ -118,5 +116,3 @@ class ProfileService extends BaseService implements IProfileService {
     return this.doRequest<ShareResponse>(config);
   };
 }
-
-export { ProfileService as default };

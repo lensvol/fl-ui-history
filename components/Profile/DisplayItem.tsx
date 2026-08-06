@@ -50,7 +50,11 @@ export default function DisplayItem(props: OwnProps) {
       await dispatch(action(newQuality));
 
       if (profileCharacter) {
-        dispatch(fetchProfile({ characterName: profileCharacter.name }));
+        dispatch(
+          fetchProfile({
+            characterName: profileCharacter.name,
+          })
+        );
       }
     },
     [dispatch, nature, profileCharacter]

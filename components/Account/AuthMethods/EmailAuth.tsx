@@ -1,20 +1,31 @@
 import React, { useCallback, useState } from "react";
+
+import { useDispatch } from "react-redux";
+
 import classnames from "classnames";
-import { connect, useDispatch } from "react-redux";
-import { IAppState } from "types/app";
-import LinkEmailModal from "./LinkEmailModal";
-import UpdateEmailModal from "./UpdateEmailModal";
-import VerifyEmailModal from "./VerifyEmailModal";
 
 import { fetch as fetchSettings } from "actions/settings";
 
-export function EmailAuth(props: Props) {
-  const {
-    buttonClassName,
-    data: { emailAuth, emailAddress, emailVerified },
-    onLinkSuccess,
-    showVerificationLink,
-  } = props;
+import LinkEmailModal from "components/Account/AuthMethods/LinkEmailModal";
+import UpdateEmailModal from "components/Account/AuthMethods/UpdateEmailModal";
+import VerifyEmailModal from "components/Account/AuthMethods/VerifyEmailModal";
+
+import { useAppSelector } from "features/app/store";
+
+type Props = {
+  buttonClassName?: string;
+  onLinkSuccess?: () => void;
+  showVerificationLink?: boolean;
+};
+
+export default function EmailAuth({
+  buttonClassName,
+  onLinkSuccess,
+  showVerificationLink,
+}: Props) {
+  const data = useAppSelector((state) => state.settings.data);
+
+  const { emailAddress, emailAuth, emailVerified } = data;
 
   const [isLinkEmailModalOpen, setIsLinkEmailModalOpen] = useState(false);
   const [isUpdateEmailModalOpen, setIsUpdateEmailModalOpen] = useState(false);
@@ -48,7 +59,9 @@ export function EmailAuth(props: Props) {
   const dispatch = useDispatch();
 
   const didLinkEmail = useCallback(() => {
-    onLinkSuccess?.();
+    if (onLinkSuccess) {
+      onLinkSuccess();
+    }
 
     dispatch(fetchSettings());
   }, [dispatch, onLinkSuccess]);
@@ -97,16 +110,4 @@ export function EmailAuth(props: Props) {
   );
 }
 
-const mapStateToProps = (state: IAppState) => ({
-  data: state.settings.data,
-});
-
-type OwnProps = {
-  buttonClassName?: string;
-  onLinkSuccess?: () => void;
-  showVerificationLink?: boolean;
-};
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(EmailAuth);
+EmailAuth.displayName = "EmailAuth";

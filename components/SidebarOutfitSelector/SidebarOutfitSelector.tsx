@@ -9,7 +9,7 @@ import { isDowngradedSubscription } from "actions/fate/subscriptions";
 import { changeOutfit } from "actions/outfit";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 
-import * as DropdownStyles from "components/Equipment/dropdown-styles";
+import { styles, theme } from "components/Equipment/dropdown-styles";
 import SidebarOutfitSelectorDisabled from "components/SidebarOutfitSelector/SidebarOutfitSelectorDisabled";
 import Title from "components/SidebarOutfitSelector/Title";
 
@@ -38,6 +38,7 @@ export default function SidebarOutfitSelector() {
     (state) => state.settings.subscriptions.subscriptionType
   );
   const outfits = useAppSelector((state) => getOrderedOutfits(state));
+  const uiRestrictions = useAppSelector((state) => state.myself.uiRestrictions);
 
   const isExceptionalFriend =
     subscriptionType === "ExceptionalFriendship" ||
@@ -46,12 +47,11 @@ export default function SidebarOutfitSelector() {
   const isEnhancedExceptionalFriend =
     subscriptionType === "EnhancedExceptionalFriendship";
 
-  const showPossessionsUI = useAppSelector(
-    (state) =>
-      !state.myself.uiRestrictions?.find(
-        (restriction) => restriction === UIRestriction.Possessions
-      )
-  );
+  const showPossessionsUI =
+    uiRestrictions === undefined ||
+    !uiRestrictions.find(
+      (restriction) => restriction === UIRestriction.Possessions
+    );
 
   const [isChanging, setIsChanging] = useState(false);
 
@@ -64,15 +64,26 @@ export default function SidebarOutfitSelector() {
 
   const onChange = useCallback(
     async (arg: any) => {
-      const { value } = arg as { label: string; value: number };
+      const { value } = arg as {
+        label: string;
+        value: number;
+      };
 
       if (!canUserChangeOutfit) {
         return;
       }
 
       setIsChanging(true);
-      await dispatch(changeOutfit(value, { clearCacheImmediately: false }));
-      await dispatch(fetchAvailableStorylets({ setIsFetching: true }));
+      await dispatch(
+        changeOutfit(value, {
+          clearCacheImmediately: false,
+        })
+      );
+      await dispatch(
+        fetchAvailableStorylets({
+          setIsFetching: true,
+        })
+      );
       await dispatch(fetchCards());
       setIsChanging(false);
     },
@@ -130,23 +141,24 @@ export default function SidebarOutfitSelector() {
       }}
     >
       <Title />
+
       <Select
         aria-hidden="true"
-        onChange={onChange}
-        value={{
-          label: selectedOutfit.name,
-          value: selectedOutfit.id,
-          type: selectedOutfit.type,
-          isDisabled: false,
+        components={{
+          IndicatorSeparator: () => null,
         }}
-        options={options}
         isClearable={false}
         isDisabled={isChanging}
         isSearchable={false}
-        theme={DropdownStyles.theme}
-        styles={DropdownStyles.styles}
-        components={{
-          IndicatorSeparator: () => null,
+        onChange={onChange}
+        options={options}
+        styles={styles}
+        theme={theme}
+        value={{
+          isDisabled: false,
+          label: selectedOutfit.name,
+          type: selectedOutfit.type,
+          value: selectedOutfit.id,
         }}
       />
     </div>

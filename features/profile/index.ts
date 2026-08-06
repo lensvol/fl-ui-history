@@ -16,27 +16,25 @@ import { AreaWithNestedJsonInfo } from "types/map";
 import { IQuality } from "types/qualities";
 
 export interface IProfileState {
-  characterName: string | undefined;
-  currentArea: AreaWithNestedJsonInfo | undefined;
-  description: string | undefined;
+  characterName?: string;
+  currentArea?: AreaWithNestedJsonInfo;
+  description?: string;
   hasFavouredOutfit?: boolean;
   isFetching: boolean;
   isLoggedInUsersProfile: boolean;
   isSharing: boolean;
-  mantelpieceItem: IQuality | undefined;
+  mantelpieceItem?: IQuality;
   outfitName?: string;
   profileBanner?: string;
-  profileCharacter?: IProfileCharacter | undefined;
+  profileCharacter?: IProfileCharacter;
   profileDescription?: string;
   profileName?: string;
-  scrapbookStatus: IQuality | undefined;
+  scrapbookStatus?: IQuality;
   sharedContent: ApiSharedContent[];
   shareMessageResponse: string | null;
-  standardEquipped:
-    | {
-        possessions: IQuality[];
-      }
-    | undefined;
+  standardEquipped?: {
+    possessions: IQuality[];
+  };
 }
 
 const initialState: IProfileState = {
@@ -58,33 +56,26 @@ const initialState: IProfileState = {
   standardEquipped: undefined,
 };
 
-export type FetchProfileArg = {
+type FetchProfileArg = {
   characterName: string;
   fromEchoId?: string | number;
 };
 
-export type ShareContentArg = ShareContentRequest;
+type ShareContentArg = ShareContentRequest;
 
-export type ToggleFavouriteJournalEntryArg = {
-  id: number;
-};
-
-export type UpdateDescriptionArg = {
+type UpdateDescriptionArg = {
   description: string;
 };
 
-export type UpdateDescriptionResponse = BaseUpdateDescriptionResponse &
+type UpdateDescriptionResponse = BaseUpdateDescriptionResponse &
   UpdateDescriptionArg;
 
 const fetchProfile = createAsyncThunk<
   FetchProfileResponse,
   FetchProfileArg,
   ThunkApiConfig
->("profile/fetchProfile", async ({ characterName, fromEchoId }) => {
-  const response = await new ProfileService().fetchProfile(
-    characterName,
-    fromEchoId
-  );
+>("profile/fetchProfile", async ({ characterName }) => {
+  const response = await new ProfileService().fetchProfile(characterName);
 
   if (response instanceof Success) {
     return response.data;
@@ -157,7 +148,9 @@ export { fetchProfile, shareContent, updateDescription };
 
 function onFetchProfileFulfilled(
   state: IProfileState,
-  action: { payload: FetchProfileResponse }
+  action: {
+    payload: FetchProfileResponse;
+  }
 ) {
   const {
     characterName,
@@ -191,7 +184,9 @@ function onShareContentFulfilled(state: IProfileState) {
 
 function onUpdateDescriptionFulfilled(
   state: IProfileState,
-  action: { payload: UpdateDescriptionResponse }
+  action: {
+    payload: UpdateDescriptionResponse;
+  }
 ) {
   if (!state.profileCharacter) {
     console.error("Tried to update profile description for an undefined user");

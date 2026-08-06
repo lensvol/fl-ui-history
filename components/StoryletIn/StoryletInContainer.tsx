@@ -12,7 +12,7 @@ import { handleVersionMismatch } from "actions/versionSync";
 
 import StoryletInComponent from "components/StoryletIn/StoryletInComponent";
 
-import * as phases from "constants/phases";
+import { AVAILABLE, IN_ITEM_USE } from "constants/phases";
 
 import { useAppSelector } from "features/app/store";
 
@@ -73,7 +73,7 @@ export default function StoryletInContainer() {
 
       // If the situation is nominal and we are getting returned to the available storylets,
       // nothing much has changed, so we can take the player back to the Possessions tab
-      if (phase === phases.IN_ITEM_USE && nextPhase === phases.AVAILABLE) {
+      if (phase === IN_ITEM_USE && nextPhase === AVAILABLE) {
         history.push("/possessions");
       }
 

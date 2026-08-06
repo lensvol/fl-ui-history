@@ -1,9 +1,9 @@
 import { showAccountLinkReminder } from "actions/accountLinkReminder";
 import { fetchActions } from "actions/actions";
 import fetchAgents from "actions/agents/fetchAgents";
-import { fetch as fetchCards } from "actions/cards";
 import extractImages from "actions/app/extractImages";
 import preloadImages from "actions/app/preloadImages";
+import { fetch as fetchCards } from "actions/cards";
 import { fetchExchange } from "actions/exchange";
 import { fetch as fetchFate } from "actions/fate";
 import { getSupportingData } from "actions/infoBar";
@@ -61,7 +61,12 @@ export default function performInitialRequests(options = {}) {
       const images = extractImages();
 
       preloadImages(
-        images.map((image) => getImagePath({ icon: image, type: "small-icon" }))
+        images.map((image) =>
+          getImagePath({
+            icon: image,
+            type: "small-icon",
+          })
+        )
       );
     }
 
@@ -100,7 +105,10 @@ export default function performInitialRequests(options = {}) {
         // (this will change in a future API update)
         if (data.area) {
           dispatch(
-            setCurrentArea({ ...data.area, ...(data.area.jsonInfo ?? {}) })
+            setCurrentArea({
+              ...data.area,
+              ...(data.area.jsonInfo ?? {}),
+            })
           );
         }
 

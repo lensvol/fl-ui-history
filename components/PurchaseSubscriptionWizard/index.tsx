@@ -384,3 +384,5 @@ export default function PurchaseSubscriptionWizard({
 
   return <div className="purchase-panel">{content}</div>;
 }
+
+PurchaseSubscriptionWizard.displayName = "PurchaseSubscriptionWizard";

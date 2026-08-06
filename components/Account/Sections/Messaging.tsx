@@ -1,24 +1,19 @@
 import React, { useEffect } from "react";
-import { connect, useDispatch } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import MessagingRubric from "../MessagingRubric";
-import MessagePreferencesForm from "../MessagePreferencesForm";
+import { useDispatch } from "react-redux";
 
 import { fetch as fetchSettings } from "actions/settings";
 
+import MessagePreferencesForm from "components/Account/MessagePreferencesForm";
+import MessagingRubric from "components/Account/MessagingRubric";
 import Loading from "components/Loading";
 
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;
+export default function Messaging() {
+  const data = useAppSelector((state) => state.settings.data);
+  const isFetching = useAppSelector((state) => state.settings.isFetching);
 
-const mapStateToProps = ({ settings: { data, isFetching } }: IAppState) => ({
-  data,
-  isFetching,
-});
-
-function Messaging({ data, isFetching }: Props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,7 +24,11 @@ function Messaging({ data, isFetching }: Props) {
 
   if (isFetching) {
     return (
-      <div style={{ padding: 24 }}>
+      <div
+        style={{
+          padding: 24,
+        }}
+      >
         <Loading spinner />
       </div>
     );
@@ -43,4 +42,4 @@ function Messaging({ data, isFetching }: Props) {
   );
 }
 
-export default withRouter(connect(mapStateToProps)(Messaging));
+Messaging.displayName = "Messaging";

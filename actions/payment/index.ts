@@ -4,12 +4,10 @@ import { fetch as fetchFate } from "actions/fate";
 import { handleVersionMismatch } from "actions/versionSync";
 
 import {
-  CLOSE_DIALOG,
   OPEN_DIALOG,
   PURCHASE_FAILURE,
   PURCHASE_REQUESTED,
   PURCHASE_SUCCESS,
-  SELECT_PACKAGE,
 } from "actiontypes/payment";
 
 import { Success, Failure } from "services/BaseMonadicService";
@@ -27,20 +25,6 @@ export const openDialog = (paymentType: any) => ({
   type: OPEN_DIALOG,
   payload: {
     paymentType,
-  },
-});
-
-export const closeDialog = () => ({
-  type: CLOSE_DIALOG,
-});
-
-/** ----------------------------------------------------------------------------
- * SELECT PACKAGE
- -----------------------------------------------------------------------------*/
-export const selectPackage = (packageId: number) => ({
-  type: SELECT_PACKAGE,
-  payload: {
-    packageId,
   },
 });
 

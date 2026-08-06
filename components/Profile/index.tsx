@@ -3,9 +3,9 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import Header from "components/Header";
+import Hero from "components/Profile/Hero";
 import JournalEntriesContainer from "components/JournalEntries";
 import Loading from "components/Loading";
-import Hero from "components/Profile/Hero";
 import MantelAndScrap from "components/Profile/MantelAndScrap";
 import ProfileCameo from "components/Profile/ProfileCameo";
 import ProfileDescription from "components/Profile/ProfileDescription";

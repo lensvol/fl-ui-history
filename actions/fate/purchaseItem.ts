@@ -1,4 +1,5 @@
 import { ActionCreator } from "redux";
+
 import { ThunkDispatch } from "redux-thunk";
 
 import { fetchActions } from "actions/actions";
@@ -61,7 +62,7 @@ const purchaseItemFailure: ActionCreator<PurchaseItemFailure> = (
 
 export default purchaseItem(new FateService());
 
-export function purchaseItem(
+function purchaseItem(
   service: IFateService
 ): (
   fateData: PurchaseFateItemRequest
@@ -81,7 +82,11 @@ export function purchaseItem(
         dispatch(fetchActions());
 
         // Fetch opp cards and available storylets in case one of them changed
-        dispatch(fetchCards({ background: true }));
+        dispatch(
+          fetchCards({
+            background: true,
+          })
+        );
         dispatch(fetchAvailable());
       }
 

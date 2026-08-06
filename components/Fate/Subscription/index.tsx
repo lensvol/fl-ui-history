@@ -1,15 +1,25 @@
-import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
 import React, { useCallback, useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+
 import ReactCSSTransitionReplace from "react-css-transition-replace";
 
-import * as SubscriptionActionCreators from "actions/subscription";
+import { useDispatch } from "react-redux";
 
-import SubscriptionComponent from "./Subscription";
+import { fetch as fetchSubscription } from "actions/subscription";
+
+import SubscriptionComponent from "components/Fate/Subscription/Subscription";
+import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";
 
 import { PremiumSubscriptionType } from "types/subscription";
 
-function SubscriptionContainer({
+interface Props {
+  hasSubscription: boolean;
+  onClick?: () => void;
+  renewDate?: string;
+  showButtonOnly?: boolean;
+  subscriptionType?: PremiumSubscriptionType;
+}
+
+export default function SubscriptionContainer({
   hasSubscription,
   onClick,
   renewDate,
@@ -23,8 +33,10 @@ function SubscriptionContainer({
   const handleClick = useCallback(() => {
     if (onClick) {
       onClick();
+
       return;
     }
+
     setIsSubscriptionModalOpen(true);
   }, [onClick]);
 
@@ -34,21 +46,22 @@ function SubscriptionContainer({
 
   // Fetch subscription on load
   useEffect(() => {
-    dispatch(SubscriptionActionCreators.fetch());
+    dispatch(fetchSubscription());
   }, [dispatch]);
 
   return (
     <>
       <ReactCSSTransitionReplace
-        transitionName="fade-wait"
         transitionEnterTimeout={100}
         transitionLeaveTimeout={100}
+        transitionName="fade-wait"
       >
         <SubscriptionComponent
           onClick={handleClick}
           showButtonOnly={showButtonOnly}
         />
       </ReactCSSTransitionReplace>
+
       <PurchaseSubscriptionModal
         hasSubscription={hasSubscription}
         isOpen={isSubscriptionModalOpen}
@@ -60,12 +73,4 @@ function SubscriptionContainer({
   );
 }
 
-interface Props {
-  hasSubscription: boolean;
-  onClick?: () => void;
-  renewDate?: string;
-  showButtonOnly?: boolean;
-  subscriptionType?: PremiumSubscriptionType;
-}
-
-export default connect()(SubscriptionContainer);
+SubscriptionContainer.displayName = "SubscriptionContainer";

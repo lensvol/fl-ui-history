@@ -1,22 +1,18 @@
 import React, { useEffect } from "react";
-import AuthMethods from "components/Account/AuthMethods";
-import Loading from "components/Loading";
 
-import { connect, useDispatch } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import { fetch as fetchSettings } from "actions/settings";
 
-import { IAppState } from "types/app";
+import AuthMethods from "components/Account/AuthMethods";
+import Loading from "components/Loading";
 
-type Props = RouteComponentProps & ReturnType<typeof mapStateToProps>;
+import { useAppSelector } from "features/app/store";
 
-const mapStateToProps = ({ settings: { data, isFetching } }: IAppState) => ({
-  data,
-  isFetching,
-});
+export default function AuthenticationSection() {
+  const data = useAppSelector((state) => state.settings.data);
+  const isFetching = useAppSelector((state) => state.settings.isFetching);
 
-function AuthenticationSection({ data, isFetching }: Props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,17 +23,17 @@ function AuthenticationSection({ data, isFetching }: Props) {
 
   if (isFetching) {
     return (
-      <div style={{ padding: 24 }}>
+      <div
+        style={{
+          padding: 24,
+        }}
+      >
         <Loading spinner />
       </div>
     );
   }
 
-  return (
-    <>
-      <AuthMethods />
-    </>
-  );
+  return <AuthMethods />;
 }
 
-export default withRouter(connect(mapStateToProps)(AuthenticationSection));
+AuthenticationSection.displayName = "AuthenticationSection";

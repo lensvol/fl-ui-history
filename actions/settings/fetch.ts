@@ -1,6 +1,13 @@
-import { handleVersionMismatch } from "actions/versionSync";
-import * as SettingsActionTypes from "actiontypes/settings";
 import { ActionCreator } from "redux";
+
+import { handleVersionMismatch } from "actions/versionSync";
+
+import {
+  FETCH_SETTINGS_FAILURE,
+  FETCH_SETTINGS_REQUESTED,
+  FETCH_SETTINGS_SUCCESS,
+} from "actiontypes/settings";
+
 import { Either, Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
 import SettingsService, {
@@ -9,38 +16,35 @@ import SettingsService, {
 } from "services/SettingsService";
 
 export type FetchSettingsSuccess = {
-  type: typeof SettingsActionTypes.FETCH_SETTINGS_SUCCESS;
+  type: typeof FETCH_SETTINGS_SUCCESS;
   payload: FetchSettingsResponse;
 };
 
-export type FetchSettingsRequested = {
-  type: typeof SettingsActionTypes.FETCH_SETTINGS_REQUESTED;
+type FetchSettingsRequested = {
+  type: typeof FETCH_SETTINGS_REQUESTED;
 };
 
-export type FetchSettingsFailure = {
-  type: typeof SettingsActionTypes.FETCH_SETTINGS_FAILURE;
+type FetchSettingsFailure = {
+  type: typeof FETCH_SETTINGS_FAILURE;
 };
 
 export type FetchSettingsActions =
   FetchSettingsSuccess | FetchSettingsRequested | FetchSettingsFailure;
 
-export const fetchSettingsRequested = () => ({
-  type: SettingsActionTypes.FETCH_SETTINGS_REQUESTED,
+const fetchSettingsRequested = () => ({
+  type: FETCH_SETTINGS_REQUESTED,
   isFetching: true,
 });
 
-export const fetchSettingsSuccess: ActionCreator<FetchSettingsSuccess> = (
+const fetchSettingsSuccess: ActionCreator<FetchSettingsSuccess> = (
   response: FetchSettingsResponse
 ) => ({
-  type: SettingsActionTypes.FETCH_SETTINGS_SUCCESS,
+  type: FETCH_SETTINGS_SUCCESS,
   payload: response,
 });
 
-export const fetchSettingsFailure = (_error?: any) => ({
-  type: SettingsActionTypes.FETCH_SETTINGS_FAILURE,
-  // isFetching: false,
-  // error: true,
-  // status: error.response && error.response.status,
+const fetchSettingsFailure = (_error?: any) => ({
+  type: FETCH_SETTINGS_FAILURE,
 });
 
 /** ----------------------------------------------------------------------------
@@ -55,9 +59,12 @@ export function fetch(service: ISettingsService) {
 
     try {
       const result: Either<FetchSettingsResponse> = await service.fetch();
+
       if (result instanceof Success) {
         const { messageAboutStorylets } = result.data;
+
         const { messageAboutStories } = result.data as any;
+
         if (
           messageAboutStorylets === undefined &&
           messageAboutStories !== undefined
@@ -65,20 +72,27 @@ export function fetch(service: ISettingsService) {
           console.warn(
             "Settings response contains a `messageAboutStories` field but no `messageAboutStorylets` field; patching"
           );
+
           result.data.messageAboutStorylets = messageAboutStories;
         }
+
         const { data } = result;
+
         dispatch(fetchSettingsSuccess(data));
       } else {
         dispatch(fetchSettingsFailure());
       }
+
       return result;
     } catch (error) {
       if (error instanceof VersionMismatch) {
         dispatch(handleVersionMismatch(error));
+
         return error;
       }
+
       dispatch(fetchSettingsFailure(error));
+
       throw error;
     }
   };

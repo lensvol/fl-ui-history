@@ -1,22 +1,25 @@
 import React, { useMemo } from "react";
-import { connect } from "react-redux";
+
 import classnames from "classnames";
+
 import Image from "components/Image";
 import Loading from "components/Loading";
 
-import { Props } from "./index";
+type Props = {
+  avatar?: string;
+  fateCost: number;
+  isFree: boolean;
+  isSubmitting: boolean;
+  onConfirm: () => void;
+};
 
-export function ConfirmModalReady({
+export default function ConfirmModalReady({
   avatar,
   fateCost,
-  isSubmitting,
   isFree,
+  isSubmitting,
   onConfirm,
-}: Props & {
-  fateCost: number;
-  isSubmitting: boolean;
-  onConfirm: (_args?: any) => void;
-}) {
+}: Props) {
   const buttonLabel = useMemo(() => {
     if (isSubmitting) {
       return <Loading spinner small />;
@@ -32,21 +35,24 @@ export function ConfirmModalReady({
   return (
     <div>
       <h3 className="heading heading--2">Change your face?</h3>
+
       <hr />
+
       <div className="media dialog__media">
         <div className="media__content">
           <div className="media__left">
             <div>
               <Image
-                className="media__object"
-                icon={avatar}
                 alt={avatar}
-                width={78}
+                className="media__object"
                 height={100}
+                icon={avatar}
                 type="cameo"
+                width={78}
               />
             </div>
           </div>
+
           <div className="media__body">
             <p>Are you sure?</p>
             {isFree ? (
@@ -59,17 +65,19 @@ export function ConfirmModalReady({
               </p>
             )}
           </div>
+
           <hr />
         </div>
+
         <div className="dialog__actions">
           <button
             className={classnames(
               "button",
               isFree ? "button--primary" : "button--secondary"
             )}
+            disabled={isSubmitting}
             onClick={onConfirm}
             type="button"
-            disabled={isSubmitting}
           >
             {buttonLabel}
           </button>
@@ -79,4 +87,4 @@ export function ConfirmModalReady({
   );
 }
 
-export default connect()(ConfirmModalReady);
+ConfirmModalReady.displayName = "ConfirmModalReady";

@@ -12,7 +12,6 @@ import { useAppSelector } from "features/app/store";
 
 export default function Cards() {
   const showOps = useAppSelector((state) => state.map.showOps);
-
   const wasInvalidatedByEquipmentChange = useAppSelector(
     (state) => state.cards.wasInvalidatedByEquipmentChange
   );

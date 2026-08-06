@@ -1,13 +1,18 @@
 import React, { useEffect } from "react";
-import { connect, useDispatch } from "react-redux";
-import { IAppState } from "types/app";
-import MetaQuality from "components/Account/MetaQuality";
+
+import { useDispatch } from "react-redux";
 
 import { fetch as fetchSettings } from "actions/settings";
 
+import MetaQuality from "components/Account/MetaQuality";
 import Loading from "components/Loading";
 
-export const MetaQualities = ({ data, isFetching }: Props) => {
+import { useAppSelector } from "features/app/store";
+
+export default function MetaQualities() {
+  const data = useAppSelector((state) => state.settings.data);
+  const isFetching = useAppSelector((state) => state.settings.isFetching);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,7 +23,11 @@ export const MetaQualities = ({ data, isFetching }: Props) => {
 
   if (isFetching) {
     return (
-      <div style={{ padding: 24 }}>
+      <div
+        style={{
+          padding: 24,
+        }}
+      >
         <Loading spinner />
       </div>
     );
@@ -39,13 +48,6 @@ export const MetaQualities = ({ data, isFetching }: Props) => {
       </ul>
     </div>
   );
-};
+}
 
-const mapStateToProps = ({ settings: { data, isFetching } }: IAppState) => ({
-  data,
-  isFetching,
-});
-
-type Props = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(MetaQualities);
+MetaQualities.displayName = "MetaQualities";

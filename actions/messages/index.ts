@@ -1,21 +1,26 @@
-import { CLEAR_NOTIFICATION } from "actiontypes/messages";
 import { ActionCreator } from "redux";
-import accept, { AcceptAction } from "./accept";
-import cancel, { CancelAction } from "./cancel";
-import clearCache, { ClearMessagesCache } from "./clearCache";
-import closeDialog, { CloseDialog } from "./closeDialog";
-import deleteMessage, { DeleteAction } from "./deleteMessage";
-import emailMessage, { EmailAction } from "./emailMessage";
-import fetch, { FetchAllAction } from "./fetch";
+
+import accept, { AcceptAction } from "actions/messages/accept";
+import cancel, { CancelAction } from "actions/messages/cancel";
+import clearCache, { ClearMessagesCache } from "actions/messages/clearCache";
+import closeDialog, { CloseDialog } from "actions/messages/closeDialog";
+import deleteMessage, { DeleteAction } from "actions/messages/deleteMessage";
+import emailMessage, { EmailAction } from "actions/messages/emailMessage";
+import fetch, { FetchAllAction } from "actions/messages/fetch";
 import fetchFeedMessages, {
   FetchFeedMessagesAction,
-} from "./fetchFeedMessages";
+} from "actions/messages/fetchFeedMessages";
 import fetchInteractions, {
   FetchInteractionsAction,
-} from "./fetchInteractions";
-import reject, { RejectAction } from "./reject";
+} from "actions/messages/fetchInteractions";
+import reject, { RejectAction } from "actions/messages/reject";
 
-export type ClearNotification = { type: typeof CLEAR_NOTIFICATION };
+import { CLEAR_NOTIFICATION } from "actiontypes/messages";
+
+type ClearNotification = {
+  type: typeof CLEAR_NOTIFICATION;
+};
+
 const clearNotification: ActionCreator<ClearNotification> = () => ({
   type: CLEAR_NOTIFICATION,
 });
@@ -34,10 +39,10 @@ export type MessagesAction =
   | RejectAction;
 
 export {
-  clearCache,
-  clearNotification,
   accept,
   cancel,
+  clearCache,
+  clearNotification,
   closeDialog,
   deleteMessage,
   emailMessage,

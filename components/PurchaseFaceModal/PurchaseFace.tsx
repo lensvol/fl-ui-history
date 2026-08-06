@@ -1,27 +1,34 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import { useDispatch } from "react-redux";
+
 import classnames from "classnames";
-import { connect } from "react-redux";
 
 import { fetch as fetchAvatars } from "actions/registration";
-import Loading from "components/Loading";
 
-import { ThunkDispatch } from "redux-thunk";
+import Loading from "components/Loading";
+import Avatar from "components/PurchaseFaceModal/Avatar";
+import ConfirmModal from "components/PurchaseFaceModal/ConfirmModal";
+import NotEnoughFateWarning from "components/PurchaseFaceModal/NotEnoughFateWarning";
+
 import getFaceChangeFateCost from "selectors/fate/getFaceChangeFateCost";
 import getCanChangeFaceForFree from "selectors/myself/getCanChangeFaceForFree";
-import { IAppState } from "types/app";
-import NotEnoughFateWarning from "./NotEnoughFateWarning";
-import Avatar from "./Avatar";
-import ConfirmModal from "./ConfirmModal";
 
-export function PurchaseFace(props: Props) {
-  const {
-    avatars,
-    canChangeFaceForFree,
-    currentFate,
-    dispatch,
-    fateCost,
-    onRequestClose,
-  } = props;
+import { useAppSelector } from "features/app/store";
+
+type Props = {
+  onRequestClose: (_args?: any) => void;
+};
+
+export default function PurchaseFace({ onRequestClose }: Props) {
+  const avatars = useAppSelector((state) => state.registration.avatars);
+  const currentFate = useAppSelector((state) => state.fate.data.currentFate);
+  const canChangeFaceForFree = useAppSelector((state) =>
+    getCanChangeFaceForFree(state)
+  );
+  const fateCost = useAppSelector((state) => getFaceChangeFateCost(state));
+
+  const dispatch = useDispatch();
 
   const [hasLoadedAvatars, setHasLoadedAvatars] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -64,10 +71,15 @@ export function PurchaseFace(props: Props) {
 
   return (
     <>
-      <div style={{ flex: 1 }}>
+      <div
+        style={{
+          flex: 1,
+        }}
+      >
         <h3 className="heading heading--2 heading--inverse">
           Change your face
         </h3>
+
         {fateCost > 0 && (
           <NotEnoughFateWarning
             currentFate={currentFate}
@@ -75,13 +87,16 @@ export function PurchaseFace(props: Props) {
             fateCost={fateCost}
           />
         )}
+
         {canChangeFaceForFree && (
           <div>
             You have an opportunity to change your face. Choose your new face
             below.
           </div>
         )}
+
         <hr />
+
         <div>
           <ul
             className="list--unstyled avatar-list"
@@ -105,6 +120,7 @@ export function PurchaseFace(props: Props) {
           </ul>
         </div>
       </div>
+
       <ConfirmModal
         avatar={selectedAvatar}
         isOpen={isConfirmModalOpen}
@@ -121,20 +137,4 @@ export function PurchaseFace(props: Props) {
   );
 }
 
-const mapStateToProps = ({
-  fate,
-  myself: { qualities },
-  registration: { avatars },
-}: IAppState) => ({
-  avatars,
-  currentFate: fate.data.currentFate,
-  canChangeFaceForFree: getCanChangeFaceForFree({ myself: { qualities } }),
-  fateCost: getFaceChangeFateCost({ fate }),
-});
-
-type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: ThunkDispatch<any, any, any>;
-  onRequestClose: (_args?: any) => void;
-};
-
-export default connect(mapStateToProps)(PurchaseFace);
+PurchaseFace.displayName = "PurchaseFace";

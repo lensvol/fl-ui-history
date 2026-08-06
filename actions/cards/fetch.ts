@@ -1,17 +1,13 @@
 /* eslint-disable func-names */
-import { PutInAction } from "actions/storylet/putIn";
-import { handleVersionMismatch } from "actions/versionSync";
 import { ActionCreator } from "redux";
+
 import { ThunkDispatch } from "redux-thunk";
-import { Either, Failure } from "services/BaseMonadicService";
-import { VersionMismatch } from "services/BaseService";
-import CardService, {
-  FetchCardsResponse,
-  ICardsService,
-} from "services/CardsService";
-import { setNextAvailable, TimerAction } from "actions/timer";
+
 import { putIn } from "actions/storylet";
-import computeNextActionsAt from "utils/computeNextActionsAt";
+import { PutInAction } from "actions/storylet/putIn";
+import { setNextAvailable, TimerAction } from "actions/timer";
+import { handleVersionMismatch } from "actions/versionSync";
+
 import {
   BACKGROUND_FETCH_CARDS_REQUESTED,
   CARDS_SHOULD_FETCH,
@@ -19,23 +15,39 @@ import {
   FETCH_CARDS_REQUESTED,
   FETCH_CARDS_SUCCESS,
 } from "actiontypes/cards";
+
+import { Either, Failure } from "services/BaseMonadicService";
+import { VersionMismatch } from "services/BaseService";
+import CardService, {
+  FetchCardsResponse,
+  ICardsService,
+} from "services/CardsService";
+
 import { IAppState } from "types/app";
 
-export type FetchCardsRequested = {
+import computeNextActionsAt from "utils/computeNextActionsAt";
+
+type FetchCardsRequested = {
   type: typeof BACKGROUND_FETCH_CARDS_REQUESTED | typeof FETCH_CARDS_REQUESTED;
 };
-export type FetchCardsSuccess = {
+
+type FetchCardsSuccess = {
   type: typeof FETCH_CARDS_SUCCESS;
   payload: FetchCardsResponse;
 };
-export type FetchCardsFailure = { type: typeof FETCH_CARDS_FAILURE };
 
-export type ShouldFetchCards = { type: typeof CARDS_SHOULD_FETCH };
+type FetchCardsFailure = {
+  type: typeof FETCH_CARDS_FAILURE;
+};
+
+type ShouldFetchCards = {
+  type: typeof CARDS_SHOULD_FETCH;
+};
 
 export type FetchCardsActions =
+  | FetchCardsFailure
   | FetchCardsRequested
   | FetchCardsSuccess
-  | FetchCardsFailure
   | ShouldFetchCards;
 
 const fetchRequested: ActionCreator<FetchCardsRequested> = (
@@ -44,7 +56,7 @@ const fetchRequested: ActionCreator<FetchCardsRequested> = (
   type: background ? BACKGROUND_FETCH_CARDS_REQUESTED : FETCH_CARDS_REQUESTED,
 });
 
-export const fetchSuccess: ActionCreator<FetchCardsSuccess> = (
+const fetchSuccess: ActionCreator<FetchCardsSuccess> = (
   data: FetchCardsResponse
 ) => ({
   type: FETCH_CARDS_SUCCESS,
@@ -79,7 +91,11 @@ export function fetch(
 ): (
   options?: FetchOptions
 ) => (
-  dispatch: ThunkDispatch<Either<FetchCardsResponse>, IAppState, FetchActions>,
+  dispatch: ThunkDispatch<
+    Promise<Either<FetchCardsResponse>>,
+    IAppState,
+    FetchActions
+  >,
   getState: () => IAppState
 ) => Promise<Either<FetchCardsResponse> | VersionMismatch> {
   return function (options: FetchOptions = {}) {
@@ -108,18 +124,23 @@ export function fetch(
 
         if (result instanceof Failure) {
           dispatch(fetchFailure());
+
           return result;
         }
 
         const { data } = result;
+
         const { currentTime, isInAStorylet, nextActionAt } = data;
+
         if (!preventMove && isInAStorylet && !background) {
           dispatch(putIn());
         }
+
         const nextActionsAt = computeNextActionsAt({
           currentTime,
           nextActionAt,
         });
+
         dispatch(setNextAvailable(nextActionsAt));
         dispatch(fetchSuccess(data));
 
@@ -127,10 +148,12 @@ export function fetch(
       } catch (error) {
         if (error instanceof VersionMismatch) {
           dispatch(handleVersionMismatch(error));
+
           return error;
         }
 
         dispatch(fetchFailure());
+
         throw error;
       }
     };

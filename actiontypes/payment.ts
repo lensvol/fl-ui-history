@@ -1,11 +1,8 @@
 export const OPEN_DIALOG = "payment/OPEN_DIALOG";
-export const CLOSE_DIALOG = "payment/CLOSE_DIALOG";
 
 export const SELECT_CURRENCY_REQUESTED = "payment/SELECT_CURRENCY_REQUESTED";
 export const SELECT_CURRENCY_SUCCESS = "payment/SELECT_CURRENCY_SUCCESS";
 export const SELECT_CURRENCY_FAILURE = "payment/SELECT_CURRENCY_FAILURE";
-
-export const SELECT_PACKAGE = "payment/SELECT_PACKAGE";
 
 export const PURCHASE_REQUESTED = "payment/PURCHASE_REQUESTED";
 export const PURCHASE_SUCCESS = "payment/PURCHASE_SUCCESS";

@@ -93,4 +93,3 @@ export const CLOSE_CANNOTUSE_DIALOG = "storylet/CLOSE_CANNOTUSE_DIALOG";
 
 // branch fate controls
 export const OPEN_REFRESH_DIALOG = "storylet/OPEN_REFRESH_DIALOG";
-export const OPEN_FATE_PURCHASE = "storylet/OPEN_FATE_PURCHASE";

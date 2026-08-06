@@ -1,37 +1,59 @@
-import { ActContextValue } from "components/Act/ActContext";
 import React, { useCallback, useMemo } from "react";
+
+import { useDispatch } from "react-redux";
+
 import classnames from "classnames";
-import Loading from "components/Loading";
-import { connect } from "react-redux";
-import { Field, Formik, Form } from "formik";
+
+import { Field, Form, Formik } from "formik";
 
 import { fetch as fetchMessages } from "actions/messages";
 import { goBackFromSocialAct, sendSocialInvite } from "actions/storylet";
-import { ThunkDispatch } from "redux-thunk";
+
+import { ActContextValue } from "components/Act/ActContext";
+import getContactName from "components/Act/getContactName";
+import Loading from "components/Loading";
 
 import {
   ApiCharacterFriend,
   ApiInternalSocialActRequest,
 } from "services/StoryletService";
-import { IAppState } from "types/app";
 
-import getContactName from "./getContactName";
+import { useAppSelector } from "features/app/store";
 
-function InvitationForm({
-  actMessagePreview,
-  branch,
+type Props = {
+  designatedFriend?: {
+    name: string;
+    userName: string;
+  };
+  eligibleFriends: ApiCharacterFriend[];
+  ineligibleContacts: ActContextValue["ineligibleContacts"];
+  isFetchingIneligibleContacts: boolean;
+  selectedContactId?: number;
+};
+
+export default function InvitationForm({
   designatedFriend,
-  dispatch,
   eligibleFriends,
   ineligibleContacts,
   isFetchingIneligibleContacts,
   selectedContactId,
 }: Props) {
+  const actMessagePreview = useAppSelector(
+    (state) => state.socialAct.actMessagePreview
+  );
+  const branch = useAppSelector((state) => state.socialAct.branch);
+
+  const dispatch = useDispatch();
+
   const contactName = useMemo(() => {
     if (designatedFriend) {
       return designatedFriend.name;
     }
-    return getContactName({ eligibleFriends, selectedContactId });
+
+    return getContactName({
+      eligibleFriends,
+      selectedContactId,
+    });
   }, [designatedFriend, eligibleFriends, selectedContactId]);
 
   const ineligibleDesignatedFriend = useMemo(() => {
@@ -40,6 +62,7 @@ function InvitationForm({
     }
 
     const match = `${designatedFriend.name} (${designatedFriend.userName})`;
+
     return ineligibleContacts.find((c: { name: string }) => c.name === match);
   }, [designatedFriend, ineligibleContacts]);
 
@@ -96,7 +119,7 @@ function InvitationForm({
 
   const handleSubmit = useCallback(
     async (values) => {
-      if (branch?.id === undefined) {
+      if (branch === undefined) {
         return;
       }
 
@@ -105,7 +128,7 @@ function InvitationForm({
       }
 
       const data: ApiInternalSocialActRequest = {
-        branchId: branch?.id,
+        branchId: branch.id,
         targetCharacterId: selectedContactId,
         userMessage: values.userMessage,
       };
@@ -145,6 +168,7 @@ function InvitationForm({
           <h3 className="heading heading--3 u-space-above act__invitation-form-header">
             {`${contactName} will see this message:`}
           </h3>
+
           {actMessagePreview && (
             <p
               className="act__preset-invitation-text"
@@ -165,6 +189,7 @@ function InvitationForm({
           {ineligibleDesignatedFriend !== undefined && (
             <div>{contactName} is currently ineligible to receive this.</div>
           )}
+
           <FormButtons
             disabled={disabled}
             isSubmitting={isSubmitting}
@@ -176,33 +201,30 @@ function InvitationForm({
   );
 }
 
-function FormButtons({
-  disabled,
-  isSubmitting,
-  onGoBack,
-}: {
+type FormButtonProps = {
   disabled: boolean;
   isSubmitting: boolean;
   onGoBack: () => void;
-}) {
+};
+
+function FormButtons({ disabled, isSubmitting, onGoBack }: FormButtonProps) {
   return (
     <p className="buttons buttons--no-squash act__send-or-go-back">
       <button
-        type="submit"
         className={classnames(
-          "button button--primary",
-          "button--no-margin",
+          "button button--primary button--no-margin",
           disabled && "button--disabled"
         )}
         disabled={disabled || isSubmitting}
+        type="submit"
       >
         {isSubmitting ? <Loading spinner small /> : <span>Choose</span>}
       </button>
 
       <button
-        type="button"
         className="button button--primary button--no-margin"
         onClick={onGoBack}
+        type="button"
       >
         <i className="fa fa-arrow-left" /> Back
       </button>
@@ -210,24 +232,4 @@ function FormButtons({
   );
 }
 
-type OwnProps = {
-  designatedFriend: { name: string; userName: string } | undefined;
-  eligibleFriends: ApiCharacterFriend[];
-  ineligibleContacts: ActContextValue["ineligibleContacts"];
-  isFetchingIneligibleContacts: boolean;
-  selectedContactId: number | undefined;
-};
-
-function mapStateToProps({
-  socialAct: { actMessagePreview, branch },
-}: IAppState) {
-  return {
-    actMessagePreview,
-    branch,
-  };
-}
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type Props = OwnProps & StateProps & { dispatch: ThunkDispatch<any, any, any> };
-
-export default connect(mapStateToProps)(InvitationForm);
+InvitationForm.displayName = "InvitationForm";

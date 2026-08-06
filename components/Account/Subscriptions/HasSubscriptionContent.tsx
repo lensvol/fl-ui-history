@@ -180,3 +180,5 @@ export default function HasSubscriptionContent({ onClick }: Props) {
     </div>
   );
 }
+
+HasSubscriptionContent.displayName = "HasSubscriptionContent";

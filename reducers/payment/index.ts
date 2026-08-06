@@ -1,16 +1,13 @@
 import {
-  CLOSE_DIALOG,
   OPEN_DIALOG,
   PURCHASE_FAILURE,
   PURCHASE_SUCCESS,
   SELECT_CURRENCY_FAILURE,
   SELECT_CURRENCY_REQUESTED,
   SELECT_CURRENCY_SUCCESS,
-  SELECT_PACKAGE,
 } from "actiontypes/payment";
 
 import selectCurrencySuccess from "reducers/payment/selectCurrencySuccess";
-import selectPackage from "reducers/payment/selectPackage";
 
 import { IPaymentState } from "types/payment";
 
@@ -48,14 +45,6 @@ export default function reducer(
         paymentType: payload.paymentType,
       };
 
-    case CLOSE_DIALOG:
-      return {
-        ...state,
-        selectedPackage: null,
-        isSuccess: false,
-        message: null,
-      };
-
     case SELECT_CURRENCY_REQUESTED:
       return {
         ...state,
@@ -73,9 +62,6 @@ export default function reducer(
         isFetching: false,
         currency: payload.currency,
       };
-
-    case SELECT_PACKAGE:
-      return selectPackage(state, payload);
 
     case PURCHASE_FAILURE:
       return {
