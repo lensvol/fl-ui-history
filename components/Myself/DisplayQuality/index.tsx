@@ -22,6 +22,7 @@ export default function DisplayQuality({ isChanging, item, onClick }: Props) {
       },
     ],
   };
+
   return (
     <>
       <DisplayQualitySmDown
@@ -30,6 +31,7 @@ export default function DisplayQuality({ isChanging, item, onClick }: Props) {
         onClick={onClick}
         tooltipData={tooltipData}
       />
+
       <DisplayQualityMdUp
         {...item}
         isChanging={isChanging}

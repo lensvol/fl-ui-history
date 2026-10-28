@@ -1,4 +1,5 @@
 import React from "react";
+
 import classnames from "classnames";
 
 type Props = {
@@ -13,9 +14,12 @@ export default function EmptyDisplayQuality({ isChanging, onClick }: Props) {
         "button--link icon display-quality display-quality--empty",
         isChanging && "display-quality--is-changing"
       )}
-      style={{ width: 40, height: 40 }}
-      type="button"
       onClick={onClick}
+      style={{
+        height: 40,
+        width: 40,
+      }}
+      type="button"
     />
   );
 }

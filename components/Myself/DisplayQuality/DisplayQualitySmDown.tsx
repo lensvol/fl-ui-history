@@ -49,6 +49,7 @@ export default function DisplayQualitySmDown({
             tooltipData={tooltipData}
           />
         </div>
+
         <div className="item__desc">
           <span className="js-item-name item__name">
             {shouldRenderNameAndLevel ? (
@@ -62,3 +63,5 @@ export default function DisplayQualitySmDown({
     </MediaSmDown>
   );
 }
+
+DisplayQualitySmDown.displayName = "DisplayQualitySmDown";

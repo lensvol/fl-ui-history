@@ -1,24 +1,33 @@
-import React, { Fragment, useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { chooseNewMantelpiece, chooseNewScrapbook } from "actions/myself";
 
-import QualityPicker from "components/QualityPicker";
 import DisplayQuality from "components/Myself/DisplayQuality";
 import EmptyDisplayQuality from "components/Myself/EmptyDisplayQuality";
+import QualityPicker from "components/QualityPicker";
+
+import { useAppSelector } from "features/app/store";
 
 import getItem from "selectors/myself/getItem";
 import getQualities from "selectors/qualityPicker/getQualities";
 
-import { IAppState } from "types/app";
 import { IQuality } from "types/qualities";
 
-export function PossibleDisplayQuality({
-  item,
-  nature,
-  qualityPickerQualities,
-}: Props) {
+type Props = {
+  itemId?: number;
+  nature: string;
+};
+
+export default function PossibleDisplayQuality(props: Props) {
+  const { nature } = props;
+
+  const item = useAppSelector((state) => getItem(state, props));
+  const qualityPickerQualities = useAppSelector((state) =>
+    getQualities(state, props)
+  );
+
   const dispatch = useDispatch();
 
   const [isChanging, setIsChanging] = useState(false);
@@ -51,7 +60,7 @@ export function PossibleDisplayQuality({
   );
 
   return (
-    <Fragment>
+    <>
       {item ? (
         <DisplayQuality
           isChanging={isChanging}
@@ -61,6 +70,7 @@ export function PossibleDisplayQuality({
       ) : (
         <EmptyDisplayQuality isChanging={isChanging} onClick={handleClick} />
       )}
+
       <QualityPicker
         activateButtonLabel="Flaunt"
         header={`Choose your new ${nature === "Thing" ? "Mantelpiece item" : "Scrapbook status"}`}
@@ -69,22 +79,8 @@ export function PossibleDisplayQuality({
         onRequestClose={handleRequestClose}
         qualities={qualityPickerQualities}
       />
-    </Fragment>
+    </>
   );
 }
 
 PossibleDisplayQuality.displayName = "PossibleDisplayQuality";
-
-interface OwnProps {
-  itemId: number | undefined;
-  nature: string;
-}
-
-const mapStateToProps = (state: IAppState, props: OwnProps) => ({
-  item: getItem(state, props),
-  qualityPickerQualities: getQualities(state, props),
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(PossibleDisplayQuality);

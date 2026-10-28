@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import classnames from "classnames";
 
+import shareContent from "actions/profile/shareContent";
+
 import Config from "configuration";
 
 import Buttonlet from "components/Buttonlet";
@@ -15,8 +17,6 @@ import MediaSmDown from "components/Responsive/MediaSmDown";
 import ShareDialog from "components/ShareDialog";
 import FrequencyButtonlet from "components/StoryletRoot/FrequencyButtonlet";
 import TippyWrapper from "components/TippyWrapper";
-
-import { shareContent } from "features/profile";
 
 import { IAppState } from "types/app";
 import { StoryletRootData } from "types/storylet";
@@ -64,8 +64,11 @@ export function StoryletRoot({
         })
       );
 
-      setShareMessageResponse(result.payload?.message);
-      setShareErrorResponse(result.error?.message);
+      if (result?.isSuccess) {
+        setShareMessageResponse(result.message);
+      } else {
+        setShareErrorResponse(result?.message);
+      }
 
       setIsSharing(false);
 

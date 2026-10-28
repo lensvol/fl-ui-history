@@ -1,91 +1,76 @@
+import React, { useCallback } from "react";
+
+import { useDispatch } from "react-redux";
+
 import { hideMap } from "actions/map";
 import { setTab } from "actions/subtabs";
+
 import Cards from "components/Cards";
 import SmallCards from "components/Cards/components/SmallCards";
 import Loading from "components/Loading";
 import MediaLgDown from "components/Responsive/MediaLgDown";
 import MediaMdUp from "components/Responsive/MediaMdUp";
 import MediaSmDown from "components/Responsive/MediaSmDown";
-import InnerTabs from "components/StoryletsAvailable/components/InnerTabs";
+import StoryletInnerTabs from "components/StoryletsAvailable/components/StoryletInnerTabs";
 import StoryletStagger from "components/StoryletsAvailable/components/StoryletStagger";
 import WelcomeAndTravel from "components/StoryletsAvailable/components/WelcomeAndTravel";
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
 
-import { ThunkDispatch } from "redux-thunk";
-import { IAppState } from "types/app";
-import { SOMETIMES, StoryletActiveTab as ActiveTab } from "types/subtabs";
+import { useAppSelector } from "features/app/store";
 
-class StoryletsAvailableContainer extends Component<Props> {
-  static displayName = "StoryletsAvailableContainer";
+import { SOMETIMES, StoryletActiveTab } from "types/subtabs";
 
-  static defaultProps = {
-    storylets: undefined,
-  };
+export default function StoryletsAvailableContainer() {
+  const dispatch = useDispatch();
 
-  switchTab = (subtab: ActiveTab) => {
-    const { dispatch, isMapVisible } = this.props;
-    dispatch(setTab({ subtab, tab: "storylet" }));
+  const isMapVisible = useAppSelector((state) => state.map.isVisible);
+  const showOps = useAppSelector((state) => state.map.showOps);
+  const storylets = useAppSelector((state) => state.storylet.storylets);
+  const subtab = useAppSelector((state) => state.subtabs.storylet);
 
-    // If we're switching to the 'sometimes' subtab, then hide the map
-    if (subtab === "sometimes" && isMapVisible) {
-      dispatch(hideMap());
-    }
-  };
+  const onTabSwitch = useCallback(
+    (subtab: StoryletActiveTab) => {
+      dispatch(
+        setTab({
+          tab: "storylet",
+          subtab,
+        })
+      );
 
-  /**
-   * render
-   * @return {Object}
-   */
-  render() {
-    const { showOps, storylets, subtab } = this.props;
+      // If we're switching to the 'sometimes' subtab, then hide the map
+      if (subtab === "sometimes" && isMapVisible) {
+        dispatch(hideMap());
+      }
+    },
+    [dispatch, isMapVisible]
+  );
 
-    if (!storylets) {
-      return <Loading spinner />;
-    }
-
-    const onTabSwitch = this.switchTab;
-
-    return (
-      <Fragment>
-        <MediaLgDown>
-          <MediaMdUp>
-            <WelcomeAndTravel />
-          </MediaMdUp>
-        </MediaLgDown>
-
-        <MediaSmDown>
-          {showOps && <InnerTabs activeTab={subtab} onChange={onTabSwitch} />}
-          {subtab === SOMETIMES ? <SmallCards /> : <StoryletStagger />}
-        </MediaSmDown>
-
-        <MediaMdUp>
-          <Cards />
-          <StoryletStagger />
-        </MediaMdUp>
-      </Fragment>
-    );
+  if (!storylets) {
+    return <Loading spinner />;
   }
+
+  return (
+    <>
+      <MediaLgDown>
+        <MediaMdUp>
+          <WelcomeAndTravel />
+        </MediaMdUp>
+      </MediaLgDown>
+
+      <MediaSmDown>
+        {showOps && (
+          <StoryletInnerTabs activeTab={subtab} onChange={onTabSwitch} />
+        )}
+
+        {subtab === SOMETIMES ? <SmallCards /> : <StoryletStagger />}
+      </MediaSmDown>
+
+      <MediaMdUp>
+        <Cards />
+
+        <StoryletStagger />
+      </MediaMdUp>
+    </>
+  );
 }
 
-const mapStateToProps = (state: IAppState) => {
-  const {
-    map: { isVisible, showOps },
-    storylet: { phase, storylets },
-    subtabs: { storylet: subtab },
-  } = state;
-
-  return {
-    phase,
-    showOps,
-    storylets,
-    subtab,
-    isMapVisible: isVisible,
-  };
-};
-
-type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: ThunkDispatch<any, any, any>;
-};
-
-export default connect(mapStateToProps)(StoryletsAvailableContainer);
+StoryletsAvailableContainer.displayName = "StoryletsAvailableContainer";

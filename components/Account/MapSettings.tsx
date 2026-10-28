@@ -1,17 +1,23 @@
 import React from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
+
+import { useDispatch } from "react-redux";
+
 import { setFallbackMapPreferred } from "actions/map";
 
-interface Props {
-  dispatch: Function;
-  fallbackMapPreferred: boolean;
-}
+import { useAppSelector } from "features/app/store";
 
-export function MapSettings({ dispatch, fallbackMapPreferred }: Props) {
+export default function MapSettings() {
+  const dispatch = useDispatch();
+
+  const fallbackMapPreferred = useAppSelector(
+    (state) => state.map.fallbackMapPreferred
+  );
+
   const onChange = (e: any) => {
     const value = e.target.checked;
+
     dispatch(setFallbackMapPreferred(value));
+
     window.localStorage.setItem("use-fallback-map", value.toString());
   };
 
@@ -20,14 +26,15 @@ export function MapSettings({ dispatch, fallbackMapPreferred }: Props) {
       <h2 className="heading heading--2" id="map-settings">
         Map settings
       </h2>
+
       <ul>
         <li className="checkbox">
           <label>
             <input
-              id="js-map-compatibility-preference"
-              type="checkbox"
               checked={fallbackMapPreferred}
+              id="js-map-compatibility-preference"
               onChange={onChange}
+              type="checkbox"
             />
             Prefer compatibility version in this browser
           </label>
@@ -37,8 +44,4 @@ export function MapSettings({ dispatch, fallbackMapPreferred }: Props) {
   );
 }
 
-const mapStateToProps = ({ map: { fallbackMapPreferred } }: IAppState) => ({
-  fallbackMapPreferred,
-});
-
-export default connect(mapStateToProps)(MapSettings);
+MapSettings.displayName = "MapSettings";

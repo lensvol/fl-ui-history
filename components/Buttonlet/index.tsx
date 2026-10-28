@@ -1,12 +1,14 @@
 import React, { CSSProperties, useMemo } from "react";
+
 import classnames from "classnames";
-import { ITooltipData } from "components/ModalTooltip/types";
-import TippyWrapper from "components/TippyWrapper";
+
 import {
   useButtonletClassName,
   useCircleClassName,
   useIconClassName,
-} from "./hooks";
+} from "components/Buttonlet/hooks";
+import { ITooltipData } from "components/ModalTooltip/types";
+import TippyWrapper from "components/TippyWrapper";
 import TouchModalTooltip from "components/Tooltip/TouchModalTooltip";
 
 type Props = {
@@ -21,12 +23,11 @@ type Props = {
   local?: boolean;
   onClick?: (...args: any) => any;
   override?: boolean;
+  showModalTooltipOnTouch?: boolean;
   spin?: boolean;
   style?: CSSProperties;
   title?: string;
   tooltipData?: ITooltipData;
-  tooltipTimeout?: number;
-  showModalTooltipOnTouch?: boolean;
   type: string;
 };
 
@@ -34,15 +35,15 @@ export default function Buttonlet({
   classNames,
   disabled,
   focused,
-  onClick,
   local,
+  onClick,
   override,
-  type,
+  showModalTooltipOnTouch,
   spin,
   style,
   title,
   tooltipData,
-  showModalTooltipOnTouch,
+  type,
 }: Props) {
   const buttonletClassName = useButtonletClassName(
     classNames?.buttonletClassName,
@@ -54,12 +55,10 @@ export default function Buttonlet({
   );
 
   const containerClassName = classNames?.containerClassName;
-
   const circleClassName = useCircleClassName(
     classNames?.circleClassName,
     override
   );
-
   const iconClassName = useIconClassName(
     classNames?.iconClassName,
     override,
@@ -71,13 +70,13 @@ export default function Buttonlet({
     () => (
       <button
         aria-label={title}
-        onClick={onClick}
         className={classnames("buttonlet-container", containerClassName)}
-        type="button"
         disabled={disabled}
+        onClick={onClick}
+        type="button"
       >
         <span
-          className={classnames(buttonletClassName, ` buttonlet-${type}`)}
+          className={classnames(buttonletClassName, `buttonlet-${type}`)}
           style={style}
           title={title}
         >
@@ -104,9 +103,9 @@ export default function Buttonlet({
     if (showModalTooltipOnTouch) {
       return (
         <TouchModalTooltip
-          tooltipData={tooltipData}
-          onClick={onClick}
           disabled={disabled}
+          onClick={onClick}
+          tooltipData={tooltipData}
         >
           {component}
         </TouchModalTooltip>

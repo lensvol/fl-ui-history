@@ -1,25 +1,37 @@
 import React, { useCallback, useMemo } from "react";
 
-import { connect, DispatchProp } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import classnames from "classnames";
 
 import { clearAgentsNotification } from "actions/agents/fetchAgents";
 import { setTab } from "actions/subtabs";
 
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
+
 import { UIRestriction } from "types/myself";
 
-function InnerTabs({
-  agentsChanged,
-  dispatch,
-  history,
-  showAgentsUI,
-  showPossessionsUI,
-  subtab,
-}: Props) {
+export default function InnerTabs() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const hasAgentTabAlert = useAppSelector(
+    (state) => state.agents.hasNotification
+  );
+  const uiRestrictions = useAppSelector((state) => state.myself.uiRestrictions);
+  const subtab = useAppSelector((state) => state.subtabs.myself);
+
+  const showAgentsUI =
+    uiRestrictions === undefined ||
+    !uiRestrictions.find((restriction) => restriction === UIRestriction.Agents);
+  const showPossessionsUI =
+    uiRestrictions === undefined ||
+    !uiRestrictions.find(
+      (restriction) => restriction === UIRestriction.Possessions
+    );
+
   const goToMyself = useCallback(() => {
     setTab({
       tab: "myself",
@@ -74,9 +86,9 @@ function InnerTabs({
       classnames({
         "inner-tab": true,
         "inner-tab--active": subtab === "agents",
-        notifying: agentsChanged && subtab !== "agents",
+        notifying: hasAgentTabAlert && subtab !== "agents",
       }),
-    [agentsChanged, subtab]
+    [hasAgentTabAlert, subtab]
   );
 
   if (!showPossessionsUI) {
@@ -120,23 +132,4 @@ function InnerTabs({
   );
 }
 
-const mapStateToProps = ({
-  agents,
-  myself: { uiRestrictions },
-  subtabs: { myself: subtab },
-}: IAppState) => ({
-  agentsChanged: agents.hasNotification,
-  showAgentsUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Agents
-  ),
-  showPossessionsUI: !uiRestrictions?.find(
-    (restriction) => restriction === UIRestriction.Possessions
-  ),
-  subtab,
-});
-
-type Props = DispatchProp &
-  RouteComponentProps &
-  ReturnType<typeof mapStateToProps>;
-
-export default withRouter(connect(mapStateToProps)(InnerTabs));
+InnerTabs.displayName = "InnerTabs";

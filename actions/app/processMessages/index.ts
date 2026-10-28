@@ -18,7 +18,7 @@ import processStandardMessages from "actions/app/processMessages/processStandard
 import shouldFetchOpportunityCards from "actions/app/processMessages/shouldFetchOpportunityCards";
 import shouldPlansUpdate from "actions/app/processMessages/shouldPlansUpdate";
 import { shouldFetch as setOpportunitiesShouldFetch } from "actions/cards";
-import { fetch as fetchFate } from "actions/fate";
+import { fetchFate } from "actions/fate";
 import { fetchMap } from "actions/map";
 import { fetchMyself } from "actions/myself";
 import { fetchOutfit } from "actions/outfit";

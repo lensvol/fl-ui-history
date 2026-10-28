@@ -1,12 +1,14 @@
 import React from "react";
+
 import QualityUpdate from "components/QualityUpdates/QualityUpdate";
+
 import { ApiResultMessageQualityEffect } from "types/app/messages";
 
-export default function QualityUpdatesList({
-  updates,
-}: {
+type Props = {
   updates: ApiResultMessageQualityEffect[];
-}) {
+};
+
+export default function QualityUpdatesList({ updates }: Props) {
   return (
     <>
       {updates.map((update) => (
@@ -15,3 +17,5 @@ export default function QualityUpdatesList({
     </>
   );
 }
+
+QualityUpdatesList.displayName = "QualityUpdatesList";

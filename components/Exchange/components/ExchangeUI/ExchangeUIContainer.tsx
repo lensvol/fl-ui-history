@@ -208,9 +208,16 @@ export default function ExchangeUIContainer({
         // Check whether, by buying or selling stuff, we have acquired something new
         const myItems = shops["null"].items;
 
-        if (changes?.some((q: IQuality) => isNewQuality(q, myItems))) {
+        if (
+          changes !== undefined &&
+          changes.some((q: IQuality) => isNewQuality(q, myItems))
+        ) {
           // Dispatch a full on re-fetch of sellable items
-          dispatch(fetchAvailableItems("null", { background: true }));
+          dispatch(
+            fetchAvailableItems("null", {
+              background: true,
+            })
+          );
         }
       } else {
         // We should update the UI to show the success message
@@ -227,7 +234,6 @@ export default function ExchangeUIContainer({
   return (
     <ExchangeUI
       activeItem={activeItem}
-      buying={activeItem.forSale}
       countCharacterAlreadyHas={quantities[activeItem.availability.quality.id]}
       disabled={disabled}
       maxAmount={getMaxAmount()}

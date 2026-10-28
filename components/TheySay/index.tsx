@@ -2,12 +2,13 @@ import React, { useCallback, useState } from "react";
 
 import ReactCSSTransitionReplace from "react-css-transition-replace";
 
+import updateDescription from "actions/profile/updateDescription";
+
 import EditToggle from "components/TheySay/EditToggle";
 import TheySayForm from "components/TheySay/TheySayForm";
 import TheySayStatic from "components/TheySay/TheySayStatic";
 
 import { useAppDispatch, useAppSelector } from "features/app/store";
-import { updateDescription } from "features/profile";
 
 export default function TheySay() {
   const dispatch = useAppDispatch();

@@ -1,39 +1,50 @@
 import React, { useCallback } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { ThunkDispatch } from "redux-thunk";
 
-import * as MessageActions from "actions/messages";
+import { useDispatch } from "react-redux";
+
+import { clearNotification, closeDialog } from "actions/messages";
 import { setTab } from "actions/subtabs";
-import { IAppState } from "types/app";
 
-import MediaSmDown from "../Responsive/MediaSmDown";
-import MediaMdUp from "../Responsive/MediaMdUp";
-import Dialog from "../Dialog";
+import Dialog from "components/Dialog";
+import FeedMessages from "components/Messages/components/FeedMessages";
+import MessageInnerTabs from "components/Messages/components/MessageInnerTabs";
+import MediaMdUp from "components/Responsive/MediaMdUp";
+import MediaSmDown from "components/Responsive/MediaSmDown";
 
-import FeedMessages from "./components/FeedMessages";
-import InnerTabs from "./components/InnerTabs";
+import { useAppSelector } from "features/app/store";
 
-function Messages({ dialogMessage, dialogOpen, dispatch, subtab }: Props) {
-  const clearNotifications = useCallback(
-    () => dispatch(MessageActions.clearNotification()),
-    [dispatch]
-  );
+export default function Messages() {
+  const dispatch = useDispatch();
 
-  const closeDialog = useCallback(
-    () => dispatch(MessageActions.closeDialog()),
-    [dispatch]
-  );
+  const dialogMessage = useAppSelector((state) => state.messages.dialogMessage);
+  const dialogOpen = useAppSelector((state) => state.messages.dialogOpen);
+  const subtab = useAppSelector((state) => state.subtabs.messages);
+
+  const clearNotifications = useCallback(() => {
+    return dispatch(clearNotification());
+  }, [dispatch]);
+
+  const onCloseDialog = useCallback(() => {
+    return dispatch(closeDialog());
+  }, [dispatch]);
 
   const switchTab = useCallback(
-    (newSubtab) => dispatch(setTab({ subtab: newSubtab, tab: "messages" })),
+    (newSubtab) => {
+      return dispatch(
+        setTab({
+          subtab: newSubtab,
+          tab: "messages",
+        })
+      );
+    },
     [dispatch]
   );
 
   return (
     <div onClick={clearNotifications}>
       <MediaSmDown>
-        <InnerTabs activeTab={subtab} onChange={switchTab} />
+        <MessageInnerTabs activeTab={subtab} onChange={switchTab} />
+
         <div className="messages">
           <FeedMessages type={subtab} />
         </div>
@@ -42,14 +53,16 @@ function Messages({ dialogMessage, dialogOpen, dispatch, subtab }: Props) {
       <MediaMdUp>
         <div className="messages">
           <FeedMessages type="interactions" />
+
           <FeedMessages type="feedMessages" />
         </div>
       </MediaMdUp>
 
       {dialogOpen && (
-        <Dialog isOpen={dialogOpen} onRequestClose={closeDialog}>
+        <Dialog isOpen={dialogOpen} onRequestClose={onCloseDialog}>
           <div>
             <h1 className="travel__message heading heading--1">Warning!</h1>
+
             <p>{dialogMessage}</p>
           </div>
         </Dialog>
@@ -59,15 +72,3 @@ function Messages({ dialogMessage, dialogOpen, dispatch, subtab }: Props) {
 }
 
 Messages.displayName = "Messages";
-
-const mapStateToProps = (state: IAppState) => ({
-  dialogMessage: state.messages.dialogMessage,
-  dialogOpen: state.messages.dialogOpen,
-  subtab: state.subtabs.messages,
-});
-
-type Props = ReturnType<typeof mapStateToProps> & {
-  dispatch: ThunkDispatch<any, any, any>;
-};
-
-export default withRouter(connect(mapStateToProps)(Messages));

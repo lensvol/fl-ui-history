@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchAvatars } from "actions/registration";
+import { fetchAvatars } from "actions/registration";
 
 import Avatar from "components/CreateCharacter/components/AvatarSelection/Avatar";
 

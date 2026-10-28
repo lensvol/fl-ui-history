@@ -1,7 +1,13 @@
 import React, { PropsWithChildren } from "react";
+
 import classnames from "classnames";
 
-export default function PrimaryButton({ children, disabled, ...rest }: Props) {
+type Props = PropsWithChildren<{
+  disabled: boolean;
+  onClick: (...args: unknown[]) => unknown;
+}>;
+
+export default function PrimaryButton({ children, disabled, onClick }: Props) {
   return (
     <button
       className={classnames(
@@ -9,15 +15,12 @@ export default function PrimaryButton({ children, disabled, ...rest }: Props) {
         disabled && "button--disabled"
       )}
       disabled={disabled}
+      onClick={onClick}
       type="button"
-      {...rest}
     >
       {children}
     </button>
   );
 }
 
-type Props = PropsWithChildren<{
-  disabled: boolean;
-  onClick: (...args: unknown[]) => unknown;
-}>;
+PrimaryButton.displayName = "PrimaryButton";

@@ -8,7 +8,7 @@ import { SET_ACTIVE_SUBTAB, TOGGLE_ENHANCED_STORE } from "actiontypes/fate";
 
 import { FateSubtab } from "types/fate";
 
-export { default as fetch } from "actions/fate/fetch";
+export { default as fetchFate } from "actions/fate/fetch";
 export { default as purchaseItem } from "actions/fate/purchaseItem";
 
 type SetFateSubtab = {

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchCards } from "actions/cards";
+import { fetchCards } from "actions/cards";
 
 import SmallCardContainer from "components/Cards/components/SmallCardContainer";
 import SmallCountAndTimer from "components/Cards/components/SmallCountAndTimer";

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { fetchMap } from "actions/map";
-import { fetch as fetchSettings } from "actions/settings";
+import { fetchSettings } from "actions/settings";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";
 
 import Act from "components/Act";

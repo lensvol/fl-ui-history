@@ -49,19 +49,20 @@ const fetchSubscriptionFailure = (error: any) => ({
   status: error.response?.status,
 });
 
-export const fetch = (options?: FetchOptions) => async (dispatch: Dispatch) => {
-  if (!options?.fetchInBackground) {
-    dispatch(fetchSubscriptionRequested());
-  }
+export const fetchSubscription =
+  (options?: FetchOptions) => async (dispatch: Dispatch) => {
+    if (!options?.fetchInBackground) {
+      dispatch(fetchSubscriptionRequested());
+    }
 
-  try {
-    const { data } = await service.fetchSubscription();
+    try {
+      const { data } = await service.fetchSubscription();
 
-    dispatch(fetchSubscriptionSuccess(data));
-  } catch (error) {
-    dispatch(fetchSubscriptionFailure(error));
-  }
-};
+      dispatch(fetchSubscriptionSuccess(data));
+    } catch (error) {
+      dispatch(fetchSubscriptionFailure(error));
+    }
+  };
 
 const modifyBraintreeSubscriptionRequested = () => ({
   type: MODIFY_BRAINTREE_SUBSCRIPTION_REQUESTED,

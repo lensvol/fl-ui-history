@@ -3,13 +3,13 @@ import React, { Fragment, useCallback, useState } from "react";
 import classnames from "classnames";
 
 import { chooseNewMantelpiece, chooseNewScrapbook } from "actions/myself";
+import fetchProfile from "actions/profile/fetchProfile";
 
 import Image from "components/Image";
 import QualityPicker from "components/QualityPicker";
 import { buildTooltipData } from "components/SidebarQualities/utils";
 
 import { useAppDispatch, useAppSelector } from "features/app/store";
-import { fetchProfile } from "features/profile";
 
 import { IQuality } from "types/qualities";
 

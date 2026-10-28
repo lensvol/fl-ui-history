@@ -1,4 +1,4 @@
-import React, { useCallback, useState, PropsWithChildren } from "react";
+import React, { useCallback, useState } from "react";
 
 import { useDispatch } from "react-redux";
 
@@ -86,11 +86,13 @@ export default function Fate() {
                   You have {data.currentFate.toLocaleString("en-GB")} Fate
                   Points
                 </h1>
+
                 <p className="col-2-of-3 lede">
                   Buy Fate to get premium content, extra storylines or faster
                   progression.
                 </p>
               </div>
+
               <button
                 className="button button--secondary fate-header__button"
                 onClick={onOpenPurchaseFateModal}
@@ -111,57 +113,60 @@ export default function Fate() {
           </div>
 
           <div className="inner-tabs--fate" role="tablist">
-            <Tab
+            <FateTab
               activeTab={activeSubtab}
               onClick={setActiveTab}
               subtabType={SUBTAB_NEW}
             >
               <i className="fl-ico-story inner-tab__icon--fate" />
               <div className="inner-tab__label--fate">Purchase Stories</div>
-            </Tab>
+            </FateTab>
 
-            <Tab
+            <FateTab
               activeTab={activeSubtab}
               onClick={setActiveTab}
               subtabType={SUBTAB_RESET}
             >
               <i className="fl-ico-star inner-tab__icon--fate" />
               <div className="inner-tab__label--fate">Reset Stories</div>
-            </Tab>
+            </FateTab>
 
             <div id="inner-tab-separator" />
 
-            <Tab
+            <FateTab
               activeTab={activeSubtab}
               onClick={setActiveTab}
               subtabType={SUBTAB_GAMEPLAY}
             >
               <i className="fl-ico-deck inner-tab__icon--fate" />
               <div className="inner-tab__label--fate">Gameplay</div>
-            </Tab>
+            </FateTab>
 
-            <Tab
+            <FateTab
               activeTab={activeSubtab}
               onClick={setActiveTab}
               subtabType={SUBTAB_OTHER}
             >
               <i className="fl-ico-logo inner-tab__icon--fate" />
               <div className="inner-tab__label--fate">Other Games</div>
-            </Tab>
+            </FateTab>
           </div>
 
           <GameplayTab
             active={activeSubtab === SUBTAB_GAMEPLAY}
             onClick={handleClickFateCard}
           />
+
           <PurchaseStoriesTab
             active={activeSubtab === SUBTAB_NEW}
             onClick={handleClickFateCard}
           />
+
           <ResetStoriesTab
             active={activeSubtab === SUBTAB_RESET}
             onClick={handleClickFateCard}
           />
+
           <OtherGamesTab active={activeSubtab === SUBTAB_OTHER} />
 
           <PurchaseModal
@@ -187,18 +192,21 @@ export default function Fate() {
 
 Fate.displayName = "Fate";
 
-function Tab({
+type FateTabProps = {
+  activeTab: FateSubtab;
+  border?: boolean;
+  children: React.ReactNode;
+  onClick: (subtab: FateSubtab) => void;
+  subtabType: FateSubtab;
+};
+
+function FateTab({
   activeTab,
   border,
   children,
   onClick,
   subtabType,
-}: PropsWithChildren<{
-  activeTab: FateSubtab;
-  border?: boolean;
-  onClick: (subtab: FateSubtab) => void;
-  subtabType: FateSubtab;
-}>) {
+}: FateTabProps) {
   return (
     <button
       aria-selected={activeTab === subtabType}
@@ -216,4 +224,4 @@ function Tab({
   );
 }
 
-Tab.displayName = "Tab";
+FateTab.displayName = "FateTab";

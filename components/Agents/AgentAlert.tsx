@@ -69,6 +69,7 @@ export default function AgentAlert() {
           onClick={dismiss}
           type="close"
         />
+
         <div
           style={{
             display: "flex",
@@ -83,12 +84,14 @@ export default function AgentAlert() {
             height={40}
             width={40}
           />
+
           <div>
             <div className="heading heading--2">
-              {agent.name} has completed a Plot.
+              The {agent.name} has completed a Plot.
             </div>
           </div>
         </div>
+
         <p
           style={{
             marginBottom: 0,

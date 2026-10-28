@@ -62,3 +62,5 @@ export const NAME_CHANGED = "myself/NAME_CHANGED";
 
 // Journal view
 export const TOGGLE_JOURNAL_VIEW = "myself/TOGGLE_JOURNAL_VIEW";
+
+export const CLEAR_CHANGED = "myself/CLEAR_CHANGED";

@@ -1,96 +1,12 @@
-import { buildTooltipData } from "components/SidebarQualities/utils";
-import React, { Component } from "react";
+import React, { useCallback, useState } from "react";
 
-import { normalize } from "utils/stringFunctions";
-import Modal from "components/Modal";
 import Image from "components/Image";
+import Modal from "components/Modal";
+import { buildTooltipData } from "components/SidebarQualities/utils";
+
 import { IQuality } from "types/qualities";
 
-interface State {
-  filterString: string;
-}
-
-export default class QualityPicker extends Component<Props, State> {
-  mounted = false;
-
-  state = {
-    filterString: "",
-  };
-
-  componentDidMount = () => {
-    this.mounted = true;
-  };
-
-  componentWillUnmount = () => {
-    this.mounted = false;
-  };
-
-  handleClick = (item: IQuality) => {
-    const { onChoose, onRequestClose } = this.props;
-    onChoose(item);
-    onRequestClose();
-  };
-
-  handleFilterStringChange = (evt: any) => {
-    this.setState({ filterString: evt.target.value });
-  };
-
-  render = () => {
-    const { activateButtonLabel, header, isOpen, qualities, onRequestClose } =
-      this.props;
-    const { filterString } = this.state;
-
-    return (
-      <Modal
-        isOpen={isOpen}
-        className="modal-dialog--quality-picker"
-        onRequestClose={onRequestClose}
-      >
-        <div className="quality-picker">
-          <h1 className="heading heading--3">{header}</h1>
-          <input
-            className="form__control"
-            placeholder="Search"
-            type="text"
-            value={filterString}
-            onChange={this.handleFilterStringChange}
-          />
-          <div className="quality-picker__items">
-            {qualities
-              .filter(
-                (q) => normalize(q.name).indexOf(normalize(filterString)) >= 0
-              )
-              .map((item) => (
-                <div
-                  className="icon icon--inventory quality-picker__item"
-                  key={item.id}
-                >
-                  <Image
-                    icon={item.image}
-                    alt={item.nameAndLevel || item.name}
-                    type="small-icon"
-                    width={50}
-                    height={50}
-                    onClick={() => this.handleClick(item)}
-                    style={{ cursor: "pointer", imageRendering: "auto" }}
-                    tooltipData={{
-                      ...buildTooltipData(item),
-                      smallButtons: [
-                        {
-                          label: activateButtonLabel,
-                          action: () => this.handleClick(item),
-                        },
-                      ],
-                    }}
-                  />
-                </div>
-              ))}
-          </div>
-        </div>
-      </Modal>
-    );
-  };
-}
+import { normalize } from "utils/stringFunctions";
 
 interface Props {
   activateButtonLabel: string;
@@ -100,3 +16,83 @@ interface Props {
   onChoose: (quality: IQuality) => void;
   onRequestClose: () => void;
 }
+
+export default function QualityPicker({
+  activateButtonLabel,
+  header,
+  isOpen,
+  qualities,
+  onChoose,
+  onRequestClose,
+}: Props) {
+  const [filterString, setFilterString] = useState("");
+
+  const handleClick = useCallback(
+    (item: IQuality) => {
+      onChoose(item);
+      onRequestClose();
+    },
+    [onChoose, onRequestClose]
+  );
+
+  const handleFilterStringChange = useCallback((evt: any) => {
+    setFilterString(evt.target.value);
+  }, []);
+
+  return (
+    <Modal
+      className="modal-dialog--quality-picker"
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+    >
+      <div className="quality-picker">
+        <h1 className="heading heading--3">{header}</h1>
+
+        <input
+          className="form__control"
+          onChange={handleFilterStringChange}
+          placeholder="Search"
+          type="text"
+          value={filterString}
+        />
+
+        <div className="quality-picker__items">
+          {qualities
+            .filter(
+              (q) => normalize(q.name).indexOf(normalize(filterString)) >= 0
+            )
+            .map((item) => (
+              <div
+                className="icon icon--inventory quality-picker__item"
+                key={item.id}
+              >
+                <Image
+                  alt={item.nameAndLevel || item.name}
+                  height={50}
+                  icon={item.image}
+                  onClick={() => handleClick(item)}
+                  style={{
+                    cursor: "pointer",
+                    imageRendering: "auto",
+                  }}
+                  tooltipData={{
+                    ...buildTooltipData(item),
+                    smallButtons: [
+                      {
+                        action: () => handleClick(item),
+                        label: activateButtonLabel,
+                      },
+                    ],
+                  }}
+                  type="small-icon"
+                  width={50}
+                />
+              </div>
+            ))}
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+QualityPicker.displayName = "QualityPicker";

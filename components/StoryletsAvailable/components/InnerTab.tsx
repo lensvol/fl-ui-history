@@ -1,7 +1,20 @@
 import React from "react";
+
 import classnames from "classnames";
 
-export default function Tab({ bordered, isActive, onClick, children }: Props) {
+interface Props {
+  bordered: boolean;
+  children: React.ReactNode;
+  isActive: boolean;
+  onClick: (_?: any) => void;
+}
+
+export default function InnerTab({
+  bordered,
+  isActive,
+  onClick,
+  children,
+}: Props) {
   return (
     <button
       className={classnames(
@@ -18,13 +31,4 @@ export default function Tab({ bordered, isActive, onClick, children }: Props) {
   );
 }
 
-export interface Props {
-  bordered?: boolean;
-  children: React.ReactNode;
-  isActive: boolean;
-  onClick: (_?: any) => void;
-}
-
-Tab.defaultProps = {
-  bordered: false,
-};
+InnerTab.displayName = "InnerTab";

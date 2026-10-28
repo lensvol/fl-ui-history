@@ -18,8 +18,8 @@ type Props = IQuality & {
 
 export default function DisplayQualityMdUp({
   effectiveLevel,
-  isChanging,
   image,
+  isChanging,
   name,
   nameAndLevel,
   nature,
@@ -54,6 +54,7 @@ export default function DisplayQualityMdUp({
             {effectiveLevel.toLocaleString("en-GB")}
           </span>
         </div>
+
         <div>
           <span className="js-item-name item__name">
             {shouldRenderNameAndLevel ? (
@@ -67,3 +68,5 @@ export default function DisplayQualityMdUp({
     </MediaMdUp>
   );
 }
+
+DisplayQualityMdUp.displayName = "DisplayQualityMdUp";

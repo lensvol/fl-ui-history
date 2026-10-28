@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { fetchActions } from "actions/actions";
-import { fetch as fetchCards } from "actions/cards";
-import { fetch as fetchMessages } from "actions/messages";
+import { fetchCards } from "actions/cards";
+import { fetchMessages } from "actions/messages";
 import { setRemaining } from "actions/timer";
 
 import { MESSAGE_POLL_INTERVAL, TICK_RATE } from "constants/timer";

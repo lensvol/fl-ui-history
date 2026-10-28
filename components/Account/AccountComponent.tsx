@@ -1,6 +1,6 @@
-import Subscription from "components/Account/Sections/Subscription";
 import React, { useEffect, useMemo, useState } from "react";
 
+import AccountTabs from "components/Account/AccountTabs";
 import AccountContext, {
   TAB_TYPE_AUTH,
   TAB_TYPE_CONTACTS,
@@ -10,16 +10,14 @@ import AccountContext, {
   TAB_TYPE_SUBSCRIPTION,
   TAB_TYPE_USER,
   TabType,
-} from "./AccountContext";
-
-import AccountTabs from "./AccountTabs";
-
-import Authentication from "./Sections/Authentication";
-import ContactsSection from "./Sections/Contacts";
-import Deletion from "./Sections/Deletion";
-import Messaging from "./Sections/Messaging";
-import Preferences from "./Sections/Preferences";
-import UserProfile from "./Sections/UserProfile";
+} from "components/Account/AccountContext";
+import Authentication from "components/Account/Sections/Authentication";
+import ContactsSection from "components/Account/Sections/Contacts";
+import Deletion from "components/Account/Sections/Deletion";
+import Messaging from "components/Account/Sections/Messaging";
+import Preferences from "components/Account/Sections/Preferences";
+import Subscription from "components/Account/Sections/Subscription";
+import UserProfile from "components/Account/Sections/UserProfile";
 
 type Props = {
   hash?: string;
@@ -40,16 +38,22 @@ export default function Account(props: Props) {
     switch (currentTab) {
       case TAB_TYPE_AUTH:
         return <Authentication />;
+
       case TAB_TYPE_NOTIFICATIONS:
         return <Messaging />;
+
       case TAB_TYPE_SUBSCRIPTION:
         return <Subscription />;
+
       case TAB_TYPE_PREFERENCES:
         return <Preferences />;
+
       case TAB_TYPE_CONTACTS:
         return <ContactsSection />;
+
       case TAB_TYPE_DANGER_ZONE:
         return <Deletion />;
+
       case TAB_TYPE_USER:
       default:
         return <UserProfile />;
@@ -59,14 +63,20 @@ export default function Account(props: Props) {
   return (
     <div className="content container">
       <div className="account">
-        <AccountContext.Provider value={{ currentTab, setCurrentTab }}>
+        <AccountContext.Provider
+          value={{
+            currentTab,
+            setCurrentTab,
+          }}
+        >
           <h1 className="heading heading--1">Account</h1>
+
           <div className="nav nav--stacked nav--stacked--1-of-4 nav--stacked--roman">
             <AccountTabs />
           </div>
 
           <div className="stack-content">
-            <div role="tabpanel" aria-labelledby={`tab--${currentTab}`}>
+            <div aria-labelledby={`tab--${currentTab}`} role="tabpanel">
               {tabContent}
             </div>
           </div>

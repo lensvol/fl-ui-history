@@ -1,32 +1,39 @@
-import buildMessagesObject from "actions/app/processMessages/buildMessagesObject";
 import React from "react";
+
 import classnames from "classnames";
 
-import QualityUpdatesList from "components/QualityUpdates/QualityUpdatesList";
+import buildMessagesObject from "actions/app/processMessages/buildMessagesObject";
+
 import QualityUpdate from "components/QualityUpdates/QualityUpdate";
+import QualityUpdatesList from "components/QualityUpdates/QualityUpdatesList";
+
 import { IMessages } from "types/app/messages";
 
-export default function QualityUpdates({ data }: { data: IMessages }) {
+type Props = {
+  data: IMessages;
+};
+
+export default function QualityUpdates({ data }: Props) {
   const {
-    difficultyMessages,
-    headlineMessages,
-    standardMessages,
-    fateMessage,
     actionMessage,
     areaMessage,
     deckRefreshedMessage,
+    difficultyMessages,
+    fateMessage,
+    headlineMessages,
+    standardMessages,
   } = buildMessagesObject(data);
 
   // Have we got messages?
   const hasMessages = [
-    difficultyMessages,
-    headlineMessages,
-    standardMessages,
-    fateMessage,
     actionMessage,
     areaMessage,
     deckRefreshedMessage,
-  ].some((x) => x && (!Array.isArray(x) || x.length));
+    difficultyMessages,
+    fateMessage,
+    headlineMessages,
+    standardMessages,
+  ].some((qEffMsg) => qEffMsg && (!Array.isArray(qEffMsg) || qEffMsg.length));
 
   const WrapperClass = classnames({
     branch: hasMessages,
@@ -38,9 +45,13 @@ export default function QualityUpdates({ data }: { data: IMessages }) {
       {difficultyMessages != null && difficultyMessages.length > 0 && (
         <QualityUpdatesList updates={difficultyMessages} />
       )}
+
       {fateMessage != null ? <QualityUpdate data={fateMessage} /> : null}
+
       {actionMessage != null ? <QualityUpdate data={actionMessage} /> : null}
+
       {areaMessage != null ? <QualityUpdate data={areaMessage} /> : null}
+
       {deckRefreshedMessage != null ? (
         <QualityUpdate data={deckRefreshedMessage} />
       ) : null}

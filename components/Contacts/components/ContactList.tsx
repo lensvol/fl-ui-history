@@ -1,7 +1,8 @@
 import React, { useCallback } from "react";
 
+import ContactItem from "components/Contacts/components/ContactItem";
+
 import { IContact } from "features/contacts";
-import ContactItem from "./ContactItem";
 
 interface Props {
   children?: React.ReactNode;
@@ -17,16 +18,25 @@ export default function ContactList({
   onDelete,
 }: Props) {
   const filterFn = useCallback(
-    (c: any) =>
-      !c.userName ||
-      c.userName.toLowerCase().indexOf(filterString.toLowerCase()) >= 0,
+    (c: any) => {
+      return (
+        !c.userName ||
+        c.userName.toLowerCase().indexOf(filterString.toLowerCase()) >= 0
+      );
+    },
     [filterString]
   );
 
-  const visibleContacts = contacts?.filter(filterFn) ?? [];
+  const visibleContacts =
+    contacts === undefined ? [] : contacts.filter(filterFn);
 
   return (
-    <ul className="account__contact-list" style={{ marginBottom: 40 }}>
+    <ul
+      className="account__contact-list"
+      style={{
+        marginBottom: 40,
+      }}
+    >
       {visibleContacts.map((contact) => (
         <ContactItem
           key={contact.id}
@@ -34,6 +44,7 @@ export default function ContactList({
           deleteContact={() => onDelete(contact)}
         />
       ))}
+
       {children}
     </ul>
   );

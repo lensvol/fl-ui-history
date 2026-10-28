@@ -1,7 +1,13 @@
 import React, { PropsWithChildren } from "react";
+
 import classnames from "classnames";
 
-export default function Tertiary({ children, disabled, ...rest }: Props) {
+type Props = PropsWithChildren<{
+  disabled: boolean;
+  onClick: () => void;
+}>;
+
+export default function TertiaryButton({ children, disabled, onClick }: Props) {
   return (
     <button
       className={classnames(
@@ -9,15 +15,12 @@ export default function Tertiary({ children, disabled, ...rest }: Props) {
         disabled && "button--disabled"
       )}
       disabled={disabled}
+      onClick={onClick}
       type="button"
-      {...rest}
     >
       {children}
     </button>
   );
 }
 
-type Props = PropsWithChildren<{
-  disabled: boolean;
-  onClick: () => void;
-}>;
+TertiaryButton.displayName = "TertiaryButton";

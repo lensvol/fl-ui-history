@@ -1,34 +1,41 @@
 import BaseService, { Either } from "services/BaseMonadicService";
 
 import { IMessages } from "types/app/messages";
+import { FetchMessageType } from "types/messages";
 
 export type Message = {
-  type: string;
+  ago: string;
+  date: string;
+  description: string;
   image: string;
   relatedId: number;
   title: string;
-  description: string;
-  date: string;
-  ago: string;
+  type: string;
 };
 
 type BaseInvitationResponse = {
   actions: number;
-  messages: IMessages;
   content: Message;
   elapsed?: number;
+  messages: IMessages;
 };
 
 export type AcceptInvitationResponse = BaseInvitationResponse;
-export type CancelInvitationResponse = BaseInvitationResponse;
-export type DeleteMessageResponse = {};
-export type EmailMessageResponse = {};
+
+type CancelInvitationResponse = BaseInvitationResponse;
+
+type DeleteMessageResponse = {};
+
+type EmailMessageResponse = {};
+
 export type FetchAllMessagesResponse = {
   feedMessages: Message[];
   interactions: Message[];
 };
-export type FetchMessagesResponse = Message[];
-export type RejectInvitationResponse = BaseInvitationResponse;
+
+type FetchMessagesResponse = Message[];
+
+type RejectInvitationResponse = BaseInvitationResponse;
 
 export interface IMessagesService {
   acceptInvitation: (
@@ -39,9 +46,7 @@ export interface IMessagesService {
   ) => Promise<Either<CancelInvitationResponse>>;
   deleteMessage: (messageId: number) => Promise<Either<DeleteMessageResponse>>;
   emailMessage: (messageId: number) => Promise<Either<EmailMessageResponse>>;
-  fetch: (
-    what: "feed" | "interactions"
-  ) => Promise<Either<FetchMessagesResponse>>;
+  fetch: (what: FetchMessageType) => Promise<Either<FetchMessagesResponse>>;
   fetchAll: () => Promise<Either<FetchAllMessagesResponse>>;
   rejectInvitation: (
     invitationId: number
@@ -59,6 +64,20 @@ export default class MessagesService
     };
 
     return this.doRequest<AcceptInvitationResponse>(config);
+  };
+
+  /**
+   * Cancel Invitation
+   * @param  {Number} invitationId
+   * @return {Promise}
+   */
+  cancelInvitation = (invitationId: number) => {
+    const config = {
+      method: "post",
+      url: `/messages/cancelinvitation/${invitationId}`,
+    };
+
+    return this.doRequest<RejectInvitationResponse>(config);
   };
 
   deleteMessage = (messageId: number) => {
@@ -79,6 +98,15 @@ export default class MessagesService
     return this.doRequest<EmailMessageResponse>(config);
   };
 
+  fetch = (what: FetchMessageType) => {
+    const config = {
+      method: "get",
+      url: `/messages/${what}`,
+    };
+
+    return this.doRequest<FetchMessagesResponse>(config);
+  };
+
   fetchAll = () => {
     const config = {
       method: "get",
@@ -86,15 +114,6 @@ export default class MessagesService
     };
 
     return this.doRequest<FetchAllMessagesResponse>(config);
-  };
-
-  fetch = (what: "feed" | "interactions") => {
-    const config = {
-      method: "get",
-      url: `/messages/${what}`,
-    };
-
-    return this.doRequest<FetchMessagesResponse>(config);
   };
 
   /**
@@ -107,20 +126,6 @@ export default class MessagesService
       method: "post",
       url: `/messages/rejectinvitation/${invitationId}`,
     };
-    return this.doRequest<RejectInvitationResponse>(config);
-  };
-
-  /**
-   * Cancel Invitation
-   * @param  {Number} invitationId
-   * @return {Promise}
-   */
-  cancelInvitation = (invitationId: number) => {
-    const config = {
-      method: "post",
-      url: `/messages/cancelinvitation/${invitationId}`,
-    };
-
     return this.doRequest<RejectInvitationResponse>(config);
   };
 }

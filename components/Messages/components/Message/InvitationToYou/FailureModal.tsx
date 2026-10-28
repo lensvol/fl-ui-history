@@ -4,7 +4,7 @@ import Modal from "components/Modal";
 
 type Props = {
   isOpen: boolean;
-  message: string | undefined;
+  message?: string;
   onAfterClose: () => void;
   onRequestClose: () => void;
 };
@@ -25,3 +25,5 @@ export default function FailureModal({
     </Modal>
   );
 }
+
+FailureModal.displayName = "FailureModal";

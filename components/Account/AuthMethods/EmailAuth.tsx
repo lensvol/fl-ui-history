@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import classnames from "classnames";
 
-import { fetch as fetchSettings } from "actions/settings";
+import { fetchSettings } from "actions/settings";
 
 import LinkEmailModal from "components/Account/AuthMethods/LinkEmailModal";
 import UpdateEmailModal from "components/Account/AuthMethods/UpdateEmailModal";

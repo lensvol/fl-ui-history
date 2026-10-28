@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { fetchActions } from "actions/actions";
-import { fetch as fetchFate } from "actions/fate";
+import { fetchFate } from "actions/fate";
 
 import Loading from "components/Loading";
 import Modal, { Props as ModalProps } from "components/Modal";

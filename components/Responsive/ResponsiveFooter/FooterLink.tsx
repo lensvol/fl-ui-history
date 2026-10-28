@@ -1,13 +1,20 @@
-import * as MessageActions from "actions/messages";
-import classnames from "classnames";
-import MessageNotificationConstants from "constants/messageNotificationConstants";
-import { useAppSelector } from "features/app/store";
 import React, { useCallback, useMemo } from "react";
+
 import { useDispatch } from "react-redux";
+
 import { Link } from "react-router-dom";
+
+import classnames from "classnames";
+
+import { clearNotification } from "actions/messages";
+
+import MessageNotificationConstants from "constants/messageNotificationConstants";
+
+import { useAppSelector } from "features/app/store";
+
 import { UIRestriction } from "types/myself";
 
-interface OwnProps {
+interface Props {
   className?: string;
   current: string;
   highlightAlso?: string;
@@ -25,16 +32,19 @@ export default function FooterLink({
   title,
   to,
   uiRestriction,
-}: OwnProps) {
+}: Props) {
   const dispatch = useDispatch();
-  const messagesChanged = useAppSelector((s) => s.messages.isChanged);
-  const uiRestrictions = useAppSelector((s) => s.myself.uiRestrictions);
+
+  const hasMessageTabAlert = useAppSelector(
+    (state) => state.messages.hasMessageTabAlert
+  );
+  const uiRestrictions = useAppSelector((state) => state.myself.uiRestrictions);
 
   const classes = classnames("fl-ico fl-ico-2x", className);
 
   const onClick = useCallback(() => {
     if (to === MessageNotificationConstants.messagesPathName) {
-      dispatch(MessageActions.clearNotification());
+      dispatch(clearNotification());
     }
   }, [dispatch, to]);
 
@@ -44,24 +54,28 @@ export default function FooterLink({
         "footer-menu__item",
         (current === to || current === highlightAlso) && "active",
         to === MessageNotificationConstants.messagesPathName &&
-          messagesChanged &&
+          hasMessageTabAlert &&
           "notifying"
       ),
-    [current, highlightAlso, messagesChanged, to]
+    [current, hasMessageTabAlert, highlightAlso, to]
   );
 
   const shouldShowUI =
     !uiRestriction ||
-    !uiRestrictions?.find((restriction) => restriction === uiRestriction);
+    uiRestrictions === undefined ||
+    !uiRestrictions.find((restriction) => restriction === uiRestriction);
 
   return (
     <li className={liClass} data-name={title.toLowerCase()} role={role}>
       {shouldShowUI && (
-        <Link onClick={onClick} to={to} title={title}>
+        <Link onClick={onClick} title={title} to={to}>
           <i className={classes} />
+
           <span className="u-visually-hidden">{title}</span>
         </Link>
       )}
     </li>
   );
 }
+
+FooterLink.displayName = "FooterLink";

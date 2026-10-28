@@ -1,24 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 
-import FeedMessagesComponent from "./FeedMessagesComponent";
-
-export default class FeedMessagesContainer extends Component<Props> {
-  static displayName = "FeedMessagesContainer";
-  /**
-   * Render
-   * @return {Object}
-   */
-  render() {
-    const { type } = this.props;
-
-    const title = type === "feedMessages" ? "Recently" : "Messages";
-
-    return <FeedMessagesComponent title={title} type={type} />;
-  }
-}
+import FeedMessagesComponent from "components/Messages/components/FeedMessages/FeedMessagesComponent";
 
 type Props = {
   type: "feedMessages" | "interactions";
 };
+
+export default function FeedMessagesContainer({ type }: Props) {
+  const title = type === "feedMessages" ? "Recently" : "Messages";
+
+  return <FeedMessagesComponent title={title} type={type} />;
+}
 
 FeedMessagesContainer.displayName = "FeedMessagesContainer";

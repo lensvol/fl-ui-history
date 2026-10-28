@@ -1,5 +1,15 @@
 import React, { useCallback } from "react";
-import { connect } from "react-redux";
+
+import { useDispatch } from "react-redux";
+
+import { showAccountLinkReminder } from "actions/accountLinkReminder";
+import { deleteMessage, emailMessage } from "actions/messages";
+
+import InvitationFromYou from "components/Messages/components/Message/InvitationFromYou";
+import InvitationToYou from "components/Messages/components/Message/InvitationToYou";
+import MessageComponent from "components/Messages/components/Message/MessageComponent";
+import SocialMessage from "components/Messages/components/Message/SocialMessage";
+import StoryletMessage from "components/Messages/components/Message/StoryletMessage";
 
 import {
   INVITATION_FROM_YOU,
@@ -8,26 +18,24 @@ import {
   STORYLET_MESSAGE,
 } from "constants/messageTypes";
 
-import { deleteMessage, emailMessage } from "actions/messages";
-import { showAccountLinkReminder } from "actions/accountLinkReminder";
-import { ThunkDispatch } from "redux-thunk";
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
+
 import { FeedMessage } from "types/messages";
 
-import SocialMessage from "./SocialMessage";
-import StoryletMessage from "./StoryletMessage";
-import InvitationFromYou from "./InvitationFromYou";
-import InvitationToYou from "./InvitationToYou";
+type Props = {
+  data: FeedMessage;
+};
 
-import MessageComponent from "./MessageComponent";
+export default function MessageContainer({ data }: Props) {
+  const dispatch = useDispatch();
 
-function MessageContainer(props: Props) {
-  const { data, disabled, dispatch } = props;
+  const disabled = useAppSelector((state) => state.messages.isRequesting);
 
   const { relatedId } = data;
 
   const handleDelete = useCallback(async () => {
     const id = relatedId;
+
     if (!id && id !== 0) {
       return; // no message id
     }
@@ -62,18 +70,15 @@ function MessageContainer(props: Props) {
           onEmail={handleEmail}
         />
       );
+
     case INVITATION_TO_YOU:
-      return (
-        <InvitationToYou
-          data={data}
-          disabled={disabled}
-          onEmail={handleEmail}
-        />
-      );
+      return <InvitationToYou data={data} onEmail={handleEmail} />;
+
     case SOCIAL_MESSAGE:
       return (
         <SocialMessage data={data} disabled={disabled} onEmail={handleEmail} />
       );
+
     case STORYLET_MESSAGE:
       return (
         <StoryletMessage
@@ -82,26 +87,18 @@ function MessageContainer(props: Props) {
           onEmail={handleEmail}
         />
       );
+
     default:
       return (
         <MessageComponent
           data={data}
           deletable
-          onDelete={handleDelete}
           emailable
+          onDelete={handleDelete}
           onEmail={handleEmail}
         />
       );
   }
 }
 
-const mapStateToProps = ({
-  messages: { isRequesting: disabled },
-}: IAppState) => ({ disabled });
-
-type Props = ReturnType<typeof mapStateToProps> & {
-  data: FeedMessage;
-  dispatch: ThunkDispatch<any, any, any>;
-};
-
-export default connect(mapStateToProps)(MessageContainer);
+MessageContainer.displayName = "MessageContainer";

@@ -3,7 +3,7 @@ import { ActionCreator } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
 import { processMessages } from "actions/app";
-import { fetch as fetchCards } from "actions/cards";
+import { fetchCards } from "actions/cards";
 import { fetchAvailableSuccess } from "actions/storylet/fetchAvailable";
 import { handleVersionMismatch } from "actions/versionSync";
 

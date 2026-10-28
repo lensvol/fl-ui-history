@@ -1,87 +1,78 @@
+import { ActionCreator } from "@reduxjs/toolkit";
+
 import { handleVersionMismatch } from "actions/versionSync";
+
 import {
-  SHARE_CONTENT_COMPLETE,
   SHARE_CONTENT_FAILURE,
   SHARE_CONTENT_REQUESTED,
   SHARE_CONTENT_SUCCESS,
 } from "actiontypes/profile";
-import { ActionCreator } from "redux";
+
 import { Success } from "services/BaseMonadicService";
 import { VersionMismatch } from "services/BaseService";
-import ProfileService, { IProfileService } from "services/ProfileService";
+import ProfileService, {
+  IProfileService,
+  ShareContentRequest,
+  ShareResponse,
+} from "services/ProfileService";
 
-export type ShareContentComplete = { type: typeof SHARE_CONTENT_COMPLETE };
-export type ShareContentRequested = { type: typeof SHARE_CONTENT_REQUESTED };
-export type ShareContentFailure = { type: typeof SHARE_CONTENT_FAILURE };
-export type ShareContentSuccess = {
+type ShareContentRequested = {
+  type: typeof SHARE_CONTENT_REQUESTED;
+};
+
+type ShareContentFailure = {
+  type: typeof SHARE_CONTENT_FAILURE;
+};
+
+type ShareContentSuccess = {
   type: typeof SHARE_CONTENT_SUCCESS;
-  payload: string;
+  payload: ShareResponse;
 };
 
 export type ShareContentActions =
-  | ShareContentComplete
-  | ShareContentRequested
-  | ShareContentFailure
-  | ShareContentSuccess;
-
-export type ShareContentArgs = {
-  contentClass: any;
-  contentKey: any;
-  image: any;
-  message: any;
-};
+  ShareContentRequested | ShareContentFailure | ShareContentSuccess;
 
 export default shareContent(new ProfileService());
 
-export function shareContent(service: IProfileService) {
-  return ({ contentClass, contentKey, image, message }: ShareContentArgs) =>
-    async (dispatch: Function) => {
-      dispatch(shareContentRequest());
-      try {
-        // const { data } = await service.share(contentClass, contentKey, image, message);
-        const result = await service.share(
-          contentClass,
-          contentKey,
-          image,
-          message
-        );
-        if (result instanceof Success) {
-          dispatch(shareContentSuccess(result.data));
-        } else {
-          dispatch(shareContentFailure(result.message));
-        }
-        return result;
-      } catch (error) {
-        if (error instanceof VersionMismatch) {
-          dispatch(handleVersionMismatch(error));
-          return error;
-        }
-        dispatch(shareContentFailure(error));
-        throw error;
+function shareContent(service: IProfileService) {
+  return (request: ShareContentRequest) => async (dispatch: Function) => {
+    dispatch(shareContentRequest());
+
+    try {
+      const response = await service.share(request);
+
+      if (response instanceof Success) {
+        dispatch(shareContentSuccess(response.data));
+
+        return response.data;
       }
-    };
+
+      throw response;
+    } catch (error) {
+      if (error instanceof VersionMismatch) {
+        dispatch(handleVersionMismatch(error));
+
+        return error;
+      }
+
+      dispatch(shareContentFailure());
+
+      throw error;
+    }
+  };
 }
 
 const shareContentRequest: ActionCreator<ShareContentRequested> = () => ({
   type: SHARE_CONTENT_REQUESTED,
 });
 
-const shareContentSuccess: ActionCreator<ShareContentSuccess> = (data: {
-  message: string;
-}) => ({
-  type: SHARE_CONTENT_SUCCESS,
-  payload: data.message,
-  shareMessageResponse: data.message,
-});
-
-const shareContentFailure: ActionCreator<ShareContentFailure> = (
-  _message: any
+const shareContentSuccess: ActionCreator<ShareContentSuccess> = (
+  response: ShareResponse
 ) => ({
-  type: SHARE_CONTENT_FAILURE,
+  type: SHARE_CONTENT_SUCCESS,
+  payload: response,
 });
 
-export const shareContentComplete: ActionCreator<
-  ShareContentComplete
-> = () => ({
-  type: SHARE_CONTENT_COMPLETE,
+const shareContentFailure: ActionCreator<ShareContentFailure> = () => ({
+  type: SHARE_CONTENT_FAILURE,
 });

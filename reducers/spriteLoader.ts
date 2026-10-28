@@ -10,11 +10,17 @@ const INITIAL_STATE: ISpriteLoaderState = {
 
 export default function reducer(
   state = INITIAL_STATE,
-  action: { type: string; payload: any }
+  action: {
+    type: string;
+    payload: any;
+  }
 ) {
   switch (action.type) {
     case SPRITE_LOADER_PROGRESS:
-      return { progress: action.payload as number };
+      return {
+        progress: action.payload as number,
+      };
+
     default:
       return state;
   }

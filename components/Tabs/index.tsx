@@ -1,19 +1,15 @@
 import React from "react";
 
-import Tab from "./Tab";
+import Tab from "components/Tabs/Tab";
+
 import { UIRestriction } from "types/myself";
 
 type Props = {
-  // active: string,
   items: any[];
   uiRestrictions?: UIRestriction[];
 };
 
-export default function Tabs({
-  // active,
-  items,
-  uiRestrictions,
-}: Props) {
+export default function Tabs({ items, uiRestrictions }: Props) {
   return (
     <ul role="tablist">
       {items

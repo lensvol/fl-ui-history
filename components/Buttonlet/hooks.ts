@@ -1,6 +1,8 @@
-import classnames from "classnames";
-import getImageClassByType from "components/Buttonlet/getImageClassByType";
 import { useMemo } from "react";
+
+import classnames from "classnames";
+
+import getImageClassByType from "components/Buttonlet/getImageClassByType";
 
 export function useButtonletClassName(
   className: string | undefined,
@@ -10,36 +12,31 @@ export function useButtonletClassName(
   onClick: ((args?: any) => any) | undefined,
   type: string
 ) {
-  return useMemo(
-    () =>
-      classnames(
-        "buttonlet",
-        "fa-stack",
-        type !== "delete-contact" && "fa-lg",
-        disabled || onClick === undefined
-          ? "buttonlet-disabled"
-          : "buttonlet-enabled",
-        local && "buttonlet-local",
-        focused && "buttonlet--focused",
-        className
-      ),
-    [className, disabled, focused, local, onClick, type]
-  );
+  return useMemo(() => {
+    return classnames(
+      "buttonlet fa-stack",
+      type !== "delete-contact" && "fa-lg",
+      disabled || onClick === undefined
+        ? "buttonlet-disabled"
+        : "buttonlet-enabled",
+      local && "buttonlet-local",
+      focused && "buttonlet--focused",
+      className
+    );
+  }, [className, disabled, focused, local, onClick, type]);
 }
 
 export function useCircleClassName(
   className: string | undefined,
   override: boolean | undefined
 ) {
-  return useMemo(
-    () =>
-      classnames(
-        className,
-        "fa fa-circle fa-stack-2x",
-        override && "buttonlet-override-circle"
-      ),
-    [className, override]
-  );
+  return useMemo(() => {
+    return classnames(
+      className,
+      "fa fa-circle fa-stack-2x",
+      override && "buttonlet-override-circle"
+    );
+  }, [className, override]);
 }
 
 export function useIconClassName(

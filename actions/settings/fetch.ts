@@ -51,9 +51,9 @@ const fetchSettingsFailure = (_error?: any) => ({
  * FETCH
  -----------------------------------------------------------------------------*/
 
-export default fetch(new SettingsService());
+export default fetchSettings(new SettingsService());
 
-export function fetch(service: ISettingsService) {
+export function fetchSettings(service: ISettingsService) {
   return () => async (dispatch: Function) => {
     dispatch(fetchSettingsRequested());
 

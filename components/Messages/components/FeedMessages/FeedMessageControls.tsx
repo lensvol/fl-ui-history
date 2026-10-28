@@ -1,73 +1,57 @@
-import React, { Component } from "react";
-import classnames from "classnames";
-import { connect } from "react-redux";
+import React, { useCallback, useState } from "react";
+
+import { useDispatch } from "react-redux";
+
 import { Link } from "react-router-dom";
 
+import classnames from "classnames";
+
 import { fetchInteractions } from "actions/messages";
+
+import MessagesService from "services/MessagesService";
+
 import wait from "utils/wait";
 
-type Props = {
-  dispatch: Function;
-};
+export default function FeedMessageControls() {
+  const dispatch = useDispatch();
 
-type State = {
-  isWorking: boolean;
-};
+  const [isWorking, setIsWorking] = useState(false);
 
-export class FeedMessageControls extends Component<Props, State> {
-  mounted = false;
-
-  state = {
-    isWorking: false,
-  };
-
-  componentDidMount = () => {
-    this.mounted = true;
-  };
-
-  componentWillUnmount = () => {
-    this.mounted = false;
-  };
-
-  handleRefresh = async () => {
-    const { dispatch } = this.props;
-    const { isWorking } = this.state;
+  const handleRefresh = useCallback(async () => {
     if (isWorking) {
       return;
     }
-    this.setState({ isWorking: true });
-    await dispatch(fetchInteractions());
-    await wait(1500);
-    if (this.mounted) {
-      this.setState({ isWorking: false });
-    }
-  };
 
-  render = () => (
+    setIsWorking(true);
+
+    await dispatch(fetchInteractions(new MessagesService()));
+    await wait(1500);
+
+    setIsWorking(false);
+  }, [dispatch, isWorking]);
+
+  return (
     <div>
       <button
         className="button--link button--link-inverse"
-        onClick={this.handleRefresh}
-        type="button"
+        disabled={isWorking}
+        onClick={handleRefresh}
         style={{
-          cursor: this.state.isWorking ? "not-allowed" : "pointer",
+          cursor: isWorking ? "not-allowed" : "pointer",
           marginRight: "2rem",
         }}
-        disabled={this.state.isWorking}
+        type="button"
       >
-        <i
-          className={classnames(
-            "fa fa-refresh",
-            this.state.isWorking && "fa-spin"
-          )}
-        />
+        <i className={classnames("fa fa-refresh", isWorking && "fa-spin")} />
       </button>
+
       <Link className="link--inverse" to="/account">
         <i className="fa fa-cog" />
+
         <span className="u-visually-hidden">Settings</span>
       </Link>
     </div>
   );
 }
 
-export default connect()(FeedMessageControls);
+FeedMessageControls.displayName = "FeedMessageControls";

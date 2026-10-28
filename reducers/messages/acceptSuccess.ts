@@ -1,4 +1,4 @@
-import { AcceptSuccess } from "actions/messages/accept";
+import { AcceptSuccess } from "actions/messages/acceptInvitation";
 
 import excludeById from "reducers/messages/excludeById";
 import sortByDate from "reducers/messages/sortByDate";

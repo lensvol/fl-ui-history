@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchSettings } from "actions/settings";
+import { fetchSettings } from "actions/settings";
 
 import AuthMethods from "components/Account/AuthMethods";
 import Loading from "components/Loading";

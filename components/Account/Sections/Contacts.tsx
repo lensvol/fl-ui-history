@@ -1,4 +1,5 @@
 import React from "react";
+
 import Contacts from "components/Contacts";
 
 export default function ContactsSection() {
@@ -9,7 +10,10 @@ export default function ContactsSection() {
         <a href="mailto:abuse@failbettergames.com">abuse@failbettergames.com</a>
         .
       </p>
+
       <Contacts />
     </>
   );
 }
+
+ContactsSection.displayName = "ContactsSection";

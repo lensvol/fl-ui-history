@@ -6,7 +6,7 @@ import classnames from "classnames";
 
 import { Field, Form, Formik } from "formik";
 
-import { fetch as fetchMessages } from "actions/messages";
+import { fetchMessages } from "actions/messages";
 import { goBackFromSocialAct, sendSocialInvite } from "actions/storylet";
 
 import { ActContextValue } from "components/Act/ActContext";

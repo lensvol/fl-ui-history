@@ -2,8 +2,8 @@ import React, { useEffect, useMemo } from "react";
 
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchSettings } from "actions/settings";
-import { fetch as fetchSubscription } from "actions/subscription";
+import { fetchSettings } from "actions/settings";
+import { fetchSubscription } from "actions/subscription";
 
 import SubscriptionComponent from "components/Fate/Subscription/Subscription";
 import Loading from "components/Loading";

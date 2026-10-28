@@ -1,6 +1,6 @@
 import { ThunkDispatch } from "redux-thunk";
 
-import { fetch as fetchFate } from "actions/fate";
+import { fetchFate } from "actions/fate";
 import { handleVersionMismatch } from "actions/versionSync";
 
 import {

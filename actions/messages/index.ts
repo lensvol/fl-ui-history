@@ -1,19 +1,22 @@
 import { ActionCreator } from "redux";
 
-import accept, { AcceptAction } from "actions/messages/accept";
-import cancel, { CancelAction } from "actions/messages/cancel";
+import acceptInvitation, {
+  AcceptAction,
+} from "actions/messages/acceptInvitation";
+import cancelInvitation, {
+  CancelAction,
+} from "actions/messages/cancelInvitation";
 import clearCache, { ClearMessagesCache } from "actions/messages/clearCache";
 import closeDialog, { CloseDialog } from "actions/messages/closeDialog";
 import deleteMessage, { DeleteAction } from "actions/messages/deleteMessage";
 import emailMessage, { EmailAction } from "actions/messages/emailMessage";
-import fetch, { FetchAllAction } from "actions/messages/fetch";
-import fetchFeedMessages, {
-  FetchFeedMessagesAction,
-} from "actions/messages/fetchFeedMessages";
+import fetchMessages, { FetchAllAction } from "actions/messages/fetch";
 import fetchInteractions, {
   FetchInteractionsAction,
 } from "actions/messages/fetchInteractions";
-import reject, { RejectAction } from "actions/messages/reject";
+import rejectInvitation, {
+  RejectAction,
+} from "actions/messages/rejectInvitation";
 
 import { CLEAR_NOTIFICATION } from "actiontypes/messages";
 
@@ -34,20 +37,18 @@ export type MessagesAction =
   | DeleteAction
   | EmailAction
   | FetchAllAction
-  | FetchFeedMessagesAction
   | FetchInteractionsAction
   | RejectAction;
 
 export {
-  accept,
-  cancel,
+  acceptInvitation,
+  cancelInvitation,
   clearCache,
   clearNotification,
   closeDialog,
   deleteMessage,
   emailMessage,
-  fetch,
-  fetchFeedMessages,
   fetchInteractions,
-  reject,
+  fetchMessages,
+  rejectInvitation,
 };

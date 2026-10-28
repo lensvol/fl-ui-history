@@ -41,13 +41,13 @@ const messagesService: IMessagesService = new MessagesService();
 /** ----------------------------------------------------------------------------
  * FETCH ALL MESSAGES
  -----------------------------------------------------------------------------*/
-export default function fetch() {
+export default function fetchMessages() {
   return async (dispatch: Function) => {
     if (document.hidden) {
       document.onvisibilitychange = () => {
         document.onvisibilitychange = null;
 
-        dispatch(fetch());
+        dispatch(fetchMessages());
       };
 
       return dispatch(fetchQueued());

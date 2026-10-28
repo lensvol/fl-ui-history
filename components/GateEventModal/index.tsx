@@ -8,7 +8,7 @@ import { actionsUpdated } from "actions/actions";
 import { processMessages } from "actions/app";
 import buildMessagesObject from "actions/app/processMessages/buildMessagesObject";
 import processSettingChangeMessage from "actions/app/processMessages/processSettingChangeMessage";
-import { fetch as fetchOpportunityCards } from "actions/cards";
+import { fetchCards as fetchOpportunityCards } from "actions/cards";
 import {
   beginGateEvent,
   chooseGateEventBranch,

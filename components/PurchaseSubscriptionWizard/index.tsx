@@ -3,12 +3,12 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { fetchActions } from "actions/actions";
-import { fetch as fetchFate } from "actions/fate";
+import { fetchFate } from "actions/fate";
 import { fetchMap } from "actions/map";
 import { fetchMyself } from "actions/myself";
 import { fetchOutfit } from "actions/outfit";
-import { fetch as fetchSettings } from "actions/settings";
-import { fetch as fetchSubscription } from "actions/subscription";
+import { fetchSettings } from "actions/settings";
+import { fetchSubscription } from "actions/subscription";
 
 import CompletingTransaction from "components/PurchaseSubscriptionWizard/CompletingTransaction";
 import ConfirmNewPlan from "components/PurchaseSubscriptionWizard/ConfirmNewPlan";

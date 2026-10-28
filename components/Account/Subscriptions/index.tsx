@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchSettings } from "actions/settings";
+import { fetchSettings } from "actions/settings";
 
 import HasSubscriptionContent from "components/Account/Subscriptions/HasSubscriptionContent";
 import EnhancedStore from "components/Fate/EnhancedStore";

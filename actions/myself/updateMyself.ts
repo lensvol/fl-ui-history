@@ -1,13 +1,19 @@
-import { MYSELF_CHANGED } from "actiontypes/myself";
-import { IQuality } from "types/qualities";
 import { ActionCreator, Dispatch } from "redux";
+
+import { MYSELF_CHANGED } from "actiontypes/myself";
+
+import { QualityChangeType } from "types/app/messages";
+import { IQuality } from "types/qualities";
 
 export type UpdateMyself = {
   type: typeof MYSELF_CHANGED;
   payload: UpdateMyselfData;
 };
 
-type UpdateMyselfData = { possession: IQuality }[];
+type UpdateMyselfData = {
+  possession: IQuality;
+  changeType?: QualityChangeType;
+}[];
 
 const myselfChanged: ActionCreator<UpdateMyself> = (
   data: UpdateMyselfData
@@ -16,8 +22,6 @@ const myselfChanged: ActionCreator<UpdateMyself> = (
   payload: data,
 });
 
-export default function updateMyself(
-  wrappedPossessions: { possession: IQuality }[]
-) {
+export default function updateMyself(wrappedPossessions: UpdateMyselfData) {
   return (dispatch: Dispatch) => dispatch(myselfChanged(wrappedPossessions));
 }

@@ -152,13 +152,16 @@ function runApp() {
         // Log the error before showing the error page
         console.error(error);
 
-        // This isn't an error we can handle client-side.
-        const airbrake = getAirbrakeClient();
+        // we can't fix players' networking issues, and it just clutters the logs to tell us about them
+        if (error.message !== "Network Error") {
+          // This isn't an error we can handle client-side.
+          const airbrake = getAirbrakeClient();
 
-        airbrake.notify({
-          ...error,
-          message: `Bootstrapping failed; original message: '${error.message}'`,
-        });
+          airbrake.notify({
+            ...error,
+            message: `Bootstrapping failed; original message: '${error.message}'`,
+          });
+        }
 
         // Display the error text
         const ctr = document.querySelector(APP_ROOT_SELECTOR).firstElementChild;

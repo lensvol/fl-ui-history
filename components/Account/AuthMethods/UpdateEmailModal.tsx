@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { Field, Form, Formik, FormikHelpers } from "formik";
 
-import { fetch as fetchSettings, updateEmailAddress } from "actions/settings";
+import { fetchSettings, updateEmailAddress } from "actions/settings";
 
 import Loading from "components/Loading";
 import Modal from "components/Modal";

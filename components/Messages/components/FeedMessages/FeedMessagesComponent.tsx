@@ -1,35 +1,40 @@
 import React from "react";
-import { connect } from "react-redux";
-import { IAppState } from "types/app";
 
-import FeedMessageControls from "./FeedMessageControls";
-import MessageList from "./MessageList";
+import FeedMessageControls from "components/Messages/components/FeedMessages/FeedMessageControls";
+import MessageList from "components/Messages/components/FeedMessages/MessageList";
 
-export function FeedMessagesComponent(props: Props) {
-  const { messages, title, type } = props;
+import { useAppSelector } from "features/app/store";
+
+type Props = {
+  title: string;
+  type: "feedMessages" | "interactions";
+};
+
+export default function FeedMessagesComponent({ title, type }: Props) {
+  const messages = useAppSelector((state) => state.messages[type]);
+
   return (
-    <div className="message" style={{ marginBottom: "10px" }}>
+    <div
+      className="message"
+      style={{
+        marginBottom: "10px",
+      }}
+    >
       <h1
         className="heading heading--1 messages__heading"
-        style={{ display: "flex", justifyContent: "space-between" }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
       >
         {title}
+
         {type !== "feedMessages" && <FeedMessageControls />}
       </h1>
+
       <MessageList messages={messages} />
     </div>
   );
 }
 
-type OwnProps = {
-  title: string;
-  type: "feedMessages" | "interactions";
-};
-
-const mapStateToProps = ({ messages }: IAppState, { type }: OwnProps) => ({
-  messages: messages[type],
-});
-
-type Props = OwnProps & ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(FeedMessagesComponent);
+FeedMessagesComponent.displayName = "FeedMessagesComponent";

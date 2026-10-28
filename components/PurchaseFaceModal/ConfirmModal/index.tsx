@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { fetchActions } from "actions/actions";
-import { fetch as fetchFate, purchaseItem } from "actions/fate";
+import { fetchFate, purchaseItem } from "actions/fate";
 import { setAvatarImage } from "actions/myself";
 import { newAvatarImage } from "actions/myself/setAvatarImage";
 

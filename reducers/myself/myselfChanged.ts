@@ -1,14 +1,14 @@
+import { SetAvatarImageSuccess } from "actions/myself/setAvatarImage";
+import { UpdateMyself } from "actions/myself/updateMyself";
+
 import { IMyselfState } from "types/myself";
-import { IQuality } from "types/qualities";
+
+type MyselfChangedAction = SetAvatarImageSuccess | UpdateMyself;
 
 export default function myselfChanged(
   state: IMyselfState,
-  action: {
-    payload: {
-      possession: IQuality;
-    }[];
-  }
-) {
+  action: MyselfChangedAction
+): IMyselfState {
   const { categories, qualities } = state;
 
   const { payload } = action;
@@ -21,13 +21,17 @@ export default function myselfChanged(
     ...q,
   }));
 
-  payload.forEach(({ possession: updatedQuality }) => {
+  payload.forEach(({ changeType, possession: updatedQuality }) => {
     // Find the quality with this updated quality's ID
     const idx = newQualities.findIndex((_) => _.id === updatedQuality.id);
 
     // If this is a quality we don't already have, then add it to the qualities array
     if (idx < 0) {
-      newQualities.push(updatedQuality);
+      newQualities.push({
+        ...updatedQuality,
+        changeType: undefined,
+        previousProgress: undefined,
+      });
     } else {
       // Otherwise, merge the existing quality with this value
       const newQuality = newQualities[idx];
@@ -35,10 +39,18 @@ export default function myselfChanged(
       newQualities[idx] = {
         ...newQuality,
         ...updatedQuality,
+        changeType,
         isOutfit:
           updatedQuality.isOutfit === undefined
             ? newQuality.isOutfit
             : updatedQuality.isOutfit,
+        previousProgress:
+          changeType === undefined
+            ? undefined
+            : {
+                level: newQuality.level,
+                percentage: newQuality.progressAsPercentage,
+              },
       };
     }
 

@@ -1,4 +1,5 @@
 import createCachedSelector from "re-reselect";
+
 import { IAppState } from "types/app";
 
 interface Props {

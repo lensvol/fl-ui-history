@@ -1,67 +1,51 @@
-import React from "react";
+import React, { useCallback } from "react";
 
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import classnames from "classnames";
 
 import { clearAgentsNotification } from "actions/agents/fetchAgents";
-import * as MessageActions from "actions/messages";
+import { clearNotification } from "actions/messages";
 
-import { IAppState } from "types/app";
+import { useAppSelector } from "features/app/store";
 
-const mapStateToProps = ({ agents, messages }: IAppState) => ({
-  agentsChanged: agents.hasNotification,
-  messagesChanged: messages.isChanged,
-});
-
-type OwnProps = {
+type Props = {
   children: React.ReactNode;
   id: string;
   name: string;
   to: string;
 };
 
-type Props = OwnProps &
-  ReturnType<typeof mapStateToProps> &
-  RouteComponentProps;
-
-export function Tab({
-  agentsChanged,
-  children,
-  history,
-  id,
-  messagesChanged,
-  name,
-  to,
-}: Props) {
+export default function Tab({ children, id, name, to }: Props) {
   const dispatch = useDispatch();
+  const history = useHistory();
+
+  const hasAgentTabAlert = useAppSelector(
+    (state) => state.agents.hasNotification
+  );
+  const hasMessageTabAlert = useAppSelector(
+    (state) => state.messages.hasMessageTabAlert
+  );
 
   const {
     location: { pathname },
   } = history;
 
   const isNotifying =
-    (name === "messages" && messagesChanged) ||
-    (name === "agents" && agentsChanged);
+    (name === "messages" && hasMessageTabAlert) ||
+    (name === "agents" && hasAgentTabAlert);
 
-  const clearMessages = () => {
-    dispatch(MessageActions.clearNotification());
-  };
-
-  const clearAgentsNotifying = () => {
-    dispatch(clearAgentsNotification());
-  };
-
-  const noOp = () => {};
-
-  const onSelect =
-    name === "messages"
-      ? clearMessages
-      : name === "agents"
-        ? clearAgentsNotifying
-        : noOp;
+  const onSelect = useCallback(() => {
+    if (name === "messages") {
+      dispatch(clearNotification());
+    } else if (name === "agents") {
+      dispatch(clearAgentsNotification());
+    } else {
+      // no-op
+    }
+  }, [dispatch, name]);
 
   const activeLabel = pathname === "/" ? "/" : pathname.replace("/", "");
 
@@ -86,4 +70,4 @@ export function Tab({
   );
 }
 
-export default withRouter(connect(mapStateToProps)(Tab));
+Tab.displayName = "Tab";

@@ -1,12 +1,12 @@
 import React, { Fragment, useState, useCallback } from "react";
 
 import { fetchSnippets } from "actions/infoBar";
+import shareContent from "actions/profile/shareContent";
 
 import ShareDialog from "components/ShareDialog";
 import SnippetComponent from "components/Snippet/SnippetComponent";
 
 import { useAppDispatch, useAppSelector } from "features/app/store";
-import { shareContent } from "features/profile";
 
 import { stripHtml } from "utils/stringFunctions";
 
@@ -74,8 +74,11 @@ export default function SnippetContainer() {
       })
     );
 
-    setShareMessageResponse(result.payload?.message);
-    setShareErrorResponse(result.error?.message);
+    if (result?.isSuccess) {
+      setShareMessageResponse(result.message);
+    } else {
+      setShareErrorResponse(result?.message);
+    }
 
     setIsSharing(false);
   }, [dispatch, snippet]);

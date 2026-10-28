@@ -1,7 +1,6 @@
 import { combineReducers } from "redux";
 
 import { reducer as contacts } from "features/contacts";
-import { reducer as profile } from "features/profile";
 import timeTheHealer from "features/timeTheHealer/timeTheHealerSlice";
 
 import accessCodes from "reducers/accessCodes";
@@ -27,6 +26,7 @@ import outfit from "reducers/outfit";
 import payment from "reducers/payment";
 import phase from "reducers/phase";
 import plans from "reducers/plans";
+import profile from "reducers/profile";
 import registration from "reducers/registration";
 import screen from "reducers/screen";
 import scrollToComponent from "reducers/scrollToComponent";

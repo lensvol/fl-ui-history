@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import Select from "react-select";
 
-import { fetch as fetchCards } from "actions/cards";
+import { fetchCards } from "actions/cards";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
 import { changeOutfit } from "actions/outfit";
 import { fetchAvailable as fetchAvailableStorylets } from "actions/storylet";

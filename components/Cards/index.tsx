@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchCards } from "actions/cards";
+import { fetchCards } from "actions/cards";
 
 import Deck from "components/Cards/components/Deck";
 import Hand from "components/Cards/components/Hand";

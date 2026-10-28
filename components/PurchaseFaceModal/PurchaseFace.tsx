@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import classnames from "classnames";
 
-import { fetch as fetchAvatars } from "actions/registration";
+import { fetchAvatars } from "actions/registration";
 
 import Loading from "components/Loading";
 import Avatar from "components/PurchaseFaceModal/Avatar";

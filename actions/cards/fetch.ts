@@ -71,7 +71,7 @@ const fetchFailure: ActionCreator<FetchCardsFailure> = () => ({
   type: FETCH_CARDS_FAILURE,
 });
 
-export default fetch(new CardService());
+export default fetchCards(new CardService());
 
 type FetchOptions = {
   background?: boolean;
@@ -86,7 +86,7 @@ type FetchOptions = {
 
 type FetchActions = FetchCardsActions | PutInAction | TimerAction;
 
-export function fetch(
+export function fetchCards(
   service: ICardsService
 ): (
   options?: FetchOptions

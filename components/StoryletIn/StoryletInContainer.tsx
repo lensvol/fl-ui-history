@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 
 import { actionsUpdated } from "actions/actions";
 import { processMessages } from "actions/app";
-import { fetch as fetchCards } from "actions/cards";
+import { fetchCards } from "actions/cards";
 import { fetchAvailableSuccess, goBackSuccess } from "actions/storylet";
 import { handleVersionMismatch } from "actions/versionSync";
 

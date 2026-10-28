@@ -1,11 +1,42 @@
 export default function getImageClassByType(type: string): string | null {
   switch (type) {
-    case "edit":
-      return "fa-pencil";
+    case "book":
+      return "fa-book";
+
+    case "bsky":
+      return "fbg-bsky";
+
+    case "check":
+      return "fa-check";
+
+    case "chevron-down":
+      return "fa-chevron-down";
+
+    case "close":
+      return "fa-close";
 
     case "delete":
     case "delete-contact":
       return "fa-times";
+
+    case "edit":
+      return "fa-pencil";
+
+    case "envelope":
+      return "fa-envelope";
+
+    case "facebook":
+      return "fa-facebook";
+
+    case "frequency":
+      return "fa-info";
+
+    case "lock":
+    case "padlock":
+      return "fa-lock";
+
+    case "minus":
+      return "fa-minus";
 
     case "plan":
       return "fa-bookmark buttonlet--plan";
@@ -13,60 +44,29 @@ export default function getImageClassByType(type: string): string | null {
     case "plan--active":
       return "fa-bookmark buttonlet--active-plan";
 
-    case "refresh":
-      return "fa-refresh";
-
-    case "close":
-      return "fa-close";
+    case "plus":
+      return "fa-plus";
 
     case "question":
       return "fa-question";
 
-    case "frequency":
-      return "fa-info";
-
-    case "check":
-      return "fa-check";
-
-    case "book":
-      return "fa-book";
-
-    case "facebook":
-      return "fa-facebook";
-
-    case "bsky":
-      return "fbg-bsky";
-
-    case "lock":
-    case "padlock":
-      return "fa-lock";
-
     case "quote-left":
       return "fa-quote-left";
 
+    case "refresh":
+      return "fa-refresh";
+
     case "save-outfit":
       return "fl-ico fl-ico-save-outfit";
-
-    case "unlock":
-      return "fa-unlock";
-
-    case "plus":
-      return "fa-plus";
-
-    case "minus":
-      return "fa-minus";
-
-    case "envelope":
-      return "fa-envelope";
-
-    case "chevron-down":
-      return "fa-chevron-down";
 
     case "star":
       return "fa-star";
 
     case "star-o":
       return "fa-star-o";
+
+    case "unlock":
+      return "fa-unlock";
 
     default:
       return null;

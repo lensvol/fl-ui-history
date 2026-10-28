@@ -4,7 +4,7 @@ import ReactCSSTransitionReplace from "react-css-transition-replace";
 
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchMessages } from "actions/messages";
+import { fetchMessages } from "actions/messages";
 
 import GeneralContainer from "components/GeneralContainer";
 import Loading from "components/Loading";
@@ -30,12 +30,16 @@ export default function MessagesContainer() {
       return;
     }
 
-    // If we aren't fetching, and we don't have the expected state shape, then fetch messages
-    if (!feedMessages.length && !interactions.length) {
-      dispatch(fetchMessages());
-    }
+    asyncUseEffect();
 
-    setDidLoad(true);
+    async function asyncUseEffect() {
+      // If we aren't fetching, and we don't have the expected state shape, then fetch messages
+      if (!feedMessages.length && !interactions.length) {
+        await dispatch(fetchMessages());
+      }
+
+      setDidLoad(true);
+    }
   }, [didLoad, dispatch, feedMessages, interactions, isFetching]);
 
   return (

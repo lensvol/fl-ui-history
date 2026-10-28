@@ -1,5 +1,6 @@
 import React from "react";
-import { Formik, Form, Field } from "formik";
+
+import { Field, Form, Formik } from "formik";
 
 type Props = {
   onSubmit: (values: { userName: string }) => Promise<unknown>;
@@ -7,19 +8,26 @@ type Props = {
 
 export default function AddContactForm({ onSubmit }: Props) {
   return (
-    <Formik initialValues={{ userName: "" }} onSubmit={onSubmit}>
+    <Formik
+      initialValues={{
+        userName: "",
+      }}
+      onSubmit={onSubmit}
+    >
       {({ values }) => (
         <Form className="account__add-contact-form">
-          <label htmlFor="userName" className="u-visually-hidden">
+          <label className="u-visually-hidden" htmlFor="userName">
             Username:
           </label>
+
           <Field
-            name="userName"
-            id="userName"
             className="form__control"
+            id="userName"
+            name="userName"
             placeholder="Add a contact"
             type="text"
           />
+
           <button
             className="button button--primary"
             disabled={values.userName === ""}
@@ -32,3 +40,5 @@ export default function AddContactForm({ onSubmit }: Props) {
     </Formik>
   );
 }
+
+AddContactForm.displayName = "AddContactForm";

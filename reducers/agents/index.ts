@@ -15,7 +15,7 @@ import { FetchPlotsAndConcernsAction } from "actions/agents/fetchPlots";
 import { HearReportAction } from "actions/agents/hearReport";
 import { LendToAgentAction } from "actions/agents/lendToAgent";
 import { PerhapsNotSuccess } from "actions/agents/perhapsNot";
-import { AcceptSuccess } from "actions/messages/accept";
+import { AcceptSuccess } from "actions/messages/acceptInvitation";
 import { BeginSuccessAction } from "actions/storylet/begin";
 import { ChooseBranchSuccessAction } from "actions/storylet/chooseBranch/chooseBranchSuccess";
 import { FetchAvailableSuccessAction } from "actions/storylet/fetchAvailable";
@@ -125,7 +125,7 @@ export default function reducer(
         isFetchingAgents: true,
       };
 
-    case FETCH_AGENTS_SUCCESS:
+    case FETCH_AGENTS_SUCCESS: {
       const fetchAgentsSuccessShowAlertIds = fetchShowAlertIds(action);
       const fetchAgentsSuccessHasNotification = agentsHaveNotification(
         state,
@@ -134,11 +134,6 @@ export default function reducer(
 
       return {
         ...state,
-        isFetchingAgents: false,
-        hasFetchedAgents: true,
-        hasNotification: fetchAgentsSuccessHasNotification,
-        showAlertIds: fetchAgentsSuccessShowAlertIds,
-        maxPlots: action.payload.maxPlots,
         agents: action.payload.agents,
         agentToAssign:
           state.agentToAssign === undefined
@@ -146,8 +141,14 @@ export default function reducer(
             : action.payload.agents.find(
                 (agent) => agent.id === state.agentToAssign?.id
               ),
+        hasFetchedAgents: true,
+        hasNotification: fetchAgentsSuccessHasNotification,
+        isFetchingAgents: false,
+        maxPlots: action.payload.maxPlots,
         report: action.payload.report,
+        showAlertIds: fetchAgentsSuccessShowAlertIds,
       };
+    }
 
     case LEND_TO_AGENT_REQUESTED:
       return {
@@ -158,7 +159,6 @@ export default function reducer(
     case LEND_TO_AGENT_SUCCESS:
       return {
         ...state,
-        isFetchingAgent: false,
         agents: action.payload.agents,
         agentToAssign:
           state.agentToAssign === undefined
@@ -183,6 +183,7 @@ export default function reducer(
               ),
             }) as Concern
         ),
+        isFetchingAgent: false,
       };
 
     case CLEAR_AGENTS_NOTIFCATION:
@@ -206,7 +207,6 @@ export default function reducer(
     case FETCH_PLOTS_AND_CONCERNS_SUCCESS:
       return {
         ...state,
-        isFetchingPlots: false,
         agentToAssign: action.payload.agent,
         concerns: [
           {
@@ -215,13 +215,14 @@ export default function reducer(
           } as Concern,
           ...action.payload.concerns,
         ],
+        isFetchingPlots: false,
       };
 
     case BEGIN_PLOT_SUCCESS:
       return {
         ...state,
-        isFetchingAgent: false,
         agents: action.payload.agents,
+        isFetchingAgent: false,
         plotResult: {
           name: action.payload.name,
           description: action.payload.description,
@@ -235,18 +236,20 @@ export default function reducer(
     case CHOOSE_STORYLET_SUCCESS:
     case FETCH_AVAILABLE_SUCCESS:
     case RENAME_QUALITY_SUCCESS:
-    case SEND_SOCIAL_INVITATION_SUCCESS:
+    case SEND_SOCIAL_INVITATION_SUCCESS: {
+      // check if a Plot has just been completed
       const incrementActionAgents = incrementActionsAgents(state, action);
-      const incrementActionHasNotfication = agentsHaveNotification(
+      const incrementActionHasNotification = agentsHaveNotification(
         state,
         incrementActionAgents
       );
 
       return {
         ...state,
-        hasNotification: incrementActionHasNotfication,
         agents: incrementActionAgents,
+        hasNotification: incrementActionHasNotification,
       };
+    }
 
     case ABANDON_PLOT_SUCCESS:
     case HEAR_REPORT_SUCCESS:
@@ -262,7 +265,7 @@ export default function reducer(
         report: undefined,
       };
 
-    case HIDE_AGENT_ALERT_NOTIFCATION:
+    case HIDE_AGENT_ALERT_NOTIFCATION: {
       const hideAgentHasNotification =
         state.agents.filter(
           (agent) =>
@@ -280,13 +283,14 @@ export default function reducer(
           action.payload.alertId,
         ],
       };
+    }
 
     case HIDE_ALL_AGENT_ALERTS_NOTIFCATION:
       return {
         ...state,
         hasNotification: false,
-        showAlertIds: [],
         hideAlertIds: state.showAlertIds,
+        showAlertIds: [],
       };
 
     case UNHIDE_AGENT_ALERT_NOTIFCATION:
@@ -299,10 +303,7 @@ export default function reducer(
       };
 
     default:
-      // no-op
-      return {
-        ...state,
-      };
+      return state;
   }
 }
 

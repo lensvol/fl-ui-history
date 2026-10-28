@@ -4,9 +4,9 @@ import ReactCSSTransitionReplace from "react-css-transition-replace";
 
 import { useDispatch } from "react-redux";
 
-import { fetch as fetchFate } from "actions/fate";
+import { fetchFate } from "actions/fate";
 import { isDowngradedSubscription } from "actions/fate/subscriptions";
-import { fetch as fetchSubscription } from "actions/subscription";
+import { fetchSubscription } from "actions/subscription";
 
 import Loading from "components/Loading";
 import PurchaseSubscriptionModal from "components/PurchaseSubscriptionModal";

@@ -9,9 +9,19 @@ import { QUALITY_ID_PENNY } from "constants/possessions";
 
 import { IAvailability } from "types/exchange";
 
+type Props = {
+  activeItem: IAvailability;
+  countCharacterAlreadyHas: number;
+  disabled: boolean;
+  maxAmount: number;
+  onChange: (change: React.ChangeEvent<HTMLInputElement>) => void;
+  onIncrement: Function;
+  onSubmit: (evt: any) => void;
+  sellAmount: number;
+};
+
 export default function ExchangeUI({
   activeItem,
-  buying,
   countCharacterAlreadyHas,
   disabled,
   onChange,
@@ -22,13 +32,12 @@ export default function ExchangeUI({
 }: Props) {
   const input = useRef<HTMLInputElement>(null);
 
-  const { availability } = activeItem;
-
+  const buying = activeItem.forSale;
   const buttonText = buying ? "Buy" : "Sell";
   const verb = buttonText.toLowerCase();
-  const priceValue = buying ? availability.cost : availability.sellPrice;
-  const title = `Please select a number to ${verb}`;
-  const tooltipData = availability.quality;
+  const priceValue = buying
+    ? activeItem.availability.cost
+    : activeItem.availability.sellPrice;
   const upperLimit = buying ? MAX_BUY_AMOUNT : MAX_SELL_AMOUNT;
   const transactionLimit = Math.min(maxAmount, upperLimit);
 
@@ -41,7 +50,7 @@ export default function ExchangeUI({
             color: "#000",
           }}
         >
-          {title}
+          Please select a number to {verb}
         </h3>
       </div>
 
@@ -54,11 +63,12 @@ export default function ExchangeUI({
         >
           <div className="js-icon icon js-tt icon--inventory icon--emphasize">
             <Image
-              alt={availability.quality.name}
-              icon={availability.quality.image}
-              tooltipData={tooltipData}
+              alt={activeItem.availability.quality.name}
+              icon={activeItem.availability.quality.image}
+              tooltipData={activeItem.availability.quality}
               type="small-icon"
             />
+
             {countCharacterAlreadyHas > 0 && (
               <span className="js-item-value icon__value">
                 {countCharacterAlreadyHas.toLocaleString("en-GB")}
@@ -66,27 +76,35 @@ export default function ExchangeUI({
             )}
           </div>
         </div>
+
         <div className="media__body">
-          <h3 className="heading heading--3">{availability.quality.name}</h3>
-          {availability.purchaseQuality.id === QUALITY_ID_PENNY ? (
+          <h3 className="heading heading--3">
+            {activeItem.availability.quality.name}
+          </h3>
+
+          {activeItem.availability.purchaseQuality.id === QUALITY_ID_PENNY ? (
             <QualityValue
-              isCurrency={availability.purchaseQuality.id === QUALITY_ID_PENNY}
-              quality={availability.purchaseQuality}
+              isCurrency={
+                activeItem.availability.purchaseQuality.id === QUALITY_ID_PENNY
+              }
+              quality={activeItem.availability.purchaseQuality}
               value={priceValue * (+sellAmount || 0)}
             />
           ) : (
             <>
               {(priceValue * (+sellAmount || 0)).toLocaleString("en-GB")} ×{" "}
-              {availability.purchaseQuality.name}
+              {activeItem.availability.purchaseQuality.name}
             </>
           )}
         </div>
       </div>
+
       <div className="exchange-ui__rubric-and-controls">
         <em>
           You may {verb} up to {upperLimit.toLocaleString("en-GB")} items at a
           time. If you need to {verb} more, do so in batches.
         </em>
+
         <form className="exchange-ui__form" onSubmit={onSubmit}>
           <div className="exchange-ui__controls">
             <StateChangeButton
@@ -95,12 +113,14 @@ export default function ExchangeUI({
               maxAmount={maxAmount}
               sellAmount={sellAmount}
             />
+
             <StateChangeButton
               by={-1}
               onClick={onIncrement}
               maxAmount={maxAmount}
               sellAmount={sellAmount}
             />
+
             <input
               autoFocus
               className="form__control form__control--1h"
@@ -114,12 +134,14 @@ export default function ExchangeUI({
               type="number"
               value={sellAmount}
             />
+
             <StateChangeButton
               by={+1}
               onClick={onIncrement}
               maxAmount={transactionLimit}
               sellAmount={sellAmount}
             />
+
             <StateChangeButton
               by={+10}
               onClick={onIncrement}
@@ -127,6 +149,7 @@ export default function ExchangeUI({
               sellAmount={sellAmount}
             />
           </div>
+
           <div className="exchange-ui__submit-button-container">
             <button
               className="button button--primary"
@@ -143,15 +166,3 @@ export default function ExchangeUI({
 }
 
 ExchangeUI.displayName = "ExchangeUI";
-
-type Props = {
-  activeItem: IAvailability;
-  buying: boolean;
-  countCharacterAlreadyHas: number;
-  disabled: boolean;
-  maxAmount: number;
-  onChange: (change: React.ChangeEvent<HTMLInputElement>) => void;
-  onIncrement: Function;
-  onSubmit: (evt: any) => void;
-  sellAmount: number;
-};

@@ -1,20 +1,19 @@
-import { useAppDispatch, useAppSelector } from "features/app/store";
 import React, { useCallback, useState } from "react";
 
+import AddContactForm from "components/Contacts/components/AddContactForm";
+import ContactList from "components/Contacts/components/ContactList";
+import ContactsHeader from "components/Contacts/components/ContactsHeader";
 import Loading from "components/Loading";
 import SearchField from "components/SearchField";
 
-import { IContact, addContact, deleteContact } from "features/contacts";
-import AddContactForm from "./components/AddContactForm";
-import ContactsHeader from "./components/ContactsHeader";
-import ContactList from "./components/ContactList";
+import { useAppDispatch, useAppSelector } from "features/app/store";
+import { addContact, deleteContact, IContact } from "features/contacts";
 
 export default function Contacts() {
-  const dispatch = useAppDispatch();
+  const dispatch: Function = useAppDispatch();
 
   const contacts = useAppSelector((s) => s.contacts.contacts);
   const isFetching = useAppSelector((s) => s.contacts.isFetching);
-  // const message = useAppSelector(s => s.contacts.message);
 
   const [filterString, setFilterString] = useState("");
   const [addContactResponseMessage, setAddContactResponseMessage] =
@@ -24,14 +23,21 @@ export default function Contacts() {
     async (values: { userName: string }) => {
       try {
         setAddContactResponseMessage("");
+
         const response = await dispatch(
-          addContact({ userName: values.userName })
+          addContact({
+            userName: values.userName,
+          })
         ).unwrap();
+
         setAddContactResponseMessage(response.message);
-      } catch (e) {
-        if (e.message) {
-          console.error(e.message);
-          setAddContactResponseMessage(e.message);
+      } catch (error) {
+        const err: any = error;
+
+        if (err.message) {
+          console.error(err.message);
+
+          setAddContactResponseMessage(err.message);
         }
       }
     },
@@ -41,11 +47,17 @@ export default function Contacts() {
   const handleDelete = useCallback(
     async (contact: IContact) => {
       try {
-        await dispatch(deleteContact({ userID: contact.id })).unwrap();
-      } catch (ex) {
-        if (ex.message) {
+        await dispatch(
+          deleteContact({
+            userID: contact.id,
+          })
+        ).unwrap();
+      } catch (error) {
+        const err: any = error;
+
+        if (err.message) {
           // NOTE: We should probably surface this error to the user
-          console.error(ex.message);
+          console.error(err.message);
         }
       }
     },
@@ -74,9 +86,9 @@ export default function Contacts() {
       )}
 
       <SearchField
+        onChange={handleSearchFieldChange}
         placeholder="Search contacts"
         value={filterString}
-        onChange={handleSearchFieldChange}
       />
 
       <ContactList

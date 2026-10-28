@@ -1,5 +1,6 @@
+import BaseService, { Either } from "services/BaseMonadicService";
+
 import { BaseResponse } from "types/app";
-import BaseService, { Either } from "./BaseMonadicService";
 
 export interface IContactService {
   addContact: (userName: string) => Promise<Either<AddContactResponse>>;
@@ -19,19 +20,10 @@ export interface IContact {
   userName: string;
 }
 
-class ContactService extends BaseService implements IContactService {
-  /**
-   * Fetch Contacts
-   * @return {Promise}
-   */
-  fetch = () => {
-    const config = {
-      method: "get",
-      url: "/contact",
-    };
-    return this.doRequest<IContact[]>(config);
-  };
-
+export default class ContactService
+  extends BaseService
+  implements IContactService
+{
   /**
    * Add contact
    * @param {String} userName
@@ -39,11 +31,26 @@ class ContactService extends BaseService implements IContactService {
    */
   addContact = (userName: string) => {
     const config = {
-      url: "/contact/addcontact",
       method: "post",
-      data: { userName },
+      url: "/contact/addcontact",
+      data: {
+        userName,
+      },
     };
+
     return this.doRequest<AddContactResponse>(config);
+  };
+
+  /**
+   * add facebook contacts
+   */
+  addFacebookContacts = () => {
+    const config = {
+      method: "post",
+      url: "/contacts/addfacebookcontacts",
+    };
+
+    return this.doRequest(config);
   };
 
   /**
@@ -55,21 +62,24 @@ class ContactService extends BaseService implements IContactService {
     const config = {
       method: "post",
       url: "/contact/deletecontact",
-      data: { contactId },
+      data: {
+        contactId,
+      },
     };
+
     return this.doRequest<BaseResponse>(config);
   };
 
   /**
-   * add facebook contacts
+   * Fetch Contacts
+   * @return {Promise}
    */
-  addFacebookContacts = () => {
+  fetch = () => {
     const config = {
-      method: "post",
-      url: "/contacts/addfacebookcontacts",
+      method: "get",
+      url: "/contact",
     };
-    return this.doRequest(config);
+
+    return this.doRequest<IContact[]>(config);
   };
 }
-
-export default ContactService;

@@ -6,7 +6,7 @@ import { useHistory } from "react-router";
 
 import classnames from "classnames";
 
-import { fetch as fetchFate, toggleEnhancedStoreView } from "actions/fate";
+import { fetchFate, toggleEnhancedStoreView } from "actions/fate";
 import {
   isDowngradedSubscription,
   isRecentlyCancelledSubscription,

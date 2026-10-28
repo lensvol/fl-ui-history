@@ -1,86 +1,132 @@
-import { ProfileActions } from "actions/profile";
-import * as ProfileActionTypes from "actiontypes/profile";
+import { FetchProfileActions } from "actions/profile/fetchProfile";
+import { ShareContentActions } from "actions/profile/shareContent";
+import { UpdateDescriptionActions } from "actions/profile/updateDescription";
 
-import deleteEntrySuccess from "reducers/profile/deleteEntrySuccess";
-import fetchProfileSuccess from "reducers/profile/fetchProfileSuccess";
-import fetchSharedContentSuccess from "reducers/profile/fetchSharedContentSuccess";
-import { IProfileState } from "features/profile";
+import {
+  FETCH_PROFILE_FAILURE,
+  FETCH_PROFILE_REQUESTED,
+  FETCH_PROFILE_SUCCESS,
+  SHARE_CONTENT_FAILURE,
+  SHARE_CONTENT_REQUESTED,
+  SHARE_CONTENT_SUCCESS,
+  UPDATE_DESCRIPTION_FAILURE,
+  UPDATE_DESCRIPTION_REQUESTED,
+  UPDATE_DESCRIPTION_SUCCESS,
+} from "actiontypes/profile";
+
+import { ApiSharedContent, IProfileCharacter } from "services/ProfileService";
+
+import { AreaWithNestedJsonInfo } from "types/map";
+import { IQuality } from "types/qualities";
+
+export interface IProfileState {
+  characterName?: string;
+  currentArea?: AreaWithNestedJsonInfo;
+  description?: string;
+  hasFavouredOutfit?: boolean;
+  isFetching: boolean;
+  isLoggedInUsersProfile: boolean;
+  isSharing: boolean;
+  mantelpieceItem?: IQuality;
+  outfitName?: string;
+  profileBanner?: string;
+  profileCharacter?: IProfileCharacter;
+  profileDescription?: string;
+  profileName?: string;
+  scrapbookStatus?: IQuality;
+  sharedContent: ApiSharedContent[];
+  shareMessageResponse: string | null;
+  standardEquipped?: {
+    possessions: IQuality[];
+  };
+}
 
 const INITIAL_STATE: IProfileState = {
   characterName: undefined,
+  currentArea: undefined,
+  description: undefined,
+  hasFavouredOutfit: undefined,
   isFetching: false,
   isLoggedInUsersProfile: false,
-  lookingAtOwnProfile: false,
-  description: undefined,
-  currentArea: undefined,
-  profileCharacter: undefined,
-  standardEquipped: undefined,
-  expandedEquipped: undefined,
+  isSharing: false,
   mantelpieceItem: undefined,
+  outfitName: undefined,
+  profileBanner: undefined,
+  profileCharacter: undefined,
+  profileDescription: undefined,
+  profileName: undefined,
   scrapbookStatus: undefined,
   sharedContent: [],
-  isSharing: false,
   shareMessageResponse: null,
-  next: null,
-  prev: null,
+  standardEquipped: undefined,
 };
 
-/**
- * Character Reducer
- * @param {Object} state
- * @param {[Object]} action
- */
+type ProfileActions =
+  FetchProfileActions | ShareContentActions | UpdateDescriptionActions;
+
 export default function reducer(state = INITIAL_STATE, action: ProfileActions) {
   switch (action.type) {
-    case ProfileActionTypes.FETCH_PROFILE_REQUESTED:
-      return { ...state, isFetching: true };
+    case FETCH_PROFILE_REQUESTED:
+      return {
+        ...state,
+        isFetching: true,
+      };
 
-    case ProfileActionTypes.FETCH_PROFILE_FAILURE:
-      return { ...state, isFetching: false };
+    case FETCH_PROFILE_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+      };
 
-    case ProfileActionTypes.FETCH_PROFILE_SUCCESS:
-      return fetchProfileSuccess(state, action);
+    case FETCH_PROFILE_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        characterName: action.payload.characterName,
+        currentArea: action.payload.currentArea,
+        hasFavouredOutfit: action.payload.hasFavouredOutfit,
+        isLoggedInUsersProfile: action.payload.isLoggedInUsersProfile,
+        outfitName: action.payload.outfitName,
+        profileBanner: action.payload.profileBanner,
+        profileCharacter: action.payload.profileCharacter,
+        profileDescription: action.payload.profileDescription,
+        profileName: action.payload.profileName,
+        standardEquipped: action.payload.standardEquippedPossessions,
+      };
 
-    case ProfileActionTypes.FETCH_SHARED_CONTENT_SUCCESS:
-      return fetchSharedContentSuccess(state, action);
+    case SHARE_CONTENT_REQUESTED:
+      return {
+        ...state,
+        isSharing: true,
+      };
 
-    case ProfileActionTypes.UPDATE_DESCRIPTION_SUCCESS:
+    case SHARE_CONTENT_FAILURE:
+    case SHARE_CONTENT_SUCCESS:
+      return {
+        ...state,
+        isSharing: false,
+      };
+
+    case UPDATE_DESCRIPTION_SUCCESS: {
+      if (!state.profileCharacter) {
+        console.error(
+          "Tried to update profile description for an undefined user"
+        );
+
+        return state;
+      }
+
       return {
         ...state,
         profileCharacter: {
           ...state.profileCharacter,
-          description: action.payload,
+          description: action.payload.description,
         },
       };
+    }
 
-    case ProfileActionTypes.SHARE_CONTENT_REQUESTED:
-      return { ...state, isSharing: true };
-
-    case ProfileActionTypes.SHARE_CONTENT_FAILURE:
-      return { ...state, isSharing: false };
-
-    case ProfileActionTypes.SHARE_CONTENT_SUCCESS:
-      return {
-        ...state,
-        isSharing: false,
-        shareMessageResponse: action.payload,
-      };
-
-    case ProfileActionTypes.SHARE_CONTENT_COMPLETE:
-      return {
-        ...state,
-        shareMessageResponse: null,
-      };
-
-    case ProfileActionTypes.DELETE_ENTRY_SUCCESS:
-      return deleteEntrySuccess(state, action);
-
-    case ProfileActionTypes.DELETE_ENTRY_FAILURE:
-      return { ...state, isFetching: false };
-
-    case ProfileActionTypes.DELETE_ENTRY_REQUESTED:
-      return { ...state, isFetching: true };
-
+    case UPDATE_DESCRIPTION_FAILURE:
+    case UPDATE_DESCRIPTION_REQUESTED:
     default:
       return state;
   }

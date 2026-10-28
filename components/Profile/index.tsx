@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
+import fetchProfile from "actions/profile/fetchProfile";
+
 import Header from "components/Header";
 import Hero from "components/Profile/Hero";
 import JournalEntriesContainer from "components/JournalEntries";
@@ -17,7 +19,6 @@ import TippyWrapper from "components/TippyWrapper";
 
 import { useAppDispatch, useAppSelector } from "features/app/store";
 import { fetchContacts } from "features/contacts";
-import { fetchProfile } from "features/profile";
 
 type Params = {
   profileName: string;

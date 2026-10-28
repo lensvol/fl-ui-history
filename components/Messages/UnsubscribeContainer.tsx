@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
+
 import { useDispatch } from "react-redux";
+
 import { useHistory, useParams } from "react-router-dom";
 
 import unsubscribe from "actions/messages/unsubscribe";
@@ -91,11 +93,7 @@ export default function UnsubscribeContainer() {
       return <Loading spinner />;
 
     case UnsubscribeStep.Stop:
-      return (
-        <>
-          <p>{message}</p>
-        </>
-      );
+      return <p>{message}</p>;
 
     default:
       return null;

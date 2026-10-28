@@ -51,7 +51,7 @@ const fetchFailure: ActionCreator<FetchRegisterFailure> = (error: any) => ({
 /** ----------------------------------------------------------------------------
  * FETCH
  -----------------------------------------------------------------------------*/
-export default function fetch(): ThunkAction<
+export default function fetchAvatars(): ThunkAction<
   Promise<Either<FetchRegisterResponse>>,
   any,
   any,

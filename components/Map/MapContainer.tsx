@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 
 import classnames from "classnames";
 
-import { fetch as fetchCards } from "actions/cards";
+import { fetchCards } from "actions/cards";
 import { changeLocation, hideMap, setCurrentArea } from "actions/map";
 
 import ActionRefreshContext from "components/ActionRefreshContext";

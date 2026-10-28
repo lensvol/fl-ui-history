@@ -50,9 +50,9 @@ export type FetchFateSuccess = {
 export type FetchFateActions =
   FetchFateFailure | FetchFateRequested | FetchFateSuccess;
 
-export default fetch(new FateService());
+export default fetchFate(new FateService());
 
-export function fetch(
+export function fetchFate(
   service: IFateService
 ): () => (
   dispatch: ThunkDispatch<any, any, any>

@@ -1,8 +1,5 @@
 import { processMessages } from "actions/app";
-import {
-  clearCache as clearCardCache,
-  fetch as fetchCards,
-} from "actions/cards";
+import { clearCache as clearCardCache, fetchCards } from "actions/cards";
 import fetchAvailable from "actions/storylet/fetchAvailable";
 import { handleVersionMismatch } from "actions/versionSync";
 

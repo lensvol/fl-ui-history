@@ -13,6 +13,7 @@ import {
   CHANGE_OUTFIT_REQUESTED,
   CHOOSE_NEW_MANTELPIECE_SUCCESS,
   CHOOSE_NEW_SCRAPBOOK_SUCCESS,
+  CLEAR_CHANGED,
   FETCH_MYSELF_REQUESTED,
   FETCH_MYSELF_SUCCESS,
   FETCH_OUTFIT_SUCCESS,
@@ -88,6 +89,25 @@ export default function reducer(
 
     case MYSELF_CHANGED:
       return myselfChanged(state, action);
+
+    case CLEAR_CHANGED: {
+      const quality = state.qualities.find((q) => q.id === action.payload.id);
+
+      if (quality === undefined) {
+        return state;
+      }
+
+      return {
+        ...state,
+        qualities: [
+          ...state.qualities.filter((q) => q.id !== action.payload.id),
+          {
+            ...quality,
+            changeType: undefined,
+          },
+        ],
+      };
+    }
 
     case NAME_CHANGED:
       return nameChanged(state, action.payload);

@@ -2,7 +2,7 @@ import { ActionCreator } from "redux";
 
 import { ThunkDispatch } from "redux-thunk";
 
-import { fetch as fetchCards } from "actions/cards";
+import { fetchCards } from "actions/cards";
 import hideMap from "actions/map/hideMap";
 import setCurrentArea from "actions/map/setCurrentArea";
 import { fetchAvailable } from "actions/storylet";

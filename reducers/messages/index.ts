@@ -20,7 +20,6 @@ import {
   FETCH_ALL_FAILURE,
   FETCH_ALL_REQUESTED,
   FETCH_ALL_SUCCESS,
-  FETCH_FEED_MESSAGES_SUCCESS,
   FETCH_INTERACTIONS_SUCCESS,
   REJECT_FAILURE,
   REJECT_REQUESTED,
@@ -48,30 +47,29 @@ import { IMessagesState } from "types/messages";
  * @type {Object}
  */
 const INITIAL_STATE: IMessagesState = {
-  dialogHeader: null,
-  dialogMessage: null,
+  dialogHeader: undefined,
+  dialogMessage: undefined,
   dialogOpen: false,
   feedMessages: [],
+  hasMessageTabAlert: undefined,
   interactions: [],
   invitationId: undefined,
   isAccepting: false,
   isCancelling: false,
-  isChanged: null,
   isDeleting: false,
   isFetching: false,
   isRequesting: false,
   subtab: "blah",
 };
 
+type MessageAction = MessagesAction | StoryletActions;
+
 /**
  * Messages Reducer
  * @param {Object} state
  * @param {[Object]} action
  */
-export default function reducer(
-  state = INITIAL_STATE,
-  action: MessagesAction | StoryletActions
-) {
+export default function reducer(state = INITIAL_STATE, action: MessageAction) {
   switch (action.type) {
     case CLEAR_CACHE:
       return INITIAL_STATE;
@@ -93,47 +91,42 @@ export default function reducer(
     case FETCH_ALL_SUCCESS: {
       const { payload } = action;
 
-      const isChanged =
-        state.isChanged != null &&
-        (state.isChanged ||
+      const feedMessages = [...payload.feedMessages].sort(sortByDate).reverse();
+      const interactions = [...payload.interactions].sort(sortByDate).reverse();
+
+      const hasMessageTabAlert =
+        state.hasMessageTabAlert !== undefined &&
+        (state.hasMessageTabAlert ||
           state.feedMessages.length !== payload.feedMessages.length ||
           state.interactions.length !== payload.interactions.length);
 
       return {
         ...state,
-        feedMessages: [...payload.feedMessages].sort(sortByDate).reverse(),
-        interactions: [...payload.interactions].sort(sortByDate).reverse(),
+        feedMessages,
+        hasMessageTabAlert,
+        interactions,
         invitationId: undefined,
-        isChanged,
         isFetching: false,
-      };
-    }
-
-    case FETCH_FEED_MESSAGES_SUCCESS: {
-      const { payload } = action;
-
-      return {
-        ...state,
-        feedMessages: [...payload].sort(sortByDate).reverse(),
-        isChanged: state.feedMessages.length !== payload.length,
       };
     }
 
     case FETCH_INTERACTIONS_SUCCESS: {
       const { payload } = action;
 
+      const interactions = [...payload].sort(sortByDate).reverse();
+
       return {
         ...state,
-        interactions: [...payload].sort(sortByDate).reverse(),
+        hasMessageTabAlert: state.interactions.length !== payload.length,
+        interactions,
         invitationId: undefined,
-        isChanged: state.interactions.length !== payload.length,
       };
     }
 
     case CLEAR_NOTIFICATION:
       return {
         ...state,
-        isChanged: false,
+        hasMessageTabAlert: false,
       };
 
     case DELETE_REQUESTED:
@@ -151,9 +144,7 @@ export default function reducer(
       };
 
     case DELETE_SUCCESS: {
-      const { payload } = action;
-
-      return updateAndExclude(state, payload, {
+      return updateAndExclude(state, action.payload, {
         isDeleting: true,
         isRequesting: false,
       });
@@ -209,37 +200,29 @@ export default function reducer(
       };
 
     case CANCEL_SUCCESS: {
-      const { payload } = action;
-
-      return updateAndExclude(state, payload.cancelledId, {
+      return updateAndExclude(state, action.payload.cancelledId, {
         isRequesting: false,
       });
     }
 
     case REJECT_SUCCESS: {
-      const { payload } = action;
-
-      return updateAndExclude(state, payload.invitationId, {
+      return updateAndExclude(state, action.payload.invitationId, {
         isRequesting: false,
       });
     }
 
     case BEGIN_SOCIAL_EVENT_SUCCESS: {
-      const { payload } = action;
-
       return {
         ...state,
-        invitationId: payload.invitationId,
+        invitationId: action.payload.invitationId,
         isRequesting: false,
       };
     }
 
     case BEGIN_SOCIAL_EVENT_UNAVAILABLE: {
-      const { payload } = action;
-
       return {
         ...state,
-        dialogMessage: payload.message,
+        dialogMessage: action.payload.message,
         dialogOpen: true,
         isRequesting: false,
       };
