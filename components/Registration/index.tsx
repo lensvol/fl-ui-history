@@ -43,7 +43,7 @@ export default function Registration() {
 
           <li className="nav__item" />
 
-          {accessCode && (
+          {accessCode === undefined && (
             <RegistrationTab
               activeTab={activeTab}
               alt="Redeem code"
